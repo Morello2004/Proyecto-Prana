@@ -232,11 +232,12 @@
             // 
             // pnlContenido
             // 
-            pnlContenido.Dock = DockStyle.Left;
+            pnlContenido.Dock = DockStyle.Fill;
             pnlContenido.Location = new Point(230, 0);
             pnlContenido.Name = "pnlContenido";
             pnlContenido.Size = new Size(850, 558);
             pnlContenido.TabIndex = 1;
+            pnlContenido.Paint += pnlContenido_Paint;
             // 
             // Interfaz
             // 

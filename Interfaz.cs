@@ -15,7 +15,7 @@ namespace Prana.Presentacion
         }
 
         // Abre un formulario dentro del panel derecho
-        private void AbrirFormulario(Form formulario)
+        public void AbrirFormulario(Form formulario)
         {
             // Cierra la sección anterior, si existe
             formularioActivo?.Close();
@@ -120,6 +120,11 @@ namespace Prana.Presentacion
         private void btnUsuarios_Click(object sender, EventArgs e)
         {
             AbrirFormulario(new frmUsuarios());
+        }
+
+        private void pnlContenido_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

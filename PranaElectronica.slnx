@@ -2,8 +2,9 @@
   <Folder Name="/Elementos de la solución/">
     <File Path="BaseDeDatos/CrearBD.sql" />
   </Folder>
-  <Project Path="../Prana.Datos/Prana.Datos.csproj" />
-  <Project Path="../Prana.Entidades/Prana.Entidades.csproj" />
-  <Project Path="../Prana.negocio/Prana.negocio.csproj" />
+
+  <Project Path="Prana.Datos/Prana.Datos.csproj" />
+  <Project Path="Prana.Entidades/Prana.Entidades.csproj" />
+  <Project Path="Prana.negocio/Prana.negocio.csproj" />
   <Project Path="Prana.Presentacion.csproj" />
 </Solution>

@@ -57,17 +57,9 @@
             lblNumeroVenta = new Label();
             lblTituloNuevaVenta = new Label();
             pnlCliente = new Panel();
-            textBox4 = new TextBox();
-            textBox3 = new TextBox();
-            textBox2 = new TextBox();
-            textBox1 = new TextBox();
-            label5 = new Label();
-            label4 = new Label();
-            label3 = new Label();
-            label2 = new Label();
+            dataGridView2 = new DataGridView();
             BtnAgregarCliente = new FontAwesome.Sharp.IconButton();
             lblClienteSeleccionado = new Label();
-            btnBuscarCliente = new FontAwesome.Sharp.IconButton();
             txtBuscarCliente = new TextBox();
             lblTituloCliente = new Label();
             pnlProductos = new Panel();
@@ -88,11 +80,15 @@
             lblDescuentoAplicadoTexto = new Label();
             lblSubtotal = new Label();
             lblSubtotalTexto = new Label();
+            lblEnvio = new Label();
+            lblEnvioTexto = new Label();
             lblPorcentaje = new Label();
             nudDescuento = new NumericUpDown();
             lblDescuento = new Label();
             lblTituloDescuento = new Label();
             pnlPago = new Panel();
+            cboCantCuotas = new ComboBox();
+            label2 = new Label();
             numericUpDown2 = new NumericUpDown();
             btnConfirmarPagoActual = new Button();
             lblTotalPagoActual = new Label();
@@ -121,6 +117,7 @@
             ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             pnlEncabezadoVenta.SuspendLayout();
             pnlCliente.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
             pnlProductos.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvDetalleVenta).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nudCantidad).BeginInit();
@@ -157,7 +154,7 @@
             pnlContenidoVenta.RowStyles.Add(new RowStyle(SizeType.Absolute, 65F));
             pnlContenidoVenta.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             pnlContenidoVenta.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
-            pnlContenidoVenta.Size = new Size(1292, 1924);
+            pnlContenidoVenta.Size = new Size(1258, 1943);
             pnlContenidoVenta.TabIndex = 1;
             pnlContenidoVenta.Paint += pnlContenidoVenta_Paint;
             // 
@@ -178,7 +175,7 @@
             tlpNuevaVenta.Location = new Point(3, 68);
             tlpNuevaVenta.Name = "tlpNuevaVenta";
             tlpNuevaVenta.Padding = new Padding(0, 10, 0, 10);
-            tlpNuevaVenta.Size = new Size(1286, 1778);
+            tlpNuevaVenta.Size = new Size(1252, 1797);
             tlpNuevaVenta.TabIndex = 1;
             tlpNuevaVenta.Paint += panel1_Paint;
             // 
@@ -190,9 +187,9 @@
             pnlDocumentos.Controls.Add(chkGenerarRemito);
             pnlDocumentos.Controls.Add(chkGenerarRecibo);
             pnlDocumentos.Controls.Add(lblTituloDocumentos);
-            pnlDocumentos.Location = new Point(9, 1641);
+            pnlDocumentos.Location = new Point(9, 1660);
             pnlDocumentos.Name = "pnlDocumentos";
-            pnlDocumentos.Size = new Size(1683, 124);
+            pnlDocumentos.Size = new Size(1649, 124);
             pnlDocumentos.TabIndex = 8;
             // 
             // lblAclaracionDocumentos
@@ -260,9 +257,9 @@
             pnlFormaEntrega.Controls.Add(lblDomicilioEntrega);
             pnlFormaEntrega.Controls.Add(lblTituloFormaEntrega);
             pnlFormaEntrega.Controls.Add(rdoRetiroLocal);
-            pnlFormaEntrega.Location = new Point(9, 1357);
+            pnlFormaEntrega.Location = new Point(3, 646);
             pnlFormaEntrega.Name = "pnlFormaEntrega";
-            pnlFormaEntrega.Size = new Size(1683, 269);
+            pnlFormaEntrega.Size = new Size(1649, 269);
             pnlFormaEntrega.TabIndex = 7;
             // 
             // numericUpDown1
@@ -321,6 +318,7 @@
             cboTipoLogistica.Name = "cboTipoLogistica";
             cboTipoLogistica.Size = new Size(121, 23);
             cboTipoLogistica.TabIndex = 11;
+            cboTipoLogistica.SelectedIndexChanged += cboTipoLogistica_SelectedIndexChanged;
             // 
             // lblTipoLogistica
             // 
@@ -353,7 +351,7 @@
             txtObservacionesEntrega.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             txtObservacionesEntrega.Location = new Point(120, 152);
             txtObservacionesEntrega.Name = "txtObservacionesEntrega";
-            txtObservacionesEntrega.Size = new Size(1417, 23);
+            txtObservacionesEntrega.Size = new Size(1383, 23);
             txtObservacionesEntrega.TabIndex = 7;
             // 
             // lblObservacionesEntrega
@@ -412,7 +410,7 @@
             lblTituloFormaEntrega.Name = "lblTituloFormaEntrega";
             lblTituloFormaEntrega.Size = new Size(161, 21);
             lblTituloFormaEntrega.TabIndex = 1;
-            lblTituloFormaEntrega.Text = "5. Forma de entrega";
+            lblTituloFormaEntrega.Text = "3. Forma de entrega";
             // 
             // rdoRetiroLocal
             // 
@@ -435,7 +433,7 @@
             pnlEncabezadoVenta.Controls.Add(lblTituloNuevaVenta);
             pnlEncabezadoVenta.Location = new Point(3, 0);
             pnlEncabezadoVenta.Name = "pnlEncabezadoVenta";
-            pnlEncabezadoVenta.Size = new Size(1683, 65);
+            pnlEncabezadoVenta.Size = new Size(1649, 65);
             pnlEncabezadoVenta.TabIndex = 0;
             // 
             // lblNumeroVenta
@@ -463,92 +461,24 @@
             // 
             pnlCliente.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             pnlCliente.BackColor = Color.FromArgb(21, 30, 41);
-            pnlCliente.Controls.Add(textBox4);
-            pnlCliente.Controls.Add(textBox3);
-            pnlCliente.Controls.Add(textBox2);
-            pnlCliente.Controls.Add(textBox1);
-            pnlCliente.Controls.Add(label5);
-            pnlCliente.Controls.Add(label4);
-            pnlCliente.Controls.Add(label3);
-            pnlCliente.Controls.Add(label2);
+            pnlCliente.Controls.Add(dataGridView2);
             pnlCliente.Controls.Add(BtnAgregarCliente);
             pnlCliente.Controls.Add(lblClienteSeleccionado);
-            pnlCliente.Controls.Add(btnBuscarCliente);
             pnlCliente.Controls.Add(txtBuscarCliente);
             pnlCliente.Controls.Add(lblTituloCliente);
             pnlCliente.ForeColor = Color.White;
             pnlCliente.Location = new Point(3, 71);
             pnlCliente.Name = "pnlCliente";
-            pnlCliente.Size = new Size(1683, 256);
+            pnlCliente.Size = new Size(1649, 256);
             pnlCliente.TabIndex = 0;
             // 
-            // textBox4
+            // dataGridView2
             // 
-            textBox4.Font = new Font("Segoe UI", 10F);
-            textBox4.Location = new Point(263, 196);
-            textBox4.Name = "textBox4";
-            textBox4.Size = new Size(207, 25);
-            textBox4.TabIndex = 12;
-            // 
-            // textBox3
-            // 
-            textBox3.Font = new Font("Segoe UI", 10F);
-            textBox3.Location = new Point(20, 196);
-            textBox3.Name = "textBox3";
-            textBox3.Size = new Size(207, 25);
-            textBox3.TabIndex = 11;
-            // 
-            // textBox2
-            // 
-            textBox2.Font = new Font("Segoe UI", 10F);
-            textBox2.Location = new Point(263, 121);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(207, 25);
-            textBox2.TabIndex = 10;
-            // 
-            // textBox1
-            // 
-            textBox1.Font = new Font("Segoe UI", 10F);
-            textBox1.Location = new Point(20, 121);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(207, 25);
-            textBox1.TabIndex = 9;
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Location = new Point(270, 103);
-            label5.Name = "label5";
-            label5.Size = new Size(27, 15);
-            label5.TabIndex = 8;
-            label5.Text = "DNI";
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new Point(20, 178);
-            label4.Name = "label4";
-            label4.Size = new Size(57, 15);
-            label4.TabIndex = 7;
-            label4.Text = "Direccion";
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new Point(270, 178);
-            label3.Name = "label3";
-            label3.Size = new Size(52, 15);
-            label3.TabIndex = 6;
-            label3.Text = "Telefono";
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(15, 103);
-            label2.Name = "label2";
-            label2.Size = new Size(107, 15);
-            label2.TabIndex = 5;
-            label2.Text = "Nombre y Apellido";
+            dataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView2.Location = new Point(6, 103);
+            dataGridView2.Name = "dataGridView2";
+            dataGridView2.Size = new Size(953, 87);
+            dataGridView2.TabIndex = 5;
             // 
             // BtnAgregarCliente
             // 
@@ -559,7 +489,7 @@
             BtnAgregarCliente.IconChar = FontAwesome.Sharp.IconChar.None;
             BtnAgregarCliente.IconColor = Color.Black;
             BtnAgregarCliente.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            BtnAgregarCliente.Location = new Point(603, 36);
+            BtnAgregarCliente.Location = new Point(496, 36);
             BtnAgregarCliente.Name = "BtnAgregarCliente";
             BtnAgregarCliente.Size = new Size(100, 25);
             BtnAgregarCliente.TabIndex = 4;
@@ -575,21 +505,6 @@
             lblClienteSeleccionado.Size = new Size(157, 15);
             lblClienteSeleccionado.TabIndex = 3;
             lblClienteSeleccionado.Text = "Ningún cliente seleccionado";
-            // 
-            // btnBuscarCliente
-            // 
-            btnBuscarCliente.BackColor = Color.FromArgb(35, 135, 190);
-            btnBuscarCliente.FlatAppearance.BorderSize = 0;
-            btnBuscarCliente.FlatStyle = FlatStyle.Flat;
-            btnBuscarCliente.IconChar = FontAwesome.Sharp.IconChar.None;
-            btnBuscarCliente.IconColor = Color.Black;
-            btnBuscarCliente.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnBuscarCliente.Location = new Point(486, 36);
-            btnBuscarCliente.Name = "btnBuscarCliente";
-            btnBuscarCliente.Size = new Size(100, 25);
-            btnBuscarCliente.TabIndex = 2;
-            btnBuscarCliente.Text = "Buscar";
-            btnBuscarCliente.UseVisualStyleBackColor = false;
             // 
             // txtBuscarCliente
             // 
@@ -622,7 +537,7 @@
             pnlProductos.Controls.Add(lblTituloProductos);
             pnlProductos.Location = new Point(3, 354);
             pnlProductos.Name = "pnlProductos";
-            pnlProductos.Size = new Size(1683, 273);
+            pnlProductos.Size = new Size(1649, 273);
             pnlProductos.TabIndex = 1;
             // 
             // dgvDetalleVenta
@@ -641,7 +556,7 @@
             dgvDetalleVenta.ReadOnly = true;
             dgvDetalleVenta.RowHeadersVisible = false;
             dgvDetalleVenta.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvDetalleVenta.Size = new Size(1523, 138);
+            dgvDetalleVenta.Size = new Size(1489, 138);
             dgvDetalleVenta.TabIndex = 5;
             dgvDetalleVenta.CellContentClick += dgvDetalleVenta_CellContentClick;
             // 
@@ -731,13 +646,15 @@
             pnlDescuentoTotales.Controls.Add(lblDescuentoAplicadoTexto);
             pnlDescuentoTotales.Controls.Add(lblSubtotal);
             pnlDescuentoTotales.Controls.Add(lblSubtotalTexto);
+            pnlDescuentoTotales.Controls.Add(lblEnvio);
+            pnlDescuentoTotales.Controls.Add(lblEnvioTexto);
             pnlDescuentoTotales.Controls.Add(lblPorcentaje);
             pnlDescuentoTotales.Controls.Add(nudDescuento);
             pnlDescuentoTotales.Controls.Add(lblDescuento);
             pnlDescuentoTotales.Controls.Add(lblTituloDescuento);
-            pnlDescuentoTotales.Location = new Point(3, 646);
+            pnlDescuentoTotales.Location = new Point(3, 930);
             pnlDescuentoTotales.Name = "pnlDescuentoTotales";
-            pnlDescuentoTotales.Size = new Size(1683, 146);
+            pnlDescuentoTotales.Size = new Size(1649, 165);
             pnlDescuentoTotales.TabIndex = 0;
             pnlDescuentoTotales.Paint += panel1_Paint_2;
             // 
@@ -746,7 +663,7 @@
             lblTotal.AutoSize = true;
             lblTotal.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblTotal.ForeColor = Color.White;
-            lblTotal.Location = new Point(665, 95);
+            lblTotal.Location = new Point(665, 115);
             lblTotal.Name = "lblTotal";
             lblTotal.Size = new Size(61, 25);
             lblTotal.TabIndex = 9;
@@ -757,7 +674,7 @@
             lblTotalTexto.AutoSize = true;
             lblTotalTexto.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblTotalTexto.ForeColor = Color.White;
-            lblTotalTexto.Location = new Point(505, 98);
+            lblTotalTexto.Location = new Point(505, 118);
             lblTotalTexto.Name = "lblTotalTexto";
             lblTotalTexto.Size = new Size(60, 21);
             lblTotalTexto.TabIndex = 8;
@@ -803,6 +720,26 @@
             lblSubtotalTexto.TabIndex = 4;
             lblSubtotalTexto.Text = "Subtotal:";
             // 
+            // lblEnvio
+            // 
+            lblEnvio.AutoSize = true;
+            lblEnvio.ForeColor = Color.White;
+            lblEnvio.Location = new Point(680, 83);
+            lblEnvio.Name = "lblEnvio";
+            lblEnvio.Size = new Size(34, 15);
+            lblEnvio.TabIndex = 10;
+            lblEnvio.Text = "$0,00";
+            // 
+            // lblEnvioTexto
+            // 
+            lblEnvioTexto.AutoSize = true;
+            lblEnvioTexto.ForeColor = Color.White;
+            lblEnvioTexto.Location = new Point(505, 83);
+            lblEnvioTexto.Name = "lblEnvioTexto";
+            lblEnvioTexto.Size = new Size(39, 15);
+            lblEnvioTexto.TabIndex = 11;
+            lblEnvioTexto.Text = "Envío:";
+            // 
             // lblPorcentaje
             // 
             lblPorcentaje.AutoSize = true;
@@ -842,12 +779,14 @@
             lblTituloDescuento.Name = "lblTituloDescuento";
             lblTituloDescuento.Size = new Size(177, 21);
             lblTituloDescuento.TabIndex = 0;
-            lblTituloDescuento.Text = "3. Descuento y totales";
+            lblTituloDescuento.Text = "4. Descuento y totales";
             // 
             // pnlPago
             // 
             pnlPago.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             pnlPago.BackColor = Color.FromArgb(21, 30, 41);
+            pnlPago.Controls.Add(cboCantCuotas);
+            pnlPago.Controls.Add(label2);
             pnlPago.Controls.Add(numericUpDown2);
             pnlPago.Controls.Add(btnConfirmarPagoActual);
             pnlPago.Controls.Add(lblTotalPagoActual);
@@ -864,10 +803,29 @@
             pnlPago.Controls.Add(cboMedioPago);
             pnlPago.Controls.Add(lblTituloPago);
             pnlPago.Controls.Add(lblMedioPago);
-            pnlPago.Location = new Point(3, 802);
+            pnlPago.Location = new Point(3, 1105);
             pnlPago.Name = "pnlPago";
-            pnlPago.Size = new Size(1683, 546);
+            pnlPago.Size = new Size(1649, 546);
             pnlPago.TabIndex = 6;
+            // 
+            // cboCantCuotas
+            // 
+            cboCantCuotas.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboCantCuotas.FormattingEnabled = true;
+            cboCantCuotas.Location = new Point(26, 200);
+            cboCantCuotas.Name = "cboCantCuotas";
+            cboCantCuotas.Size = new Size(230, 23);
+            cboCantCuotas.TabIndex = 19;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.ForeColor = Color.White;
+            label2.Location = new Point(20, 182);
+            label2.Name = "label2";
+            label2.Size = new Size(44, 15);
+            label2.TabIndex = 18;
+            label2.Text = "Cuotas";
             // 
             // numericUpDown2
             // 
@@ -886,7 +844,7 @@
             btnConfirmarPagoActual.FlatAppearance.BorderSize = 0;
             btnConfirmarPagoActual.FlatStyle = FlatStyle.Flat;
             btnConfirmarPagoActual.ForeColor = Color.White;
-            btnConfirmarPagoActual.Location = new Point(255, 272);
+            btnConfirmarPagoActual.Location = new Point(261, 390);
             btnConfirmarPagoActual.Name = "btnConfirmarPagoActual";
             btnConfirmarPagoActual.Size = new Size(185, 30);
             btnConfirmarPagoActual.TabIndex = 16;
@@ -897,7 +855,7 @@
             // 
             lblTotalPagoActual.AutoSize = true;
             lblTotalPagoActual.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblTotalPagoActual.Location = new Point(36, 276);
+            lblTotalPagoActual.Location = new Point(42, 394);
             lblTotalPagoActual.Name = "lblTotalPagoActual";
             lblTotalPagoActual.Size = new Size(184, 20);
             lblTotalPagoActual.TabIndex = 14;
@@ -964,12 +922,12 @@
             dgvPagos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvPagos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvPagos.Columns.AddRange(new DataGridViewColumn[] { colMedioPago, colMontoPago, colRecargoPago, colTotalPago, colQuitarPago });
-            dgvPagos.Location = new Point(20, 180);
+            dgvPagos.Location = new Point(26, 298);
             dgvPagos.Name = "dgvPagos";
             dgvPagos.ReadOnly = true;
             dgvPagos.RowHeadersVisible = false;
             dgvPagos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvPagos.Size = new Size(1506, 74);
+            dgvPagos.Size = new Size(1472, 74);
             dgvPagos.TabIndex = 7;
             // 
             // colMedioPago
@@ -1043,7 +1001,7 @@
             // 
             cboMedioPago.DropDownStyle = ComboBoxStyle.DropDownList;
             cboMedioPago.FormattingEnabled = true;
-            cboMedioPago.Location = new Point(20, 140);
+            cboMedioPago.Location = new Point(26, 139);
             cboMedioPago.Name = "cboMedioPago";
             cboMedioPago.Size = new Size(230, 23);
             cboMedioPago.TabIndex = 3;
@@ -1057,7 +1015,7 @@
             lblTituloPago.Name = "lblTituloPago";
             lblTituloPago.Size = new Size(66, 21);
             lblTituloPago.TabIndex = 0;
-            lblTituloPago.Text = "4. Pago";
+            lblTituloPago.Text = "5. Pago";
             // 
             // lblMedioPago
             // 
@@ -1092,6 +1050,7 @@
             pnlEncabezadoVenta.PerformLayout();
             pnlCliente.ResumeLayout(false);
             pnlCliente.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView2).EndInit();
             pnlProductos.ResumeLayout(false);
             pnlProductos.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvDetalleVenta).EndInit();
@@ -1129,7 +1088,6 @@
         private Label lblTituloNuevaVenta;
         private Panel pnlCliente;
         private Label lblClienteSeleccionado;
-        private FontAwesome.Sharp.IconButton btnBuscarCliente;
         private TextBox txtBuscarCliente;
         private Label lblTituloCliente;
         private Panel pnlProductos;
@@ -1151,6 +1109,8 @@
         private Label lblDescuentoAplicadoTexto;
         private Label lblSubtotal;
         private Label lblSubtotalTexto;
+        private Label lblEnvio;
+        private Label lblEnvioTexto;
         private Label lblPorcentaje;
         private NumericUpDown nudDescuento;
         private Label lblDescuento;
@@ -1180,14 +1140,6 @@
         private NumericUpDown numericUpDown1;
         private Label lblCostoEnvio;
         private FontAwesome.Sharp.IconButton BtnAgregarCliente;
-        private Label label5;
-        private Label label4;
-        private Label label3;
-        private Label label2;
-        private TextBox textBox4;
-        private TextBox textBox3;
-        private TextBox textBox2;
-        private TextBox textBox1;
         private Label lblFechaPago;
         private ComboBox cboCondicionPago;
         private Label lblCondicionPago;
@@ -1199,6 +1151,8 @@
         private Label lblPagosRegistrados;
         private Button btnConfirmarPagoActual;
         private NumericUpDown numericUpDown2;
-        
+        private DataGridView dataGridView2;
+        private ComboBox cboCantCuotas;
+        private Label label2;
     }
 }

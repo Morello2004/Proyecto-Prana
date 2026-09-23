@@ -101,7 +101,7 @@
             btnAlerta.Name = "btnAlerta";
             btnAlerta.Size = new Size(210, 46);
             btnAlerta.TabIndex = 9;
-            btnAlerta.Text = "ALERTA";
+            btnAlerta.Text = "HISTORIAL";
             btnAlerta.UseVisualStyleBackColor = true;
             btnAlerta.Click += btnAlerta_Click;
             // 

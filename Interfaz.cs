@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Prana.negocio;
 
 namespace Prana.Presentacion
 {
@@ -12,6 +13,9 @@ namespace Prana.Presentacion
         public Interfaz()
         {
             InitializeComponent();
+            btnAlerta.Visible = Permisos.TienePermiso(Permisos.ConsultarHistorial);
+            btnUsuarios.Visible = Permisos.TienePermiso(Permisos.GestionarUsuarios);
+            btnMediosPagos.Visible = Permisos.TienePermiso(Permisos.ModificarMediosPago);
         }
 
         // Abre un formulario dentro del panel derecho
@@ -104,6 +108,10 @@ namespace Prana.Presentacion
 
         private void btnMediosPagos_Click(object sender, EventArgs e)
         {
+            // Detiene el evento si el usuario no puede modificar medios de pago.
+            if (!Permisos.TienePermiso(Permisos.ModificarMediosPago)) return;
+
+            // Abre el ABM de medios de pago.
             AbrirFormulario(new frmMediosPagos());
         }
 
@@ -114,11 +122,28 @@ namespace Prana.Presentacion
 
         private void btnAlerta_Click(object sender, EventArgs e)
         {
-            AbrirFormulario(new frmAlertas());
+            // Comprueba si el usuario puede consultar el historial.
+            if (!Permisos.TienePermiso(Permisos.ConsultarHistorial))
+            {
+                // Informa que el usuario no tiene autorización.
+                MessageBox.Show("No tiene permisos para consultar el historial.", "Acceso denegado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Abre el historial de actividades.
+            AbrirFormulario(new frmHistorial());
         }
 
         private void btnUsuarios_Click(object sender, EventArgs e)
         {
+            // Detiene el evento si el usuario no puede gestionar usuarios.
+            if (!Permisos.TienePermiso(Permisos.GestionarUsuarios))
+            {
+                // Detiene la apertura del formulario.
+                return;
+            }
+
+            // Abre el formulario de gestión de usuarios.
             AbrirFormulario(new frmUsuarios());
         }
 

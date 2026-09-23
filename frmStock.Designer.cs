@@ -32,6 +32,10 @@
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
             label1 = new Label();
             pnlEncabezadostock = new Panel();
             lblstock = new Label();
@@ -39,6 +43,18 @@
             panel3 = new Panel();
             label30 = new Label();
             dataGridViewBusquedaProducto = new DataGridView();
+            colIdVariante = new DataGridViewTextBoxColumn();
+            colModelo = new DataGridViewTextBoxColumn();
+            colNombre2 = new DataGridViewTextBoxColumn();
+            colDescripcion = new DataGridViewTextBoxColumn();
+            colColorb = new DataGridViewTextBoxColumn();
+            colCondicion = new DataGridViewTextBoxColumn();
+            colPrecio = new DataGridViewTextBoxColumn();
+            colCosto2 = new DataGridViewTextBoxColumn();
+            colStockFisicoBusqueda = new DataGridViewTextBoxColumn();
+            colComprometidoBusqueda = new DataGridViewTextBoxColumn();
+            colModificar = new DataGridViewButtonColumn();
+            ColEliminar = new DataGridViewButtonColumn();
             comboBoxCateogria = new ComboBox();
             label2 = new Label();
             comboBoxCondicion = new ComboBox();
@@ -106,18 +122,6 @@
             label4 = new Label();
             label5 = new Label();
             btnAgregarVariante = new FontAwesome.Sharp.IconButton();
-            colIdVariante = new DataGridViewTextBoxColumn();
-            colModelo = new DataGridViewTextBoxColumn();
-            colNombre2 = new DataGridViewTextBoxColumn();
-            colDescripcion = new DataGridViewTextBoxColumn();
-            colColorb = new DataGridViewTextBoxColumn();
-            colCondicion = new DataGridViewTextBoxColumn();
-            colPrecio = new DataGridViewTextBoxColumn();
-            colCosto2 = new DataGridViewTextBoxColumn();
-            colStockFisicoBusqueda = new DataGridViewTextBoxColumn();
-            colComprometidoBusqueda = new DataGridViewTextBoxColumn();
-            colModificar = new DataGridViewButtonColumn();
-            ColEliminar = new DataGridViewButtonColumn();
             label28 = new Label();
             pnlEncabezadostock.SuspendLayout();
             pnlbuscarproducto.SuspendLayout();
@@ -160,7 +164,7 @@
             pnlEncabezadostock.Controls.Add(lblstock);
             pnlEncabezadostock.Location = new Point(6, 5);
             pnlEncabezadostock.Name = "pnlEncabezadostock";
-            pnlEncabezadostock.Size = new Size(1478, 65);
+            pnlEncabezadostock.Size = new Size(1268, 65);
             pnlEncabezadostock.TabIndex = 6;
             pnlEncabezadostock.Paint += pnlEncabezadostock_Paint;
             // 
@@ -179,6 +183,7 @@
             // pnlbuscarproducto
             // 
             pnlbuscarproducto.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            pnlbuscarproducto.AutoScroll = true;
             pnlbuscarproducto.AutoSize = true;
             pnlbuscarproducto.BackColor = Color.FromArgb(21, 30, 41);
             pnlbuscarproducto.Controls.Add(panel3);
@@ -196,7 +201,7 @@
             pnlbuscarproducto.ForeColor = Color.White;
             pnlbuscarproducto.Location = new Point(9, 76);
             pnlbuscarproducto.Name = "pnlbuscarproducto";
-            pnlbuscarproducto.Size = new Size(1503, 366);
+            pnlbuscarproducto.Size = new Size(1265, 366);
             pnlbuscarproducto.TabIndex = 7;
             pnlbuscarproducto.Paint += pnlCliente_Paint;
             // 
@@ -208,7 +213,7 @@
             panel3.Controls.Add(label30);
             panel3.Location = new Point(3, 0);
             panel3.Name = "panel3";
-            panel3.Size = new Size(1492, 65);
+            panel3.Size = new Size(1254, 65);
             panel3.TabIndex = 49;
             panel3.Paint += panel3_Paint;
             // 
@@ -227,28 +232,116 @@
             // 
             dataGridViewBusquedaProducto.AllowUserToAddRows = false;
             dataGridViewBusquedaProducto.AllowUserToDeleteRows = false;
+            dataGridViewCellStyle1.ForeColor = Color.Black;
+            dataGridViewBusquedaProducto.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             dataGridViewBusquedaProducto.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             dataGridViewBusquedaProducto.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridViewBusquedaProducto.BackgroundColor = SystemColors.Control;
             dataGridViewBusquedaProducto.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewBusquedaProducto.Columns.AddRange(new DataGridViewColumn[] { colIdVariante, colModelo, colNombre2, colDescripcion, colColorb, colCondicion, colPrecio, colCosto2, colStockFisicoBusqueda, colComprometidoBusqueda, colModificar, ColEliminar });
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Window;
-            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle1.ForeColor = Color.White;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
-            dataGridViewBusquedaProducto.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = SystemColors.Window;
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle2.ForeColor = Color.White;
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            dataGridViewBusquedaProducto.DefaultCellStyle = dataGridViewCellStyle2;
             dataGridViewBusquedaProducto.EditMode = DataGridViewEditMode.EditProgrammatically;
             dataGridViewBusquedaProducto.Location = new Point(8, 160);
             dataGridViewBusquedaProducto.MultiSelect = false;
             dataGridViewBusquedaProducto.Name = "dataGridViewBusquedaProducto";
+            dataGridViewBusquedaProducto.RowHeadersWidth = 51;
             dataGridViewBusquedaProducto.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridViewBusquedaProducto.Size = new Size(1492, 150);
+            dataGridViewBusquedaProducto.Size = new Size(1217, 150);
             dataGridViewBusquedaProducto.TabIndex = 48;
             dataGridViewBusquedaProducto.CellClick += dataGridViewBusquedaProducto_CellClick;
             dataGridViewBusquedaProducto.CellContentClick += dataGridViewBusquedaProducto_CellContentClick;
+            // 
+            // colIdVariante
+            // 
+            colIdVariante.HeaderText = "";
+            colIdVariante.MinimumWidth = 6;
+            colIdVariante.Name = "colIdVariante";
+            colIdVariante.Visible = false;
+            // 
+            // colModelo
+            // 
+            colModelo.DataPropertyName = "Modelo";
+            colModelo.HeaderText = "Modelo";
+            colModelo.MinimumWidth = 6;
+            colModelo.Name = "colModelo";
+            // 
+            // colNombre2
+            // 
+            colNombre2.HeaderText = "Producto";
+            colNombre2.MinimumWidth = 6;
+            colNombre2.Name = "colNombre2";
+            // 
+            // colDescripcion
+            // 
+            colDescripcion.HeaderText = "Descripcion";
+            colDescripcion.MinimumWidth = 6;
+            colDescripcion.Name = "colDescripcion";
+            // 
+            // colColorb
+            // 
+            colColorb.DataPropertyName = "Color";
+            colColorb.HeaderText = "Color";
+            colColorb.MinimumWidth = 6;
+            colColorb.Name = "colColorb";
+            // 
+            // colCondicion
+            // 
+            colCondicion.DataPropertyName = "Condicion";
+            colCondicion.HeaderText = "Condicion";
+            colCondicion.MinimumWidth = 6;
+            colCondicion.Name = "colCondicion";
+            // 
+            // colPrecio
+            // 
+            colPrecio.DataPropertyName = "Precio";
+            colPrecio.HeaderText = "Precio";
+            colPrecio.MinimumWidth = 6;
+            colPrecio.Name = "colPrecio";
+            // 
+            // colCosto2
+            // 
+            colCosto2.HeaderText = "Costo";
+            colCosto2.MinimumWidth = 6;
+            colCosto2.Name = "colCosto2";
+            // 
+            // colStockFisicoBusqueda
+            // 
+            colStockFisicoBusqueda.DataPropertyName = "StockFisico";
+            colStockFisicoBusqueda.HeaderText = "Stock fisico";
+            colStockFisicoBusqueda.MinimumWidth = 6;
+            colStockFisicoBusqueda.Name = "colStockFisicoBusqueda";
+            // 
+            // colComprometidoBusqueda
+            // 
+            colComprometidoBusqueda.DataPropertyName = "StockComprometido";
+            colComprometidoBusqueda.HeaderText = "Comprometido";
+            colComprometidoBusqueda.MinimumWidth = 6;
+            colComprometidoBusqueda.Name = "colComprometidoBusqueda";
+            // 
+            // colModificar
+            // 
+            colModificar.HeaderText = "Accion";
+            colModificar.MinimumWidth = 6;
+            colModificar.Name = "colModificar";
+            colModificar.Resizable = DataGridViewTriState.True;
+            colModificar.SortMode = DataGridViewColumnSortMode.Automatic;
+            colModificar.Text = "Modificar";
+            // 
+            // ColEliminar
+            // 
+            ColEliminar.HeaderText = "Accion";
+            ColEliminar.MinimumWidth = 6;
+            ColEliminar.Name = "ColEliminar";
+            ColEliminar.SortMode = DataGridViewColumnSortMode.Automatic;
+            ColEliminar.Text = "Eliminar";
+            ColEliminar.UseColumnTextForButtonValue = true;
             // 
             // comboBoxCateogria
             // 
@@ -391,7 +484,7 @@
             panel5.Controls.Add(label14);
             panel5.Location = new Point(3, 1095);
             panel5.Name = "panel5";
-            panel5.Size = new Size(1492, 65);
+            panel5.Size = new Size(1271, 65);
             panel5.TabIndex = 54;
             // 
             // label14
@@ -428,7 +521,7 @@
             PnlNuevoStock.Controls.Add(label16);
             PnlNuevoStock.Location = new Point(5, 1095);
             PnlNuevoStock.Name = "PnlNuevoStock";
-            PnlNuevoStock.Size = new Size(1519, 517);
+            PnlNuevoStock.Size = new Size(1269, 517);
             PnlNuevoStock.TabIndex = 9;
             // 
             // textBoxRtoProveedor
@@ -535,13 +628,28 @@
             // 
             dataGridViewDetalleIngreso.AllowUserToAddRows = false;
             dataGridViewDetalleIngreso.AllowUserToDeleteRows = false;
+            dataGridViewCellStyle3.ForeColor = Color.Black;
+            dataGridViewCellStyle3.SelectionBackColor = Color.Transparent;
+            dataGridViewCellStyle3.SelectionForeColor = Color.Black;
+            dataGridViewDetalleIngreso.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
             dataGridViewDetalleIngreso.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             dataGridViewDetalleIngreso.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridViewDetalleIngreso.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewDetalleIngreso.Columns.AddRange(new DataGridViewColumn[] { colProducto, idVariante, colVarianteIngreso, colCantidad, colCosto, colTotal });
+            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = SystemColors.Window;
+            dataGridViewCellStyle5.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle5.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle5.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = SystemColors.Desktop;
+            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.False;
+            dataGridViewDetalleIngreso.DefaultCellStyle = dataGridViewCellStyle5;
             dataGridViewDetalleIngreso.Location = new Point(10, 271);
             dataGridViewDetalleIngreso.Name = "dataGridViewDetalleIngreso";
-            dataGridViewDetalleIngreso.Size = new Size(1492, 150);
+            dataGridViewDetalleIngreso.RowHeadersWidth = 51;
+            dataGridViewCellStyle6.ForeColor = Color.Black;
+            dataGridViewDetalleIngreso.RowsDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewDetalleIngreso.Size = new Size(1242, 150);
             dataGridViewDetalleIngreso.TabIndex = 47;
             dataGridViewDetalleIngreso.CellContentClick += dataGridViewDetalleIngreso_CellContentClick;
             dataGridViewDetalleIngreso.CellEndEdit += dataGridViewDetalleIngreso_CellEndEdit;
@@ -550,36 +658,42 @@
             // 
             colProducto.DataPropertyName = "NombreProducto";
             colProducto.HeaderText = "producto";
+            colProducto.MinimumWidth = 6;
             colProducto.Name = "colProducto";
             // 
             // idVariante
             // 
             idVariante.DataPropertyName = "IdVariante";
             idVariante.HeaderText = "colId";
+            idVariante.MinimumWidth = 6;
             idVariante.Name = "idVariante";
             idVariante.Visible = false;
             // 
             // colVarianteIngreso
             // 
             colVarianteIngreso.HeaderText = "Ingreso";
+            colVarianteIngreso.MinimumWidth = 6;
             colVarianteIngreso.Name = "colVarianteIngreso";
             // 
             // colCantidad
             // 
             colCantidad.HeaderText = "Cantidad";
+            colCantidad.MinimumWidth = 6;
             colCantidad.Name = "colCantidad";
             // 
             // colCosto
             // 
             colCosto.HeaderText = "Costo unitario";
+            colCosto.MinimumWidth = 6;
             colCosto.Name = "colCosto";
             // 
             // colTotal
             // 
-            dataGridViewCellStyle2.Format = "C2";
-            dataGridViewCellStyle2.NullValue = null;
-            colTotal.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Format = "C2";
+            dataGridViewCellStyle4.NullValue = null;
+            colTotal.DefaultCellStyle = dataGridViewCellStyle4;
             colTotal.HeaderText = "Total";
+            colTotal.MinimumWidth = 6;
             colTotal.Name = "colTotal";
             colTotal.ReadOnly = true;
             // 
@@ -675,7 +789,7 @@
             panel2.ForeColor = Color.White;
             panel2.Location = new Point(6, 448);
             panel2.Name = "panel2";
-            panel2.Size = new Size(1478, 641);
+            panel2.Size = new Size(1268, 641);
             panel2.TabIndex = 8;
             panel2.Paint += panel2_Paint;
             // 
@@ -706,7 +820,7 @@
             panel4.Controls.Add(label9);
             panel4.Location = new Point(0, 3);
             panel4.Name = "panel4";
-            panel4.Size = new Size(1492, 65);
+            panel4.Size = new Size(1282, 65);
             panel4.TabIndex = 50;
             // 
             // label9
@@ -783,19 +897,20 @@
             dgvVariantes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvVariantes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvVariantes.Columns.AddRange(new DataGridViewColumn[] { CondicionProducto, colColor, Colmodelo2, Precio, colStockFisico, ColComprometido, ColDisponible, NombreProducto });
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = SystemColors.Window;
-            dataGridViewCellStyle3.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle3.ForeColor = Color.White;
-            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
-            dgvVariantes.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = SystemColors.Window;
+            dataGridViewCellStyle7.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle7.ForeColor = Color.White;
+            dataGridViewCellStyle7.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.False;
+            dgvVariantes.DefaultCellStyle = dataGridViewCellStyle7;
             dgvVariantes.Location = new Point(6, 330);
             dgvVariantes.MultiSelect = false;
             dgvVariantes.Name = "dgvVariantes";
+            dgvVariantes.RowHeadersWidth = 51;
             dgvVariantes.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvVariantes.Size = new Size(1360, 150);
+            dgvVariantes.Size = new Size(1150, 150);
             dgvVariantes.TabIndex = 32;
             dgvVariantes.CellContentClick += dgvVariantes_CellContentClick;
             // 
@@ -803,6 +918,7 @@
             // 
             CondicionProducto.DataPropertyName = "CondicionProducto";
             CondicionProducto.HeaderText = "Condicion";
+            CondicionProducto.MinimumWidth = 6;
             CondicionProducto.Name = "CondicionProducto";
             CondicionProducto.ReadOnly = true;
             // 
@@ -810,12 +926,14 @@
             // 
             colColor.DataPropertyName = "Color";
             colColor.HeaderText = "Color";
+            colColor.MinimumWidth = 6;
             colColor.Name = "colColor";
             colColor.ReadOnly = true;
             // 
             // Colmodelo2
             // 
             Colmodelo2.HeaderText = "Modelo";
+            Colmodelo2.MinimumWidth = 6;
             Colmodelo2.Name = "Colmodelo2";
             Colmodelo2.ReadOnly = true;
             // 
@@ -823,24 +941,28 @@
             // 
             Precio.DataPropertyName = "Precio";
             Precio.HeaderText = "Precio";
+            Precio.MinimumWidth = 6;
             Precio.Name = "Precio";
             Precio.ReadOnly = true;
             // 
             // colStockFisico
             // 
             colStockFisico.HeaderText = "Stock Fisico";
+            colStockFisico.MinimumWidth = 6;
             colStockFisico.Name = "colStockFisico";
             colStockFisico.ReadOnly = true;
             // 
             // ColComprometido
             // 
             ColComprometido.HeaderText = "Comprometido";
+            ColComprometido.MinimumWidth = 6;
             ColComprometido.Name = "ColComprometido";
             ColComprometido.ReadOnly = true;
             // 
             // ColDisponible
             // 
             ColDisponible.HeaderText = "Disponible";
+            ColDisponible.MinimumWidth = 6;
             ColDisponible.Name = "ColDisponible";
             ColDisponible.ReadOnly = true;
             // 
@@ -848,6 +970,7 @@
             // 
             NombreProducto.DataPropertyName = "NombreProducto";
             NombreProducto.HeaderText = "Nombre";
+            NombreProducto.MinimumWidth = 6;
             NombreProducto.Name = "NombreProducto";
             // 
             // label13
@@ -997,79 +1120,6 @@
             btnAgregarVariante.Text = "Agregar variante";
             btnAgregarVariante.UseVisualStyleBackColor = false;
             btnAgregarVariante.Click += btnAgregarVariante_Click;
-            // 
-            // colIdVariante
-            // 
-            colIdVariante.HeaderText = "";
-            colIdVariante.Name = "colIdVariante";
-            colIdVariante.Visible = false;
-            // 
-            // colModelo
-            // 
-            colModelo.DataPropertyName = "Modelo";
-            colModelo.HeaderText = "Modelo";
-            colModelo.Name = "colModelo";
-            // 
-            // colNombre2
-            // 
-            colNombre2.HeaderText = "Producto";
-            colNombre2.Name = "colNombre2";
-            // 
-            // colDescripcion
-            // 
-            colDescripcion.HeaderText = "Descripcion";
-            colDescripcion.Name = "colDescripcion";
-            // 
-            // colColorb
-            // 
-            colColorb.DataPropertyName = "Color";
-            colColorb.HeaderText = "Color";
-            colColorb.Name = "colColorb";
-            // 
-            // colCondicion
-            // 
-            colCondicion.DataPropertyName = "Condicion";
-            colCondicion.HeaderText = "Condicion";
-            colCondicion.Name = "colCondicion";
-            // 
-            // colPrecio
-            // 
-            colPrecio.DataPropertyName = "Precio";
-            colPrecio.HeaderText = "Precio";
-            colPrecio.Name = "colPrecio";
-            // 
-            // colCosto2
-            // 
-            colCosto2.HeaderText = "Costo";
-            colCosto2.Name = "colCosto2";
-            // 
-            // colStockFisicoBusqueda
-            // 
-            colStockFisicoBusqueda.DataPropertyName = "StockFisico";
-            colStockFisicoBusqueda.HeaderText = "Stock fisico";
-            colStockFisicoBusqueda.Name = "colStockFisicoBusqueda";
-            // 
-            // colComprometidoBusqueda
-            // 
-            colComprometidoBusqueda.DataPropertyName = "StockComprometido";
-            colComprometidoBusqueda.HeaderText = "Comprometido";
-            colComprometidoBusqueda.Name = "colComprometidoBusqueda";
-            // 
-            // colModificar
-            // 
-            colModificar.HeaderText = "Accion";
-            colModificar.Name = "colModificar";
-            colModificar.Resizable = DataGridViewTriState.True;
-            colModificar.SortMode = DataGridViewColumnSortMode.Automatic;
-            colModificar.Text = "Modificar";
-            // 
-            // ColEliminar
-            // 
-            ColEliminar.HeaderText = "Accion";
-            ColEliminar.Name = "ColEliminar";
-            ColEliminar.SortMode = DataGridViewColumnSortMode.Automatic;
-            ColEliminar.Text = "Eliminar";
-            ColEliminar.UseColumnTextForButtonValue = true;
             // 
             // frmStock
             // 

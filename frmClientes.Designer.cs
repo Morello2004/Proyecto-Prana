@@ -78,6 +78,7 @@
             panel1.AutoScroll = true;
             panel1.AutoSize = true;
             panel1.BackColor = Color.FromArgb(13, 19, 27);
+            panel1.Controls.Add(PnlBusquedaCliente);
             panel1.Controls.Add(panel2);
             panel1.Controls.Add(pnlEncabezadoClientes);
             panel1.Location = new Point(2, 1);
@@ -115,10 +116,15 @@
             // 
             btn_CrearCliente.Location = new Point(42, 220);
             btn_CrearCliente.Name = "btn_CrearCliente";
-            btn_CrearCliente.Size = new Size(109, 23);
+            btn_CrearCliente.Size = new Size(145, 34);
+            btn_CrearCliente.BackColor = Color.DodgerBlue;
+            btn_CrearCliente.ForeColor = Color.White;
+            btn_CrearCliente.FlatStyle = FlatStyle.Flat;
+            btn_CrearCliente.FlatAppearance.BorderSize = 0;
+            btn_CrearCliente.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btn_CrearCliente.TabIndex = 44;
             btn_CrearCliente.Text = "Crear cliente";
-            btn_CrearCliente.UseVisualStyleBackColor = true;
+            btn_CrearCliente.UseVisualStyleBackColor = false;
             btn_CrearCliente.Click += btn_CrearCliente_Click;
             // 
             // Localidad
@@ -173,6 +179,22 @@
             dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
             dgv_listadoClientes.DefaultCellStyle = dataGridViewCellStyle4;
+            // Fija el contraste para que no herede el texto blanco del formulario contenedor.
+            dgv_listadoClientes.ForeColor = Color.FromArgb(21, 30, 41);
+            dgv_listadoClientes.BackgroundColor = Color.FromArgb(13, 19, 27);
+            dgv_listadoClientes.DefaultCellStyle.ForeColor = Color.FromArgb(21, 30, 41);
+            dgv_listadoClientes.DefaultCellStyle.BackColor = Color.White;
+            dgv_listadoClientes.DefaultCellStyle.SelectionForeColor = Color.White;
+            dgv_listadoClientes.DefaultCellStyle.SelectionBackColor = Color.FromArgb(35, 100, 166);
+            dgv_listadoClientes.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(236, 242, 249);
+            dgv_listadoClientes.EnableHeadersVisualStyles = false;
+            dgv_listadoClientes.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(37, 52, 70);
+            dgv_listadoClientes.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgv_listadoClientes.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.FromArgb(37, 52, 70);
+            dgv_listadoClientes.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.White;
+            dgv_listadoClientes.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            dgv_listadoClientes.RowTemplate.Height = 30;
+            dgv_listadoClientes.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgv_listadoClientes.Location = new Point(423, 31);
             dgv_listadoClientes.Name = "dgv_listadoClientes";
             dgv_listadoClientes.Size = new Size(1009, 194);
@@ -415,11 +437,14 @@
             // 
             // colAccion
             // 
-            colAccion.HeaderText = "Accion";
+            colAccion.HeaderText = "Acciones";
             colAccion.Name = "colAccion";
             colAccion.Resizable = DataGridViewTriState.True;
             colAccion.SortMode = DataGridViewColumnSortMode.Automatic;
-            colAccion.Text = "Modificar";
+            colAccion.Text = "Modificar cliente";
+            colAccion.Width = 145;
+            colAccion.DefaultCellStyle.NullValue = "Modificar cliente";
+            colAccion.DefaultCellStyle.ForeColor = Color.FromArgb(21, 30, 41);
             // 
             // colFechaRegistro
             // 
@@ -446,7 +471,6 @@
             AutoScroll = true;
             AutoSize = true;
             ClientSize = new Size(1460, 534);
-            Controls.Add(PnlBusquedaCliente);
             Controls.Add(panel1);
             Name = "frmClientes";
             Text = "frmClientes";

@@ -17,6 +17,9 @@ namespace Prana.Entidades
         public int IdLocalidad { get; set; }
         public Localidad Localidad { get; set; } = new Localidad();
         public decimal SaldoFavor { get; set; }
+        // Saldo de ventas sin cancelar; se consulta, no se edita en el cliente.
+        public decimal DeudaPendiente { get; set; }
+        public string EstadoCuenta => DeudaPendiente > 0 ? "Con deuda" : "Sin deuda";
 
         // devuelve el nombre de la localidad para mostrarlo en el grid
         // permite mostrar y modificar el nombre de la localidad desde el grid

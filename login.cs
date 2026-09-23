@@ -53,18 +53,19 @@ namespace Prana.Presentacion
 
                 if (usuario == null)
                 {
-                    MessageBox.Show(
-                        "Nombre de usuario o contraseña incorrectos.",
-                        "Inicio de sesión",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning
-                    );
+                    MessageBox.Show( "Nombre de usuario o contraseña incorrectos.", "Inicio de sesión", MessageBoxButtons.OK, MessageBoxIcon.Warning );
 
                     // Borra solamente la contraseña para volver a intentarlo
                     txtclave.Clear();
-
+                   
                     return;
                 }
+
+                // Guarda el usuario autenticado en la sesión actual
+                SesionActual.IniciarSesion(usuario);
+
+               
+
                 // abre un nuevo formulario el cual es el inicio
                 Interfaz form = new Interfaz();
 
@@ -96,6 +97,8 @@ namespace Prana.Presentacion
         //el formulario que se esta cerrando y e Windows Forms lo crea automáticamente antes de cerrar el formulario tiene información sobre el cierre y permite controlarlo
         private void frm_closing(object? sender, FormClosingEventArgs e)
         {
+            SesionActual.CerrarSesion();
+
             //pone en blanco campos de usuario y clave
             txtclave.Text = "";
             txtusuario.Text = "";

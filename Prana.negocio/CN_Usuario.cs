@@ -70,6 +70,25 @@ namespace Prana.negocio
             // Devuelve el hash que posteriormente debe almacenarse en la columna hash_contrasena de SQL Server.
             return BCrypt.Net.BCrypt.HashPassword(contrasena);
         }
+
+        // Valida los datos, genera el hash y crea el usuario.
+        public void CrearUsuario(string nombreUsuario, string contrasena, int idRolUsuario)
+        {
+            // Comprueba que el nombre no esté vacío.
+            if (string.IsNullOrWhiteSpace(nombreUsuario)) throw new ArgumentException("El nombre de usuario es obligatorio.");
+
+            // Comprueba que la contraseña no esté vacía.
+            if (string.IsNullOrWhiteSpace(contrasena)) throw new ArgumentException("La contraseña es obligatoria.");
+
+            // Comprueba que el rol sea Administrador o Vendedor.
+            if (idRolUsuario != 1 && idRolUsuario != 2) throw new ArgumentException("El rol seleccionado no es válido.");
+
+            // Genera el hash BCrypt de la contraseña.
+            string hashContrasena = GenerarHash(contrasena);
+
+            // Guarda el usuario sin email mediante la capa de datos.
+            datosUsuario.CrearUsuario(nombreUsuario, hashContrasena, idRolUsuario);
+        }
     }
 }
   

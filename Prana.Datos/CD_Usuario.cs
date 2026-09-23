@@ -57,13 +57,41 @@ namespace Prana.Datos
             usuario usuario = new usuario {
                 idUsuario = lector.GetInt32(lector.GetOrdinal("id_usuario")),
             nombreUsuario = lector.GetString(lector.GetOrdinal("nombre_usuario")),
-            mail = lector.GetString(lector.GetOrdinal("email")),
+                // Si email es NULL en la base, guarda un texto vacío en el objeto
+                mail = lector.IsDBNull(lector.GetOrdinal("email")) ? string.Empty : lector.GetString(lector.GetOrdinal("email")),
             contraseña = lector.GetString(lector.GetOrdinal("hash_contrasena")),
                 IdRolUsuario = lector.GetInt32(lector.GetOrdinal("id_rol_usuario")),
                 activo = lector.GetBoolean(lector.GetOrdinal("activo"))
             };
 
             return usuario;
+        }
+
+        public void CrearUsuario(string nombreUsuario, string hashContrasena, int idRolUsuario)
+        {
+            // Define la consulta parametrizada para crear el usuario.
+            string consulta = @" INSERT INTO Usuario( nombre_usuario,email,hash_contrasena, id_rol_usuario,activo) VALUES(@NombreUsuario, NULL, @HashContrasena, @IdRolUsuario, 1);";
+
+            // Crea la conexión con la base de datos.
+            using SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena());
+
+            // Prepara la consulta SQL.
+            using SqlCommand comando = new SqlCommand(consulta, conexion);
+
+            // Envía el nombre de usuario como parámetro.
+            comando.Parameters.Add("@NombreUsuario", SqlDbType.NVarChar, 100).Value = nombreUsuario;
+
+            // Envía el hash de la contraseña como parámetro.
+            comando.Parameters.Add("@HashContrasena", SqlDbType.NVarChar, 255).Value = hashContrasena;
+
+            // Envía el rol seleccionado como parámetro.
+            comando.Parameters.Add("@IdRolUsuario", SqlDbType.Int).Value = idRolUsuario;
+
+            // Abre la conexión.
+            conexion.Open();
+
+            // Ejecuta la inserción.
+            comando.ExecuteNonQuery();
         }
     }
 }

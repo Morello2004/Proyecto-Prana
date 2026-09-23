@@ -1,60 +1,80 @@
-﻿using System;
-using System.Windows.Forms;
+using Prana.Entidades;
 using Prana.negocio;
+using System.Globalization;
 
 namespace Prana.Presentacion
 {
     public partial class frmPanelPrincipal : Form
     {
-        private readonly CN_Venta cnVenta = new CN_Venta();
+        private readonly CN_Venta negocioVentas = new();
+        private readonly CultureInfo moneda = CultureInfo.GetCultureInfo("es-AR");
         public frmPanelPrincipal()
         {
             InitializeComponent();
-        }
-
-        private void frmPanelPrincipal_Load(object sender, EventArgs e)
-        {
-            // Evita que el DataGridView cree columnas automáticamente
-            dgvUltimasVentas.AutoGenerateColumns = false;
-
-            colNumeroVenta.DataPropertyName = "IdVenta";
-            colFecha.DataPropertyName = "Fecha";
-            colTotal.DataPropertyName = "Total";
-            colEstado.DataPropertyName = "Estado";
-            colCliente.DataPropertyName = "NombreCompletoCliente";
-
-            // Carga en el DataGridView las ventas obtenidas desde la capa de negocio
-            dgvUltimasVentas.DataSource = cnVenta.ObtenerUltimasVentas();
-        }
-
-        private void label4_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label15_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void flpAlertas_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void iconButton2_Click(object sender, EventArgs e)
-        {
-            // Busca la ventana principal que contiene este formulario
-            if (Parent?.FindForm() is Interfaz interfaz)
+            foreach (var columna in new[] { colTotal, colPagado, colSaldo })
             {
-                // Reemplaza el panel principal por el formulario Nueva Venta
-                interfaz.AbrirFormulario(new frmNuevaVenta());
+                columna.DefaultCellStyle.FormatProvider = moneda;
+                columna.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             }
         }
+        private void frmPanelPrincipal_Load(object? sender, EventArgs e) => CargarVentas();
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        // Presentación solo consulta negocio y enlaza resultados; no calcula deudas.
+        private void CargarVentas()
         {
-
+            try
+            {
+                UseWaitCursor = true;
+                var ventas = negocioVentas.BuscarVentas(txtBuscarVenta.Text);
+                dgvUltimasVentas.DataSource = ventas;
+                lblResultados.Text = ventas.Count == 0 ? "No se encontraron ventas" :
+                    string.IsNullOrWhiteSpace(txtBuscarVenta.Text) ? $"Últimas 10 ventas · {ventas.Count} registradas" : $"Resultados de búsqueda · {ventas.Count} ventas";
+                var resumen = negocioVentas.ObtenerResumen();
+                lblTotalHoy.Text = resumen.TotalHoy.ToString("C2", moneda);
+                lblCantidadHoy.Text = $"{resumen.CantidadHoy} operaciones registradas hoy";
+                lblTotalPendiente.Text = resumen.SaldoPendiente.ToString("C2", moneda);
+                lblCantidadPendientes.Text = resumen.VentasPendientes.ToString();
+            }
+            catch (Exception ex)
+            {
+                dgvUltimasVentas.DataSource = null;
+                lblResultados.Text = "No se pudieron cargar las ventas. Presione Actualizar para reintentar.";
+                lblTotalHoy.Text = lblTotalPendiente.Text = lblCantidadPendientes.Text = "—";
+                lblCantidadHoy.Text = "Sin datos disponibles";
+                MessageBox.Show(this, ex.Message, "Consulta de ventas", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally { UseWaitCursor = false; }
+        }
+        private void btnBuscar_Click(object? sender, EventArgs e) => CargarVentas();
+        private void btnUltimas_Click(object? sender, EventArgs e)
+        {
+            txtBuscarVenta.Clear();
+            CargarVentas();
+        }
+        private void txtBuscarVenta_KeyDown(object? sender, KeyEventArgs e)
+        {
+            if (e.KeyCode != Keys.Enter) return;
+            e.SuppressKeyPress = true;
+            CargarVentas();
+        }
+        private void btnNuevaVenta_Click(object? sender, EventArgs e)
+        {
+            if (Parent?.FindForm() is Interfaz interfaz) interfaz.AbrirFormulario(new frmNuevaVenta());
+        }
+        private void btnStock_Click(object? sender, EventArgs e)
+        {
+            if (Parent?.FindForm() is Interfaz interfaz) interfaz.AbrirFormulario(new frmStock());
+        }
+        private void dgvUltimasVentas_SelectionChanged(object? sender, EventArgs e)
+        {
+            lblDetalle.Text = dgvUltimasVentas.CurrentRow?.DataBoundItem is venta seleccionada
+                ? $"Venta #{seleccionada.IdVenta} · Productos: {seleccionada.Productos}"
+                : "Seleccione una venta para ver sus productos.";
+        }
+        private void dgvUltimasVentas_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.ColumnIndex == colSaldo.Index && e.Value is decimal saldo && saldo > 0)
+                e.CellStyle!.ForeColor = Color.FromArgb(165, 72, 0);
         }
     }
 }

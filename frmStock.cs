@@ -17,6 +17,9 @@ namespace Prana.Presentacion
         // Lista separada para el detalle de ingreso (no enlazada a dgvVariantes)
         private readonly BindingList<VarianteProducto> ingresoTemporales = new BindingList<VarianteProducto>();
 
+        // Registra las operaciones exitosas realizadas sobre el stock.
+        private readonly CN_LogActividad cnLogActividad = new CN_LogActividad();
+
         // Guarda el producto que actualmente se está modificando
         private int idProductoEnEdicion = 0;
 
@@ -432,6 +435,9 @@ namespace Prana.Presentacion
             // Verifica el resultado
             if (guardado)
             {
+                // Registra la creación exitosa del producto.
+                cnLogActividad.Registrar("CREAR_PRODUCTO", "Producto", null, "Producto creado: " + nuevoProducto.NombreProducto);
+
                 MessageBox.Show(
                     "Producto y variantes guardados correctamente",
                     "Producto guardado",
@@ -741,6 +747,9 @@ namespace Prana.Presentacion
                         return;
                     }
 
+                    // Registra la desactivación exitosa de la variante.
+                    cnLogActividad.Registrar("DESACTIVAR_VARIANTE", "VarianteProducto", idVariante, "Variante desactivada.");
+
                     // Informa que la variante fue desactivada
                     MessageBox.Show(
                         "Variante desactivada correctamente."
@@ -915,6 +924,9 @@ namespace Prana.Presentacion
 
                     return;
                 }
+
+                // Registra la modificación exitosa del producto o precio.
+                cnLogActividad.Registrar("MODIFICAR_PRODUCTO", "VarianteProducto", idVarianteModificar, "Producto: " + nombreProducto + " | Precio nuevo: " + precio + " | Costo nuevo: " + costo);
 
                 // Vuelve a colocar el texto Modificar
                 fila.Cells["colModificar"].Value = "Modificar";
@@ -1159,6 +1171,9 @@ namespace Prana.Presentacion
 
             if (ok)
             {
+                // Registra el ingreso exitoso de stock.
+                cnLogActividad.Registrar("REGISTRAR_INGRESO_STOCK", "IngresoStock", idProveedor, "Remito: " + remito + " | Cantidad de variantes: " + detalles.Count);
+
                 MessageBox.Show("Ingreso registrado correctamente.");
                 ingresoTemporales.Clear();
                 dataGridViewDetalleIngreso.Refresh();

@@ -41,8 +41,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Plantillas\logo-prana.txt" LogicalName="Prana.LogoComprobante" />
     <Compile Remove="Prana.Datos\**\*.cs" />
     <Compile Remove="Prana.Entidades\**\*.cs" />
     <Compile Remove="Prana.negocio\**\*.cs" />
+    <Compile Remove="Pruebas\**\*.cs" />
   </ItemGroup>
 </Project>

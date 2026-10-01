@@ -40,6 +40,7 @@ namespace Prana.negocio
         // Valida el nombre y los porcentajes de recargo.
         private void Validar(MedioPago medio)
         {
+            if (!TiposCaja.Todos.Contains(medio.TipoCaja)) throw new ArgumentException("Seleccione la clasificación del medio para el cierre de caja.");
             if (string.IsNullOrWhiteSpace(medio.NombreMedioPago)) throw new ArgumentException("El nombre del medio de pago es obligatorio.");
             if (medio.RecargoMedioPago < 0 || medio.Recargo3 < 0 || medio.Recargo6 < 0 || medio.Recargo9 < 0 || medio.Recargo12 < 0) throw new ArgumentException("Los recargos no pueden ser negativos.");
         }

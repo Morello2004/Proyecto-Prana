@@ -11,7 +11,7 @@ namespace Prana.Datos
         // Obtiene los medios de pago activos.
         public List<MedioPago> ObtenerTodos()
         {
-            string consulta = "SELECT id_medio_pago, nombre_medio_pago, ISNULL(recargo_medio_pago, 0), recargo_3, recargo_6, recargo_9, recargo_12, activo FROM dbo.Medio_Pago WHERE activo = 1 ORDER BY nombre_medio_pago;";
+            string consulta = "SELECT id_medio_pago, nombre_medio_pago, ISNULL(recargo_medio_pago, 0), recargo_3, recargo_6, recargo_9, recargo_12, activo, tipo_caja FROM dbo.Medio_Pago WHERE activo = 1 ORDER BY nombre_medio_pago;";
             using SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena());
             using SqlCommand comando = new SqlCommand(consulta, conexion);
             conexion.Open();
@@ -19,7 +19,7 @@ namespace Prana.Datos
             List<MedioPago> medios = new List<MedioPago>();
             while (lector.Read())
             {
-                medios.Add(new MedioPago { IdMedioPago = lector.GetInt32(0), NombreMedioPago = lector.GetString(1), RecargoMedioPago = lector.GetDecimal(2), Recargo3 = lector.GetDecimal(3), Recargo6 = lector.GetDecimal(4), Recargo9 = lector.GetDecimal(5), Recargo12 = lector.GetDecimal(6), Activo = lector.GetBoolean(7) });
+                medios.Add(new MedioPago { IdMedioPago = lector.GetInt32(0), NombreMedioPago = lector.GetString(1), RecargoMedioPago = lector.GetDecimal(2), Recargo3 = lector.GetDecimal(3), Recargo6 = lector.GetDecimal(4), Recargo9 = lector.GetDecimal(5), Recargo12 = lector.GetDecimal(6), Activo = lector.GetBoolean(7), TipoCaja = lector.GetString(8) });
             }
             return medios;
         }
@@ -27,14 +27,14 @@ namespace Prana.Datos
         // Inserta un medio de pago nuevo.
         public void Crear(MedioPago medio)
         {
-            string consulta = "INSERT INTO dbo.Medio_Pago (nombre_medio_pago, recargo_medio_pago, recargo_3, recargo_6, recargo_9, recargo_12, activo) VALUES (@Nombre, @Recargo, @Recargo3, @Recargo6, @Recargo9, @Recargo12, 1);";
+            string consulta = "INSERT INTO dbo.Medio_Pago (nombre_medio_pago, recargo_medio_pago, recargo_3, recargo_6, recargo_9, recargo_12, activo, tipo_caja) VALUES (@Nombre, @Recargo, @Recargo3, @Recargo6, @Recargo9, @Recargo12, 1, @TipoCaja);";
             EjecutarCambio(consulta, medio, false);
         }
 
         // Actualiza un medio de pago existente.
         public void Modificar(MedioPago medio)
         {
-            string consulta = "UPDATE dbo.Medio_Pago SET nombre_medio_pago = @Nombre, recargo_medio_pago = @Recargo, recargo_3 = @Recargo3, recargo_6 = @Recargo6, recargo_9 = @Recargo9, recargo_12 = @Recargo12 WHERE id_medio_pago = @Id;";
+            string consulta = "UPDATE dbo.Medio_Pago SET nombre_medio_pago = @Nombre, recargo_medio_pago = @Recargo, recargo_3 = @Recargo3, recargo_6 = @Recargo6, recargo_9 = @Recargo9, recargo_12 = @Recargo12, tipo_caja = @TipoCaja WHERE id_medio_pago = @Id;";
             EjecutarCambio(consulta, medio, true);
         }
 
@@ -61,6 +61,7 @@ namespace Prana.Datos
             comando.Parameters.Add("@Recargo6", SqlDbType.Decimal).Value = medio.Recargo6;
             comando.Parameters.Add("@Recargo9", SqlDbType.Decimal).Value = medio.Recargo9;
             comando.Parameters.Add("@Recargo12", SqlDbType.Decimal).Value = medio.Recargo12;
+            comando.Parameters.Add("@TipoCaja", SqlDbType.NVarChar, 20).Value = medio.TipoCaja;
             conexion.Open();
             comando.ExecuteNonQuery();
         }

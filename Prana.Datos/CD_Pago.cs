@@ -29,6 +29,8 @@ namespace Prana.Datos
             using var tx = cn.BeginTransaction(IsolationLevel.Serializable);
             try
             {
+                DateTime ahora = CD_Caja.Ahora(cn, tx);
+                CD_Caja.ExigirDiaAbierto(cn, tx, ahora);
                 ValidarVenta(cn, tx, pago.IdVenta);
                 using var saldoCmd = Comando(cn, tx, "SELECT saldo FROM (" + CD_Venta.SaldosSql + ") v WHERE id_venta=@venta", ("@venta", pago.IdVenta));
                 decimal saldo = Convert.ToDecimal(saldoCmd.ExecuteScalar());
@@ -41,11 +43,11 @@ namespace Prana.Datos
                     throw new InvalidOperationException("El medio de pago cambió o está inactivo. Vuelva a cargarlo.");
                 // Agrega solo el nuevo recargo: total y monto_final permanecen comparables.
                 int estado = Catalogo(cn, tx, "Estado_Venta", "id_estado_venta", "nombre_estado_venta", pago.ImporteBase == saldo ? "Pagada" : "Parcial");
-                using var insertar = Comando(cn, tx, @"INSERT INTO Pago(id_venta,id_usuario,id_medio_pago,cuotas,monto,monto_final,fecha_pago)
-                    VALUES(@venta,@usuario,@medio,@cuotas,@base,@final,SYSDATETIME());
+                using var insertar = Comando(cn, tx, @"INSERT INTO Pago(id_venta,id_usuario,id_medio_pago,cuotas,monto,monto_final,fecha_pago,tipo_caja,cuenta_destino)
+                    SELECT @venta,@usuario,@medio,@cuotas,@base,@final,@fecha,tipo_caja,@cuenta FROM Medio_Pago WHERE id_medio_pago=@medio;
                     UPDATE Venta SET total=total+@recargo,id_estado_venta=@estado WHERE id_venta=@venta;",
                     ("@venta",pago.IdVenta),("@usuario",usuario),("@medio",pago.IdMedioPago),("@cuotas",pago.Cuotas),
-                    ("@base",pago.ImporteBase),("@final",pago.ImporteBase+pago.Recargo),("@recargo",pago.Recargo),("@estado",estado));
+                    ("@base",pago.ImporteBase),("@final",pago.ImporteBase+pago.Recargo),("@recargo",pago.Recargo),("@estado",estado),("@fecha",ahora),("@cuenta",pago.CuentaDestino));
                 insertar.ExecuteNonQuery();
                 RegistrarActividad(cn,tx,usuario,"REGISTRAR_PAGO",pago.IdVenta,$"Base: {pago.ImporteBase:N2}; recargo: {pago.Recargo:N2}");
                 tx.Commit();

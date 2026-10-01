@@ -13,11 +13,15 @@ namespace Prana.Presentacion
 
         // Conserva el medio seleccionado para modificarlo.
         private int idMedioPagoSeleccionado;
+        private readonly ComboBox cboTipoCaja = new() { DropDownStyle = ComboBoxStyle.DropDownList };
 
         // Inicializa el formulario y carga los medios activos.
         public frmMediosPagos()
         {
             InitializeComponent();
+            cboTipoCaja.Items.AddRange(TiposCaja.Todos);
+            cboTipoCaja.SelectedItem = "Otros";
+            ConfigurarDistribucion();
             CargarMedios();
         }
 
@@ -28,6 +32,7 @@ namespace Prana.Presentacion
             dgvMediosPagos.DataSource = cnMedioPago.ObtenerTodos();
             dgvMediosPagos.Columns[nameof(MedioPago.IdMedioPago)].Visible = false;
             dgvMediosPagos.Columns[nameof(MedioPago.Activo)].Visible = false;
+            dgvMediosPagos.Columns[nameof(MedioPago.TipoCaja)].HeaderText = "Tipo en caja";
             dgvMediosPagos.Columns[nameof(MedioPago.NombreMedioPago)].HeaderText = "Medio de pago";
             dgvMediosPagos.Columns[nameof(MedioPago.RecargoMedioPago)].HeaderText = "Recargo general %";
             dgvMediosPagos.Columns[nameof(MedioPago.Recargo3)].HeaderText = "3 cuotas %";
@@ -69,6 +74,7 @@ namespace Prana.Presentacion
             if (e.RowIndex < 0) return;
             MedioPago medio = (MedioPago)dgvMediosPagos.Rows[e.RowIndex].DataBoundItem;
             idMedioPagoSeleccionado = medio.IdMedioPago;
+            cboTipoCaja.SelectedItem = medio.TipoCaja;
             txtNombreMedioPago.Text = medio.NombreMedioPago;
             nudRecargoGeneral.Value = medio.RecargoMedioPago;
             nudRecargo3.Value = medio.Recargo3;
@@ -82,13 +88,14 @@ namespace Prana.Presentacion
         // Convierte los controles del formulario en una entidad.
         private MedioPago ObtenerMedioDesdeFormulario()
         {
-            return new MedioPago { NombreMedioPago = txtNombreMedioPago.Text.Trim(), RecargoMedioPago = nudRecargoGeneral.Value, Recargo3 = nudRecargo3.Value, Recargo6 = nudRecargo6.Value, Recargo9 = nudRecargo9.Value, Recargo12 = nudRecargo12.Value, Activo = true };
+            return new MedioPago { TipoCaja = cboTipoCaja.Text, NombreMedioPago = txtNombreMedioPago.Text.Trim(), RecargoMedioPago = nudRecargoGeneral.Value, Recargo3 = nudRecargo3.Value, Recargo6 = nudRecargo6.Value, Recargo9 = nudRecargo9.Value, Recargo12 = nudRecargo12.Value, Activo = true };
         }
 
         // Limpia el formulario y prepara una nueva alta.
         private void LimpiarFormulario()
         {
             idMedioPagoSeleccionado = 0;
+            cboTipoCaja.SelectedItem = "Otros";
             txtNombreMedioPago.Clear();
             nudRecargoGeneral.Value = 0;
             nudRecargo3.Value = 0;

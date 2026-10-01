@@ -1,4 +1,4 @@
-﻿using Prana.Datos;
+using Prana.Datos;
 using Prana.Entidades;
 using Prana.negocio;
 using Prana.Negocio;
@@ -30,6 +30,8 @@ namespace Prana.Presentacion
         public frmStock()
         {
             InitializeComponent();
+            ConfigurarDistribucion();
+            CargarOpcionesProducto();
 
            
         
@@ -446,6 +448,7 @@ namespace Prana.Presentacion
                 );
 
                 // Limpia completamente el formulario
+                CargarOpcionesProducto();
                 LimpiarFormulario();
             }
             else
@@ -488,12 +491,21 @@ namespace Prana.Presentacion
         }
 
         // Limpia todos los datos del formulario
+        private void CargarOpcionesProducto()
+        {
+            textBoxMarca.Items.Clear(); textBoxCategoria.Items.Clear();
+            textBoxMarca.Items.AddRange(new CN_Marca().obtenerMarcas().Select(m=>(object)m.NombreMarca).ToArray());
+            textBoxCategoria.Items.AddRange(new CN_Categoria().obtenerCategorias().Select(c=>(object)c.NombreCategoria).ToArray());
+            foreach(var campo in new[]{textBoxMarca,textBoxCategoria})
+            { campo.AutoCompleteMode=AutoCompleteMode.SuggestAppend; campo.AutoCompleteSource=AutoCompleteSource.ListItems; }
+        }
         private void LimpiarFormulario()
         {
             // Limpia los datos generales del producto
             textBoxNombreProducto.Clear();
-            textBoxCategoria.Clear();
-            textBoxMarca.Clear();
+            textBoxModelo.Clear();
+            textBoxCategoria.Text = "";
+            textBoxMarca.Text = "";
             textBoxDescripcion.Clear();
 
             // Limpia los campos de la variante
@@ -1054,79 +1066,39 @@ namespace Prana.Presentacion
 
         }
 
+        private void LimpiarIngreso()
+        {
+            ingresoTemporales.Clear();
+            comboBoxSeleccionaProveedor.SelectedIndex = -1;
+            comboBoxSeleccionaProveedor.Text = "";
+            textBoxRtoProveedor.Clear();
+            dtpFechaIngresoStock.Value = DateTime.Today;
+            ActualizarTotalesIngreso();
+            comboBoxSeleccionaProveedor.Focus();
+        }
         private void ButtonRegistrarIngreso_Click(object sender, EventArgs e)
         {
-            //declara la instancia de la capa de negocio para poder utilizar sus metodos
-            CN_Proveedor negocioProveedor = new CN_Proveedor();
-
-            //obtiene el nombre del proveedor ingresado en el textbox
-            string proveedorSeleccionado = textBoxNuevoProvedor.Text.Trim();
-
-            //crea la lista de proveedores encontrados con el nombre ingresado
-            List<Proveedor> proveedoresEncontrados = negocioProveedor.buscarProveedor(proveedorSeleccionado);
-
-            if (!string.IsNullOrWhiteSpace(proveedorSeleccionado) && proveedoresEncontrados.Count > 0)
-            {
-                MessageBox.Show("El proveedor ya existe seleccionelo de la lista.");
-                return;
-            }
-
-            //si el proveedor no existe lo crea y lo agrega al combobox
-            if (!string.IsNullOrWhiteSpace(proveedorSeleccionado) && proveedoresEncontrados.Count == 0)
-            {
-                Proveedor nuevoProveedor = new Proveedor
-                {
-                    nombreProveedor = proveedorSeleccionado
-                };
-
-                //crea la variable proveedorCreado y le asigna el resultado del metodo NuevoProveedor de la capa de negocio
-                bool proveedorCreado = negocioProveedor.NuevoProveedor(nuevoProveedor);
-
-                if (proveedorCreado != null)
-                {
-                    MessageBox.Show("Proveedor creado correctamente.");
-
-                    // Actualiza el ComboBox de proveedores
-                    List<Proveedor> proveedores = negocioProveedor.buscarProveedor(string.Empty);
-
-                    // Limpia y desvincula cualquier dato que el ComboBox tuviera cargado previamente
-                    comboBoxSeleccionaProveedor.DataSource = null;
-
-                    //indica al programa que solo muestre el texto contenido en nombreProveedor dentro de la lista desplegable
-                    comboBoxSeleccionaProveedor.DisplayMember = "nombreProveedor";
-
-                    //Define el valor la clave primaria que se va a guardar detrás de la opción seleccionada
-                    comboBoxSeleccionaProveedor.ValueMember = "idProveedor";
-
-                    //Asigna la lista al componente para que se llene
-                    comboBoxSeleccionaProveedor.DataSource = proveedores;
-                }
-                else
-                {
-                    MessageBox.Show("Error al crear el proveedor.");
-                    return;
-                }
-            }
-
-
-
-
-
+            dataGridViewDetalleIngreso.EndEdit();
+            string proveedorSeleccionado = comboBoxSeleccionaProveedor.Text.Trim();
             if (ingresoTemporales.Count == 0)
             {
-                MessageBox.Show("No hay items para ingresar.");
+                MessageBox.Show("No hay productos para ingresar.");
                 return;
             }
-
-            if (comboBoxSeleccionaProveedor.SelectedIndex == -1)
+            if (string.IsNullOrWhiteSpace(proveedorSeleccionado))
             {
-                MessageBox.Show("Seleccione un proveedor.");
+                MessageBox.Show("Seleccione o escriba un proveedor.");
                 return;
             }
-
-            int idProveedor = Convert.ToInt32(comboBoxSeleccionaProveedor.SelectedValue);
             DateTime fecha = dtpFechaIngresoStock.Value;
             string remito = textBoxRtoProveedor.Text.Trim();
+            if (string.IsNullOrWhiteSpace(remito))
+            {
+                MessageBox.Show("Ingrese el número o código del documento del proveedor (remito).",
+                    "Falta el documento del proveedor", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBoxRtoProveedor.Focus();
+                return;
+            }
 
             var detalles = new List<(int idVariante, int cantidad, decimal costoUnitario)>();
 
@@ -1167,16 +1139,33 @@ namespace Prana.Presentacion
             }
 
             CN_Producto negocio = new CN_Producto();
-            bool ok = negocio.RegistrarIngreso(idProveedor, fecha, remito, detalles);
+            bool ok;
+            try
+            {
+                ok = negocio.RegistrarIngreso(proveedorSeleccionado, fecha, remito, detalles);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("No se pudo registrar el ingreso: " + ex.Message);
+                return;
+            }
 
             if (ok)
             {
-                // Registra el ingreso exitoso de stock.
-                cnLogActividad.Registrar("REGISTRAR_INGRESO_STOCK", "IngresoStock", idProveedor, "Remito: " + remito + " | Cantidad de variantes: " + detalles.Count);
-
-                MessageBox.Show("Ingreso registrado correctamente.");
-                ingresoTemporales.Clear();
-                dataGridViewDetalleIngreso.Refresh();
+                LimpiarIngreso();
+                try
+                {
+                    comboBoxSeleccionaProveedor.DataSource = new CN_Proveedor().buscarProveedor(string.Empty);
+                    comboBoxSeleccionaProveedor.SelectedIndex = -1;
+                    comboBoxSeleccionaProveedor.Text = "";
+                    cnLogActividad.Registrar("REGISTRAR_INGRESO_STOCK", "IngresoStock", null,
+                        "Proveedor: " + proveedorSeleccionado + " | Remito: " + remito + " | Cantidad de variantes: " + detalles.Count);
+                    MessageBox.Show("Ingreso registrado correctamente.");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("El ingreso se guardó, pero no se pudo actualizar la lista o el historial: " + ex.Message);
+                }
             }
             else
             {

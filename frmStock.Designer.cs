@@ -1,4 +1,4 @@
-﻿namespace Prana.Presentacion
+namespace Prana.Presentacion
 {
     partial class frmStock
     {
@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Label label28;
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
@@ -88,15 +87,13 @@
             label18 = new Label();
             dtpFechaIngresoStock = new DateTimePicker();
             comboBoxSeleccionaProveedor = new ComboBox();
-            textBoxNuevoProvedor = new TextBox();
-            label16 = new Label();
             panel2 = new Panel();
             label15 = new Label();
             textBoxModelo = new TextBox();
             panel4 = new Panel();
             label9 = new Label();
             label29 = new Label();
-            textBoxMarca = new TextBox();
+            textBoxMarca = new ComboBox();
             btnCancelar = new FontAwesome.Sharp.IconButton();
             btnGuardarProducto = new FontAwesome.Sharp.IconButton();
             dgvVariantes = new DataGridView();
@@ -113,7 +110,7 @@
             nudPrecio = new NumericUpDown();
             label11 = new Label();
             label10 = new Label();
-            textBoxCategoria = new TextBox();
+            textBoxCategoria = new ComboBox();
             textBoxColor = new TextBox();
             label8 = new Label();
             textBoxNombreProducto = new TextBox();
@@ -517,8 +514,6 @@
             PnlNuevoStock.Controls.Add(label18);
             PnlNuevoStock.Controls.Add(dtpFechaIngresoStock);
             PnlNuevoStock.Controls.Add(comboBoxSeleccionaProveedor);
-            PnlNuevoStock.Controls.Add(textBoxNuevoProvedor);
-            PnlNuevoStock.Controls.Add(label16);
             PnlNuevoStock.Location = new Point(5, 1095);
             PnlNuevoStock.Name = "PnlNuevoStock";
             PnlNuevoStock.Size = new Size(1269, 517);
@@ -529,6 +524,7 @@
             textBoxRtoProveedor.Font = new Font("Segoe UI", 10F);
             textBoxRtoProveedor.Location = new Point(602, 144);
             textBoxRtoProveedor.Name = "textBoxRtoProveedor";
+            textBoxRtoProveedor.MaxLength = 50;
             textBoxRtoProveedor.PlaceholderText = "Numero de doc de proveedor";
             textBoxRtoProveedor.Size = new Size(285, 25);
             textBoxRtoProveedor.TabIndex = 56;
@@ -706,7 +702,7 @@
             label19.Name = "label19";
             label19.Size = new Size(122, 13);
             label19.TabIndex = 33;
-            label19.Text = "Seleccionar proveedor";
+            label19.Text = "Proveedor (seleccione o escriba)";
             // 
             // label18
             // 
@@ -729,7 +725,10 @@
             // 
             // comboBoxSeleccionaProveedor
             // 
-            comboBoxSeleccionaProveedor.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBoxSeleccionaProveedor.DropDownStyle = ComboBoxStyle.DropDown;
+            comboBoxSeleccionaProveedor.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            comboBoxSeleccionaProveedor.AutoCompleteSource = AutoCompleteSource.ListItems;
+            comboBoxSeleccionaProveedor.MaxLength = 100;
             comboBoxSeleccionaProveedor.FormattingEnabled = true;
             comboBoxSeleccionaProveedor.Location = new Point(337, 146);
             comboBoxSeleccionaProveedor.Name = "comboBoxSeleccionaProveedor";
@@ -737,25 +736,9 @@
             comboBoxSeleccionaProveedor.TabIndex = 28;
             comboBoxSeleccionaProveedor.Tag = "";
             // 
-            // textBoxNuevoProvedor
             // 
-            textBoxNuevoProvedor.Font = new Font("Segoe UI", 10F);
-            textBoxNuevoProvedor.Location = new Point(24, 144);
-            textBoxNuevoProvedor.Name = "textBoxNuevoProvedor";
-            textBoxNuevoProvedor.PlaceholderText = "Si no esta cargada escribalo aqui";
-            textBoxNuevoProvedor.Size = new Size(285, 25);
-            textBoxNuevoProvedor.TabIndex = 27;
             // 
-            // label16
             // 
-            label16.AutoSize = true;
-            label16.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
-            label16.ForeColor = Color.FromArgb(145, 170, 210);
-            label16.Location = new Point(24, 128);
-            label16.Name = "label16";
-            label16.Size = new Size(61, 13);
-            label16.TabIndex = 3;
-            label16.Text = "Proveedor";
             // 
             // panel2
             // 
@@ -850,7 +833,7 @@
             textBoxMarca.Font = new Font("Segoe UI", 10F);
             textBoxMarca.Location = new Point(668, 119);
             textBoxMarca.Name = "textBoxMarca";
-            textBoxMarca.PlaceholderText = "Marca";
+            textBoxMarca.DropDownStyle = ComboBoxStyle.DropDown;
             textBoxMarca.Size = new Size(151, 25);
             textBoxMarca.TabIndex = 37;
             textBoxMarca.TextChanged += textBoxMarca_TextChanged;
@@ -1029,7 +1012,7 @@
             textBoxCategoria.Font = new Font("Segoe UI", 10F);
             textBoxCategoria.Location = new Point(497, 119);
             textBoxCategoria.Name = "textBoxCategoria";
-            textBoxCategoria.PlaceholderText = "Categoria";
+            textBoxCategoria.DropDownStyle = ComboBoxStyle.DropDown;
             textBoxCategoria.Size = new Size(163, 25);
             textBoxCategoria.TabIndex = 22;
             textBoxCategoria.TextChanged += textBoxCategoria_TextChanged;
@@ -1180,7 +1163,7 @@
         private TextBox textBoxNombreProducto;
         private Label label11;
         private Label label10;
-        private TextBox textBoxCategoria;
+        private ComboBox textBoxCategoria;
         private TextBox textBoxColor;
         private NumericUpDown nudPrecio;
         private Label label13;
@@ -1190,11 +1173,9 @@
         private FontAwesome.Sharp.IconButton btnGuardarProducto;
         private FontAwesome.Sharp.IconButton BtnLimpiarFiltros;
         private ComboBox comboBoxCateogria;
-        private TextBox textBoxMarca;
+        private ComboBox textBoxMarca;
         private Panel PnlNuevoStock;
-        private Label label16;
         private ComboBox comboBoxSeleccionaProveedor;
-        private TextBox textBoxNuevoProvedor;
         private Label label19;
         private Label label18;
         private DateTimePicker dtpFechaIngresoStock;

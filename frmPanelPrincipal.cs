@@ -11,11 +11,29 @@ namespace Prana.Presentacion
         public frmPanelPrincipal()
         {
             InitializeComponent();
+            ConfigurarAccesosCaja();
             foreach (var columna in new[] { colTotal, colPagado, colSaldo })
             {
                 columna.DefaultCellStyle.FormatProvider = moneda;
                 columna.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             }
+        }
+        private void ConfigurarAccesosCaja()
+        {
+            pnlEncabezado.Height = 120;
+            lblTitulo.Top = 8;
+            var caja = new Button { Text="Caja y gastos",Width=145,Height=34,BackColor=Color.SteelBlue,FlatStyle=FlatStyle.Flat };
+            caja.Visible = Permisos.TienePermiso(Permisos.GestionarCaja);
+            caja.Click += (_,_) => { if(Parent?.FindForm() is Interfaz interfaz) interfaz.AbrirFormulario(new frmCaja()); };
+            var documentos = new Button { Text="Garantía / remito",Width=160,Height=34,BackColor=Color.SteelBlue,FlatStyle=FlatStyle.Flat };
+            documentos.Click += (_,_) => {
+                if(dgvUltimasVentas.CurrentRow?.DataBoundItem is not venta seleccionada) { MessageBox.Show("Seleccione una venta del listado."); return; }
+                try { DocumentosPrana.MostrarVenta(this,seleccionada.IdVenta); }
+                catch(Exception ex) { MessageBox.Show(this,ex.Message,"Comprobantes",MessageBoxButtons.OK,MessageBoxIcon.Warning); }
+            };
+            var acciones=DistribucionAdaptable.Fila(btnNuevaVenta,btnStock,caja,documentos);
+            acciones.Dock=DockStyle.Bottom; acciones.Height=60;
+            pnlEncabezado.Controls.Add(acciones);
         }
         private void frmPanelPrincipal_Load(object? sender, EventArgs e) => CargarVentas();
 

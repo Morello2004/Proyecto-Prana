@@ -43,8 +43,9 @@ namespace Prana.negocio
                 throw new InvalidOperationException("La venta requiere productos válidos.");
             if (venta.Descuento < 0 || venta.Total < 0 || venta.Pagos.Any(p => p.IdMedioPago <= 0 || p.Monto <= 0 || p.Recargo < 0))
                 throw new InvalidOperationException("Los importes de la venta no son válidos.");
-            if (venta.FechaPago.Date < DateTime.Today)
-                throw new InvalidOperationException("La fecha de pago no puede ser anterior a hoy.");
+            if (venta.FechaPago.Date != DateTime.Today)
+                throw new InvalidOperationException("Los cobros se registran con la fecha actual.");
+            if (venta.Pagos.Any(p=>p.CuentaDestino.Length>100)) throw new ArgumentException("La cuenta destino admite hasta 100 caracteres.");
             decimal subtotal = venta.Detalles.Sum(d => d.Cantidad * d.PrecioUnitario);
             if (venta.Descuento > subtotal || venta.CostoEnvio < 0)
                 throw new InvalidOperationException("El descuento o el envío no son válidos.");

@@ -5,6 +5,7 @@ namespace Prana.negocio
     // Centraliza los permisos fijos del sistema.
     public static class Permisos
     {
+        public const string GestionarCaja = "GESTIONAR_CAJA";
         // Identifica el rol Administrador.
         private const int RolAdministrador = 1;
 
@@ -64,6 +65,8 @@ namespace Prana.negocio
 
         // Permite consultar el historial de actividades.
         public const string ConsultarHistorial = "CONSULTAR_HISTORIAL";
+
+        public const string ConsultarInformes = "CONSULTAR_INFORMES";
 
         // Comprueba si el usuario actual tiene el permiso solicitado.
         // Comprueba los permisos del rol del usuario actual.

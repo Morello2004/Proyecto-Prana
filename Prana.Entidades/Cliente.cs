@@ -13,6 +13,7 @@ namespace Prana.Entidades
         public string DNI { get; set; } = string.Empty;
         public string Telefono { get; set; } = string.Empty;
         public DateTime FechaRegistro { get; set; }
+        public string CodigoPostal { get; set; } = string.Empty;
         public string Direccion { get; set; } = string.Empty;
         public int IdLocalidad { get; set; }
         public Localidad Localidad { get; set; } = new Localidad();

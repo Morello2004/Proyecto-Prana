@@ -24,14 +24,16 @@ namespace Prana.Datos
 
             try
             {
-                // crea el objeto que permite trabajar con las localidades
-                CD_Localidad datosLocalidad = new CD_Localidad();
-
-                // busca la localidad o la crea y obtiene su identificador
-                int idLocalidad = datosLocalidad.ObtenerOCrearLocalidad(cliente.Localidad.NombreLocalidad, conexion, transaccion);
+                // busca o crea la localidad solamente cuando se ingresó una ciudad
+                int? idLocalidad = null;
+                if (!string.IsNullOrWhiteSpace(cliente.Localidad?.NombreLocalidad))
+                {
+                    CD_Localidad datosLocalidad = new CD_Localidad();
+                    idLocalidad = datosLocalidad.ObtenerOCrearLocalidad(cliente.Localidad.NombreLocalidad, conexion, transaccion);
+                }
 
                 // prepara la consulta para registrar el cliente
-                string consulta = "INSERT INTO Cliente (nombre_cliente, apellido_cliente, dni, telefono, fecha_registro, direccion, saldo_a_favor, id_localidad) VALUES (@Nombre, @Apellido, @DNI, @Telefono, @FechaRegistro, @Direccion, @SaldoFavor, @IdLocalidad)";
+                string consulta = "INSERT INTO Cliente (nombre_cliente, apellido_cliente, dni, telefono, fecha_registro, direccion, saldo_a_favor, id_localidad, codigo_postal) VALUES (@Nombre, @Apellido, @DNI, @Telefono, @FechaRegistro, @Direccion, @SaldoFavor, @IdLocalidad, @CodigoPostal)";
 
                 // crea el comando que registrara el cliente
                 using SqlCommand comando = new SqlCommand(consulta, conexion, transaccion);
@@ -57,8 +59,10 @@ namespace Prana.Datos
                 // envia el saldo a favor del cliente
                 comando.Parameters.Add("@SaldoFavor", SqlDbType.Decimal).Value = cliente.SaldoFavor;
 
+                comando.Parameters.Add("@CodigoPostal", SqlDbType.NVarChar, 12).Value = string.IsNullOrWhiteSpace(cliente.CodigoPostal) ? DBNull.Value : cliente.CodigoPostal;
+
                 // envia el identificador de la localidad
-                comando.Parameters.Add("@IdLocalidad", SqlDbType.Int).Value = idLocalidad;
+                comando.Parameters.Add("@IdLocalidad", SqlDbType.Int).Value = idLocalidad.HasValue ? idLocalidad.Value : DBNull.Value;
 
                 // ejecuta la consulta y guarda la cantidad de filas modificadas
                 int filasAfectadas = comando.ExecuteNonQuery();
@@ -88,7 +92,7 @@ namespace Prana.Datos
             List<Cliente> clientesEncontrados = new List<Cliente>();
 
             // busca el texto en los datos principales del cliente
-            string consulta = @"SELECT c.id_cliente, c.nombre_cliente, c.apellido_cliente, c.dni, c.telefono, c.fecha_registro, c.direccion, c.saldo_a_favor, c.id_localidad, l.nombre_localidad, l.codigo_postal FROM Cliente c LEFT JOIN Localidad l ON c.id_localidad = l.id_localidad WHERE (@busqueda IS NULL OR c.nombre_cliente LIKE '%' + @busqueda + '%' OR c.apellido_cliente LIKE '%' + @busqueda + '%' OR c.dni LIKE '%' + @busqueda + '%' OR c.telefono LIKE '%' + @busqueda + '%')";
+            string consulta = @"SELECT c.id_cliente, c.nombre_cliente, c.apellido_cliente, c.dni, c.telefono, c.fecha_registro, c.direccion, c.saldo_a_favor, c.id_localidad, l.nombre_localidad, c.codigo_postal FROM Cliente c LEFT JOIN Localidad l ON c.id_localidad = l.id_localidad WHERE (@busqueda IS NULL OR c.nombre_cliente LIKE '%' + @busqueda + '%' OR c.apellido_cliente LIKE '%' + @busqueda + '%' OR c.dni LIKE '%' + @busqueda + '%' OR c.telefono LIKE '%' + @busqueda + '%')";
 
             // crea la conexion
             using SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena());
@@ -117,6 +121,7 @@ namespace Prana.Datos
                     DNI = lector["dni"]?.ToString() ?? string.Empty,
                     Telefono = lector["telefono"]?.ToString() ?? string.Empty,
                     FechaRegistro = lector.GetDateTime(lector.GetOrdinal("fecha_registro")),
+                    CodigoPostal = lector["codigo_postal"]?.ToString() ?? string.Empty,
                     Direccion = lector["direccion"]?.ToString() ?? string.Empty,
                     SaldoFavor = lector.GetDecimal(lector.GetOrdinal("saldo_a_favor")),
                     IdLocalidad = lector["id_localidad"] == DBNull.Value ? 0 : Convert.ToInt32(lector["id_localidad"]),
@@ -153,14 +158,16 @@ namespace Prana.Datos
 
             try
             {
-                // crea el objeto que permite trabajar con localidades
-                CD_Localidad datosLocalidad = new CD_Localidad();
-
-                // busca la localidad o la crea y obtiene su identificador
-                int idLocalidad = datosLocalidad.ObtenerOCrearLocalidad(cliente.Localidad.NombreLocalidad, conexion, transaccion);
+                // busca o crea la localidad solamente cuando se ingresó una ciudad
+                int? idLocalidad = null;
+                if (!string.IsNullOrWhiteSpace(cliente.Localidad?.NombreLocalidad))
+                {
+                    CD_Localidad datosLocalidad = new CD_Localidad();
+                    idLocalidad = datosLocalidad.ObtenerOCrearLocalidad(cliente.Localidad.NombreLocalidad, conexion, transaccion);
+                }
 
                 // prepara la consulta para modificar el cliente
-                string consulta = "UPDATE Cliente SET nombre_cliente = @Nombre, apellido_cliente = @Apellido, dni = @DNI, telefono = @Telefono, direccion = @Direccion, id_localidad = @IdLocalidad WHERE id_cliente = @IdCliente";
+                string consulta = "UPDATE Cliente SET nombre_cliente = @Nombre, apellido_cliente = @Apellido, dni = @DNI, telefono = @Telefono, direccion = @Direccion, id_localidad = @IdLocalidad, codigo_postal = @CodigoPostal WHERE id_cliente = @IdCliente";
 
                 // crea el comando que ejecutara la modificacion
                 using SqlCommand comando = new SqlCommand(consulta, conexion, transaccion);
@@ -183,8 +190,10 @@ namespace Prana.Datos
                 // envia la direccion o un valor nulo si esta vacia
                 comando.Parameters.Add("@Direccion", SqlDbType.NVarChar, 200).Value = string.IsNullOrWhiteSpace(cliente.Direccion) ? DBNull.Value : cliente.Direccion;
 
+                comando.Parameters.Add("@CodigoPostal", SqlDbType.NVarChar, 12).Value = string.IsNullOrWhiteSpace(cliente.CodigoPostal) ? DBNull.Value : cliente.CodigoPostal;
+
                 // envia el identificador de la localidad
-                comando.Parameters.Add("@IdLocalidad", SqlDbType.Int).Value = idLocalidad;
+                comando.Parameters.Add("@IdLocalidad", SqlDbType.Int).Value = idLocalidad.HasValue ? idLocalidad.Value : DBNull.Value;
 
                 // ejecuta la consulta y obtiene las filas modificadas
                 int filasAfectadas = comando.ExecuteNonQuery();

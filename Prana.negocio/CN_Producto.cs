@@ -44,7 +44,31 @@ namespace Prana.Negocio
         // Registra un ingreso de stock con sus detalles y actualiza el stock de las variantes
         public bool RegistrarIngreso(int idProveedor, DateTime fechaIngreso, string remitoProveedor, List<(int idVariante, int cantidad, decimal costoUnitario)> detalles)
         {
+            ValidarIngreso(remitoProveedor, detalles);
+            if (idProveedor <= 0) throw new InvalidOperationException("Seleccione un proveedor.");
             return datosProducto.RegistrarIngreso(idProveedor, fechaIngreso, remitoProveedor, detalles);
+        }
+
+        public bool RegistrarIngreso(string nombreProveedor, DateTime fechaIngreso, string remitoProveedor, List<(int idVariante, int cantidad, decimal costoUnitario)> detalles)
+        {
+            nombreProveedor = (nombreProveedor ?? "").Trim();
+            if (nombreProveedor.Length == 0 || nombreProveedor.Length > 100)
+                throw new InvalidOperationException("Ingrese un proveedor de hasta 100 caracteres.");
+            ValidarIngreso(remitoProveedor, detalles);
+            return datosProducto.RegistrarIngreso(0, fechaIngreso, remitoProveedor, detalles, nombreProveedor);
+        }
+
+        private static void ValidarIngreso(string remito, List<(int idVariante, int cantidad, decimal costoUnitario)> detalles)
+        {
+            if (detalles == null || detalles.Count == 0)
+                throw new InvalidOperationException("No hay productos para ingresar.");
+            if (string.IsNullOrWhiteSpace(remito))
+                throw new InvalidOperationException("Ingrese el número o código del documento del proveedor (remito).");
+            if (remito.Trim().Length > 50)
+                throw new InvalidOperationException("El documento del proveedor admite hasta 50 caracteres.");
+            foreach (var detalle in detalles)
+                if (detalle.idVariante <= 0 || detalle.cantidad <= 0 || detalle.costoUnitario < 0)
+                    throw new InvalidOperationException("Revise los productos, las cantidades y los costos del ingreso.");
         }
 
 

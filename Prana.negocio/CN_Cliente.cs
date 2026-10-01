@@ -1,4 +1,4 @@
-﻿using Prana.Datos;
+using Prana.Datos;
 using Prana.Entidades;
 using System;
 using System.Collections.Generic;
@@ -9,6 +9,12 @@ namespace Prana.negocio
 {
     public class CN_Cliente
     {
+        private static void ValidarCodigoPostal(Cliente cliente)
+        {
+            cliente.CodigoPostal = (cliente.CodigoPostal ?? "").Trim().ToUpperInvariant();
+            if (cliente.CodigoPostal.Length > 0 && !Regex.IsMatch(cliente.CodigoPostal, @"^[A-Z0-9 -]{1,12}$"))
+                throw new InvalidOperationException("El codigo postal debe contener hasta 12 letras o numeros.");
+        }
         private readonly CD_Cliente datosCliente = new CD_Cliente();
 
         // valida los datos y solicita el registro del cliente
@@ -57,19 +63,9 @@ namespace Prana.negocio
                 throw new InvalidOperationException("El teléfono ingresado no es válido");
             }
 
-            // comprueba que la direccion este completa
-            if (string.IsNullOrWhiteSpace(cliente.Direccion))
-            {
-                throw new InvalidOperationException("Debe ingresar la dirección");
-            }
+            cliente.Direccion = (cliente.Direccion ?? "").Trim();
 
-            // comprueba que la localidad este completa
-            if (cliente.Localidad == null || string.IsNullOrWhiteSpace(cliente.Localidad.NombreLocalidad))
-            {
-                throw new InvalidOperationException("Debe ingresar la localidad");
-            }
-
-
+            ValidarCodigoPostal(cliente);
             // comprueba si el dni ya se encuentra registrado
             if (datosCliente.ExisteClientePorDNI(cliente.DNI, 0))
             {
@@ -133,18 +129,9 @@ namespace Prana.negocio
                 throw new InvalidOperationException("El teléfono ingresado no es válido");
             }
 
-            // comprueba que la direccion este completa
-            if (string.IsNullOrWhiteSpace(cliente.Direccion))
-            {
-                throw new InvalidOperationException("Debe ingresar la dirección");
-            }
+            cliente.Direccion = (cliente.Direccion ?? "").Trim();
 
-            // comprueba que la localidad este completa
-            if (cliente.Localidad == null || string.IsNullOrWhiteSpace(cliente.Localidad.NombreLocalidad))
-            {
-                throw new InvalidOperationException("Debe ingresar la localidad");
-            }
-
+            ValidarCodigoPostal(cliente);
             // comprueba que el dni no pertenezca a otro cliente
             if (datosCliente.ExisteClientePorDNI(cliente.DNI, cliente.IdCliente))
             {

@@ -1,4 +1,4 @@
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Prana.Entidades;
 using System.Collections.Generic;
 using System.Data;
@@ -50,10 +50,10 @@ namespace Prana.Datos
         }
 
         // Obtiene una cantidad limitada de actividades dentro de un período.
-        public List<LogActividad> ObtenerFiltrado(DateTime desde, DateTime hasta, int limite)
+        public List<LogActividad> ObtenerFiltrado(DateTime desde, DateTime hasta, int limite, int? remito = null, string accion = "", string usuario = "")
         {
             // Consulta las actividades junto con el nombre del usuario y el rango solicitado.
-            string consulta = "SELECT TOP (@Limite) l.id_log, l.id_usuario, u.nombre_usuario, l.accion, l.entidad, l.id_entidad, l.detalle, l.fecha FROM dbo.LogActividad AS l INNER JOIN dbo.Usuario AS u ON u.id_usuario = l.id_usuario WHERE l.fecha >= @Desde AND l.fecha < @Hasta ORDER BY l.fecha DESC;";
+            string consulta = "SELECT TOP (@Limite) l.id_log, l.id_usuario, u.nombre_usuario, l.accion, l.entidad, l.id_entidad, l.detalle, l.fecha FROM dbo.LogActividad AS l INNER JOIN dbo.Usuario AS u ON u.id_usuario = l.id_usuario WHERE l.fecha >= @Desde AND l.fecha < @Hasta AND (@Remito IS NULL OR (l.entidad=N'Venta' AND l.id_entidad=@Remito)) AND (@Accion=N'' OR CHARINDEX(@Accion,l.accion)>0) AND (@Usuario=N'' OR CHARINDEX(@Usuario,u.nombre_usuario)>0) ORDER BY l.fecha DESC,l.id_log DESC;";
 
             // Crea la conexión con la base de datos.
             using SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena());
@@ -63,6 +63,9 @@ namespace Prana.Datos
 
             // Agrega el límite de registros solicitado.
             comando.Parameters.Add("@Limite", SqlDbType.Int).Value = limite;
+            comando.Parameters.Add("@Remito", SqlDbType.Int).Value = (object?)remito ?? DBNull.Value;
+            comando.Parameters.Add("@Accion", SqlDbType.NVarChar, 100).Value = accion.Trim();
+            comando.Parameters.Add("@Usuario", SqlDbType.NVarChar, 100).Value = usuario.Trim();
 
             // Agrega el inicio del período.
             comando.Parameters.Add("@Desde", SqlDbType.DateTime2).Value = desde;

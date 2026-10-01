@@ -70,6 +70,24 @@ BEGIN
 END;
 GO
 
+-- Permite varios usuarios sin correo, conservando la unicidad de los correos informados.
+-- Busca la restricción por columna: su nombre cambia entre instalaciones.
+DECLARE @quitarUnicidadEmail nvarchar(max) = N'';
+SELECT @quitarUnicidadEmail = @quitarUnicidadEmail +
+    N'ALTER TABLE dbo.Usuario DROP CONSTRAINT ' + QUOTENAME(k.name) + N';'
+FROM sys.key_constraints k
+WHERE k.parent_object_id = OBJECT_ID(N'dbo.Usuario') AND k.type = 'UQ'
+  AND (SELECT COUNT(*) FROM sys.index_columns ic
+       WHERE ic.object_id=k.parent_object_id AND ic.index_id=k.unique_index_id AND ic.key_ordinal>0)=1
+  AND EXISTS (SELECT 1 FROM sys.index_columns ic JOIN sys.columns c
+      ON c.object_id=ic.object_id AND c.column_id=ic.column_id
+      WHERE ic.object_id=k.parent_object_id AND ic.index_id=k.unique_index_id
+        AND ic.key_ordinal=1 AND c.name=N'email');
+EXEC sys.sp_executesql @quitarUnicidadEmail;
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID(N'dbo.Usuario') AND name=N'UX_Usuario_EmailInformado')
+    CREATE UNIQUE INDEX UX_Usuario_EmailInformado ON dbo.Usuario(email) WHERE email IS NOT NULL;
+GO
+
 -- El código de permisos usa el identificador 2 para Vendedor; no altera roles existentes.
 IF NOT EXISTS(SELECT 1 FROM dbo.Rol WHERE id_rol_usuario=2)
 BEGIN

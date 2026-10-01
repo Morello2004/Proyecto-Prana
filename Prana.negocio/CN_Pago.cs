@@ -25,10 +25,13 @@ namespace Prana.negocio
             return new CobroVenta { IdVenta = venta, IdMedioPago = medio.IdMedioPago, Cuotas = cuotas, ImporteBase = importe,
                 Porcentaje = porcentaje, Recargo = new CN_RegistroVenta().CalcularRecargo(importe, porcentaje) };
         }
-        public void Registrar(int venta, MedioPago medio, int cuotas, decimal importe)
+        public void Registrar(int venta, MedioPago medio, int cuotas, decimal importe, string cuentaDestino = "")
         {
             Verificar(Permisos.RegistrarPagos);
-            datos.Registrar(Preparar(venta, medio, cuotas, importe), SesionActual.Usuario!.idUsuario);
+            if(cuentaDestino.Trim().Length>100) throw new ArgumentException("La cuenta admite hasta 100 caracteres.");
+            var cobro=Preparar(venta, medio, cuotas, importe);
+            cobro.CuentaDestino=cuentaDestino.Trim();
+            datos.Registrar(cobro, SesionActual.Usuario!.idUsuario);
         }
         // El usuario de la operación siempre proviene de la sesión, nunca del formulario.
         internal static void Verificar(string permiso)

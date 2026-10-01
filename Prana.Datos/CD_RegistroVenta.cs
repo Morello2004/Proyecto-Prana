@@ -16,6 +16,8 @@ namespace Prana.Datos
             using SqlTransaction transaccion = conexion.BeginTransaction();
             try
             {
+                DateTime ahora = CD_Caja.Ahora(conexion, transaccion);
+                if (venta.Pagos.Count > 0) CD_Caja.ExigirDiaAbierto(conexion, transaccion, ahora);
                 // asegura los valores de catálogo necesarios para esta venta
                 int modalidad = Catalogo(conexion, transaccion, "Modalidad_Entrega", "id_modalidad_entrega", "nombre_modalidad_entrega", venta.ModalidadEntrega);
                 int estadoVenta = Catalogo(conexion, transaccion, "Estado_Venta", "id_estado_venta", "nombre_estado_venta", venta.Pagos.Count == 0 ? "Pendiente" : venta.CondicionPago == "Pago total" ? "Pagada" : "Parcial");
@@ -46,14 +48,15 @@ namespace Prana.Datos
                 // conserva por separado la base y el importe final cobrado
                 foreach (PagoNuevaVenta item in venta.Pagos)
                 {
-                    using SqlCommand pago = new("INSERT INTO Pago (id_venta,id_usuario,id_medio_pago,cuotas,monto,monto_final,fecha_pago) VALUES (@venta,@usuario,@medio,@cuotas,@monto,@final,@fecha)", conexion, transaccion);
+                    using SqlCommand pago = new("INSERT INTO Pago (id_venta,id_usuario,id_medio_pago,cuotas,monto,monto_final,fecha_pago,tipo_caja,cuenta_destino) SELECT @venta,@usuario,@medio,@cuotas,@monto,@final,@fecha,tipo_caja,@cuenta FROM Medio_Pago WHERE id_medio_pago=@medio", conexion, transaccion);
+                    pago.Parameters.AddWithValue("@cuenta", item.CuentaDestino);
                     pago.Parameters.AddWithValue("@venta", idVenta);
                     pago.Parameters.AddWithValue("@usuario", venta.IdUsuario);
                     pago.Parameters.AddWithValue("@medio", item.IdMedioPago);
                     pago.Parameters.AddWithValue("@cuotas", item.Cuotas);
                     pago.Parameters.AddWithValue("@monto", item.Monto);
                     pago.Parameters.AddWithValue("@final", item.Monto + item.Recargo);
-                    pago.Parameters.AddWithValue("@fecha", venta.FechaPago);
+                    pago.Parameters.AddWithValue("@fecha", ahora);
                     pago.ExecuteNonQuery();
                 }
 
@@ -81,6 +84,22 @@ VALUES (@venta,@domicilio,@fecha,@horario,@observaciones,@logistica,@costo,@pago
                     entrega.Parameters.AddWithValue("@condicion", venta.CondicionPago);
                     entrega.Parameters.AddWithValue("@remito", venta.GenerarRemito);
                     entrega.ExecuteNonQuery();
+                }
+                CD_Comprobante.Guardar(conexion, transaccion, idVenta);
+                using (SqlCommand historial = new(@"
+INSERT LogActividad(id_usuario,accion,entidad,id_entidad,detalle,fecha)
+SELECT v.id_usuario,N'REGISTRAR_VENTA',N'Venta',v.id_venta,
+    CONCAT(N'Venta / RTO ',v.id_venta,N' | Cliente: ',c.nombre_cliente,N' ',c.apellido_cliente,
+        N' | Total ARS: ',FORMAT(v.total,'N2','es-AR'),N' | Descuento ARS: ',FORMAT(v.descuento,'N2','es-AR')),v.fecha_venta
+FROM Venta v JOIN Cliente c ON c.id_cliente=v.id_cliente WHERE v.id_venta=@venta;
+INSERT LogActividad(id_usuario,accion,entidad,id_entidad,detalle,fecha)
+SELECT id_usuario,N'APLICAR_DESCUENTO',N'Venta',id_venta,
+    CONCAT(N'Venta / RTO ',id_venta,N' | Descuento ARS: ',FORMAT(descuento,'N2','es-AR'),
+        N' | Total final ARS: ',FORMAT(total,'N2','es-AR')),fecha_venta
+FROM Venta WHERE id_venta=@venta AND descuento>0;", conexion, transaccion))
+                {
+                    historial.Parameters.AddWithValue("@venta", idVenta);
+                    historial.ExecuteNonQuery();
                 }
                 transaccion.Commit();
                 return idVenta;

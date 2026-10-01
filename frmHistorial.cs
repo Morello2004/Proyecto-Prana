@@ -7,12 +7,23 @@ namespace Prana.Presentacion
     public partial class frmHistorial : Form
     {
         // Accede al historial de actividades registrado por el sistema.
+        private readonly TextBox txtRemito = new() { PlaceholderText="Nro. de remito", MaxLength=10 };
+        private readonly TextBox txtAccion = new() { PlaceholderText="Ej.: DESCUENTO", MaxLength=100 };
+        private readonly TextBox txtUsuario = new() { PlaceholderText="Nombre de usuario", MaxLength=100 };
         private readonly CN_LogActividad cnLogActividad = new CN_LogActividad();
 
         public frmHistorial()
         {
             InitializeComponent();
             ConfigurarHistorial();
+            pnlFiltros.Height=175;
+            var fila=DistribucionAdaptable.Fila(
+                DistribucionAdaptable.Campo(new Label { Text="Remito" },txtRemito,170),
+                DistribucionAdaptable.Campo(new Label { Text="Accion" },txtAccion,210),
+                DistribucionAdaptable.Campo(new Label { Text="Usuario" },txtUsuario,210));
+            fila.Dock=DockStyle.Bottom; pnlFiltros.Controls.Add(fila);
+            foreach(var campo in new[]{txtRemito,txtAccion,txtUsuario})
+                campo.KeyDown+=(_,e)=> { if(e.KeyCode==Keys.Enter){e.SuppressKeyPress=true;btnFiltrar_Click(this,EventArgs.Empty);} };
         }
 
         // Configura y carga la grilla del historial.
@@ -45,7 +56,15 @@ namespace Prana.Presentacion
         private void CargarActividades(DateTime desde, DateTime hasta, int limite)
         {
             // Actualiza la grilla con los registros filtrados.
-            dgvActividades.DataSource = cnLogActividad.ObtenerFiltrado(desde, hasta, limite);
+            int? remito=null;
+            if(!string.IsNullOrWhiteSpace(txtRemito.Text))
+            {
+                if(!int.TryParse(txtRemito.Text.Trim(),out int numero) || numero<=0)
+                { MessageBox.Show("Ingrese un numero de remito valido.","Historial");return; }
+                remito=numero;
+            }
+            try { dgvActividades.DataSource = cnLogActividad.ObtenerFiltrado(desde, hasta, limite,remito,txtAccion.Text,txtUsuario.Text); }
+            catch(Exception ex) { MessageBox.Show(ex.Message,"Historial"); }
         }
 
         // Filtra las actividades por el rango seleccionado.

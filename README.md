@@ -84,10 +84,12 @@ El diseño contempla relaciones entre las diferentes entidades del negocio, util
 * Consultas parametrizadas desde C#
 * Operaciones de lectura y modificación de información
 
-El repositorio incluye un script dentro de:
+El repositorio incluye los scripts activos dentro de:
 
 ```text
-BaseDeDatos/CrearBD.sql
+BaseDeDatos/CrearEstructuraPrana_LocalDB.sql
+BaseDeDatos/ActualizarEstructuraPrana_LocalDB.sql
+BaseDeDatos/CajaYComprobantes.sql
 ```
 
 para documentar la estructura utilizada por el sistema.
@@ -101,7 +103,7 @@ Proyecto-Prana/
 ├── Prana.Entidades/
 ├── Prana.negocio/
 ├── BaseDeDatos/
-│   └── CrearBD.sql
+│   └── scripts de creación y actualización
 │
 ├── Prana.Presentacion.csproj
 ├── PranaElectronica.slnx

@@ -16,6 +16,7 @@ namespace Prana.Entidades
     // separa el importe base del recargo para registrar el cobro real
     public class PagoNuevaVenta
     {
+        public string CuentaDestino { get; set; } = "";
         public int IdMedioPago { get; set; }
         public string Medio { get; set; } = string.Empty;
         public decimal Monto { get; set; }

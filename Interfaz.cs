@@ -13,9 +13,36 @@ namespace Prana.Presentacion
         public Interfaz()
         {
             InitializeComponent();
-            btnAlerta.Visible = Permisos.TienePermiso(Permisos.ConsultarHistorial);
+            btnAlerta.Visible = Permisos.TienePermiso(Permisos.ConsultarAlertas);
+            btnHistorial.Visible = Permisos.TienePermiso(Permisos.ConsultarHistorial);
+            btnInformes.Visible = Permisos.TienePermiso(Permisos.ConsultarInformes);
             btnUsuarios.Visible = Permisos.TienePermiso(Permisos.GestionarUsuarios);
             btnMediosPagos.Visible = Permisos.TienePermiso(Permisos.ModificarMediosPago);
+            ConfigurarMenuCompacto();
+        }
+
+        private void ConfigurarMenuCompacto()
+        {
+            WindowState = FormWindowState.Maximized;
+            pnlContenido.BackColor = EstiloGestion.Fondo;
+            pnlMenuLateral.Width = 168;
+            panel2.Visible = false;
+            panel1.SetBounds(22, 8, 124, 48);
+            pnlMenuLateral.AutoScroll = true;
+            int y = 64;
+            foreach (var boton in new[] { btnPanelPrincipal, btnNuevaVenta, btnClientes,
+                btnStock, btnPagos, btnMediosPagos, btnEntregas, btnInformes, btnAlerta, btnHistorial, btnUsuarios })
+            {
+                // Visible depende también del formulario padre, aún sin mostrar.
+                bool permitido = boton != btnUsuarios || Permisos.TienePermiso(Permisos.GestionarUsuarios);
+                permitido &= boton != btnMediosPagos || Permisos.TienePermiso(Permisos.ModificarMediosPago);
+                permitido &= boton != btnAlerta || Permisos.TienePermiso(Permisos.ConsultarAlertas);
+                permitido &= boton != btnInformes || Permisos.TienePermiso(Permisos.ConsultarInformes);
+                permitido &= boton != btnHistorial || Permisos.TienePermiso(Permisos.ConsultarHistorial);
+                boton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+                boton.SetBounds(6, y, 156, 36);
+                if (permitido) y += 40;
+            }
         }
 
         // Abre un formulario dentro del panel derecho
@@ -123,15 +150,25 @@ namespace Prana.Presentacion
         private void btnAlerta_Click(object sender, EventArgs e)
         {
             // Comprueba si el usuario puede consultar el historial.
-            if (!Permisos.TienePermiso(Permisos.ConsultarHistorial))
+            if (!Permisos.TienePermiso(Permisos.ConsultarAlertas))
             {
                 // Informa que el usuario no tiene autorización.
-                MessageBox.Show("No tiene permisos para consultar el historial.", "Acceso denegado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("No tiene permisos para consultar alertas.", "Acceso denegado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             // Abre el historial de actividades.
-            AbrirFormulario(new frmHistorial());
+            AbrirFormulario(new frmAlertas());
+        }
+
+        private void btnInformes_Click(object sender, EventArgs e)
+        {
+            if (Permisos.TienePermiso(Permisos.ConsultarInformes)) AbrirFormulario(new frmInformesVentas());
+        }
+
+        private void btnHistorial_Click(object sender, EventArgs e)
+        {
+            if (Permisos.TienePermiso(Permisos.ConsultarHistorial)) AbrirFormulario(new frmHistorial());
         }
 
         private void btnUsuarios_Click(object sender, EventArgs e)

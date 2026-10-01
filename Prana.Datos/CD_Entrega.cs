@@ -100,7 +100,7 @@ namespace Prana.Datos
                     VALUES(@remito,@direccion,@horario,@tipo,0,@estado)",("@remito",idRemito),("@cantidad",cantidad),("@variante",variante),
                     ("@direccion",direccion),("@horario",horario),("@tipo",tipoEnvio),("@estado",estado));
                 detalle.ExecuteNonQuery();
-                RegistrarActividad(cn,tx,usuario,"PREPARAR_ENTREGA",venta,$"Remito {idRemito}; variante {variante}; cantidad {cantidad}");
+                RegistrarActividad(cn,tx,usuario,"PREPARAR_ENTREGA",venta,$"Remito {venta}; preparación interna {idRemito}; variante {variante}; cantidad {cantidad}");
                 tx.Commit();
             }
             catch { tx.Rollback(); throw; }

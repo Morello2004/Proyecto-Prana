@@ -11,6 +11,23 @@ namespace Prana.Datos
 {
     public class CD_Proveedor
     {
+        // Se ejecuta dentro de la transacción del ingreso: no deja proveedores huérfanos.
+        internal static int ObtenerOCrear(SqlConnection conexion, SqlTransaction transaccion, string nombre)
+        {
+            using var comando = new SqlCommand(@"
+                DECLARE @id int;
+                SELECT TOP (1) @id=id_proveedor FROM dbo.Proveedor WITH (UPDLOCK,HOLDLOCK)
+                WHERE UPPER(LTRIM(RTRIM(nombre_proveedor)))=UPPER(@nombre) ORDER BY id_proveedor;
+                IF @id IS NULL
+                BEGIN
+                    INSERT dbo.Proveedor(nombre_proveedor) VALUES(@nombre);
+                    SET @id=CONVERT(int,SCOPE_IDENTITY());
+                END;
+                SELECT @id;", conexion, transaccion);
+            comando.Parameters.Add("@nombre", SqlDbType.NVarChar, 100).Value = nombre.Trim();
+            return Convert.ToInt32(comando.ExecuteScalar());
+        }
+
         public bool NuevoProveedor(Proveedor proveedor)
         {
             string consulta = "INSERT INTO Proveedor (nombre_proveedor, email, Telefono) VALUES (@nombreProveedor, @mail, @Telefono)";

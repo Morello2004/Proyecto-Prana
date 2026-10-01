@@ -8,10 +8,13 @@ namespace Prana.Presentacion
     {
         private readonly CN_Pago negocio=new();
         private bool cargando;
+        private readonly TextBox txtCuentaDestino = new() { MaxLength=100 };
         private venta? Seleccionada => dgvVentas.CurrentRow?.DataBoundItem as venta;
         public frmPagos()
         {
             InitializeComponent();
+            ConfigurarDistribucion();
+            lblImporte.Text = "Importe a cancelar";
             EstiloGestion.Grilla(dgvVentas); EstiloGestion.Grilla(dgvPagos);
             EstiloGestion.Columna(dgvVentas,"IdVenta","Venta",50);
             EstiloGestion.Columna(dgvVentas,"NombreCompletoCliente","Cliente",160);
@@ -24,8 +27,7 @@ namespace Prana.Presentacion
             EstiloGestion.Columna(dgvPagos,"Fecha","Fecha",120,"dd/MM/yyyy HH:mm");
             EstiloGestion.Columna(dgvPagos,"Medio","Medio de pago",130);
             EstiloGestion.Columna(dgvPagos,"Cuotas","Cuotas",60);
-            EstiloGestion.Columna(dgvPagos,"ImporteBase","Importe cancelado",110,"C2");
-            EstiloGestion.Columna(dgvPagos,"Cobrado","Cobrado con recargo",120,"C2");
+            EstiloGestion.Columna(dgvPagos,"Cobrado","Total cobrado",120,"C2");
             cboCuotas.SelectedIndex=0;
             ActualizarCuotas();
             Load+=(_,_)=>Buscar();
@@ -97,7 +99,7 @@ namespace Prana.Presentacion
             {
                 // El cálculo del recargo pertenece a negocio; el formulario solo presenta la cotización.
                 var cobro=negocio.Preparar(Seleccionada.IdVenta,medio,cuotas,nudImporte.Value);
-                lblCobro.Text=$"Recargo: {cobro.Recargo:C2}   ·   Total a cobrar: {cobro.ImporteBase+cobro.Recargo:C2}";
+                lblCobro.Text=$"Total a cobrar: {cobro.ImporteBase+cobro.Recargo:C2}";
                 btnRegistrar.Enabled=nudImporte.Value<=Seleccionada.SaldoPendiente && SesionActual.Usuario!=null && Permisos.TienePermiso(Permisos.RegistrarPagos);
             }
             catch(Exception ex){lblCobro.Text=ex.Message;}
@@ -108,7 +110,8 @@ namespace Prana.Presentacion
             try
             {
                 btnRegistrar.Enabled=false;
-                negocio.Registrar(Seleccionada.IdVenta,medio,cuotas,nudImporte.Value);
+                negocio.Registrar(Seleccionada.IdVenta,medio,cuotas,nudImporte.Value,txtCuentaDestino.Text);
+                txtCuentaDestino.Clear();
                 MessageBox.Show(this,"Pago registrado correctamente.","Pagos",MessageBoxButtons.OK,MessageBoxIcon.Information);
                 Buscar();
             }

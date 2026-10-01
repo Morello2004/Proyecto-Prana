@@ -1,4 +1,4 @@
-﻿namespace Prana.Presentacion
+namespace Prana.Presentacion
 {
     partial class frmClientes
     {
@@ -153,7 +153,7 @@
             label5.Name = "label5";
             label5.Size = new Size(57, 15);
             label5.TabIndex = 41;
-            label5.Text = "Direccion";
+            label5.Text = "Dirección (opcional)";
             // 
             // textBoxDireccion
             // 

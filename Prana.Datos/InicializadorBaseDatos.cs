@@ -151,6 +151,7 @@ namespace Prana.Datos
 
                 // El script comprueba cada columna y tabla: nunca borra los datos existentes.
                 EjecutarScript(conexion, transaccion, actualizaciones);
+                EjecutarScript(conexion, transaccion, LeerScript("CajaYComprobantes.sql"));
                 transaccion.Commit();
             }
             catch

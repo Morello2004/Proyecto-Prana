@@ -1,8 +1,3 @@
-﻿-- Instalación manual en una base nueva. No ejecutar sobre una instalación con datos.
-CREATE DATABASE PranaElectronica;
-GO
-USE PranaElectronica;
-GO
 /*
     SCRIPT DE CREACIÓN DE LA ESTRUCTURA LOCAL DE PRANA ELECTRÓNICA
 

@@ -17,10 +17,18 @@ namespace Prana.Presentacion
         private readonly ListBox sugerenciasClientes = new ListBox();
         private readonly System.Windows.Forms.Timer esperaBusqueda = new System.Windows.Forms.Timer { Interval = 250 };
         private bool seleccionandoCliente;
+        private readonly TextBox txtCodigoPostal = new() { MaxLength=12, Width=170 };
 
         public frmClientes()
         {
             InitializeComponent();
+            ConfigurarDistribucion();
+            Localidad.Text="Ciudad (opcional)";
+            colLocalidad.HeaderText="Ciudad";
+            txtCodigoPostal.Location=new Point(410,165);
+            panel2.Controls.Add(new Label { Text="Codigo postal (opcional)",ForeColor=Color.White,AutoSize=true,Location=new Point(410,147) });
+            panel2.Controls.Add(txtCodigoPostal);
+            dgv_listadoClientes.Columns.Add(new DataGridViewTextBoxColumn { Name="colCodigoPostal",HeaderText="Codigo postal",DataPropertyName="CodigoPostal" });
 
             // evita que se creen columnas adicionales automaticamente
             dgv_listadoClientes.AutoGenerateColumns = false;
@@ -115,6 +123,7 @@ namespace Prana.Presentacion
                     DNI = textBoxDNI.Text.Trim(),
                     Telefono = textBoxTelefono.Text.Trim(),
                     Direccion = textBoxDireccion.Text.Trim(),
+                    CodigoPostal = txtCodigoPostal.Text.Trim(),
 
                     Localidad = new Localidad
                     {
@@ -142,6 +151,7 @@ namespace Prana.Presentacion
                 textBoxTelefono.Clear();
                 textBoxDireccion.Clear();
                 textBoxLocalidad.Clear();
+                txtCodigoPostal.Clear();
 
                 // actualiza el listado
                 CargarClientes();
@@ -228,6 +238,7 @@ namespace Prana.Presentacion
                 filaSeleccionada.Cells["ColTelefono"].ReadOnly = false;
                 filaSeleccionada.Cells["colDireccion"].ReadOnly = false;
                 filaSeleccionada.Cells["colLocalidad"].ReadOnly = false;
+                filaSeleccionada.Cells["colCodigoPostal"].ReadOnly = false;
 
                 // cambia el texto del boton de esta fila
                 filaSeleccionada.Cells["colAccion"].Value = "Guardar cambios";
@@ -256,6 +267,7 @@ namespace Prana.Presentacion
                 clienteSeleccionado.Telefono = filaSeleccionada.Cells["ColTelefono"].Value?.ToString()?.Trim() ?? string.Empty;
                 clienteSeleccionado.Direccion = filaSeleccionada.Cells["colDireccion"].Value?.ToString()?.Trim() ?? string.Empty;
 
+                clienteSeleccionado.CodigoPostal = filaSeleccionada.Cells["colCodigoPostal"].Value?.ToString()?.Trim() ?? string.Empty;
                 // guarda la localidad escrita en la fila
                 clienteSeleccionado.Localidad = new Localidad
                 {

@@ -3,6 +3,7 @@ namespace Prana.Entidades
     // Representa un medio de pago y sus recargos por cuotas.
     public class MedioPago
     {
+        public string TipoCaja { get; set; } = "Otros";
         // Identifica el medio de pago.
         public int IdMedioPago { get; set; }
 

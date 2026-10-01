@@ -39,12 +39,24 @@ namespace Prana.Presentacion
             Text = "Usar dirección registrada"
         };
         private bool actualizandoTexto;
+        private int ventaRegistrada;
+        private readonly TextBox txtCuentaDestino = new() { MaxLength = 100, Location = new Point(280, 200), Width = 250 };
 
         // inicializa el diseñador y conecta los controles con la lógica de venta
         public frmNuevaVenta()
         {
             InitializeComponent();
             ConfigurarVenta();
+            ConfigurarDistribucion();
+            chkGenerarRecibo.Text = "Generar garantía";
+            chkGenerarRecibo.Checked = chkGenerarRemito.Checked = true;
+            chkGenerarRecibo.Enabled = chkGenerarRemito.Enabled = false;
+            lblAclaracionDocumentos.Text = "Garantía y remito se generan con el mismo número de venta.";
+            btnConfirmarPagoActual.Text = "Registrar venta";
+            dtpFechaPago.Enabled = false;
+            colMontoPago.Visible = colRecargoPago.Visible = false;
+            pnlPago.Controls.Add(new Label { Text = "Cuenta destino / referencia", AutoSize = true, ForeColor = Color.White, Location = new Point(280, 182) });
+            pnlPago.Controls.Add(txtCuentaDestino);
         }
 
         // conecta las búsquedas y los cambios de cliente producto entrega y pago
@@ -224,9 +236,15 @@ namespace Prana.Presentacion
             // divide por el factor de recargo para que el importe ingresado sea lo cobrado
             (decimal montoBase, decimal recargo) = registroVentas.DesglosarCobro(cobrado, porcentaje);
             if (montoBase <= 0 || pagosVenta.Sum(p => p.Monto) + montoBase > TotalBase) { MessageBox.Show("El importe cobrado supera el saldo de la venta."); return; }
-            pagosVenta.Add(new PagoNuevaVenta { IdMedioPago = medio.IdMedioPago, Medio = medio.NombreMedioPago, Monto = montoBase, Recargo = recargo, Cuotas = cuotas });
+            pagosVenta.Add(new PagoNuevaVenta { CuentaDestino = txtCuentaDestino.Text.Trim(), IdMedioPago = medio.IdMedioPago, Medio = medio.NombreMedioPago, Monto = montoBase, Recargo = recargo, Cuotas = cuotas });
+            txtCuentaDestino.Clear();
             MostrarPagos();
             nudMontoPago.Value = 0;
+            if (dgvPagos.Rows.Count > 0)
+            {
+                dgvPagos.CurrentCell = dgvPagos.Rows[dgvPagos.Rows.Count - 1].Cells[colMedioPago.Index];
+                dgvPagos.FirstDisplayedScrollingRowIndex = dgvPagos.Rows.Count - 1;
+            }
         }
 
         // muestra base recargo total cobrado y saldo pendiente
@@ -281,10 +299,11 @@ namespace Prana.Presentacion
         {
             dtpFechaPago.Value = DateTime.Today;
             dtpFechaPago.MinDate = DateTime.Today;
-            lblMontoPago.Text = "Cobrado con recargo";
+            lblMontoPago.Text = "Importe cobrado";
             colMontoPago.HeaderText = "Base de venta";
             colRecargoPago.HeaderText = "Recargo";
             colTotalPago.HeaderText = "Total cobrado";
+            colMontoPago.Visible = colRecargoPago.Visible = false;
             pnlPago.Controls.Remove(btnConfirmarPagoActual);
             pnlDocumentos.Controls.Add(btnConfirmarPagoActual);
             btnConfirmarPagoActual.Location = new Point(270, 53);
@@ -297,7 +316,7 @@ namespace Prana.Presentacion
             dataGridView2.AllowUserToAddRows = false;
             dataGridView2.RowHeadersVisible = false;
             dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridView2.Height = 55;
+            dataGridView2.Height = 90;
             cboCantCuotas.Items.AddRange(new object[] { 1, 3, 6, 9, 12 });
             cboCantCuotas.SelectedIndex = 0;
             rdoRetiroLocal.Checked = true;
@@ -319,6 +338,7 @@ namespace Prana.Presentacion
         // valida la venta completa y envía todos los datos al registro
         private void RegistrarVenta()
         {
+            if (ventaRegistrada > 0) return;
             if (clienteElegido == null || detallesVenta.Count == 0) { MessageBox.Show("Seleccione un cliente y al menos un producto."); return; }
             if (nudDescuento.Value > detallesVenta.Sum(d => d.Cantidad * d.PrecioUnitario)) { MessageBox.Show("El descuento no puede superar el subtotal."); return; }
             if (!rdoRetiroLocal.Checked && !rdoRetiroPosterior.Checked && !rdoEnvioDomicilio.Checked) { MessageBox.Show("Seleccione una forma de entrega."); return; }
@@ -347,13 +367,18 @@ namespace Prana.Presentacion
                     ObservacionesEntrega = txtObservacionesEntrega.Text.Trim(),
                     TipoLogistica = cboTipoLogistica.Text,
                     CostoEnvio = rdoEnvioDomicilio.Checked ? numericUpDown1.Value : 0,
-                    GenerarRemito = chkGenerarRemito.Checked,
+                    GenerarRemito = true,
                     Detalles = detallesVenta.ToList(),
                     Pagos = pagosVenta.ToList()
                 });
                 lblNumeroVenta.Text = $"Venta N.° {id}";
                 btnConfirmarPagoActual.Enabled = false;
-                MessageBox.Show($"Venta N.° {id} registrada.");
+                ventaRegistrada = id;
+                try { DocumentosPrana.MostrarVenta(this, id); }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(this, $"La venta N.º {id} quedó registrada y sus comprobantes están guardados en la base.\nNo se pudieron abrir o exportar los archivos: {ex.Message}\nPuede reimprimirlos desde el panel principal, sin registrar otra venta.", "Venta registrada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
             catch (Exception ex) { ErrorVenta(ex); }
         }
@@ -389,5 +414,10 @@ namespace Prana.Presentacion
         private void radioButton1_CheckedChanged(object sender, EventArgs e) { }
         private void cboCondicionPago_SelectedIndexChanged(object sender, EventArgs e) { }
         private void cboTipoLogistica_SelectedIndexChanged(object sender, EventArgs e) { }
+
+        private void btnConfirmarPagoActual_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -1,4 +1,4 @@
-using Prana.Datos;
+﻿using Prana.Datos;
 using Prana.Entidades;
 using System;
 using System.Collections.Generic;
@@ -29,10 +29,10 @@ namespace Prana.negocio
         }
 
         // Obtiene actividades filtradas por fecha y cantidad máxima.
-        public List<LogActividad> ObtenerFiltrado(DateTime desde, DateTime hasta, int limite)
+        public List<LogActividad> ObtenerFiltrado(DateTime desde, DateTime hasta, int limite, int? remito = null, string accion = "", string usuario = "")
         {
             // Solicita los registros filtrados a la capa de datos.
-            return datosLog.ObtenerFiltrado(desde, hasta, limite);
+            return datosLog.ObtenerFiltrado(desde, hasta, limite, remito, accion, usuario);
         }
     }
 }

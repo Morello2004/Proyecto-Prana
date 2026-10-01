@@ -1,159 +1,64 @@
-﻿using Prana.negocio;
-using System;
-using System.Drawing;
+﻿using Prana.Entidades;
+using Prana.negocio;
 using System.Windows.Forms;
 
 namespace Prana.Presentacion
 {
-    public partial class frmAlertas : Form
+    public class frmAlertas : Form
     {
-        // Accede al historial de actividades registrado por el sistema.
-        private readonly CN_LogActividad cnLogActividad = new CN_LogActividad();
-
-        // Muestra las actividades registradas.
-        private readonly DataGridView dgvActividades = new DataGridView();
-
-        // Permite seleccionar el inicio del período.
-        private readonly DateTimePicker dtpDesde = new DateTimePicker();
-
-        // Permite seleccionar el final del período.
-        private readonly DateTimePicker dtpHasta = new DateTimePicker();
-
-        // Contiene los controles de filtro.
-        private readonly Panel pnlFiltros = new Panel();
-
-        // Permite aplicar el rango de fechas.
-        private readonly Button btnFiltrar = new Button();
-
-        // Permite volver a mostrar las últimas diez actividades.
-        private readonly Button btnUltimas = new Button();
-
-        // Permite ocultar o mostrar el historial.
-        private readonly Button btnOcultar = new Button();
+        private readonly CN_InformeVentas negocio = new();
+        private readonly DataGridView grilla = new();
+        private readonly Label estado = new();
 
         public frmAlertas()
         {
             Text = "Alertas";
-            Controls.Add(new Label { Text = "Alertas", AutoSize = true, Location = new Point(20, 20) });
+            BackColor = Color.FromArgb(13, 19, 27);
+            ForeColor = Color.White;
+            Padding = new Padding(16);
+            var titulo = new Label { Text = "Alertas de pagos pendientes", Font = new Font("Segoe UI", 18, FontStyle.Bold), AutoSize = true, Dock = DockStyle.Top, Height = 42 };
+            estado.Text = "Ventas con saldo pendiente luego de un mes desde el primer pago";
+            estado.Dock = DockStyle.Top;
+            estado.Height = 30;
+            estado.ForeColor = Color.FromArgb(180, 200, 225);
+            grilla.Dock = DockStyle.Fill;
+            grilla.ReadOnly = true;
+            grilla.AllowUserToAddRows = false;
+            grilla.AutoGenerateColumns = true;
+            grilla.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+            grilla.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            grilla.RowHeadersVisible = false;
+            grilla.BackgroundColor = Color.FromArgb(13, 19, 27);
+            grilla.DefaultCellStyle.BackColor = Color.White;
+            grilla.DefaultCellStyle.ForeColor = Color.FromArgb(21, 30, 41);
+            grilla.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(236, 242, 249);
+            Controls.Add(grilla);
+            Controls.Add(estado);
+            Controls.Add(titulo);
+            Cargar();
         }
 
-        // Configura y carga la grilla del historial.
-        private void ConfigurarHistorial()
+        private void Cargar()
         {
-            // Configura la grilla para ocupar el formulario.
-            dgvActividades.Dock = DockStyle.Fill;
-            dgvActividades.AutoGenerateColumns = true;
-            dgvActividades.ReadOnly = true;
-            dgvActividades.AllowUserToAddRows = false;
-            dgvActividades.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
-            dgvActividades.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dgvActividades.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvActividades.MultiSelect = false;
-            dgvActividades.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-
-            // Configura el panel superior de filtros.
-            pnlFiltros.Dock = DockStyle.Top;
-            pnlFiltros.Height = 42;
-            pnlFiltros.Padding = new Padding(8, 8, 8, 4);
-
-            // Configura el selector de fecha inicial.
-            dtpDesde.Format = DateTimePickerFormat.Short;
-            dtpDesde.Value = DateTime.Today.AddMonths(-1);
-
-            // Configura el selector de fecha final.
-            dtpHasta.Format = DateTimePickerFormat.Short;
-            dtpHasta.Value = DateTime.Today;
-
-            // Configura el botón para filtrar por fechas.
-            btnFiltrar.Text = "Filtrar";
-            btnFiltrar.AutoSize = true;
-            btnFiltrar.Click += btnFiltrar_Click;
-
-            // Configura el botón para mostrar las últimas diez actividades.
-            btnUltimas.Text = "Últimas 10";
-            btnUltimas.AutoSize = true;
-            btnUltimas.Click += btnUltimas_Click;
-
-            // Configura el botón para ocultar o mostrar el historial.
-            btnOcultar.Text = "Ocultar historial";
-            btnOcultar.AutoSize = true;
-            btnOcultar.Click += btnOcultar_Click;
-
-            // Agrega los controles al panel de filtros.
-            pnlFiltros.Controls.Add(new Label { Text = "Desde", AutoSize = true, Location = new Point(8, 12) });
-            dtpDesde.Location = new Point(52, 8);
-            pnlFiltros.Controls.Add(dtpDesde);
-            pnlFiltros.Controls.Add(new Label { Text = "Hasta", AutoSize = true, Location = new Point(160, 12) });
-            dtpHasta.Location = new Point(204, 8);
-            pnlFiltros.Controls.Add(dtpHasta);
-            btnFiltrar.Location = new Point(312, 7);
-            pnlFiltros.Controls.Add(btnFiltrar);
-            btnUltimas.Location = new Point(390, 7);
-            pnlFiltros.Controls.Add(btnUltimas);
-            btnOcultar.Location = new Point(490, 7);
-            pnlFiltros.Controls.Add(btnOcultar);
-
-            // Agrega el historial y los filtros al formulario.
-            Controls.Add(dgvActividades);
-            Controls.Add(pnlFiltros);
-            dgvActividades.BringToFront();
-
-            // Carga las últimas diez actividades.
-            CargarActividades(DateTime.MinValue, DateTime.MaxValue, 10);
-
-            // Oculta identificadores técnicos que no necesita ver el usuario.
-            dgvActividades.Columns[nameof(Prana.Entidades.LogActividad.IdLog)].Visible = false;
-            dgvActividades.Columns[nameof(Prana.Entidades.LogActividad.IdUsuario)].Visible = false;
-            dgvActividades.Columns[nameof(Prana.Entidades.LogActividad.IdEntidad)].Visible = false;
-
-            // Ajusta los títulos y anchos de las columnas visibles.
-            dgvActividades.Columns[nameof(Prana.Entidades.LogActividad.NombreUsuario)].HeaderText = "Usuario";
-            dgvActividades.Columns[nameof(Prana.Entidades.LogActividad.NombreUsuario)].Width = 140;
-            dgvActividades.Columns[nameof(Prana.Entidades.LogActividad.Accion)].HeaderText = "Acción";
-            dgvActividades.Columns[nameof(Prana.Entidades.LogActividad.Accion)].Width = 190;
-            dgvActividades.Columns[nameof(Prana.Entidades.LogActividad.Entidad)].HeaderText = "Entidad";
-            dgvActividades.Columns[nameof(Prana.Entidades.LogActividad.Entidad)].Width = 150;
-            dgvActividades.Columns[nameof(Prana.Entidades.LogActividad.Detalle)].HeaderText = "Detalle";
-            dgvActividades.Columns[nameof(Prana.Entidades.LogActividad.Detalle)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dgvActividades.Columns[nameof(Prana.Entidades.LogActividad.Fecha)].HeaderText = "Fecha";
-            dgvActividades.Columns[nameof(Prana.Entidades.LogActividad.Fecha)].Width = 150;
-
-        }
-
-        // Carga actividades según las fechas y el límite indicado.
-        private void CargarActividades(DateTime desde, DateTime hasta, int limite)
-        {
-            // Actualiza la grilla con los registros filtrados.
-            dgvActividades.DataSource = cnLogActividad.ObtenerFiltrado(desde, hasta, limite);
-        }
-
-        // Filtra las actividades por el rango seleccionado.
-        private void btnFiltrar_Click(object? sender, EventArgs e)
-        {
-            // Valida que el rango sea correcto.
-            if (dtpDesde.Value.Date > dtpHasta.Value.Date)
+            try
             {
-                MessageBox.Show("La fecha Desde no puede ser posterior a la fecha Hasta.", "Rango inválido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                List<AlertaPagoPendiente> alertas = negocio.ObtenerAlertas();
+                grilla.DataSource = alertas;
+                estado.Text = alertas.Count == 0 ? "No hay pagos pendientes vencidos." : $"{alertas.Count} venta(s) requieren seguimiento.";
+                if (grilla.Columns.Count == 0) return;
+                grilla.Columns[nameof(AlertaPagoPendiente.IdVenta)].HeaderText = "Venta";
+                grilla.Columns[nameof(AlertaPagoPendiente.Cliente)].HeaderText = "Cliente";
+                grilla.Columns[nameof(AlertaPagoPendiente.Productos)].HeaderText = "Productos";
+                grilla.Columns[nameof(AlertaPagoPendiente.PrimerPago)].HeaderText = "Primer pago";
+                grilla.Columns[nameof(AlertaPagoPendiente.Total)].HeaderText = "Total";
+                grilla.Columns[nameof(AlertaPagoPendiente.Pagado)].HeaderText = "Pagado";
+                grilla.Columns[nameof(AlertaPagoPendiente.Saldo)].HeaderText = "Saldo";
+                grilla.Columns[nameof(AlertaPagoPendiente.DiasVencida)].HeaderText = "Días vencida";
+                grilla.Columns[nameof(AlertaPagoPendiente.PrimerPago)].DefaultCellStyle.Format = "dd/MM/yyyy";
+                foreach (string nombre in new[] { nameof(AlertaPagoPendiente.Total), nameof(AlertaPagoPendiente.Pagado), nameof(AlertaPagoPendiente.Saldo) }) grilla.Columns[nombre].DefaultCellStyle.Format = "C2";
+                grilla.Columns[nameof(AlertaPagoPendiente.Productos)].Width = 280;
             }
-
-            // Incluye todo el día seleccionado como fecha final.
-            CargarActividades(dtpDesde.Value.Date, dtpHasta.Value.Date.AddDays(1), 100);
-        }
-
-        // Muestra nuevamente las últimas diez actividades.
-        private void btnUltimas_Click(object? sender, EventArgs e)
-        {
-            // Carga solo las diez actividades más recientes.
-            CargarActividades(DateTime.MinValue, DateTime.MaxValue, 10);
-        }
-
-        // Oculta o muestra la grilla del historial.
-        private void btnOcultar_Click(object? sender, EventArgs e)
-        {
-            // Invierte la visibilidad del historial.
-            dgvActividades.Visible = !dgvActividades.Visible;
-            btnOcultar.Text = dgvActividades.Visible ? "Ocultar historial" : "Mostrar historial";
+            catch (Exception ex) { MessageBox.Show(ex.Message, "Alertas", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
     }
 }

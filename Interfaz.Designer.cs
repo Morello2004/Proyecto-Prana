@@ -33,6 +33,8 @@
             panel2 = new Panel();
             btnUsuarios = new FontAwesome.Sharp.IconButton();
             btnAlerta = new FontAwesome.Sharp.IconButton();
+            btnInformes = new FontAwesome.Sharp.IconButton();
+            btnHistorial = new FontAwesome.Sharp.IconButton();
             btnEntregas = new FontAwesome.Sharp.IconButton();
             btnMediosPagos = new FontAwesome.Sharp.IconButton();
             btnPagos = new FontAwesome.Sharp.IconButton();
@@ -47,13 +49,15 @@
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
-            // 
+            //
             // pnlMenuLateral
-            // 
+            //
             pnlMenuLateral.BackColor = Color.FromArgb(20, 24, 30);
             pnlMenuLateral.Controls.Add(panel2);
             pnlMenuLateral.Controls.Add(btnUsuarios);
             pnlMenuLateral.Controls.Add(btnAlerta);
+            pnlMenuLateral.Controls.Add(btnInformes);
+            pnlMenuLateral.Controls.Add(btnHistorial);
             pnlMenuLateral.Controls.Add(btnEntregas);
             pnlMenuLateral.Controls.Add(btnMediosPagos);
             pnlMenuLateral.Controls.Add(btnPagos);
@@ -67,9 +71,9 @@
             pnlMenuLateral.Name = "pnlMenuLateral";
             pnlMenuLateral.Size = new Size(230, 558);
             pnlMenuLateral.TabIndex = 0;
-            // 
+            //
             // panel2
-            // 
+            //
             panel2.Location = new Point(228, 0);
             panel2.Name = "panel2";
             panel2.Size = new Size(842, 560);
@@ -101,10 +105,40 @@
             btnAlerta.Name = "btnAlerta";
             btnAlerta.Size = new Size(210, 46);
             btnAlerta.TabIndex = 9;
-            btnAlerta.Text = "HISTORIAL";
+            btnAlerta.Text = "ALERTAS";
             btnAlerta.UseVisualStyleBackColor = true;
             btnAlerta.Click += btnAlerta_Click;
+            //
+            // btnInformes
             // 
+            btnInformes.FlatStyle = FlatStyle.Flat;
+            btnInformes.Font = new Font("Arial Black", 11F, FontStyle.Bold);
+            btnInformes.IconChar = FontAwesome.Sharp.IconChar.None;
+            btnInformes.IconColor = Color.Black;
+            btnInformes.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnInformes.Location = new Point(12, 397);
+            btnInformes.Name = "btnInformes";
+            btnInformes.Size = new Size(210, 46);
+            btnInformes.TabIndex = 8;
+            btnInformes.Text = "INFORMES";
+            btnInformes.UseVisualStyleBackColor = true;
+            btnInformes.Click += btnInformes_Click;
+            //
+            // btnHistorial
+            //
+            btnHistorial.FlatStyle = FlatStyle.Flat;
+            btnHistorial.Font = new Font("Arial Black", 11F, FontStyle.Bold);
+            btnHistorial.IconChar = FontAwesome.Sharp.IconChar.None;
+            btnHistorial.IconColor = Color.Black;
+            btnHistorial.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnHistorial.Location = new Point(12, 501);
+            btnHistorial.Name = "btnHistorial";
+            btnHistorial.Size = new Size(210, 46);
+            btnHistorial.TabIndex = 11;
+            btnHistorial.Text = "HISTORIAL";
+            btnHistorial.UseVisualStyleBackColor = true;
+            btnHistorial.Click += btnHistorial_Click;
+            //
             // btnEntregas
             // 
             btnEntregas.FlatStyle = FlatStyle.Flat;
@@ -265,6 +299,8 @@
         private FontAwesome.Sharp.IconButton btnPanelPrincipal;
         private FontAwesome.Sharp.IconButton btnNuevaVenta;
         private FontAwesome.Sharp.IconButton btnAlerta;
+        private FontAwesome.Sharp.IconButton btnInformes;
+        private FontAwesome.Sharp.IconButton btnHistorial;
         private FontAwesome.Sharp.IconButton btnEntregas;
         private FontAwesome.Sharp.IconButton btnMediosPagos;
         private FontAwesome.Sharp.IconButton btnPagos;

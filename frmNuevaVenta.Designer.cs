@@ -154,7 +154,7 @@
             pnlContenidoVenta.RowStyles.Add(new RowStyle(SizeType.Absolute, 65F));
             pnlContenidoVenta.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             pnlContenidoVenta.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
-            pnlContenidoVenta.Size = new Size(1258, 1943);
+            pnlContenidoVenta.Size = new Size(1241, 1943);
             pnlContenidoVenta.TabIndex = 1;
             pnlContenidoVenta.Paint += pnlContenidoVenta_Paint;
             // 
@@ -175,7 +175,7 @@
             tlpNuevaVenta.Location = new Point(3, 68);
             tlpNuevaVenta.Name = "tlpNuevaVenta";
             tlpNuevaVenta.Padding = new Padding(0, 10, 0, 10);
-            tlpNuevaVenta.Size = new Size(1252, 1797);
+            tlpNuevaVenta.Size = new Size(1235, 1797);
             tlpNuevaVenta.TabIndex = 1;
             tlpNuevaVenta.Paint += panel1_Paint;
             // 
@@ -189,7 +189,7 @@
             pnlDocumentos.Controls.Add(lblTituloDocumentos);
             pnlDocumentos.Location = new Point(9, 1660);
             pnlDocumentos.Name = "pnlDocumentos";
-            pnlDocumentos.Size = new Size(1649, 124);
+            pnlDocumentos.Size = new Size(1632, 124);
             pnlDocumentos.TabIndex = 8;
             // 
             // lblAclaracionDocumentos
@@ -259,7 +259,7 @@
             pnlFormaEntrega.Controls.Add(rdoRetiroLocal);
             pnlFormaEntrega.Location = new Point(3, 646);
             pnlFormaEntrega.Name = "pnlFormaEntrega";
-            pnlFormaEntrega.Size = new Size(1649, 269);
+            pnlFormaEntrega.Size = new Size(1632, 269);
             pnlFormaEntrega.TabIndex = 7;
             // 
             // numericUpDown1
@@ -351,7 +351,7 @@
             txtObservacionesEntrega.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             txtObservacionesEntrega.Location = new Point(120, 152);
             txtObservacionesEntrega.Name = "txtObservacionesEntrega";
-            txtObservacionesEntrega.Size = new Size(1383, 23);
+            txtObservacionesEntrega.Size = new Size(1366, 23);
             txtObservacionesEntrega.TabIndex = 7;
             // 
             // lblObservacionesEntrega
@@ -433,7 +433,7 @@
             pnlEncabezadoVenta.Controls.Add(lblTituloNuevaVenta);
             pnlEncabezadoVenta.Location = new Point(3, 0);
             pnlEncabezadoVenta.Name = "pnlEncabezadoVenta";
-            pnlEncabezadoVenta.Size = new Size(1649, 65);
+            pnlEncabezadoVenta.Size = new Size(1632, 65);
             pnlEncabezadoVenta.TabIndex = 0;
             // 
             // lblNumeroVenta
@@ -469,7 +469,7 @@
             pnlCliente.ForeColor = Color.White;
             pnlCliente.Location = new Point(3, 71);
             pnlCliente.Name = "pnlCliente";
-            pnlCliente.Size = new Size(1649, 256);
+            pnlCliente.Size = new Size(1632, 256);
             pnlCliente.TabIndex = 0;
             // 
             // dataGridView2
@@ -537,7 +537,7 @@
             pnlProductos.Controls.Add(lblTituloProductos);
             pnlProductos.Location = new Point(3, 354);
             pnlProductos.Name = "pnlProductos";
-            pnlProductos.Size = new Size(1649, 273);
+            pnlProductos.Size = new Size(1632, 273);
             pnlProductos.TabIndex = 1;
             // 
             // dgvDetalleVenta
@@ -556,7 +556,7 @@
             dgvDetalleVenta.ReadOnly = true;
             dgvDetalleVenta.RowHeadersVisible = false;
             dgvDetalleVenta.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvDetalleVenta.Size = new Size(1489, 138);
+            dgvDetalleVenta.Size = new Size(1472, 138);
             dgvDetalleVenta.TabIndex = 5;
             dgvDetalleVenta.CellContentClick += dgvDetalleVenta_CellContentClick;
             // 
@@ -654,7 +654,7 @@
             pnlDescuentoTotales.Controls.Add(lblTituloDescuento);
             pnlDescuentoTotales.Location = new Point(3, 930);
             pnlDescuentoTotales.Name = "pnlDescuentoTotales";
-            pnlDescuentoTotales.Size = new Size(1649, 165);
+            pnlDescuentoTotales.Size = new Size(1632, 165);
             pnlDescuentoTotales.TabIndex = 0;
             pnlDescuentoTotales.Paint += panel1_Paint_2;
             // 
@@ -805,7 +805,7 @@
             pnlPago.Controls.Add(lblMedioPago);
             pnlPago.Location = new Point(3, 1105);
             pnlPago.Name = "pnlPago";
-            pnlPago.Size = new Size(1649, 546);
+            pnlPago.Size = new Size(1632, 546);
             pnlPago.TabIndex = 6;
             // 
             // cboCantCuotas
@@ -850,6 +850,7 @@
             btnConfirmarPagoActual.TabIndex = 16;
             btnConfirmarPagoActual.Text = "Confirmar pago actual";
             btnConfirmarPagoActual.UseVisualStyleBackColor = false;
+            btnConfirmarPagoActual.Click += btnConfirmarPagoActual_Click;
             // 
             // lblTotalPagoActual
             // 
@@ -927,7 +928,7 @@
             dgvPagos.ReadOnly = true;
             dgvPagos.RowHeadersVisible = false;
             dgvPagos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvPagos.Size = new Size(1472, 74);
+            dgvPagos.Size = new Size(1455, 74);
             dgvPagos.TabIndex = 7;
             // 
             // colMedioPago

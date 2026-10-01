@@ -35,7 +35,7 @@ namespace Prana.Datos
         }
 
         // Registra un ingreso de stock con sus detalles y actualiza el stock de las variantes
-        public bool RegistrarIngreso(int idProveedor, DateTime fechaIngreso, string remitoProveedor, List<(int idVariante, int cantidad, decimal costoUnitario)> detalles)
+        public bool RegistrarIngreso(int idProveedor, DateTime fechaIngreso, string remitoProveedor, List<(int idVariante, int cantidad, decimal costoUnitario)> detalles, string? nombreProveedor = null)
         {
             // Consultas para insertar ingreso y sus detalles y actualizar variantes
             string consultaInsertIngreso = @"
@@ -60,6 +60,8 @@ namespace Prana.Datos
 
             try
             {
+                if (nombreProveedor != null)
+                    idProveedor = CD_Proveedor.ObtenerOCrear(conexion, transaccion, nombreProveedor);
                 int idIngreso;
 
                 // Inserta el ingreso y obtiene el id generado
@@ -72,8 +74,7 @@ namespace Prana.Datos
                     object resultado = cmdInsertIngreso.ExecuteScalar();
                     if (resultado == null)
                     {
-                        transaccion.Rollback();
-                        return false;
+                        throw new InvalidOperationException("La base de datos no devolvió el identificador del ingreso.");
                     }
 
                     idIngreso = Convert.ToInt32(resultado);
@@ -105,9 +106,7 @@ namespace Prana.Datos
                     int filas = cmdActualizar.ExecuteNonQuery();
                     if (filas == 0)
                     {
-                        // variante no encontrada -> rollback
-                        transaccion.Rollback();
-                        return false;
+                        throw new InvalidOperationException("No se encontró el producto del ingreso. Vuelva a seleccionarlo.");
                     }
                 }
 
@@ -117,7 +116,7 @@ namespace Prana.Datos
             catch
             {
                 try { transaccion.Rollback(); } catch { }
-                return false;
+                throw;
             }
         }
 

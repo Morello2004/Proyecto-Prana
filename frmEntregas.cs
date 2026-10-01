@@ -10,6 +10,7 @@ namespace Prana.Presentacion
         public frmEntregas()
         {
             InitializeComponent();
+            ConfigurarDistribucion();
             EstiloGestion.Grilla(dgvPendientes); EstiloGestion.Grilla(dgvEntregas);
             EstiloGestion.Columna(dgvPendientes,"IdVenta","Venta",50);
             EstiloGestion.Columna(dgvPendientes,"Cliente","Cliente",120);
@@ -19,7 +20,7 @@ namespace Prana.Presentacion
             EstiloGestion.Columna(dgvPendientes,"Preparados","Preparados",70);
             EstiloGestion.Columna(dgvPendientes,"Pendientes","Por preparar",70);
             EstiloGestion.Columna(dgvEntregas,"IdVenta","Venta",50);
-            EstiloGestion.Columna(dgvEntregas,"IdRemito","Remito",50);
+            EstiloGestion.Columna(dgvEntregas,"NumeroRemito","Remito",50);
             EstiloGestion.Columna(dgvEntregas,"Cliente","Cliente",100);
             EstiloGestion.Columna(dgvEntregas,"Productos","Productos",170);
             EstiloGestion.Columna(dgvEntregas,"Direccion","Destino",130);

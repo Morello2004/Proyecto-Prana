@@ -12,6 +12,7 @@ namespace Prana.Entidades
     }
     public class CobroVenta
     {
+        public string CuentaDestino { get; set; } = "";
         public int IdVenta { get; set; }
         public int IdMedioPago { get; set; }
         public int Cuotas { get; set; }
@@ -36,6 +37,8 @@ namespace Prana.Entidades
         public int IdEnvio { get; set; }
         public int IdVenta { get; set; }
         public int IdRemito { get; set; }
+        // El número impreso es el de venta; IdRemito identifica una preparación parcial interna.
+        public int NumeroRemito => IdVenta;
         public string Cliente { get; set; } = "";
         public string Productos { get; set; } = "";
         public string Direccion { get; set; } = "";

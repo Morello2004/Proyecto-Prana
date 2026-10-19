@@ -1,0 +1,44 @@
+@startuml
+!pragma layout smetana
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam shadowing false
+skinparam ArrowColor #34495E
+skinparam packageStyle rectangle
+title Registrar un pago posterior
+actor Usuario as U
+participant "frmPagos" as F
+participant "CN_Pago" as N
+participant "CN_RegistroVenta" as CAL
+participant "CD_Pago" as D
+participant "CD_Caja" as C
+participant "GestionVentaSql" as G
+database "SQL Server LocalDB" as B
+U -> F : Registrar pago
+F -> N : Registrar(venta, medio, cuotas, importe, cuentaDestino)
+N -> N : Verificar(RegistrarPagos) y Preparar(...)
+N -> CAL : PorcentajeRecargo(medio, cuotas)
+CAL --> N : porcentaje
+N -> CAL : CalcularRecargo(importe, porcentaje)
+CAL --> N : recargo
+N -> D : Registrar(CobroVenta, usuario de sesión)
+D -> B : iniciar transacción Serializable
+D -> C : Ahora(conexión, transacción)
+C -> B : consultar fecha y hora
+B --> C : fecha y hora
+C --> D : fecha y hora
+D -> C : ExigirDiaAbierto(conexión, transacción, fecha)
+C -> B : bloqueo y validación de caja
+D -> G : ValidarVenta(conexión, transacción, idVenta)
+G -> B : comprobar existencia y estado
+D -> B : consultar saldo y recargo vigente del medio activo
+B --> D : saldo y porcentaje
+D -> B : insertar Pago y actualizar total y estado de Venta
+D -> G : RegistrarActividad(conexión, transacción, usuario, acción, venta, detalle)
+G -> B : insertar LogActividad
+D -> B : confirmar transacción
+D --> N : operación completada
+N --> F : operación completada
+F --> U : pago registrado y listado actualizado
+@enduml

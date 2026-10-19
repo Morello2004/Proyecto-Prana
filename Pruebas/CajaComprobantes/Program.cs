@@ -11,7 +11,7 @@ static void Ok(bool valor,string mensaje){if(!valor)throw new Exception(mensaje)
 static void Rechaza(Action accion,string mensaje){try{accion();}catch(Exception e)when(e is InvalidOperationException || e is ArgumentException || e is SqlException){Console.WriteLine("OK: rechaza "+mensaje);return;}throw new Exception("No rechazó "+mensaje);}
 static object? Sql(string texto){using var cn=new SqlConnection(Conexion.ObtenerCadena());cn.Open();using var cmd=new SqlCommand(texto,cn);return cmd.ExecuteScalar();}
 static void Script(string archivo){using var cn=new SqlConnection(Conexion.ObtenerCadena());cn.Open();string texto=File.ReadAllText(archivo);Ok(!Regex.IsMatch(texto,@"(?im)^\s*(USE|CREATE DATABASE)\b"),"Script aislado: "+Path.GetFileName(archivo));foreach(string lote in Regex.Split(texto,@"(?im)^\s*GO\s*$")){if(string.IsNullOrWhiteSpace(lote))continue;using var cmd=new SqlCommand(lote,cn);cmd.ExecuteNonQuery();}}
-static NuevaVenta Solicitud(decimal pago=400) => new(){IdCliente=1,IdUsuario=1,FechaPago=DateTime.Today,FechaEntrega=DateTime.Today,HorarioSugerido="14 a 18",ObservacionesEntrega="Llamar antes",ObservacionPago="Pago parcial registrado",TipoLogistica="Flete",Total=1000,CondicionPago="Parcial",ModalidadEntrega="Retiro en el local",GenerarRemito=true,Detalles=new(){new(){IdVariante=1,Cantidad=1,PrecioUnitario=1000}},Pagos=pago>0?new(){new(){IdMedioPago=1,Monto=pago,Cuotas=1}}:new()};
+static NuevaVenta Solicitud(decimal pago=400) => new(){IdCliente=1,IdUsuario=1,FechaPago=DateTime.Today,FechaEntrega=DateTime.Today,HorarioSugerido="14 a 18",ObservacionesEntrega="Llamar antes",ObservacionPago="Pago parcial registrado",TipoLogistica="Flete",Total=1000,CondicionPago="Pago parcial",ModalidadEntrega="Retiro en el local",Detalles=new(){new(){IdVariante=1,Cantidad=1,PrecioUnitario=1000}},Pagos=pago>0?new(){new(){IdMedioPago=1,Monto=pago,Cuotas=1}}:new()};
 [STAThread]static void Main(string[] args){
 if(args.Contains("--presentacion")){PruebasPresentacion.Ejecutar();return;}
 var b=new SqlConnectionStringBuilder(Conexion.ObtenerCadena());Ok(b.InitialCatalog==Base,"Conexión exclusiva a base de pruebas");b.InitialCatalog="master";
@@ -44,22 +44,23 @@ clientePostal.Localidad.NombreLocalidad="Lujan"; clientePostal.CodigoPostal="";
 Ok(clientes.ModificarCliente(clientePostal) && clientes.buscarCliente("12345678").Single().CodigoPostal=="","Codigo postal opcional y se puede borrar");
 clientePostal.CodigoPostal="6700"; clientes.ModificarCliente(clientePostal);
 var ventas=new CN_RegistroVenta();var caja=new CN_Caja();var pagos=new CN_Pago();
+Rechaza(()=>ventas.Registrar(Solicitud(0)),"venta parcial sin pago inicial");
 int primera=ventas.Registrar(Solicitud());Ok(primera==2500,"Primera venta = 2500 en base vacía, migración repetida");
-var conDescuento=Solicitud(0); conDescuento.Descuento=100; conDescuento.Total=900;
+var conDescuento=Solicitud(1); conDescuento.Descuento=100; conDescuento.Total=900;
 int segunda=ventas.Registrar(conDescuento);Ok(segunda==2501,"Segunda venta = 2501");
-Script("BaseDeDatos/CajaYComprobantes.sql");int tercera=ventas.Registrar(Solicitud(0));Ok(tercera==2502,"Reiniciar no retrocede ni repite números");
+Script("BaseDeDatos/CajaYComprobantes.sql");int tercera=ventas.Registrar(Solicitud(1));Ok(tercera==2502,"Reiniciar no retrocede ni repite números");
 Ok(Convert.ToInt32(Sql("SELECT COUNT(*) FROM LogActividad WHERE accion='REGISTRAR_VENTA'"))==3,"Historial registra cada venta sin duplicados");
 Ok(Convert.ToInt32(Sql("SELECT COUNT(*) FROM LogActividad WHERE accion='APLICAR_DESCUENTO'"))==1,"Historial registra solo descuentos aplicados");
 Sql($"DELETE FROM LogActividad WHERE id_entidad={segunda} AND entidad='Venta'");
 Script("BaseDeDatos/CajaYComprobantes.sql");Script("BaseDeDatos/CajaYComprobantes.sql");
 Ok(Convert.ToInt32(Sql("SELECT COUNT(*) FROM LogActividad WHERE accion='REGISTRAR_VENTA'"))==3 && Convert.ToInt32(Sql("SELECT COUNT(*) FROM LogActividad WHERE accion='APLICAR_DESCUENTO'"))==1,"Recuperacion historica idempotente de ventas y descuentos");
-var doc=new CN_Comprobante().Obtener(primera);Ok(doc.Numero==2500 && doc.Pagado==400 && doc.Saldo==600 && doc.Productos.Count==1,"Comprobantes persistidos con número común y saldo real");
+Ok(Sql("SELECT OBJECT_ID('dbo.Venta_Comprobante','U')") is DBNull,"La tabla eliminada no se recrea");
+var doc=new CN_Comprobante().Obtener(primera);Ok(doc.Numero==2500 && doc.Pagado==400 && doc.Saldo==600 && doc.Productos.Count==1,"Comprobantes reconstruidos con número común y saldo real");
 Ok(doc.CodigoPostal=="6700" && doc.Localidad=="Lujan","Remito conserva ciudad y codigo postal");
-Ok(doc.DatosEntregaCompletos && doc.HorarioSugerido=="14 a 18" && doc.ObservacionPago=="Pago parcial registrado" && doc.Observaciones=="Llamar antes","Snapshot incluye observaciones y horario");
-Sql($"UPDATE Venta_Comprobante SET datos=JSON_MODIFY(JSON_MODIFY(datos,'$.DatosEntregaCompletos',NULL),'$.HorarioSugerido',NULL) WHERE id_venta={primera}");
+Ok(doc.DatosEntregaCompletos && doc.HorarioSugerido=="14 a 18" && doc.ObservacionPago=="Pago parcial registrado" && doc.Observaciones=="Llamar antes","Comprobante consulta observaciones y horario");
 var recuperado=new CN_Comprobante().Obtener(primera);
-Ok(recuperado.HorarioSugerido=="14 a 18" && recuperado.Total==doc.Total && recuperado.Pagado==doc.Pagado,"Comprobante anterior recupera campos sin cambiar importes");
-Sql("UPDATE Cliente SET nombre_cliente=N'Cambiado' WHERE id_cliente=1");Ok(new CN_Comprobante().Obtener(primera).Cliente=="Juana Pérez","Reimpresión conserva cliente original");
+Ok(recuperado.HorarioSugerido=="14 a 18" && recuperado.Total==doc.Total && recuperado.Pagado==doc.Pagado,"Comprobante consulta datos de entrega e importes");
+Sql("UPDATE Cliente SET nombre_cliente=N'Cambiado' WHERE id_cliente=1");Ok(new CN_Comprobante().Obtener(primera).Cliente=="Cambiado Pérez","Reimpresión consulta los datos actuales del cliente");
 string carpeta=DocumentosPrana.GuardarVenta(doc,"obj/CajaComprobantes/muestras");string garantia=File.ReadAllText(Path.Combine(carpeta,"Garantia-2500.html"));string remito=File.ReadAllText(Path.Combine(carpeta,"Remito-2500.html"));
 Ok(garantia.Contains("GARANTÍA") && garantia.Contains("2500") && remito.Contains("2500") && garantia.Contains("Heladera &lt;Prueba&gt;"),"HTML generado, títulos, números y escape seguro");
 var medios=new CN_MedioPago().ObtenerTodos();var efectivo=medios.Single(m=>m.TipoCaja=="Efectivo");var transferencia=medios.Single(m=>m.TipoCaja=="Transferencia");
@@ -72,8 +73,8 @@ caja.Registrar(new MovimientoCaja{Concepto="Gasto USD",Importe=5,Tipo="Gasto",Mo
 caja.Registrar(new MovimientoCaja{Concepto="Error",Importe=999,Tipo="Gasto"});
 var consulta=caja.Consultar(DateTime.Today);caja.Anular(consulta.Movimientos.Single(m=>m.Concepto=="Error").Id,"Error de carga");
 consulta=caja.Consultar(DateTime.Today);consulta.SaldoInicial=200;consulta.SaldoInicialUsd=10;
-consulta.Billetes=new(){new(){Moneda="ARS",Denominacion=100,Cantidad=5},new(){Moneda="ARS",Denominacion=50,Cantidad=1},new(){Moneda="USD",Denominacion=5,Cantidad=5}};
-Ok(consulta.Ingresos("ARS")==1050 && consulta.Gastos("ARS")==100 && consulta.Esperado("ARS")==550 && consulta.BalanceArs==1150 && consulta.Diferencia("ARS")==0,"Caja: cobros de ventas anteriores, gastos, café, apertura y diferencia");
+consulta.Billetes=new(){new(){Moneda="ARS",Denominacion=100,Cantidad=5},new(){Moneda="ARS",Denominacion=50,Cantidad=1},new(){Moneda="ARS",Denominacion=1,Cantidad=2},new(){Moneda="USD",Denominacion=5,Cantidad=5}};
+Ok(consulta.Ingresos("ARS")==1052 && consulta.Gastos("ARS")==100 && consulta.Esperado("ARS")==552 && consulta.BalanceArs==1152 && consulta.Diferencia("ARS")==0,"Caja: cobros de ventas anteriores, gastos, café, apertura y diferencia");
 Ok(consulta.Esperado("USD")==25 && consulta.Diferencia("USD")==0,"Dólares separados, sin mezclarse con pesos");
 Ok(consulta.Movimientos.Any(m=>m.Cuenta=="Lemon"),"Cuenta destino de transferencias en cierre");
 var obsoleto=caja.Consultar(DateTime.Today);caja.Registrar(new MovimientoCaja{Concepto="Nuevo",Importe=1,Tipo="Ingreso extra"});Rechaza(()=>caja.Cerrar(obsoleto),"cierre con movimientos desactualizados");

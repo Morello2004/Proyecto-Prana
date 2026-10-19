@@ -1,0 +1,157 @@
+@startuml
+!pragma layout smetana
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam shadowing false
+skinparam ArrowColor #34495E
+skinparam packageStyle rectangle
+title Modelo de datos y relaciones declaradas
+hide circle
+skinparam linetype ortho
+entity "Categoria" as Categoria {
+  id_categoria : int <<PK>>
+}
+entity "Cliente" as Cliente {
+  id_cliente : int <<PK>>
+  id_localidad : int
+}
+entity "Detalle_Ingreso" as Detalle_Ingreso {
+  id_detalle_ingreso : int <<PK>>
+  id_ingreso : int
+  id_variante : int
+}
+entity "Detalle_Remito" as Detalle_Remito {
+  id_detalle_remito : int <<PK>>
+  id_remito : int
+  id_variante : int
+}
+entity "Detalle_Venta" as Detalle_Venta {
+  id_detalle_venta : int <<PK>>
+  id_venta : int
+  id_variante : int
+  id_estado_variante_producto : int
+}
+entity "Envio" as Envio {
+  id_envio : int <<PK>>
+  id_remito : int
+  tipo_envio : nvarchar(30)
+  id_estado_envio : int
+}
+entity "Estado_Envio" as Estado_Envio {
+  id_estado_envio : int <<PK>>
+}
+entity "Estado_Variante_Producto" as Estado_Variante_Producto {
+  id_estado_variante_producto : int <<PK>>
+}
+entity "Estado_Venta" as Estado_Venta {
+  id_estado_venta : int <<PK>>
+}
+entity "Ingreso_Stock" as Ingreso_Stock {
+  id_ingreso : int <<PK>>
+  id_proveedor : int
+}
+entity "Localidad" as Localidad {
+  id_localidad : int <<PK>>
+}
+entity "Marca" as Marca {
+  id_marca : int <<PK>>
+}
+entity "Medio_Pago" as Medio_Pago {
+  id_medio_pago : int <<PK>>
+}
+entity "Modalidad_Entrega" as Modalidad_Entrega {
+  id_modalidad_entrega : int <<PK>>
+}
+entity "Pago" as Pago {
+  id_pago : int <<PK>>
+  id_venta : int
+  id_usuario : int
+  id_medio_pago : int
+  fecha_pago : datetime2
+}
+entity "Producto" as Producto {
+  id_producto : int <<PK>>
+  id_marca : int
+  id_categoria : int
+}
+entity "Proveedor" as Proveedor {
+  id_proveedor : int <<PK>>
+}
+entity "Recibo" as Recibo {
+  id_recibo : int <<PK>>
+  id_pago : int
+}
+entity "Remito" as Remito {
+  id_remito : int <<PK>>
+  id_venta : int
+}
+entity "Rol" as Rol {
+  id_rol_usuario : int <<PK>>
+}
+entity "Usuario" as Usuario {
+  id_usuario : int <<PK>>
+  id_rol_usuario : int
+  activo : bit
+}
+entity "Variante_Producto" as Variante_Producto {
+  id_variante : int <<PK>>
+  stock_disponible : int
+  id_producto : int
+  activo : bit
+}
+entity "Venta" as Venta {
+  id_venta : int <<PK>>
+  id_cliente : int
+  id_usuario : int
+  fecha_venta : datetime2
+  id_estado_venta : int
+  total : decimal
+  id_modalidad_entrega : int
+}
+entity "LogActividad" as LogActividad {
+  id_log <<PK>>
+  id_usuario <<FK>>
+}
+entity "Venta_Entrega" as Venta_Entrega {
+  id_venta <<PK>>
+}
+entity "Caja_Movimiento" as Caja_Movimiento {
+  id <<PK>>
+  id_usuario <<FK>>
+}
+entity "Caja_Cierre" as Caja_Cierre {
+  id <<PK>>
+  id_usuario <<FK>>
+}
+Localidad ||--o{ Cliente : id_localidad
+Ingreso_Stock ||--o{ Detalle_Ingreso : id_ingreso
+Variante_Producto ||--o{ Detalle_Ingreso : id_variante
+Remito ||--o{ Detalle_Remito : id_remito
+Variante_Producto ||--o{ Detalle_Remito : id_variante
+Estado_Variante_Producto ||--o{ Detalle_Venta : id_estado_variante_producto
+Variante_Producto ||--o{ Detalle_Venta : id_variante
+Venta ||--o{ Detalle_Venta : id_venta
+Estado_Envio ||--o{ Envio : id_estado_envio
+Remito ||--o{ Envio : id_remito
+Proveedor ||--o{ Ingreso_Stock : id_proveedor
+Medio_Pago ||--o{ Pago : id_medio_pago
+Usuario ||--o{ Pago : id_usuario
+Venta ||--o{ Pago : id_venta
+Categoria ||--o{ Producto : id_categoria
+Marca ||--o{ Producto : id_marca
+Pago ||--o{ Recibo : id_pago
+Venta ||--o{ Remito : id_venta
+Rol ||--o{ Usuario : id_rol_usuario
+Producto ||--o{ Variante_Producto : id_producto
+Cliente ||--o{ Venta : id_cliente
+Estado_Venta ||--o{ Venta : id_estado_venta
+Modalidad_Entrega ||--o{ Venta : id_modalidad_entrega
+Usuario ||--o{ Venta : id_usuario
+Usuario ||--o{ LogActividad : id_usuario
+Venta ||--o| Venta_Entrega : id_venta
+Usuario ||--o{ Caja_Movimiento : id_usuario
+Usuario ||--o{ Caja_Cierre : id_usuario
+note "Recibo forma parte del esquema, pero no representa un circuito operativo completo en la interfaz." as Nota
+
+@enduml

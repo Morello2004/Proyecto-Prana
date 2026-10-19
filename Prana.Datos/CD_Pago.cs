@@ -35,7 +35,7 @@ namespace Prana.Datos
                 using var saldoCmd = Comando(cn, tx, "SELECT saldo FROM (" + CD_Venta.SaldosSql + ") v WHERE id_venta=@venta", ("@venta", pago.IdVenta));
                 decimal saldo = Convert.ToDecimal(saldoCmd.ExecuteScalar());
                 if (pago.ImporteBase <= 0 || pago.ImporteBase > saldo) throw new InvalidOperationException("El importe supera el saldo actual. Actualice la venta.");
-                using var medioCmd = Comando(cn, tx, @"SELECT CASE @cuotas WHEN 3 THEN recargo_3 WHEN 6 THEN recargo_6 WHEN 9 THEN recargo_9
+                using var medioCmd = Comando(cn, tx, @"SELECT CASE @cuotas WHEN 2 THEN recargo_2 WHEN 3 THEN recargo_3 WHEN 6 THEN recargo_6 WHEN 9 THEN recargo_9
                     WHEN 12 THEN recargo_12 ELSE recargo_medio_pago END FROM Medio_Pago WITH (HOLDLOCK)
                     WHERE id_medio_pago=@medio AND activo=1", ("@cuotas", pago.Cuotas), ("@medio", pago.IdMedioPago));
                 object? porcentaje = medioCmd.ExecuteScalar();

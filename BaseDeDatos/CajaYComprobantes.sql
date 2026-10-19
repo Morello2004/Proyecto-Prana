@@ -42,10 +42,10 @@ IF OBJECT_ID(N'dbo.Caja_Cierre',N'U') IS NULL
         id_usuario int NOT NULL REFERENCES dbo.Usuario(id_usuario),
         fecha_cierre datetime2 NOT NULL DEFAULT(SYSDATETIME()), datos nvarchar(max) NOT NULL CHECK(ISJSON(datos)=1));
 GO
-IF OBJECT_ID(N'dbo.Venta_Comprobante',N'U') IS NULL
-    CREATE TABLE dbo.Venta_Comprobante (
-        id_venta int NOT NULL PRIMARY KEY REFERENCES dbo.Venta(id_venta),
-        datos nvarchar(max) NOT NULL CHECK(ISJSON(datos)=1));
+-- Los comprobantes se construyen desde las tablas de la venta.
+-- Retira la copia JSON de instalaciones anteriores; no elimina ventas ni pagos.
+IF OBJECT_ID(N'dbo.Venta_Comprobante',N'U') IS NOT NULL
+    DROP TABLE dbo.Venta_Comprobante;
 GO
 
 IF COL_LENGTH('dbo.Cliente','codigo_postal') IS NULL
@@ -66,4 +66,42 @@ SELECT v.id_usuario,N'APLICAR_DESCUENTO',N'Venta',v.id_venta,
  CONCAT(N'Venta / RTO ',v.id_venta,N' | Descuento ARS: ',FORMAT(v.descuento,'N2','es-AR'),
  N' | Total final ARS: ',FORMAT(v.total,'N2','es-AR'),N' | Recuperado del registro de ventas'),v.fecha_venta
 FROM Venta v WHERE v.descuento>0 AND NOT EXISTS(SELECT 1 FROM LogActividad l WHERE l.entidad=N'Venta' AND l.id_entidad=v.id_venta AND l.accion=N'APLICAR_DESCUENTO');
+GO
+
+-- Corrige los cuatro medios fijos sin alterar sus recargos generales ni los de credito
+UPDATE mp
+SET tipo_caja = medios.tipo_caja,
+    activo = 1,
+    recargo_2 = CASE WHEN medios.tipo_caja = N'Crédito' THEN mp.recargo_2 ELSE 0 END,
+    recargo_3 = CASE WHEN medios.tipo_caja = N'Crédito' THEN mp.recargo_3 ELSE 0 END,
+    recargo_6 = CASE WHEN medios.tipo_caja = N'Crédito' THEN mp.recargo_6 ELSE 0 END,
+    recargo_9 = CASE WHEN medios.tipo_caja = N'Crédito' THEN mp.recargo_9 ELSE 0 END,
+    recargo_12 = CASE WHEN medios.tipo_caja = N'Crédito' THEN mp.recargo_12 ELSE 0 END
+FROM dbo.Medio_Pago mp
+INNER JOIN (VALUES
+    (N'Efectivo', N'Efectivo'),
+    (N'Transferencia', N'Transferencia'),
+    (N'Débito', N'Débito'),
+    (N'Crédito', N'Crédito')
+) AS medios(nombre, tipo_caja)
+    ON mp.nombre_medio_pago COLLATE Latin1_General_100_BIN2 = medios.nombre COLLATE Latin1_General_100_BIN2;
+GO
+
+-- Crea los medios fijos que todavia no existan
+INSERT INTO dbo.Medio_Pago
+    (nombre_medio_pago, recargo_medio_pago, recargo_2, recargo_3,
+     recargo_6, recargo_9, recargo_12, activo, tipo_caja)
+SELECT medios.nombre, 0, 0, 0, 0, 0, 0, 1, medios.tipo_caja
+FROM (VALUES
+    (N'Efectivo', N'Efectivo'),
+    (N'Transferencia', N'Transferencia'),
+    (N'Débito', N'Débito'),
+    (N'Crédito', N'Crédito')
+) AS medios(nombre, tipo_caja)
+WHERE NOT EXISTS
+(
+    SELECT 1
+    FROM dbo.Medio_Pago mp
+    WHERE mp.nombre_medio_pago COLLATE Latin1_General_100_BIN2 = medios.nombre COLLATE Latin1_General_100_BIN2
+);
 GO

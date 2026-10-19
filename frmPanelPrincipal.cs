@@ -1,4 +1,4 @@
-using Prana.Entidades;
+﻿using Prana.Entidades;
 using Prana.negocio;
 using System.Globalization;
 
@@ -12,25 +12,25 @@ namespace Prana.Presentacion
         {
             InitializeComponent();
             ConfigurarAccesosCaja();
+            ConfigurarAyudaBusqueda();
             foreach (var columna in new[] { colTotal, colPagado, colSaldo })
             {
                 columna.DefaultCellStyle.FormatProvider = moneda;
                 columna.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             }
         }
+        private void ConfigurarAyudaBusqueda()
+        {
+            tlpContenido.RowStyles[1].Height = 170;
+            txtBuscarVenta.PlaceholderText = "N.º de venta, cliente, DNI o estado";
+
+        }
         private void ConfigurarAccesosCaja()
         {
             pnlEncabezado.Height = 120;
             lblTitulo.Top = 8;
-            var caja = new Button { Text="Caja y gastos",Width=145,Height=34,BackColor=Color.SteelBlue,FlatStyle=FlatStyle.Flat };
             caja.Visible = Permisos.TienePermiso(Permisos.GestionarCaja);
-            caja.Click += (_,_) => { if(Parent?.FindForm() is Interfaz interfaz) interfaz.AbrirFormulario(new frmCaja()); };
-            var documentos = new Button { Text="Garantía / remito",Width=160,Height=34,BackColor=Color.SteelBlue,FlatStyle=FlatStyle.Flat };
-            documentos.Click += (_,_) => {
-                if(dgvUltimasVentas.CurrentRow?.DataBoundItem is not venta seleccionada) { MessageBox.Show("Seleccione una venta del listado."); return; }
-                try { DocumentosPrana.MostrarVenta(this,seleccionada.IdVenta); }
-                catch(Exception ex) { MessageBox.Show(this,ex.Message,"Comprobantes",MessageBoxButtons.OK,MessageBoxIcon.Warning); }
-            };
+
             var acciones=DistribucionAdaptable.Fila(btnNuevaVenta,btnStock,caja,documentos);
             acciones.Dock=DockStyle.Bottom; acciones.Height=60;
             pnlEncabezado.Controls.Add(acciones);
@@ -94,5 +94,13 @@ namespace Prana.Presentacion
             if (e.ColumnIndex == colSaldo.Index && e.Value is decimal saldo && saldo > 0)
                 e.CellStyle!.ForeColor = Color.FromArgb(165, 72, 0);
         }
+        private void documentos_Click(object? sender, EventArgs e) {
+                if(dgvUltimasVentas.CurrentRow?.DataBoundItem is not venta seleccionada) { MessageBox.Show("Seleccione una venta del listado."); return; }
+                try { DocumentosPrana.MostrarVenta(this,seleccionada.IdVenta); }
+                catch(Exception ex) { MessageBox.Show(this,ex.Message,"Comprobantes",MessageBoxButtons.OK,MessageBoxIcon.Warning); }
+            }
+
+        private void caja_Click(object? sender, EventArgs e) { if(Parent?.FindForm() is Interfaz interfaz) interfaz.AbrirFormulario(new frmCaja()); }
+
     }
 }

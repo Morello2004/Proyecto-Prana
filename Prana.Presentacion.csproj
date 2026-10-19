@@ -27,6 +27,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="frmNuevaVenta.Logica.resx">
+      <ManifestResourceName>Prana.Presentacion.frmNuevaVenta.Logica</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Update="PantallasAdaptables.resx">
+      <ManifestResourceName>Prana.Presentacion.PantallasAdaptables</ManifestResourceName>
+    </EmbeddedResource>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -46,5 +52,19 @@
     <Compile Remove="Prana.Entidades\**\*.cs" />
     <Compile Remove="Prana.negocio\**\*.cs" />
     <Compile Remove="Pruebas\**\*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="frmResumenMensualCaja.cs"><SubType>Form</SubType></Compile>
+    <Compile Update="frmResumenMensualCaja.Designer.cs"><DependentUpon>frmResumenMensualCaja.cs</DependentUpon></Compile>
+    <Compile Update="frmCaja.cs"><SubType>Form</SubType></Compile>
+    <Compile Update="frmCaja.Designer.cs"><DependentUpon>frmCaja.cs</DependentUpon></Compile>
+    <Compile Update="frmAlertas.cs"><SubType>Form</SubType></Compile>
+    <Compile Update="frmAlertas.Designer.cs"><DependentUpon>frmAlertas.cs</DependentUpon></Compile>
+    <Compile Update="frmInformesVentas.cs"><SubType>Form</SubType></Compile>
+    <Compile Update="frmInformesVentas.Designer.cs"><DependentUpon>frmInformesVentas.cs</DependentUpon></Compile>
+    <Compile Update="frmComprobantes.cs"><SubType>Form</SubType></Compile>
+    <Compile Update="frmComprobantes.Designer.cs"><DependentUpon>frmComprobantes.cs</DependentUpon></Compile>
+    <Compile Update="frmMotivoAnulacion.cs"><SubType>Form</SubType></Compile>
+    <Compile Update="frmMotivoAnulacion.Designer.cs"><DependentUpon>frmMotivoAnulacion.cs</DependentUpon></Compile>
   </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-﻿using Prana.Entidades;
+using Prana.Entidades;
 using Prana.negocio;
 using System;
 using System.Collections.Generic;
@@ -14,10 +14,7 @@ namespace Prana.Presentacion
 {
     public partial class frmClientes : Form
     {
-        private readonly ListBox sugerenciasClientes = new ListBox();
-        private readonly System.Windows.Forms.Timer esperaBusqueda = new System.Windows.Forms.Timer { Interval = 250 };
         private bool seleccionandoCliente;
-        private readonly TextBox txtCodigoPostal = new() { MaxLength=12, Width=170 };
 
         public frmClientes()
         {
@@ -25,60 +22,21 @@ namespace Prana.Presentacion
             ConfigurarDistribucion();
             Localidad.Text="Ciudad (opcional)";
             colLocalidad.HeaderText="Ciudad";
-            txtCodigoPostal.Location=new Point(410,165);
-            panel2.Controls.Add(new Label { Text="Codigo postal (opcional)",ForeColor=Color.White,AutoSize=true,Location=new Point(410,147) });
-            panel2.Controls.Add(txtCodigoPostal);
-            dgv_listadoClientes.Columns.Add(new DataGridViewTextBoxColumn { Name="colCodigoPostal",HeaderText="Codigo postal",DataPropertyName="CodigoPostal" });
 
             // evita que se creen columnas adicionales automaticamente
             dgv_listadoClientes.AutoGenerateColumns = false;
-            txtBuscarProducto.MaxLength = 200;
+            txtBuscarCliente.MaxLength = 200;
             // El saldo llega desde negocio y nunca se edita como dato del cliente.
-            var deuda = new DataGridViewTextBoxColumn
-            {
-                Name = "colDeudaPendiente", HeaderText = "Deuda pendiente",
-                DataPropertyName = "DeudaPendiente", ReadOnly = true, Width = 125,
-                DefaultCellStyle = new DataGridViewCellStyle { Format = "C2", FormatProvider = CultureInfo.GetCultureInfo("es-AR") }
-            };
-            dgv_listadoClientes.Columns.Add(deuda);
-            dgv_listadoClientes.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                Name = "colEstadoCuenta", HeaderText = "Cuenta", DataPropertyName = "EstadoCuenta", ReadOnly = true
-            });
-            dgv_listadoClientes.Columns.Add(new DataGridViewButtonColumn
-            {
-                Name = "colVerDeuda", HeaderText = "Pendientes", Text = "Ver detalle",
-                UseColumnTextForButtonValue = true, ReadOnly = true
-            });
-            deuda.DisplayIndex = 3;
+            colDeudaPendiente.DisplayIndex = 3;
             dgv_listadoClientes.Columns["colEstadoCuenta"]!.DisplayIndex = 4;
             dgv_listadoClientes.Columns["colVerDeuda"]!.DisplayIndex = 5;
-            dgv_listadoClientes.CellFormatting += (_, e) =>
-            {
-                if (e.ColumnIndex == deuda.Index && e.Value is decimal saldo && saldo > 0)
-                    e.CellStyle!.ForeColor = Color.FromArgb(165, 72, 0);
-            };
-            Load += (_, _) =>
-            {
-                try { CargarClientes(); }
-                catch (Exception ex) { MessageBox.Show(ex.Message, "Consulta de clientes"); }
-            };
-            sugerenciasClientes.Font = txtBuscarProducto.Font;
+
+            sugerenciasClientes.Font = txtBuscarCliente.Font;
             sugerenciasClientes.Visible = false;
             sugerenciasClientes.IntegralHeight = false;
             sugerenciasClientes.HorizontalScrollbar = true;
-            Controls.Add(sugerenciasClientes);
-            txtBuscarProducto.PlaceholderText = "Buscar por nombre completo, DNI o teléfono";
-            esperaBusqueda.Tick += (_, _) => ActualizarSugerencias();
-            sugerenciasClientes.Click += (_, _) => ElegirSugerencia();
-            sugerenciasClientes.KeyDown += Buscador_KeyDown;
-            txtBuscarProducto.KeyDown += Buscador_KeyDown;
-            txtBuscarProducto.Leave += (_, _) => BeginInvoke(new Action(() =>
-            {
-                if (!sugerenciasClientes.ContainsFocus) OcultarSugerencias();
-            }));
-            sugerenciasClientes.Leave += (_, _) => OcultarSugerencias();
-            Disposed += (_, _) => esperaBusqueda.Dispose();
+            txtBuscarCliente.PlaceholderText = "Buscar por nombre completo, DNI o teléfono";
+
         }
 
         private void label10_Click(object sender, EventArgs e)
@@ -96,18 +54,12 @@ namespace Prana.Presentacion
         {
             CN_Cliente negocioCliente = new CN_Cliente();
 
-
         }
 
         private void iconButton1_Click(object sender, EventArgs e)
         {
 
         }
-
-
-
-
-
 
         private void btn_CrearCliente_Click(object sender, EventArgs e)
         {
@@ -163,7 +115,6 @@ namespace Prana.Presentacion
             }
         }
 
-
         // carga los clientes y coloca modificar en los botones
         private void CargarClientes()
         {
@@ -182,11 +133,6 @@ namespace Prana.Presentacion
                 fila.Cells["colAccion"].Value = "Modificar cliente";
             }
         }
-
-
-
-
-
 
         private void dgv_listadoClientes_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -298,18 +244,19 @@ namespace Prana.Presentacion
         }
 
         // busca clientes por nombre apellido dni o telefono
-        private void btnBuscarProducto_Click(object sender, EventArgs e)
+        private void btnBuscarClientes_Click(object sender, EventArgs e)
         {
             OcultarSugerencias();
             try
             {
                 // obtiene el texto ingresado
-                string busqueda = txtBuscarProducto.Text.Trim();
+                string busqueda = txtBuscarCliente.Text.Trim();
 
                 // crea el objeto de negocio
                 // carga los resultados encontrados
                 dgv_listadoClientes.DataSource = null;
-                dgv_listadoClientes.DataSource = BuscarClientes(busqueda);
+                var encontrados = BuscarClientes(busqueda);
+                dgv_listadoClientes.DataSource = encontrados;
 
                 // coloca modificar en cada boton
                 foreach (DataGridViewRow fila in dgv_listadoClientes.Rows)
@@ -318,7 +265,7 @@ namespace Prana.Presentacion
                 }
 
                 // informa cuando no se encontraron clientes
-                if (dgv_listadoClientes.Rows.Count == 0)
+                if (encontrados.Count == 0)
                 {
                     MessageBox.Show("No se encontraron clientes");
                 }
@@ -330,10 +277,10 @@ namespace Prana.Presentacion
             }
         }
 
-        private void txtBuscarProducto_TextChanged(object sender, EventArgs e)
+        private void txtBuscarCliente_TextChanged(object sender, EventArgs e)
         {
             OcultarSugerencias();
-            if (!seleccionandoCliente && txtBuscarProducto.Text.Trim().Length >= 2)
+            if (!seleccionandoCliente && txtBuscarCliente.Text.Trim().Length >= 2)
                 esperaBusqueda.Start();
         }
 
@@ -352,14 +299,14 @@ namespace Prana.Presentacion
         private void ActualizarSugerencias()
         {
             esperaBusqueda.Stop();
-            if (!txtBuscarProducto.Focused) return;
+            if (!txtBuscarCliente.Focused) return;
             try
             {
                 sugerenciasClientes.Items.Clear();
-                foreach (var cliente in BuscarClientes(txtBuscarProducto.Text).Take(15))
+                foreach (var cliente in BuscarClientes(txtBuscarCliente.Text).Take(15))
                     sugerenciasClientes.Items.Add(new OpcionCliente(cliente));
-                sugerenciasClientes.Location = PointToClient(txtBuscarProducto.PointToScreen(new Point(0, txtBuscarProducto.Height + 2)));
-                sugerenciasClientes.Size = new Size(txtBuscarProducto.Width,
+                sugerenciasClientes.Location = PointToClient(txtBuscarCliente.PointToScreen(new Point(0, txtBuscarCliente.Height + 2)));
+                sugerenciasClientes.Size = new Size(txtBuscarCliente.Width,
                     Math.Min(120, sugerenciasClientes.Items.Count * sugerenciasClientes.ItemHeight + 4));
                 sugerenciasClientes.Visible = sugerenciasClientes.Items.Count > 0;
                 sugerenciasClientes.BringToFront();
@@ -376,13 +323,13 @@ namespace Prana.Presentacion
             if (sugerenciasClientes.SelectedItem is not OpcionCliente opcion) return;
             OcultarSugerencias();
             seleccionandoCliente = true;
-            txtBuscarProducto.Text = $"{opcion.Cliente.Nombre} {opcion.Cliente.Apellido}";
+            txtBuscarCliente.Text = $"{opcion.Cliente.Nombre} {opcion.Cliente.Apellido}";
             seleccionandoCliente = false;
             dgv_listadoClientes.DataSource = new List<Cliente> { opcion.Cliente };
             foreach (DataGridViewRow fila in dgv_listadoClientes.Rows)
                 fila.Cells["colAccion"].Value = "Modificar cliente";
-            txtBuscarProducto.Focus();
-            txtBuscarProducto.SelectionStart = txtBuscarProducto.TextLength;
+            txtBuscarCliente.Focus();
+            txtBuscarCliente.SelectionStart = txtBuscarCliente.TextLength;
         }
 
         private void Buscador_KeyDown(object? sender, KeyEventArgs e)
@@ -396,7 +343,7 @@ namespace Prana.Presentacion
             else if (e.KeyCode == Keys.Enter)
             {
                 if (sugerenciasClientes.Visible && sugerenciasClientes.SelectedIndex >= 0) ElegirSugerencia();
-                else btnBuscarProducto_Click(sender!, EventArgs.Empty);
+                else btnBuscarClientes_Click(sender!, EventArgs.Empty);
             }
             else return;
             e.SuppressKeyPress = true;
@@ -408,5 +355,28 @@ namespace Prana.Presentacion
             public OpcionCliente(Cliente cliente) => Cliente = cliente;
             public override string ToString() => $"{Cliente.Nombre} {Cliente.Apellido} — DNI: {Cliente.DNI} — {Cliente.EstadoCuenta}";
         }
+        private void dgv_listadoClientes_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e) {
+                if (e.ColumnIndex == colDeudaPendiente.Index && e.Value is decimal saldo && saldo > 0)
+                    e.CellStyle!.ForeColor = Color.FromArgb(165, 72, 0);
+            }
+
+        private void frmClientes_Load(object? sender, EventArgs e) {
+                try { CargarClientes(); }
+                catch (Exception ex) { MessageBox.Show(ex.Message, "Consulta de clientes"); }
+            }
+
+        private void esperaBusqueda_Tick(object? sender, EventArgs e) { ActualizarSugerencias(); }
+
+        private void sugerenciasClientes_Click(object? sender, EventArgs e) { ElegirSugerencia(); }
+
+        private void txtBuscarCliente_Leave(object? sender, EventArgs e) { BeginInvoke(new Action(() =>
+            {
+                if (!sugerenciasClientes.ContainsFocus) OcultarSugerencias();
+            })); }
+
+        private void sugerenciasClientes_Leave(object? sender, EventArgs e) { OcultarSugerencias(); }
+
+        private void frmClientes_Disposed(object? sender, EventArgs e) { esperaBusqueda.Dispose(); }
+
     }
 }

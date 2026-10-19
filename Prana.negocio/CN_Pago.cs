@@ -19,7 +19,8 @@ namespace Prana.negocio
         public CobroVenta Preparar(int venta, MedioPago medio, int cuotas, decimal importe)
         {
             if (venta <= 0 || medio == null || !medio.Activo) throw new ArgumentException("Seleccione una venta y un medio activo.");
-            if (!new[] { 1, 3, 6, 9, 12 }.Contains(cuotas)) throw new ArgumentException("Seleccione una cantidad de cuotas válida.");
+            if (!new[] { 1, 2, 3, 6, 9, 12 }.Contains(cuotas)) throw new ArgumentException("Seleccione una cantidad de cuotas válida.");
+            if (cuotas > 1 && medio.TipoCaja != "Crédito") throw new ArgumentException("Solo los medios de tipo Crédito admiten pagos en cuotas.");
             if (importe <= 0 || importe != decimal.Round(importe, 2)) throw new ArgumentException("Ingrese un importe positivo con hasta dos decimales.");
             decimal porcentaje = new CN_RegistroVenta().PorcentajeRecargo(medio, cuotas);
             return new CobroVenta { IdVenta = venta, IdMedioPago = medio.IdMedioPago, Cuotas = cuotas, ImporteBase = importe,

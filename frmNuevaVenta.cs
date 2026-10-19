@@ -16,47 +16,30 @@ namespace Prana.Presentacion
         private readonly CN_Producto productosVenta = new();
         private readonly CN_MedioPago mediosVenta = new();
         private readonly CN_RegistroVenta registroVentas = new();
-        private readonly ListBox listaClientes = new();
-        private readonly ListBox listaProductos = new();
-        private readonly System.Windows.Forms.Timer esperaClientes = new() { Interval = 250 };
-        private readonly System.Windows.Forms.Timer esperaProductos = new() { Interval = 250 };
         private Cliente? clienteElegido;
         private OpcionProducto? productoElegido;
         private readonly List<DetalleNuevaVenta> detallesVenta = new();
         private readonly List<PagoNuevaVenta> pagosVenta = new();
-        private readonly Label lblCobroPrevisto = new()
-        {
-            AutoSize = true,
-            ForeColor = Color.White,
-            Font = new Font("Segoe UI", 10F, FontStyle.Bold),
-            Location = new Point(20, 245)
-        };
-        private readonly CheckBox usarDireccionRegistrada = new()
-        {
-            AutoSize = true,
-            ForeColor = Color.White,
-            Location = new Point(520, 55),
-            Text = "Usar dirección registrada"
-        };
         private bool actualizandoTexto;
         private int ventaRegistrada;
-        private readonly TextBox txtCuentaDestino = new() { MaxLength = 100, Location = new Point(280, 200), Width = 250 };
+
 
         // inicializa el diseñador y conecta los controles con la lógica de venta
         public frmNuevaVenta()
         {
             InitializeComponent();
+
             ConfigurarVenta();
             ConfigurarDistribucion();
             chkGenerarRecibo.Text = "Generar garantía";
-            chkGenerarRecibo.Checked = chkGenerarRemito.Checked = true;
-            chkGenerarRecibo.Enabled = chkGenerarRemito.Enabled = false;
-            lblAclaracionDocumentos.Text = "Garantía y remito se generan con el mismo número de venta.";
-            btnConfirmarPagoActual.Text = "Registrar venta";
+            chkGenerarRecibo.Checked = true;
+            chkGenerarRecibo.Enabled = false;
+            lblAclaracionDocumentos.Text = "La garantía y el remito se generan con el mismo número de venta.";
+            btnRegistrarVenta.Text = "Registrar venta";
             dtpFechaPago.Enabled = false;
             colMontoPago.Visible = colRecargoPago.Visible = false;
-            pnlPago.Controls.Add(new Label { Text = "Cuenta destino / referencia", AutoSize = true, ForeColor = Color.White, Location = new Point(280, 182) });
-            pnlPago.Controls.Add(txtCuentaDestino);
+            cboTipoLogistica.SelectedIndex = 0;
+
         }
 
         // conecta las búsquedas y los cambios de cliente producto entrega y pago
@@ -64,31 +47,6 @@ namespace Prana.Presentacion
         {
             ConfigurarLista(listaClientes, pnlCliente, txtBuscarCliente);
             ConfigurarLista(listaProductos, pnlProductos, txtBuscarProducto);
-            txtBuscarCliente.TextChanged += (_, _) => { if (actualizandoTexto) return; clienteElegido = null; esperaClientes.Stop(); esperaClientes.Start(); };
-            txtBuscarProducto.TextChanged += (_, _) => { if (actualizandoTexto) return; productoElegido = null; esperaProductos.Stop(); esperaProductos.Start(); };
-            esperaClientes.Tick += (_, _) => { esperaClientes.Stop(); BuscarClientes(); };
-            esperaProductos.Tick += (_, _) => { esperaProductos.Stop(); BuscarProductos(); };
-            listaClientes.Click += (_, _) => ElegirCliente();
-            listaProductos.Click += (_, _) => ElegirProducto();
-            txtBuscarCliente.KeyDown += (_, e) => Navegar(e, listaClientes, ElegirCliente);
-            txtBuscarProducto.KeyDown += (_, e) => Navegar(e, listaProductos, ElegirProducto);
-            BtnAgregarCliente.Click += (_, _) => ElegirCliente();
-            btnAgregarProducto.Click += (_, _) => AgregarProducto();
-            dgvDetalleVenta.CellContentClick += (_, e) => { if (e.RowIndex >= 0 && e.ColumnIndex == colEliminar.Index) { detallesVenta.RemoveAt(e.RowIndex); MostrarDetalle(); } };
-            nudDescuento.ValueChanged += (_, _) => ActualizarTotales();
-            btnAgregarPago.Click += (_, _) => AgregarPago();
-            dgvPagos.CellContentClick += (_, e) => { if (e.RowIndex >= 0 && e.ColumnIndex == colQuitarPago.Index) { pagosVenta.RemoveAt(e.RowIndex); MostrarPagos(); } };
-            btnConfirmarPagoActual.Click += (_, _) => RegistrarVenta();
-            rdoRetiroLocal.CheckedChanged += (_, _) => ActualizarEntrega();
-            rdoRetiroPosterior.CheckedChanged += (_, _) => ActualizarEntrega();
-            rdoEnvioDomicilio.CheckedChanged += (_, _) => ActualizarEntrega();
-            pnlFormaEntrega.Controls.Add(usarDireccionRegistrada);
-            usarDireccionRegistrada.CheckedChanged += (_, _) => ActualizarDireccionEntrega();
-            pnlPago.Controls.Add(lblCobroPrevisto);
-            numericUpDown1.ValueChanged += (_, _) => ActualizarTotales();
-            cboMedioPago.SelectedIndexChanged += (_, _) => { ActualizarCuotas(); MostrarPagos(); };
-            cboCantCuotas.SelectedIndexChanged += (_, _) => MostrarPagos();
-            nudMontoPago.ValueChanged += (_, _) => ActualizarResumenPago();
         }
 
         // coloca las sugerencias debajo del campo de búsqueda
@@ -173,17 +131,19 @@ namespace Prana.Presentacion
             listaProductos.Visible = false;
         }
 
-        // agrega la cantidad elegida sin superar el stock disponible
+        // Agrega el producto; puede quedar pendiente de ingreso de stock.
         private void AgregarProducto()
         {
-            if (productoElegido == null) { MessageBox.Show("Seleccione un producto de la lista."); return; }
-            int cantidad = (int)nudCantidad.Value;
-            int existente = detallesVenta.Where(d => d.IdVariante == productoElegido.Variante.IdVariante).Sum(d => d.Cantidad);
-            if (existente + cantidad > productoElegido.Variante.StockFisico - productoElegido.Variante.StockComprometido) { MessageBox.Show("La cantidad supera el stock disponible."); return; }
-            detallesVenta.Add(new DetalleNuevaVenta { IdVariante = productoElegido.Variante.IdVariante, Producto = productoElegido.Producto.NombreProducto, Variante = productoElegido.Variante.Color + " " + productoElegido.Variante.CondicionProducto, Cantidad = cantidad, PrecioUnitario = productoElegido.Variante.Precio });
-            MostrarDetalle();
-            txtBuscarProducto.Clear();
-            productoElegido = null;
+            try
+            {
+                var detalle = registroVentas.PrepararProducto(productoElegido?.Producto,
+                    productoElegido?.Variante, (int)nudCantidad.Value, detallesVenta);
+                detallesVenta.Add(detalle);
+                MostrarDetalle();
+                txtBuscarProducto.Clear();
+                productoElegido = null;
+            }
+            catch (Exception ex) { ErrorVenta(ex); }
         }
 
         // actualiza las filas de productos y vuelve a calcular los importes
@@ -213,7 +173,7 @@ namespace Prana.Presentacion
         // muestra cuotas solo para medios que admiten financiación
         private void ActualizarCuotas()
         {
-            bool mostrar = cboMedioPago.SelectedItem is MedioPago medio && (medio.Recargo3 > 0 || medio.Recargo6 > 0 || medio.Recargo9 > 0 || medio.Recargo12 > 0 || medio.NombreMedioPago.Contains("tarjeta", StringComparison.OrdinalIgnoreCase));
+            bool mostrar = cboMedioPago.SelectedItem is MedioPago medio && medio.TipoCaja == "Crédito";
             label2.Visible = cboCantCuotas.Visible = mostrar;
             if (!mostrar && cboCantCuotas.Items.Count > 0) cboCantCuotas.SelectedIndex = 0;
         }
@@ -229,22 +189,22 @@ namespace Prana.Presentacion
         // toma el importe final recibido y separa base y recargo
         private void AgregarPago()
         {
-            if (cboMedioPago.SelectedItem is not MedioPago medio || nudMontoPago.Value <= 0) { MessageBox.Show("Seleccione un medio e ingrese un monto."); return; }
-            int cuotas = cboCantCuotas.Visible ? Convert.ToInt32(cboCantCuotas.SelectedItem) : 1;
-            decimal porcentaje = PorcentajeRecargoSeleccionado();
-            decimal cobrado = nudMontoPago.Value;
-            // divide por el factor de recargo para que el importe ingresado sea lo cobrado
-            (decimal montoBase, decimal recargo) = registroVentas.DesglosarCobro(cobrado, porcentaje);
-            if (montoBase <= 0 || pagosVenta.Sum(p => p.Monto) + montoBase > TotalBase) { MessageBox.Show("El importe cobrado supera el saldo de la venta."); return; }
-            pagosVenta.Add(new PagoNuevaVenta { CuentaDestino = txtCuentaDestino.Text.Trim(), IdMedioPago = medio.IdMedioPago, Medio = medio.NombreMedioPago, Monto = montoBase, Recargo = recargo, Cuotas = cuotas });
-            txtCuentaDestino.Clear();
-            MostrarPagos();
-            nudMontoPago.Value = 0;
-            if (dgvPagos.Rows.Count > 0)
+            try
             {
-                dgvPagos.CurrentCell = dgvPagos.Rows[dgvPagos.Rows.Count - 1].Cells[colMedioPago.Index];
-                dgvPagos.FirstDisplayedScrollingRowIndex = dgvPagos.Rows.Count - 1;
+                int cuotas = cboCantCuotas.Visible ? Convert.ToInt32(cboCantCuotas.SelectedItem) : 1;
+                var pago = registroVentas.PrepararPago(cboMedioPago.SelectedItem as MedioPago,
+                    cuotas, nudMontoPago.Value, TotalBase, pagosVenta, txtCuentaDestino.Text);
+                pagosVenta.Add(pago);
+                txtCuentaDestino.Clear();
+                MostrarPagos();
+                nudMontoPago.Value = 0;
+                if (dgvPagos.Rows.Count > 0)
+                {
+                    dgvPagos.CurrentCell = dgvPagos.Rows[dgvPagos.Rows.Count - 1].Cells[colMedioPago.Index];
+                    dgvPagos.FirstDisplayedScrollingRowIndex = dgvPagos.Rows.Count - 1;
+                }
             }
+            catch (Exception ex) { ErrorVenta(ex); }
         }
 
         // muestra base recargo total cobrado y saldo pendiente
@@ -264,6 +224,14 @@ namespace Prana.Presentacion
             decimal recargoPrevisto = registroVentas.CalcularRecargo(saldoBase, PorcentajeRecargoSeleccionado());
             decimal totalPrevisto = TotalConRecargos + recargoPrevisto;
             bool estimado = recargoPrevisto > 0;
+            // Completa el importe con el saldo pendiente y el recargo del medio elegido
+            decimal importeSugerido = saldoBase + recargoPrevisto;
+
+            if (nudMontoPago.Value != importeSugerido)
+            {
+                nudMontoPago.Value = importeSugerido;
+            }
+
             lblTotalTexto.Text = estimado ? "TOTAL EST.:" : "TOTAL:";
             lblTotal.Text = totalPrevisto.ToString("C");
             lblTotalPagoActual.Text = $"Pago: {pagadoConRecargos:C}    {(estimado ? "Saldo estimado" : "Saldo")}: {Math.Max(0, totalPrevisto - pagadoConRecargos):C}";
@@ -304,12 +272,8 @@ namespace Prana.Presentacion
             colRecargoPago.HeaderText = "Recargo";
             colTotalPago.HeaderText = "Total cobrado";
             colMontoPago.Visible = colRecargoPago.Visible = false;
-            pnlPago.Controls.Remove(btnConfirmarPagoActual);
-            pnlDocumentos.Controls.Add(btnConfirmarPagoActual);
-            btnConfirmarPagoActual.Location = new Point(270, 53);
-            btnConfirmarPagoActual.Text = "Registrar venta";
-            chkGenerarRemito.Text = "Datos para remito";
-            lblAclaracionDocumentos.Text = "Los datos de entrega se guardarán para confeccionar el remito.";
+            btnRegistrarVenta.Text = "Registrar venta";
+            lblAclaracionDocumentos.Text = "La garantía y el remito se generan con el mismo número de venta.";
             dataGridView2.Columns.Clear();
             foreach (string nombre in new[] { "DNI", "Nombre", "Apellido", "Teléfono", "Dirección" }) dataGridView2.Columns.Add(nombre, nombre);
             dataGridView2.ReadOnly = true;
@@ -317,10 +281,10 @@ namespace Prana.Presentacion
             dataGridView2.RowHeadersVisible = false;
             dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView2.Height = 90;
-            cboCantCuotas.Items.AddRange(new object[] { 1, 3, 6, 9, 12 });
+            cboCantCuotas.Items.AddRange(new object[] { 1, 2, 3, 6, 9, 12 });
             cboCantCuotas.SelectedIndex = 0;
             rdoRetiroLocal.Checked = true;
-            cboCondicionPago.SelectedIndex = 2;
+            cboCondicionPago.SelectedItem = "Pago total";
             try
             {
                 List<MedioPago> mediosDisponibles = mediosVenta.ObtenerTodos();
@@ -335,49 +299,39 @@ namespace Prana.Presentacion
             ActualizarTotales();
         }
 
-        // valida la venta completa y envía todos los datos al registro
+        // recoge los datos; negocio valida y registra la venta
         private void RegistrarVenta()
         {
             if (ventaRegistrada > 0) return;
-            if (clienteElegido == null || detallesVenta.Count == 0) { MessageBox.Show("Seleccione un cliente y al menos un producto."); return; }
-            if (nudDescuento.Value > detallesVenta.Sum(d => d.Cantidad * d.PrecioUnitario)) { MessageBox.Show("El descuento no puede superar el subtotal."); return; }
-            if (!rdoRetiroLocal.Checked && !rdoRetiroPosterior.Checked && !rdoEnvioDomicilio.Checked) { MessageBox.Show("Seleccione una forma de entrega."); return; }
-            if (rdoEnvioDomicilio.Checked && (string.IsNullOrWhiteSpace(txtDomicilioEntrega.Text) || cboTipoLogistica.SelectedIndex < 0)) { MessageBox.Show("Complete domicilio y logística."); return; }
-            if (cboCondicionPago.SelectedIndex < 0) { MessageBox.Show("Seleccione la condición del pago."); return; }
-            if (dtpFechaPago.Value.Date < DateTime.Today) { MessageBox.Show("La fecha de pago no puede ser anterior a hoy."); return; }
-            decimal pagado = pagosVenta.Sum(p => p.Monto);
-            if (pagado > TotalBase) { MessageBox.Show("Los pagos superan el total actualizado. Ajuste los medios de pago."); return; }
-            if (cboCondicionPago.SelectedIndex == 2 && pagado != TotalBase) { MessageBox.Show("El pago total debe cubrir la venta."); return; }
-            if (cboCondicionPago.SelectedIndex < 2 && (pagado <= 0 || pagado >= TotalBase)) { MessageBox.Show("Ingrese un pago inicial parcial."); return; }
             try
             {
                 int id = registroVentas.Registrar(new NuevaVenta
                 {
-                    IdCliente = clienteElegido.IdCliente,
-                    IdUsuario = SesionActual.Usuario?.idUsuario ?? throw new InvalidOperationException("No hay usuario autenticado."),
+                    IdCliente = clienteElegido?.IdCliente ?? 0,
+                    IdUsuario = SesionActual.Usuario?.idUsuario ?? 0,
                     Descuento = nudDescuento.Value,
                     Total = TotalConRecargos,
-                    CondicionPago = cboCondicionPago.Text,
+                    CondicionPago = cboCondicionPago.SelectedItem?.ToString() ?? string.Empty,
                     FechaPago = dtpFechaPago.Value,
                     ObservacionPago = txtObservacionPago.Text.Trim(),
-                    ModalidadEntrega = rdoEnvioDomicilio.Checked ? "Envío a domicilio" : rdoRetiroPosterior.Checked ? "Retiro posterior en el local" : "Retiro en el local",
+                    ModalidadEntrega = rdoEnvioDomicilio.Checked ? "Envío a domicilio" : rdoRetiroPosterior.Checked ? "Retiro posterior en el local" : rdoRetiroLocal.Checked ? "Retiro en el local" : string.Empty,
                     DomicilioEntrega = txtDomicilioEntrega.Text.Trim(),
                     FechaEntrega = dtpFechaEntrega.Value,
                     HorarioSugerido = txtHorarioSugerido.Text.Trim(),
                     ObservacionesEntrega = txtObservacionesEntrega.Text.Trim(),
-                    TipoLogistica = cboTipoLogistica.Text,
+                    TipoLogistica = cboTipoLogistica.SelectedItem?.ToString() ?? string.Empty,
                     CostoEnvio = rdoEnvioDomicilio.Checked ? numericUpDown1.Value : 0,
-                    GenerarRemito = true,
                     Detalles = detallesVenta.ToList(),
-                    Pagos = pagosVenta.ToList()
+                    Pagos = pagosVenta.ToList(),
+                    SegundoTelefono = textBox1.Text.Trim()
                 });
                 lblNumeroVenta.Text = $"Venta N.° {id}";
-                btnConfirmarPagoActual.Enabled = false;
+                btnRegistrarVenta.Enabled = false;
                 ventaRegistrada = id;
-                try { DocumentosPrana.MostrarVenta(this, id); }
+                try { DocumentosPrana.MostrarVenta(this, id, textBox1.Text.Trim()); }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(this, $"La venta N.º {id} quedó registrada y sus comprobantes están guardados en la base.\nNo se pudieron abrir o exportar los archivos: {ex.Message}\nPuede reimprimirlos desde el panel principal, sin registrar otra venta.", "Venta registrada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(this, $"La venta N.º {id} quedó registrada.\nNo se pudieron abrir o exportar los archivos: {ex.Message}\nPuede reimprimirlos desde el panel principal, sin registrar otra venta.", "Venta registrada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             catch (Exception ex) { ErrorVenta(ex); }
@@ -405,9 +359,9 @@ namespace Prana.Presentacion
         // carga los datos cuando se abre el formulario
         private void frmNuevaVenta_Load(object sender, EventArgs e) => CargarVenta();
 
-        // mantiene los eventos vacíos que todavía referencia el diseñador
+        // eventos del diseñador: el doble clic abre la acción de cada control
         private void panel1_Paint(object sender, PaintEventArgs e) { }
-        private void dgvDetalleVenta_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
+        private void dgvDetalleVenta_CellContentClick(object? sender, DataGridViewCellEventArgs e) { if (e.RowIndex >= 0 && e.ColumnIndex == colEliminar.Index) { detallesVenta.RemoveAt(e.RowIndex); MostrarDetalle(); } }
         private void panel1_Paint_1(object sender, PaintEventArgs e) { }
         private void pnlContenidoVenta_Paint(object sender, PaintEventArgs e) { }
         private void panel1_Paint_2(object sender, PaintEventArgs e) { }
@@ -415,7 +369,76 @@ namespace Prana.Presentacion
         private void cboCondicionPago_SelectedIndexChanged(object sender, EventArgs e) { }
         private void cboTipoLogistica_SelectedIndexChanged(object sender, EventArgs e) { }
 
-        private void btnConfirmarPagoActual_Click(object sender, EventArgs e)
+        private void btnRegistrarVenta_Click(object? sender, EventArgs e)
+        {
+            RegistrarVenta();
+        }
+        private void txtBuscarCliente_TextChanged(object? sender, EventArgs e) {
+            // Ignora los cambios de texto realizados al seleccionar un cliente.
+            if (actualizandoTexto) return;
+
+            // Reinicia la espera antes de buscar nuevas coincidencias.
+            esperaClientes.Stop();
+
+            // Oculta las sugerencias anteriores.
+            listaClientes.Visible = false;
+
+            // Busca solamente cuando se escriben al menos dos caracteres.
+            if (txtBuscarCliente.Text.Trim().Length >= 2) 
+                esperaClientes.Start();
+        }
+
+        private void txtBuscarProducto_TextChanged(object? sender, EventArgs e) { if (actualizandoTexto) return; productoElegido = null; esperaProductos.Stop(); esperaProductos.Start(); }
+
+        private void esperaClientes_Tick(object? sender, EventArgs e) { esperaClientes.Stop(); BuscarClientes(); }
+
+        private void esperaProductos_Tick(object? sender, EventArgs e) { esperaProductos.Stop(); BuscarProductos(); }
+
+        private void listaClientes_Click(object? sender, EventArgs e) { ElegirCliente(); }
+
+        private void listaProductos_Click(object? sender, EventArgs e) { ElegirProducto(); }
+
+        private void txtBuscarCliente_KeyDown(object? sender, KeyEventArgs e) { Navegar(e, listaClientes, ElegirCliente); }
+
+        private void txtBuscarProducto_KeyDown(object? sender, KeyEventArgs e) { Navegar(e, listaProductos, ElegirProducto); }
+
+        private void BtnAgregarCliente_Click(object? sender, EventArgs e) { ElegirCliente(); }
+
+        private void btnAgregarProducto_Click(object? sender, EventArgs e) { AgregarProducto(); }
+
+        private void nudDescuento_ValueChanged(object? sender, EventArgs e) { ActualizarTotales(); }
+
+        private void btnAgregarPago_Click(object? sender, EventArgs e) { AgregarPago(); }
+
+        private void dgvPagos_CellContentClick(object? sender, DataGridViewCellEventArgs e) { if (e.RowIndex >= 0 && e.ColumnIndex == colQuitarPago.Index) { pagosVenta.RemoveAt(e.RowIndex); MostrarPagos(); } }
+
+        private void rdoRetiroLocal_CheckedChanged(object? sender, EventArgs e) { ActualizarEntrega(); }
+
+        private void rdoRetiroPosterior_CheckedChanged(object? sender, EventArgs e) { ActualizarEntrega(); }
+
+        private void rdoEnvioDomicilio_CheckedChanged(object? sender, EventArgs e) { ActualizarEntrega(); }
+
+        private void usarDireccionRegistrada_CheckedChanged(object? sender, EventArgs e) { ActualizarDireccionEntrega(); }
+
+        private void numericUpDown1_ValueChanged(object? sender, EventArgs e) { ActualizarTotales(); }
+
+        private void cboMedioPago_SelectedIndexChanged(object? sender, EventArgs e) { ActualizarCuotas(); MostrarPagos(); }
+
+        private void cboCantCuotas_SelectedIndexChanged(object? sender, EventArgs e) { MostrarPagos(); }
+
+        private void nudMontoPago_ValueChanged(object? sender, EventArgs e) { ActualizarResumenPago(); }
+
+        private void pnlFormaEntrega_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void pnlCliente_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
         {
 
         }

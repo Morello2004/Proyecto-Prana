@@ -26,11 +26,7 @@ namespace Prana.Presentacion
             EstiloGestion.Columna(dgvEntregas,"Direccion","Destino",130);
             EstiloGestion.Columna(dgvEntregas,"Estado","Estado",80);
             EstiloGestion.Columna(dgvEntregas,"FechaEntrega","Entregado el",105,"dd/MM/yyyy HH:mm");
-            Load+=(_,_)=>Buscar(); btnBuscar.Click+=(_,_)=>Buscar();
-            txtBuscar.KeyDown+=(_,e)=>{if(e.KeyCode==Keys.Enter){e.SuppressKeyPress=true;Buscar();}};
-            dgvPendientes.SelectionChanged+=(_,_)=>Seleccionar();
-            dgvEntregas.SelectionChanged+=(_,_)=>ActualizarConfirmacion();
-            btnPreparar.Click+=Preparar; btnConfirmar.Click+=Confirmar;
+
         }
         private void Buscar()
         {
@@ -85,5 +81,15 @@ namespace Prana.Presentacion
             catch(Exception ex){Error(ex);ActualizarConfirmacion();}
         }
         private void Error(Exception ex)=>MessageBox.Show(this,ex.Message,"Entregas",MessageBoxButtons.OK,MessageBoxIcon.Error);
+        private void btnBuscar_Click(object? sender, EventArgs e) { Buscar(); }
+
+        private void txtBuscar_KeyDown(object? sender, KeyEventArgs e) {if(e.KeyCode==Keys.Enter){e.SuppressKeyPress=true;Buscar();}}
+
+        private void dgvPendientes_SelectionChanged(object? sender, EventArgs e) { Seleccionar(); }
+
+        private void dgvEntregas_SelectionChanged(object? sender, EventArgs e) { ActualizarConfirmacion(); }
+
+        private void frmEntregas_Load(object? sender, EventArgs e) => Buscar();
+
     }
 }

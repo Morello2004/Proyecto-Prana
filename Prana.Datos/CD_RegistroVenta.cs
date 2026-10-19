@@ -9,7 +9,7 @@ namespace Prana.Datos
     public static class CD_RegistroVenta
     {
         // registra encabezado detalles pagos y entrega juntos
-        public static int Guardar(NuevaVenta venta)
+        public static int Guardar(NuevaVenta venta,bool retiroInmediato)
         {
             using SqlConnection conexion = new(Conexion.ObtenerCadena());
             conexion.Open();
@@ -21,7 +21,7 @@ namespace Prana.Datos
                 // asegura los valores de catálogo necesarios para esta venta
                 int modalidad = Catalogo(conexion, transaccion, "Modalidad_Entrega", "id_modalidad_entrega", "nombre_modalidad_entrega", venta.ModalidadEntrega);
                 int estadoVenta = Catalogo(conexion, transaccion, "Estado_Venta", "id_estado_venta", "nombre_estado_venta", venta.Pagos.Count == 0 ? "Pendiente" : venta.CondicionPago == "Pago total" ? "Pagada" : "Parcial");
-                int estadoDetalle = Catalogo(conexion, transaccion, "Estado_Variante_Producto", "id_estado_variante_producto", "nombre_estado_variante_producto", "Pendiente");
+                int estadoDetalle = Catalogo(conexion, transaccion, "Estado_Variante_Producto", "id_estado_variante_producto", "nombre_estado_variante_producto", retiroInmediato ? "Entregado" : "Pendiente");
                 // guarda el encabezado y obtiene el número de venta
                 using SqlCommand encabezado = new("INSERT INTO Venta (id_cliente,id_usuario,fecha_venta,id_estado_venta,total,id_modalidad_entrega,descuento) OUTPUT INSERTED.id_venta VALUES (@cliente,@usuario,SYSDATETIME(),@estado,@total,@modalidad,@descuento)", conexion, transaccion);
                 encabezado.Parameters.AddWithValue("@cliente", venta.IdCliente);
@@ -68,10 +68,9 @@ IF OBJECT_ID(N'dbo.Venta_Entrega', N'U') IS NULL
         domicilio nvarchar(200) NULL, fecha_estimada datetime2 NULL,
         horario_sugerido nvarchar(50) NULL, observaciones nvarchar(500) NULL,
         tipo_logistica nvarchar(50) NULL, costo_envio decimal(10,2) NOT NULL,
-        observacion_pago nvarchar(500) NULL, condicion_pago nvarchar(30) NOT NULL,
-        generar_remito bit NOT NULL);
-INSERT INTO dbo.Venta_Entrega (id_venta,domicilio,fecha_estimada,horario_sugerido,observaciones,tipo_logistica,costo_envio,observacion_pago,condicion_pago,generar_remito)
-VALUES (@venta,@domicilio,@fecha,@horario,@observaciones,@logistica,@costo,@pago,@condicion,@remito)", conexion, transaccion))
+        observacion_pago nvarchar(500) NULL, condicion_pago nvarchar(30) NOT NULL);
+INSERT INTO dbo.Venta_Entrega (id_venta,domicilio,fecha_estimada,horario_sugerido,observaciones,tipo_logistica,costo_envio,observacion_pago,condicion_pago)
+VALUES (@venta,@domicilio,@fecha,@horario,@observaciones,@logistica,@costo,@pago,@condicion)", conexion, transaccion))
                 {
                     entrega.Parameters.AddWithValue("@venta", idVenta);
                     entrega.Parameters.AddWithValue("@domicilio", (object)venta.DomicilioEntrega ?? DBNull.Value);
@@ -82,10 +81,18 @@ VALUES (@venta,@domicilio,@fecha,@horario,@observaciones,@logistica,@costo,@pago
                     entrega.Parameters.AddWithValue("@costo", venta.CostoEnvio);
                     entrega.Parameters.AddWithValue("@pago", venta.ObservacionPago);
                     entrega.Parameters.AddWithValue("@condicion", venta.CondicionPago);
-                    entrega.Parameters.AddWithValue("@remito", venta.GenerarRemito);
                     entrega.ExecuteNonQuery();
                 }
-                CD_Comprobante.Guardar(conexion, transaccion, idVenta);
+
+                if (retiroInmediato)
+                {
+                    CD_Entrega.RegistrarRetiroInmediato(
+                        conexion,
+                        transaccion,
+                        idVenta,
+                        venta);
+                }
+
                 using (SqlCommand historial = new(@"
 INSERT LogActividad(id_usuario,accion,entidad,id_entidad,detalle,fecha)
 SELECT v.id_usuario,N'REGISTRAR_VENTA',N'Venta',v.id_venta,

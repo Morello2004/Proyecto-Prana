@@ -1,0 +1,35 @@
+@startuml
+!pragma layout smetana
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam shadowing false
+skinparam ArrowColor #34495E
+skinparam packageStyle rectangle
+title Despliegue local en Windows x64
+node "Computadora Windows\nUsuario de Windows" {
+artifact "Instalador Inno Setup\nPranaElectronica-Setup-2026-10-02.exe" as I
+node "Carpeta de instalación\nProgram Files / PranaElectronica" {
+artifact "Prana.Presentacion.exe\nRuntime .NET autocontenido" as EX
+artifact "Prana.Presentacion.dll.config\nConexionPrana" as C
+artifact "Scripts SQL de creación y actualización" as S
+}
+node "Instancia (localdb)\MSSQLLocalDB\nInstalación independiente" {
+database "PranaElectronica" as DB
+}
+folder "LocalAppData / PranaElectronica / Data" as DATA
+folder "Documentos / PranaElectronica / Comprobantes" as HTML
+folder "Documentos / PranaElectronica / Cierres" as CIERRES
+}
+I --> EX : instala archivos
+EX ..> C : lee configuración
+EX ..> S : prepara esquema
+EX --> DB : autenticación integrada
+DB ..> DATA : MDF y LDF
+EX --> HTML : genera garantía y remito HTML
+EX --> CIERRES : genera cierre HTML
+note bottom of DB
+El inicializador utiliza una conexión LocalDB fija.
+La base pertenece al usuario de Windows.
+end note
+@enduml

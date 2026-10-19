@@ -37,8 +37,6 @@ namespace Prana.Presentacion
         public buttonSeleccionarProducto()
         {
             InitializeComponent();
-
-            CargarProductos(string.Empty);
         }
 
         // Se ejecuta cuando se abre el formulario.

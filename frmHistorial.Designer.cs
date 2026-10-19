@@ -28,6 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
+            lbltxtUsuario = new Label();
+
+            txtUsuario = new TextBox();
+
+            lbltxtAccion = new Label();
+
+            txtAccion = new TextBox();
+
+            lbltxtRemito = new Label();
+
+            txtRemito = new TextBox();
+
             pnlEncabezado = new Panel();
             lblTitulo = new Label();
             pnlListado = new Panel();
@@ -144,7 +156,7 @@
             lblTitulo.AutoSize = true;
             lblTitulo.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
             lblTitulo.Location = new Point(20, 20);
-            pnlFiltros.Height = 100;
+            pnlFiltros.Height = 175;
             pnlFiltros.BackColor = Color.FromArgb(21, 30, 41);
             lblDesde.Location = new Point(20, 15);
             lblDesde.ForeColor = Color.FromArgb(145, 170, 210);
@@ -210,6 +222,49 @@
             pnlFiltros.ResumeLayout(false);
             pnlFiltros.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvActividades).EndInit();
+            txtRemito.Name = "txtRemito";
+            txtRemito.PlaceholderText = "Nro. de remito";
+            txtRemito.MaxLength = 10;
+            txtRemito.Location = new Point(16, 125);
+            txtRemito.Size = new Size(170, 25);
+            pnlFiltros.Controls.Add(txtRemito);
+            txtRemito.KeyDown += Filtro_KeyDown;
+            lbltxtRemito.Name = "lbltxtRemito";
+            lbltxtRemito.Text = "Remito";
+            lbltxtRemito.Location = new Point(16, 100);
+            lbltxtRemito.Size = new Size(170, 23);
+            lbltxtRemito.ForeColor = Color.White;
+            pnlFiltros.Controls.Add(lbltxtRemito);
+
+            txtAccion.Name = "txtAccion";
+            txtAccion.PlaceholderText = "Ej.: DESCUENTO";
+            txtAccion.MaxLength = 100;
+            txtAccion.Location = new Point(210, 125);
+            txtAccion.Size = new Size(210, 25);
+            pnlFiltros.Controls.Add(txtAccion);
+            txtAccion.KeyDown += Filtro_KeyDown;
+            lbltxtAccion.Name = "lbltxtAccion";
+            lbltxtAccion.Text = "Acción";
+            lbltxtAccion.Location = new Point(210, 100);
+            lbltxtAccion.Size = new Size(210, 23);
+            lbltxtAccion.ForeColor = Color.White;
+            pnlFiltros.Controls.Add(lbltxtAccion);
+
+            txtUsuario.Name = "txtUsuario";
+            txtUsuario.PlaceholderText = "Nombre de usuario";
+            txtUsuario.MaxLength = 100;
+            txtUsuario.Location = new Point(440, 125);
+            txtUsuario.Size = new Size(210, 25);
+            pnlFiltros.Controls.Add(txtUsuario);
+            txtUsuario.KeyDown += Filtro_KeyDown;
+            lbltxtUsuario.Name = "lbltxtUsuario";
+            lbltxtUsuario.Text = "Usuario";
+            lbltxtUsuario.Location = new Point(440, 100);
+            lbltxtUsuario.Size = new Size(210, 23);
+            lbltxtUsuario.ForeColor = Color.White;
+            pnlFiltros.Controls.Add(lbltxtUsuario);
+
+            Load += frmHistorial_Load;
             ResumeLayout(false);
         }
 
@@ -225,5 +280,17 @@
         private Button btnFiltrar;
         private Button btnUltimas;
         private DataGridView dgvActividades;
+        private TextBox txtRemito;
+
+        private Label lbltxtRemito;
+
+        private TextBox txtAccion;
+
+        private Label lbltxtAccion;
+
+        private TextBox txtUsuario;
+
+        private Label lbltxtUsuario;
+
     }
 }

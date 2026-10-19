@@ -28,15 +28,26 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
+            esperaClientes = new System.Windows.Forms.Timer(components);
+            esperaProductos = new System.Windows.Forms.Timer(components);
+            lblCobroPrevisto = new Label();
+            usarDireccionRegistrada = new CheckBox();
+            txtCuentaDestino = new TextBox();
+            lblCuentaDestino = new Label();
+            listaClientes = new ListBox();
+            listaProductos = new ListBox();
             label1 = new Label();
             pnlContenidoVenta = new TableLayoutPanel();
             tlpNuevaVenta = new Panel();
             pnlDocumentos = new Panel();
             lblAclaracionDocumentos = new Label();
-            chkGenerarRemito = new CheckBox();
             chkGenerarRecibo = new CheckBox();
             lblTituloDocumentos = new Label();
+            btnRegistrarVenta = new Button();
             pnlFormaEntrega = new Panel();
+            textBox1 = new TextBox();
+            label3 = new Label();
             numericUpDown1 = new NumericUpDown();
             lblCostoEnvio = new Label();
             rdoEnvioDomicilio = new RadioButton();
@@ -58,7 +69,6 @@
             lblTituloNuevaVenta = new Label();
             pnlCliente = new Panel();
             dataGridView2 = new DataGridView();
-            BtnAgregarCliente = new FontAwesome.Sharp.IconButton();
             lblClienteSeleccionado = new Label();
             txtBuscarCliente = new TextBox();
             lblTituloCliente = new Label();
@@ -90,7 +100,6 @@
             cboCantCuotas = new ComboBox();
             label2 = new Label();
             numericUpDown2 = new NumericUpDown();
-            btnConfirmarPagoActual = new Button();
             lblTotalPagoActual = new Label();
             txtObservacionPago = new TextBox();
             lblObservacionPago = new Label();
@@ -129,6 +138,73 @@
             ((System.ComponentModel.ISupportInitialize)nudMontoPago).BeginInit();
             SuspendLayout();
             // 
+            // esperaClientes
+            // 
+            esperaClientes.Interval = 250;
+            esperaClientes.Tick += esperaClientes_Tick;
+            // 
+            // esperaProductos
+            // 
+            esperaProductos.Interval = 250;
+            esperaProductos.Tick += esperaProductos_Tick;
+            // 
+            // lblCobroPrevisto
+            // 
+            lblCobroPrevisto.AutoSize = true;
+            lblCobroPrevisto.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lblCobroPrevisto.ForeColor = Color.White;
+            lblCobroPrevisto.Location = new Point(20, 245);
+            lblCobroPrevisto.Name = "lblCobroPrevisto";
+            lblCobroPrevisto.Size = new Size(0, 19);
+            lblCobroPrevisto.TabIndex = 20;
+            // 
+            // usarDireccionRegistrada
+            // 
+            usarDireccionRegistrada.AutoSize = true;
+            usarDireccionRegistrada.ForeColor = Color.White;
+            usarDireccionRegistrada.Location = new Point(520, 55);
+            usarDireccionRegistrada.Name = "usarDireccionRegistrada";
+            usarDireccionRegistrada.Size = new Size(156, 19);
+            usarDireccionRegistrada.TabIndex = 16;
+            usarDireccionRegistrada.Text = "Usar dirección registrada";
+            usarDireccionRegistrada.CheckedChanged += usarDireccionRegistrada_CheckedChanged;
+            // 
+            // txtCuentaDestino
+            // 
+            txtCuentaDestino.Location = new Point(280, 200);
+            txtCuentaDestino.MaxLength = 100;
+            txtCuentaDestino.Name = "txtCuentaDestino";
+            txtCuentaDestino.Size = new Size(250, 23);
+            txtCuentaDestino.TabIndex = 21;
+            // 
+            // lblCuentaDestino
+            // 
+            lblCuentaDestino.AutoSize = true;
+            lblCuentaDestino.ForeColor = Color.White;
+            lblCuentaDestino.Location = new Point(280, 182);
+            lblCuentaDestino.Name = "lblCuentaDestino";
+            lblCuentaDestino.Size = new Size(150, 15);
+            lblCuentaDestino.TabIndex = 22;
+            lblCuentaDestino.Text = "Cuenta destino / referencia";
+            // 
+            // listaClientes
+            // 
+            listaClientes.Location = new Point(20, 80);
+            listaClientes.Name = "listaClientes";
+            listaClientes.Size = new Size(350, 109);
+            listaClientes.TabIndex = 6;
+            listaClientes.Visible = false;
+            listaClientes.Click += listaClientes_Click;
+            // 
+            // listaProductos
+            // 
+            listaProductos.Location = new Point(20, 80);
+            listaProductos.Name = "listaProductos";
+            listaProductos.Size = new Size(350, 109);
+            listaProductos.TabIndex = 6;
+            listaProductos.Visible = false;
+            listaProductos.Click += listaProductos_Click;
+            // 
             // label1
             // 
             label1.AutoSize = true;
@@ -154,7 +230,7 @@
             pnlContenidoVenta.RowStyles.Add(new RowStyle(SizeType.Absolute, 65F));
             pnlContenidoVenta.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             pnlContenidoVenta.RowStyles.Add(new RowStyle(SizeType.Absolute, 75F));
-            pnlContenidoVenta.Size = new Size(1241, 1943);
+            pnlContenidoVenta.Size = new Size(1173, 1943);
             pnlContenidoVenta.TabIndex = 1;
             pnlContenidoVenta.Paint += pnlContenidoVenta_Paint;
             // 
@@ -175,7 +251,7 @@
             tlpNuevaVenta.Location = new Point(3, 68);
             tlpNuevaVenta.Name = "tlpNuevaVenta";
             tlpNuevaVenta.Padding = new Padding(0, 10, 0, 10);
-            tlpNuevaVenta.Size = new Size(1235, 1797);
+            tlpNuevaVenta.Size = new Size(1167, 1797);
             tlpNuevaVenta.TabIndex = 1;
             tlpNuevaVenta.Paint += panel1_Paint;
             // 
@@ -184,12 +260,12 @@
             pnlDocumentos.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             pnlDocumentos.BackColor = Color.FromArgb(21, 30, 41);
             pnlDocumentos.Controls.Add(lblAclaracionDocumentos);
-            pnlDocumentos.Controls.Add(chkGenerarRemito);
             pnlDocumentos.Controls.Add(chkGenerarRecibo);
             pnlDocumentos.Controls.Add(lblTituloDocumentos);
+            pnlDocumentos.Controls.Add(btnRegistrarVenta);
             pnlDocumentos.Location = new Point(9, 1660);
             pnlDocumentos.Name = "pnlDocumentos";
-            pnlDocumentos.Size = new Size(1632, 124);
+            pnlDocumentos.Size = new Size(1564, 124);
             pnlDocumentos.TabIndex = 8;
             // 
             // lblAclaracionDocumentos
@@ -198,32 +274,20 @@
             lblAclaracionDocumentos.ForeColor = Color.FromArgb(145, 170, 210);
             lblAclaracionDocumentos.Location = new Point(20, 100);
             lblAclaracionDocumentos.Name = "lblAclaracionDocumentos";
-            lblAclaracionDocumentos.Size = new Size(359, 15);
+            lblAclaracionDocumentos.Size = new Size(355, 15);
             lblAclaracionDocumentos.TabIndex = 3;
-            lblAclaracionDocumentos.Text = " Los documentos seleccionados se generarán al confirmar la venta.";
-            // 
-            // chkGenerarRemito
-            // 
-            chkGenerarRemito.AutoSize = true;
-            chkGenerarRemito.Checked = true;
-            chkGenerarRemito.CheckState = CheckState.Checked;
-            chkGenerarRemito.Location = new Point(29, 58);
-            chkGenerarRemito.Name = "chkGenerarRemito";
-            chkGenerarRemito.Size = new Size(103, 19);
-            chkGenerarRemito.TabIndex = 2;
-            chkGenerarRemito.Text = "Generar recibo";
-            chkGenerarRemito.UseVisualStyleBackColor = true;
+            lblAclaracionDocumentos.Text = "La garantía y el remito se generan con el mismo número de venta.";
             // 
             // chkGenerarRecibo
             // 
             chkGenerarRecibo.AutoSize = true;
             chkGenerarRecibo.Checked = true;
             chkGenerarRecibo.CheckState = CheckState.Checked;
-            chkGenerarRecibo.Location = new Point(147, 58);
+            chkGenerarRecibo.Location = new Point(29, 58);
             chkGenerarRecibo.Name = "chkGenerarRecibo";
-            chkGenerarRecibo.Size = new Size(103, 19);
+            chkGenerarRecibo.Size = new Size(113, 19);
             chkGenerarRecibo.TabIndex = 1;
-            chkGenerarRecibo.Text = "Generar recibo";
+            chkGenerarRecibo.Text = "Generar garantía";
             chkGenerarRecibo.UseVisualStyleBackColor = true;
             // 
             // lblTituloDocumentos
@@ -237,10 +301,26 @@
             lblTituloDocumentos.TabIndex = 0;
             lblTituloDocumentos.Text = "6. Documentos";
             // 
+            // btnRegistrarVenta
+            // 
+            btnRegistrarVenta.BackColor = Color.FromArgb(35, 135, 190);
+            btnRegistrarVenta.FlatAppearance.BorderSize = 0;
+            btnRegistrarVenta.FlatStyle = FlatStyle.Flat;
+            btnRegistrarVenta.ForeColor = Color.White;
+            btnRegistrarVenta.Location = new Point(270, 53);
+            btnRegistrarVenta.Name = "btnRegistrarVenta";
+            btnRegistrarVenta.Size = new Size(185, 30);
+            btnRegistrarVenta.TabIndex = 16;
+            btnRegistrarVenta.Text = "Registrar venta";
+            btnRegistrarVenta.UseVisualStyleBackColor = false;
+            btnRegistrarVenta.Click += btnRegistrarVenta_Click;
+            // 
             // pnlFormaEntrega
             // 
             pnlFormaEntrega.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             pnlFormaEntrega.BackColor = Color.FromArgb(21, 30, 41);
+            pnlFormaEntrega.Controls.Add(textBox1);
+            pnlFormaEntrega.Controls.Add(label3);
             pnlFormaEntrega.Controls.Add(numericUpDown1);
             pnlFormaEntrega.Controls.Add(lblCostoEnvio);
             pnlFormaEntrega.Controls.Add(rdoEnvioDomicilio);
@@ -257,10 +337,29 @@
             pnlFormaEntrega.Controls.Add(lblDomicilioEntrega);
             pnlFormaEntrega.Controls.Add(lblTituloFormaEntrega);
             pnlFormaEntrega.Controls.Add(rdoRetiroLocal);
+            pnlFormaEntrega.Controls.Add(usarDireccionRegistrada);
             pnlFormaEntrega.Location = new Point(3, 646);
             pnlFormaEntrega.Name = "pnlFormaEntrega";
-            pnlFormaEntrega.Size = new Size(1632, 269);
+            pnlFormaEntrega.Size = new Size(1564, 269);
             pnlFormaEntrega.TabIndex = 7;
+            pnlFormaEntrega.Paint += pnlFormaEntrega_Paint;
+            // 
+            // textBox1
+            // 
+            textBox1.Location = new Point(390, 189);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(143, 23);
+            textBox1.TabIndex = 18;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(280, 192);
+            label3.Name = "label3";
+            label3.Size = new Size(101, 15);
+            label3.TabIndex = 17;
+            label3.Text = "Segundo telefono";
+            label3.Click += label3_Click;
             // 
             // numericUpDown1
             // 
@@ -272,6 +371,7 @@
             numericUpDown1.Size = new Size(180, 23);
             numericUpDown1.TabIndex = 15;
             numericUpDown1.ThousandsSeparator = true;
+            numericUpDown1.ValueChanged += numericUpDown1_ValueChanged;
             // 
             // lblCostoEnvio
             // 
@@ -294,6 +394,7 @@
             rdoEnvioDomicilio.Text = "Envio a domicilio";
             rdoEnvioDomicilio.TextAlign = ContentAlignment.MiddleCenter;
             rdoEnvioDomicilio.UseVisualStyleBackColor = true;
+            rdoEnvioDomicilio.CheckedChanged += rdoEnvioDomicilio_CheckedChanged;
             // 
             // rdoRetiroPosterior
             // 
@@ -307,7 +408,7 @@
             rdoRetiroPosterior.Text = "Retiro posterior en el local";
             rdoRetiroPosterior.TextAlign = ContentAlignment.MiddleCenter;
             rdoRetiroPosterior.UseVisualStyleBackColor = true;
-            rdoRetiroPosterior.CheckedChanged += radioButton1_CheckedChanged;
+            rdoRetiroPosterior.CheckedChanged += rdoRetiroPosterior_CheckedChanged;
             // 
             // cboTipoLogistica
             // 
@@ -351,7 +452,7 @@
             txtObservacionesEntrega.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             txtObservacionesEntrega.Location = new Point(120, 152);
             txtObservacionesEntrega.Name = "txtObservacionesEntrega";
-            txtObservacionesEntrega.Size = new Size(1366, 23);
+            txtObservacionesEntrega.Size = new Size(1298, 23);
             txtObservacionesEntrega.TabIndex = 7;
             // 
             // lblObservacionesEntrega
@@ -424,6 +525,7 @@
             rdoRetiroLocal.Text = "Retiro en el local";
             rdoRetiroLocal.TextAlign = ContentAlignment.MiddleCenter;
             rdoRetiroLocal.UseVisualStyleBackColor = true;
+            rdoRetiroLocal.CheckedChanged += rdoRetiroLocal_CheckedChanged;
             // 
             // pnlEncabezadoVenta
             // 
@@ -433,7 +535,7 @@
             pnlEncabezadoVenta.Controls.Add(lblTituloNuevaVenta);
             pnlEncabezadoVenta.Location = new Point(3, 0);
             pnlEncabezadoVenta.Name = "pnlEncabezadoVenta";
-            pnlEncabezadoVenta.Size = new Size(1632, 65);
+            pnlEncabezadoVenta.Size = new Size(1564, 65);
             pnlEncabezadoVenta.TabIndex = 0;
             // 
             // lblNumeroVenta
@@ -462,15 +564,16 @@
             pnlCliente.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             pnlCliente.BackColor = Color.FromArgb(21, 30, 41);
             pnlCliente.Controls.Add(dataGridView2);
-            pnlCliente.Controls.Add(BtnAgregarCliente);
             pnlCliente.Controls.Add(lblClienteSeleccionado);
             pnlCliente.Controls.Add(txtBuscarCliente);
             pnlCliente.Controls.Add(lblTituloCliente);
+            pnlCliente.Controls.Add(listaClientes);
             pnlCliente.ForeColor = Color.White;
             pnlCliente.Location = new Point(3, 71);
             pnlCliente.Name = "pnlCliente";
-            pnlCliente.Size = new Size(1632, 256);
+            pnlCliente.Size = new Size(1564, 256);
             pnlCliente.TabIndex = 0;
+            pnlCliente.Paint += pnlCliente_Paint;
             // 
             // dataGridView2
             // 
@@ -479,22 +582,6 @@
             dataGridView2.Name = "dataGridView2";
             dataGridView2.Size = new Size(953, 87);
             dataGridView2.TabIndex = 5;
-            // 
-            // BtnAgregarCliente
-            // 
-            BtnAgregarCliente.BackColor = Color.DodgerBlue;
-            BtnAgregarCliente.FlatAppearance.BorderSize = 0;
-            BtnAgregarCliente.FlatStyle = FlatStyle.Flat;
-            BtnAgregarCliente.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            BtnAgregarCliente.IconChar = FontAwesome.Sharp.IconChar.None;
-            BtnAgregarCliente.IconColor = Color.Black;
-            BtnAgregarCliente.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            BtnAgregarCliente.Location = new Point(496, 36);
-            BtnAgregarCliente.Name = "BtnAgregarCliente";
-            BtnAgregarCliente.Size = new Size(100, 25);
-            BtnAgregarCliente.TabIndex = 4;
-            BtnAgregarCliente.Text = "Agregar";
-            BtnAgregarCliente.UseVisualStyleBackColor = false;
             // 
             // lblClienteSeleccionado
             // 
@@ -514,6 +601,8 @@
             txtBuscarCliente.PlaceholderText = "Buscar por DNI, nombre o apellido...";
             txtBuscarCliente.Size = new Size(460, 25);
             txtBuscarCliente.TabIndex = 1;
+            txtBuscarCliente.TextChanged += txtBuscarCliente_TextChanged;
+            txtBuscarCliente.KeyDown += txtBuscarCliente_KeyDown;
             // 
             // lblTituloCliente
             // 
@@ -535,9 +624,10 @@
             pnlProductos.Controls.Add(nudCantidad);
             pnlProductos.Controls.Add(txtBuscarProducto);
             pnlProductos.Controls.Add(lblTituloProductos);
+            pnlProductos.Controls.Add(listaProductos);
             pnlProductos.Location = new Point(3, 354);
             pnlProductos.Name = "pnlProductos";
-            pnlProductos.Size = new Size(1632, 273);
+            pnlProductos.Size = new Size(1564, 273);
             pnlProductos.TabIndex = 1;
             // 
             // dgvDetalleVenta
@@ -556,7 +646,7 @@
             dgvDetalleVenta.ReadOnly = true;
             dgvDetalleVenta.RowHeadersVisible = false;
             dgvDetalleVenta.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvDetalleVenta.Size = new Size(1472, 138);
+            dgvDetalleVenta.Size = new Size(1404, 138);
             dgvDetalleVenta.TabIndex = 5;
             dgvDetalleVenta.CellContentClick += dgvDetalleVenta_CellContentClick;
             // 
@@ -605,6 +695,7 @@
             btnAgregarProducto.TabIndex = 4;
             btnAgregarProducto.Text = "Agregar";
             btnAgregarProducto.UseVisualStyleBackColor = false;
+            btnAgregarProducto.Click += btnAgregarProducto_Click;
             // 
             // nudCantidad
             // 
@@ -624,6 +715,8 @@
             txtBuscarProducto.PlaceholderText = " Buscar por código, producto o marca...";
             txtBuscarProducto.Size = new Size(420, 25);
             txtBuscarProducto.TabIndex = 1;
+            txtBuscarProducto.TextChanged += txtBuscarProducto_TextChanged;
+            txtBuscarProducto.KeyDown += txtBuscarProducto_KeyDown;
             // 
             // lblTituloProductos
             // 
@@ -654,7 +747,7 @@
             pnlDescuentoTotales.Controls.Add(lblTituloDescuento);
             pnlDescuentoTotales.Location = new Point(3, 930);
             pnlDescuentoTotales.Name = "pnlDescuentoTotales";
-            pnlDescuentoTotales.Size = new Size(1632, 165);
+            pnlDescuentoTotales.Size = new Size(1564, 165);
             pnlDescuentoTotales.TabIndex = 0;
             pnlDescuentoTotales.Paint += panel1_Paint_2;
             // 
@@ -759,6 +852,7 @@
             nudDescuento.Size = new Size(75, 23);
             nudDescuento.TabIndex = 2;
             nudDescuento.ThousandsSeparator = true;
+            nudDescuento.ValueChanged += nudDescuento_ValueChanged;
             // 
             // lblDescuento
             // 
@@ -788,7 +882,6 @@
             pnlPago.Controls.Add(cboCantCuotas);
             pnlPago.Controls.Add(label2);
             pnlPago.Controls.Add(numericUpDown2);
-            pnlPago.Controls.Add(btnConfirmarPagoActual);
             pnlPago.Controls.Add(lblTotalPagoActual);
             pnlPago.Controls.Add(txtObservacionPago);
             pnlPago.Controls.Add(lblObservacionPago);
@@ -803,9 +896,12 @@
             pnlPago.Controls.Add(cboMedioPago);
             pnlPago.Controls.Add(lblTituloPago);
             pnlPago.Controls.Add(lblMedioPago);
+            pnlPago.Controls.Add(lblCobroPrevisto);
+            pnlPago.Controls.Add(txtCuentaDestino);
+            pnlPago.Controls.Add(lblCuentaDestino);
             pnlPago.Location = new Point(3, 1105);
             pnlPago.Name = "pnlPago";
-            pnlPago.Size = new Size(1632, 546);
+            pnlPago.Size = new Size(1564, 546);
             pnlPago.TabIndex = 6;
             // 
             // cboCantCuotas
@@ -816,6 +912,7 @@
             cboCantCuotas.Name = "cboCantCuotas";
             cboCantCuotas.Size = new Size(230, 23);
             cboCantCuotas.TabIndex = 19;
+            cboCantCuotas.SelectedIndexChanged += cboCantCuotas_SelectedIndexChanged;
             // 
             // label2
             // 
@@ -837,20 +934,6 @@
             numericUpDown2.TabIndex = 17;
             numericUpDown2.ThousandsSeparator = true;
             numericUpDown2.Value = new decimal(new int[] { 1, 0, 0, 0 });
-            // 
-            // btnConfirmarPagoActual
-            // 
-            btnConfirmarPagoActual.BackColor = Color.FromArgb(35, 135, 190);
-            btnConfirmarPagoActual.FlatAppearance.BorderSize = 0;
-            btnConfirmarPagoActual.FlatStyle = FlatStyle.Flat;
-            btnConfirmarPagoActual.ForeColor = Color.White;
-            btnConfirmarPagoActual.Location = new Point(261, 390);
-            btnConfirmarPagoActual.Name = "btnConfirmarPagoActual";
-            btnConfirmarPagoActual.Size = new Size(185, 30);
-            btnConfirmarPagoActual.TabIndex = 16;
-            btnConfirmarPagoActual.Text = "Confirmar pago actual";
-            btnConfirmarPagoActual.UseVisualStyleBackColor = false;
-            btnConfirmarPagoActual.Click += btnConfirmarPagoActual_Click;
             // 
             // lblTotalPagoActual
             // 
@@ -899,7 +982,7 @@
             // 
             cboCondicionPago.DropDownStyle = ComboBoxStyle.DropDownList;
             cboCondicionPago.FormattingEnabled = true;
-            cboCondicionPago.Items.AddRange(new object[] { "Seña para reserva", "Pago parcial", "Pago total" });
+            cboCondicionPago.Items.AddRange(new object[] { "Pago parcial", "Pago total" });
             cboCondicionPago.Location = new Point(20, 78);
             cboCondicionPago.Name = "cboCondicionPago";
             cboCondicionPago.Size = new Size(220, 23);
@@ -928,8 +1011,9 @@
             dgvPagos.ReadOnly = true;
             dgvPagos.RowHeadersVisible = false;
             dgvPagos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvPagos.Size = new Size(1455, 74);
+            dgvPagos.Size = new Size(1387, 74);
             dgvPagos.TabIndex = 7;
+            dgvPagos.CellContentClick += dgvPagos_CellContentClick;
             // 
             // colMedioPago
             // 
@@ -977,6 +1061,7 @@
             btnAgregarPago.TabIndex = 6;
             btnAgregarPago.Text = "Agregar medio al pago";
             btnAgregarPago.UseVisualStyleBackColor = false;
+            btnAgregarPago.Click += btnAgregarPago_Click;
             // 
             // nudMontoPago
             // 
@@ -987,6 +1072,7 @@
             nudMontoPago.Size = new Size(150, 23);
             nudMontoPago.TabIndex = 5;
             nudMontoPago.ThousandsSeparator = true;
+            nudMontoPago.ValueChanged += nudMontoPago_ValueChanged;
             // 
             // lblMontoPago
             // 
@@ -1006,6 +1092,7 @@
             cboMedioPago.Name = "cboMedioPago";
             cboMedioPago.Size = new Size(230, 23);
             cboMedioPago.TabIndex = 3;
+            cboMedioPago.SelectedIndexChanged += cboMedioPago_SelectedIndexChanged;
             // 
             // lblTituloPago
             // 
@@ -1130,7 +1217,6 @@
         private Label lblTituloPago;
         private Label lblMedioPago;
         private CheckBox chkGenerarRecibo;
-        private CheckBox chkGenerarRemito;
         private Label lblAclaracionDocumentos;
         private ComboBox cboTipoLogistica;
         private Label lblTipoLogistica;
@@ -1140,7 +1226,6 @@
         private RadioButton rdoRetiroPosterior;
         private NumericUpDown numericUpDown1;
         private Label lblCostoEnvio;
-        private FontAwesome.Sharp.IconButton BtnAgregarCliente;
         private Label lblFechaPago;
         private ComboBox cboCondicionPago;
         private Label lblCondicionPago;
@@ -1150,10 +1235,27 @@
         private Label lblTotalPagoActual;
         private DataGridView dataGridView1;
         private Label lblPagosRegistrados;
-        private Button btnConfirmarPagoActual;
+        private Button btnRegistrarVenta;
         private NumericUpDown numericUpDown2;
         private DataGridView dataGridView2;
         private ComboBox cboCantCuotas;
         private Label label2;
+        private Label lblCobroPrevisto;
+
+        private CheckBox usarDireccionRegistrada;
+
+        private TextBox txtCuentaDestino;
+
+        private Label lblCuentaDestino;
+
+        private ListBox listaClientes;
+
+        private ListBox listaProductos;
+
+        private System.Windows.Forms.Timer esperaClientes;
+
+        private System.Windows.Forms.Timer esperaProductos;
+        private Label label3;
+        private TextBox textBox1;
     }
 }

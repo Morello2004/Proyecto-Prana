@@ -41,8 +41,8 @@ namespace Prana.Entidades
         public string ObservacionesEntrega { get; set; } = string.Empty;
         public string TipoLogistica { get; set; } = string.Empty;
         public decimal CostoEnvio { get; set; }
-        public bool GenerarRemito { get; set; }
         public List<DetalleNuevaVenta> Detalles { get; set; } = new();
         public List<PagoNuevaVenta> Pagos { get; set; } = new();
+        public string SegundoTelefono { get; set; } = string.Empty;
     }
 }

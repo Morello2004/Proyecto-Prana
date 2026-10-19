@@ -115,19 +115,31 @@ ORDER BY v.fecha_venta DESC, v.id_venta DESC;";
         public List<AlertaPagoPendiente> ObtenerAlertas(DateTime ahora)
         {
             const string sql = @"
+WITH Pagos AS
+(
+    SELECT id_venta, MIN(fecha_pago) primer_pago, SUM(monto_final) monto
+    FROM Pago
+    GROUP BY id_venta
+),
+Productos AS
+(
+    SELECT d.id_venta,
+           STRING_AGG(CAST(CONCAT(d.cantidad, N' x ', pr.nombre_producto) AS nvarchar(max)), N'; ') texto
+    FROM Detalle_Venta d
+    JOIN Variante_Producto vp ON vp.id_variante=d.id_variante
+    JOIN Producto pr ON pr.id_producto=vp.id_producto
+    GROUP BY d.id_venta
+)
 SELECT v.id_venta, CONCAT(c.nombre_cliente, N' ', c.apellido_cliente) cliente,
-       COALESCE(productos.texto, N'') productos, primero.fecha_pago primer_pago, v.total,
+       COALESCE(productos.texto, N'') productos, pagos.primer_pago, v.total,
        pagos.monto pagado, v.total - pagos.monto saldo,
-       DATEDIFF(DAY, DATEADD(MONTH, 1, primero.fecha_pago), @Ahora) dias_vencida
+       DATEDIFF(DAY, DATEADD(MONTH, 1, pagos.primer_pago), @Ahora) dias_vencida
 FROM Venta v JOIN Cliente c ON c.id_cliente=v.id_cliente
-CROSS APPLY (SELECT MIN(fecha_pago) fecha_pago FROM Pago WHERE id_venta=v.id_venta) primero
-CROSS APPLY (SELECT SUM(monto_final) monto FROM Pago WHERE id_venta=v.id_venta) pagos
-OUTER APPLY (SELECT STRING_AGG(CAST(CONCAT(d.cantidad, N' x ', pr.nombre_producto) AS nvarchar(max)), N'; ') texto
-    FROM Detalle_Venta d JOIN Variante_Producto vp ON vp.id_variante=d.id_variante JOIN Producto pr ON pr.id_producto=vp.id_producto
-    WHERE d.id_venta=v.id_venta) productos
-WHERE DATEADD(MONTH, 1, primero.fecha_pago) <= @Ahora AND v.total > pagos.monto
+JOIN Pagos pagos ON pagos.id_venta=v.id_venta
+LEFT JOIN Productos productos ON productos.id_venta=v.id_venta
+WHERE DATEADD(MONTH, 1, pagos.primer_pago) <= @Ahora AND v.total > pagos.monto
   AND NOT EXISTS (SELECT 1 FROM Estado_Venta ev WHERE ev.id_estado_venta=v.id_estado_venta AND (ev.nombre_estado_venta LIKE N'Anulad%' OR ev.nombre_estado_venta LIKE N'Cancelad%'))
-ORDER BY dias_vencida DESC, primero.fecha_pago;";
+ORDER BY dias_vencida DESC, pagos.primer_pago;";
             using SqlConnection conexion = new(Conexion.ObtenerCadena());
             using SqlCommand comando = new(sql, conexion);
             comando.Parameters.Add("@Ahora", SqlDbType.DateTime2).Value = ahora;

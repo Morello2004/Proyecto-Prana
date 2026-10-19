@@ -7,87 +7,81 @@ using System.Text;
 
 namespace Prana.negocio
 {
+    // Valida credenciales y coordina las operaciones de usuario.
     public class CN_Usuario
     {
-        // Se crea un objeto de la capa de Datos para poder buscar usuarios almacenados en SQL Server
-    
+        // Accede a los usuarios almacenados en la base de datos.
         private readonly CD_Usuario datosUsuario = new CD_Usuario();
 
-        // Recibe el nombre y la contraseña escritos en el formulario
-        // Devuelve el usuario si los datos son correctos
-        // Devuelve null si el usuario no existe, está inactivo  o la contraseña es incorrecta
-       
-        public usuario? IniciarSesion(
-            string nombreUsuario,
-            string contrasenaIngresada)
+        // Comprueba las credenciales y aplica el bloqueo de tres intentos por quince minutos.
+        public ResultadoInicioSesion IniciarSesion(string nombreUsuario, string contrasenaIngresada)
         {
-            // Le solicita a la capa de Datos que busque al usuario mediante su nombre de usuario
-            usuario? usuario =
-                datosUsuario.BuscarUsuario(nombreUsuario);
+            usuario? usuarioEncontrado = datosUsuario.BuscarUsuario(nombreUsuario.Trim());
+            if (usuarioEncontrado == null || !usuarioEncontrado.activo)
+                return new ResultadoInicioSesion { Mensaje = "Nombre de usuario o contrasena incorrectos." };
 
-            // Si Datos no encontró ningún usuario, devuelve null
-            if (usuario == null)
+            if (usuarioEncontrado.BloqueadoHasta > usuarioEncontrado.HoraServidor)
+                return new ResultadoInicioSesion
+                {
+                    BloqueadoHasta = usuarioEncontrado.BloqueadoHasta,
+                    Mensaje = "La cuenta esta bloqueada por 15 minutos. Contactate con el administrador."
+                };
+
+            if (!BCrypt.Net.BCrypt.Verify(contrasenaIngresada ?? string.Empty, usuarioEncontrado.contraseña))
             {
-                return null;
+                (int intentos, DateTime? bloqueo) = datosUsuario.RegistrarIntentoFallido(usuarioEncontrado.idUsuario);
+                int restantes = Math.Max(0, 3 - intentos);
+                string mensaje = bloqueo.HasValue
+                    ? "La contrasena es incorrecta. Se agotaron los 3 intentos. La cuenta queda bloqueada por 15 minutos. Contactate con el administrador."
+                    : $"La contrasena es incorrecta. Te quedan {restantes} intentos.";
+                return new ResultadoInicioSesion { IntentosRestantes = restantes, BloqueadoHasta = bloqueo, Mensaje = mensaje };
             }
 
-            // Comprueba que el usuario esté habilitado para utilizar el sistema. Si Activo es false, no permite el ingreso
-            if (!usuario.activo)
-            {
-                return null;
-            }
+            if (!datosUsuario.RestablecerIntentosLogin(usuarioEncontrado.idUsuario))
+                return new ResultadoInicioSesion { Mensaje = "Nombre de usuario o contrasena incorrectos." };
 
-            // BCrypt compara la contraseña escrita en el formulario con el hash almacenado en la base de datos.
-            // No desencripta el hash. Utiliza la información incluida en el propio hash para comprobar si corresponden.
-            bool contrasenaCorrecta = BCrypt.Net.BCrypt.Verify(
-                contrasenaIngresada,
-                usuario.contraseña
-            );
-
-            // Si BCrypt indica que no coinciden, devuelve null.
-            if (!contrasenaCorrecta)
-            {
-                return null;
-            }
-
-            // Si el usuario existe, está activo y la contraseña
-            // coincide, devuelve el objeto Usuario a Presentación.
-            return usuario;
+            return new ResultadoInicioSesion { Usuario = usuarioEncontrado, Autenticado = true };
         }
 
-        // Convierte una contraseña normal en un hash de BCrypt.
-        // Este método se utiliza al crear un usuario o cuando se modifica su contraseña.
+        // Convierte una contrasena en un hash de BCrypt.
         public string GenerarHash(string contrasena)
         {
-            // No se permite generar un hash de una contraseña vacía
-            if (string.IsNullOrWhiteSpace(contrasena))
-            {
-                throw new ArgumentException(
-                    "La contraseña no puede estar vacía."
-                );
-            }
-
-            // Devuelve el hash que posteriormente debe almacenarse en la columna hash_contrasena de SQL Server.
+            if (contrasena.Length < 5 || !contrasena.Any(char.IsUpper) || !contrasena.Any(char.IsDigit))
+                throw new ArgumentException("La contrasena debe tener al menos 5 caracteres, una mayuscula y un numero.");
             return BCrypt.Net.BCrypt.HashPassword(contrasena);
         }
 
-        // Valida los datos, genera el hash y crea el usuario.
+        // Obtiene la lista de usuarios para la administracion.
+        public List<usuario> ListarUsuarios() => datosUsuario.ListarUsuarios();
+
+        // Modifica el usuario y conserva el hash cuando no se informa una nueva contrasena.
+        public void ModificarUsuario(int id, string nombre, string contrasena, int rol)
+        {
+            nombre = nombre.Trim();
+            if (id <= 0) throw new ArgumentException("Seleccione un usuario.");
+            if (string.IsNullOrWhiteSpace(nombre) || nombre.Length > 100) throw new ArgumentException("El nombre debe tener entre 1 y 100 caracteres.");
+            if (rol != 1 && rol != 2) throw new ArgumentException("Seleccione un rol válido.");
+            datosUsuario.ModificarUsuario(id, nombre, string.IsNullOrEmpty(contrasena) ? null : GenerarHash(contrasena), rol);
+        }
+
+        // Valida los datos, genera el hash y crea un usuario nuevo.
         public void CrearUsuario(string nombreUsuario, string contrasena, int idRolUsuario)
         {
-            // Comprueba que el nombre no esté vacío.
             if (string.IsNullOrWhiteSpace(nombreUsuario)) throw new ArgumentException("El nombre de usuario es obligatorio.");
-
-            // Comprueba que la contraseña no esté vacía.
             if (string.IsNullOrWhiteSpace(contrasena)) throw new ArgumentException("La contraseña es obligatoria.");
-
-            // Comprueba que el rol sea Administrador o Vendedor.
             if (idRolUsuario != 1 && idRolUsuario != 2) throw new ArgumentException("El rol seleccionado no es válido.");
-
-            // Genera el hash BCrypt de la contraseña.
+            if (contrasena.Length < 5 || !contrasena.Any(char.IsUpper) || !contrasena.Any(char.IsDigit))
+                throw new ArgumentException("La contraseña debe tener al menos 5 caracteres, una mayúscula y un número.");
             string hashContrasena = GenerarHash(contrasena);
-
-            // Guarda el usuario sin email mediante la capa de datos.
             datosUsuario.CrearUsuario(nombreUsuario, hashContrasena, idRolUsuario);
+        }
+
+        // Desbloquea un usuario desde una sesion autenticada con permiso de administracion.
+        public void DesbloquearUsuario(int idUsuario)
+        {
+            CN_Pago.Verificar(Permisos.GestionarUsuarios);
+            if (idUsuario <= 0) throw new ArgumentException("Seleccione un usuario valido.");
+            datosUsuario.DesbloquearUsuario(idUsuario, SesionActual.Usuario!.idUsuario);
         }
     }
 }

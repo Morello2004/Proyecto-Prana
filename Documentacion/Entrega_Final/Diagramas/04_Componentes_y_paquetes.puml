@@ -1,0 +1,26 @@
+@startuml
+!pragma layout smetana
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam shadowing false
+skinparam ArrowColor #34495E
+skinparam packageStyle rectangle
+title Referencias entre proyectos
+package "Solución PranaElectronica.slnx" {
+component "Prana.Presentacion.csproj\nnet10.0-windows" as P
+component "Prana.negocio.csproj\nnet10.0" as N
+component "Prana.Datos.csproj\nnet10.0" as D
+component "Prana.Entidades.csproj\nnet10.0" as E
+}
+P --> N
+P --> E
+N --> D
+D --> E
+component "FontAwesome y FontAwesome.Sharp" as F
+component "Microsoft.Data.SqlClient\nBCrypt.Net-Next\nSystem.Configuration.ConfigurationManager" as L
+P ..> F
+D ..> L
+component "Pruebas/CajaComprobantes" as T
+T --> P
+@enduml

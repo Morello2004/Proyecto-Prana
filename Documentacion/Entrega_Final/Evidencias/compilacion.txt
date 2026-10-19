@@ -1,0 +1,6 @@
+2 de octubre de 2026
+Proyecto existente de pruebas: 0 errores; 86 advertencias.
+Copia aislada ampliada: 0 errores; 84 advertencias.
+Suite de presentación: 22 verificaciones OK.
+Suite ampliada: 125 verificaciones OK y 1 no satisfactoria.
+Las advertencias no se corrigieron durante el trabajo de documentación.

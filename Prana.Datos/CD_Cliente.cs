@@ -92,7 +92,7 @@ namespace Prana.Datos
             List<Cliente> clientesEncontrados = new List<Cliente>();
 
             // busca el texto en los datos principales del cliente
-            string consulta = @"SELECT c.id_cliente, c.nombre_cliente, c.apellido_cliente, c.dni, c.telefono, c.fecha_registro, c.direccion, c.saldo_a_favor, c.id_localidad, l.nombre_localidad, c.codigo_postal FROM Cliente c LEFT JOIN Localidad l ON c.id_localidad = l.id_localidad WHERE (@busqueda IS NULL OR c.nombre_cliente LIKE '%' + @busqueda + '%' OR c.apellido_cliente LIKE '%' + @busqueda + '%' OR c.dni LIKE '%' + @busqueda + '%' OR c.telefono LIKE '%' + @busqueda + '%')";
+            string consulta = @"SELECT c.id_cliente, c.nombre_cliente, c.apellido_cliente, c.dni, c.telefono, c.fecha_registro, c.direccion, c.saldo_a_favor, c.id_localidad, l.nombre_localidad, c.codigo_postal FROM Cliente c LEFT JOIN Localidad l ON c.id_localidad = l.id_localidad WHERE (@busqueda IS NULL OR c.nombre_cliente LIKE '%' + @busqueda + '%' OR c.apellido_cliente LIKE '%' + @busqueda + '%' OR CONCAT(LTRIM(RTRIM(c.nombre_cliente)), ' ', LTRIM(RTRIM(c.apellido_cliente))) LIKE '%' + @busqueda + '%' OR c.dni LIKE '%' + @busqueda + '%' OR c.telefono LIKE '%' + @busqueda + '%')";
 
             // crea la conexion
             using SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena());
@@ -101,7 +101,7 @@ namespace Prana.Datos
             using SqlCommand comando = new SqlCommand(consulta, conexion);
 
             // envia la busqueda o null si esta vacia
-            comando.Parameters.Add("@busqueda", SqlDbType.NVarChar, 100).Value = string.IsNullOrWhiteSpace(busqueda) ? DBNull.Value : busqueda;
+            comando.Parameters.Add("@busqueda", SqlDbType.NVarChar, 200).Value = string.IsNullOrWhiteSpace(busqueda) ? DBNull.Value : busqueda;
 
             // abre la conexion
             conexion.Open();

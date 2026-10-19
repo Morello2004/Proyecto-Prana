@@ -1,0 +1,39 @@
+@startuml
+!pragma layout smetana
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam shadowing false
+skinparam ArrowColor #34495E
+skinparam packageStyle rectangle
+title Registrar un ingreso de stock
+actor Usuario as U
+participant "frmStock" as F
+participant "CN_Producto\nPrana.Negocio" as N
+participant "CD_Producto" as D
+participant "CD_Proveedor" as P
+database "SQL Server LocalDB" as B
+U -> F : Registrar ingreso
+F -> N : RegistrarIngreso(nombreProveedor, fecha, remito, detalles)
+N -> N : ValidarIngreso(remito, detalles)
+N -> D : RegistrarIngreso(0, fecha, remito, detalles, nombreProveedor)
+D -> B : abrir conexión y transacción
+D -> P : ObtenerOCrear(conexión, transacción, nombreProveedor)
+P -> B : buscar nombre normalizado o insertar proveedor
+B --> P : idProveedor
+P --> D : idProveedor
+D -> B : insertar Ingreso_Stock
+B --> D : idIngreso
+loop Cada variante recibida
+D -> B : insertar Detalle_Ingreso
+D -> B : aumentar stock_disponible y actualizar costo
+end
+D -> B : confirmar transacción
+D --> N : true
+N --> F : true
+F --> U : confirmación y limpieza del ingreso
+note over D,B
+Si un detalle falla, la transacción revierte
+el ingreso, el stock y el proveedor nuevo.
+end note
+@enduml

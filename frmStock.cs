@@ -31,6 +31,10 @@ namespace Prana.Presentacion
         {
             InitializeComponent();
             ConfigurarDistribucion();
+        }
+
+        private void frmStock_Load(object? sender, EventArgs e)
+        {
             CargarOpcionesProducto();
 
            
@@ -117,15 +121,7 @@ namespace Prana.Presentacion
                 dataGridViewDetalleIngreso.Columns["colTotal"].DefaultCellStyle.NullValue = string.Empty;
             }
 
-            // Suscribimos el botón registrar ingreso si existe
-            if (ButtonRegistrarIngreso != null)
-            {
-                ButtonRegistrarIngreso.Click -= ButtonRegistrarIngreso_Click;
-                ButtonRegistrarIngreso.Click += ButtonRegistrarIngreso_Click;
-            }
-
-
-            //esta parte debajo hace que se carguen las categorias en el combobox de Marca
+//esta parte debajo hace que se carguen las categorias en el combobox de Marca
 
             // Crea el objeto de la capa de Negocio
             CN_Marca cnMarca = new CN_Marca();

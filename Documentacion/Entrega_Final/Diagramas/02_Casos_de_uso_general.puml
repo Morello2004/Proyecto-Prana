@@ -1,0 +1,47 @@
+@startuml
+!pragma layout smetana
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam shadowing false
+skinparam ArrowColor #34495E
+skinparam packageStyle rectangle
+left to right direction
+title Casos de uso y política de roles
+actor Administrador as A
+actor Vendedor as V
+rectangle "Prana Electrónica" {
+usecase "Iniciar y cerrar sesión" as U1
+usecase "Consultar panel y stock" as U2
+usecase "Gestionar clientes" as U3
+usecase "Registrar ventas y consultar comprobantes" as U4
+usecase "Consultar y registrar pagos" as U5
+usecase "Consultar entregas y alertas" as U6
+usecase "Crear y modificar productos e ingresos" as U7
+usecase "Preparar y confirmar entregas" as U8
+usecase "Gestionar caja" as U9
+usecase "Gestionar medios de pago y usuarios" as U10
+usecase "Consultar informes e historial" as U11
+}
+V --> U1
+V --> U2
+V --> U3
+V --> U4
+V --> U5
+V --> U6
+A --> U1
+A --> U2
+A --> U3
+A --> U4
+A --> U5
+A --> U6
+A --> U7
+A --> U8
+A --> U9
+A --> U10
+A --> U11
+note bottom of U7
+La política de roles está definida en Permisos.
+El control uniforme en todas las capas es una mejora pendiente.
+end note
+@enduml

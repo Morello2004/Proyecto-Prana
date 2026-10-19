@@ -1,0 +1,25 @@
+@startuml
+!pragma layout smetana
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam shadowing false
+skinparam ArrowColor #34495E
+skinparam packageStyle rectangle
+title Arquitectura de Prana Electrónica
+component "Prana.Presentacion\nWindows Forms y comprobantes HTML" as P
+component "Prana.negocio\nValidaciones y coordinación" as N
+component "Prana.Datos\nADO.NET y transacciones" as D
+component "Prana.Entidades\nModelos compartidos" as E
+database "SQL Server LocalDB\nPranaElectronica" as B
+P --> N : solicitudes
+N --> D : operaciones
+D --> B : SQL parametrizado
+P ..> E
+N ..> E
+D ..> E
+note bottom of N
+El namespace de CN_Producto es Prana.Negocio.
+El proyecto se denomina Prana.negocio.
+end note
+@enduml

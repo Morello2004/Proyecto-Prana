@@ -1,116 +1,83 @@
 ﻿using Prana.negocio;
+using Prana.Entidades;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Prana.Presentacion
 {
     public partial class login : Form
     {
+        // Inicializa la pantalla de autenticacion.
         public login()
         {
             InitializeComponent();
         }
 
+        // Conserva el evento vacio conectado al disenador
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-
         }
 
+        // Conserva el evento vacio conectado al disenador
         private void label2_Click(object sender, EventArgs e)
         {
-
         }
 
+        // Conserva el evento vacio conectado al disenador
         private void login_Load(object sender, EventArgs e)
         {
-
         }
 
+        // Conserva el evento vacio conectado al disenador
         private void label3_Click(object sender, EventArgs e)
         {
-
         }
 
+        // Cierra el formulario de autenticacion.
         private void iconButton2_Click(object sender, EventArgs e)
         {
-            //cierra la instancia actual de la clase cerrando el formulario de login
-            this.Close();
+            Close();
         }
 
+        // Autentica al usuario y presenta los intentos disponibles o el bloqueo.
         private void iconButton1_Click(object sender, EventArgs e)
         {
             try
-            {   // Se crea un objeto de la capa de Negocio
-                CN_Usuario N_Usuario = new CN_Usuario();
-
-                // Se manda a la capa de negocio los datos escritos en el formulario y devuelve el usuario correcto o null
-                var usuario = N_Usuario.IniciarSesion(txtusuario.Text, txtclave.Text);
-
-                if (usuario == null)
+            {
+                CN_Usuario negocioUsuario = new CN_Usuario();
+                var resultado = negocioUsuario.IniciarSesion(txtusuario.Text, txtclave.Text);
+                if (!resultado.Autenticado)
                 {
-                    MessageBox.Show( "Nombre de usuario o contraseña incorrectos.", "Inicio de sesión", MessageBoxButtons.OK, MessageBoxIcon.Warning );
-
-                    // Borra solamente la contraseña para volver a intentarlo
+                    MessageBox.Show(resultado.Mensaje, "Inicio de sesion", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     txtclave.Clear();
-                   
                     return;
                 }
 
-                // Guarda el usuario autenticado en la sesión actual
-                SesionActual.IniciarSesion(usuario);
-
-               
-
-                // abre un nuevo formulario el cual es el inicio
+                usuario usuarioAutenticado = resultado.Usuario ?? throw new InvalidOperationException("La autenticacion no devolvio el usuario.");
+                SesionActual.IniciarSesion(usuarioAutenticado);
                 Interfaz form = new Interfaz();
-
-                //muestra y abre en pantalla el formulario creado
                 form.Show();
-
-                //oculta el formulario de logueo una vez ingresado
                 this.Hide();
-
-                //Cuando el formulario form se esté cerrando, ejecutá el método frm_closing
                 form.FormClosing += frm_closing;
-
-
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    "Ocurrió un error al iniciar sesión: " + ex.Message,
-                    "Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
+                MessageBox.Show("Ocurrio un error al iniciar sesion: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        
 
-
-        //este metodo hace que cuando se cierre la interfaz de inicio se muestre la de logueo( recibe el objeto que produce el evento que es 
-        //el formulario que se esta cerrando y e Windows Forms lo crea automáticamente antes de cerrar el formulario tiene información sobre el cierre y permite controlarlo
+        // Cierra la sesion y vuelve a mostrar el formulario de autenticacion.
         private void frm_closing(object? sender, FormClosingEventArgs e)
         {
             SesionActual.CerrarSesion();
-
-            //pone en blanco campos de usuario y clave
-            txtclave.Text = "";
-            txtusuario.Text = "";
-
+            txtclave.Clear();
+            txtusuario.Clear();
             this.Show();
-
-
         }
 
+        // Conserva el evento vacio conectado al disenador
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-
         }
     }
 }

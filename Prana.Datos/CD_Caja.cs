@@ -41,6 +41,18 @@ public class CD_Caja
     }
 
     private static List<MovimientoCaja> LeerMovimientos(SqlConnection cn, SqlTransaction tx, DateTime fecha)
+        => LeerMovimientos(cn, tx, fecha.Date, fecha.Date.AddDays(1));
+
+    public List<MovimientoCaja> ConsultarPeriodo(DateTime desde, DateTime hasta)
+    {
+        using var cn = new SqlConnection(Conexion.ObtenerCadena()); cn.Open();
+        using var tx = cn.BeginTransaction(IsolationLevel.Serializable);
+        var resultado = LeerMovimientos(cn, tx, desde, hasta);
+        tx.Commit();
+        return resultado;
+    }
+
+    private static List<MovimientoCaja> LeerMovimientos(SqlConnection cn, SqlTransaction tx, DateTime desde, DateTime hasta)
     {
         using var cmd = Comando(cn, tx, @"
             SELECT p.id_pago id,p.id_venta venta,p.fecha_pago fecha,
@@ -53,7 +65,7 @@ public class CD_Caja
             UNION ALL
             SELECT id,NULL,fecha,concepto,tipo,medio,moneda,importe,cuenta,CAST(id_usuario AS nvarchar(20))
             FROM Caja_Movimiento WHERE fecha>=@desde AND fecha<@hasta AND anulado=0 ORDER BY fecha,id",
-            ("@desde", fecha.Date), ("@hasta", fecha.Date.AddDays(1)));
+            ("@desde", desde), ("@hasta", hasta));
         using var r = cmd.ExecuteReader();
         var movimientos = new List<MovimientoCaja>();
         while (r.Read()) movimientos.Add(new MovimientoCaja { Id=r.GetInt32(0), Venta=r.IsDBNull(1)?null:r.GetInt32(1),

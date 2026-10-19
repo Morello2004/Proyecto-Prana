@@ -3,62 +3,58 @@ using Prana.negocio;
 
 namespace Prana.Presentacion;
 
-public class frmCaja : Form
+public partial class frmCaja : Form
 {
     private readonly CN_Caja negocio = new();
-    private readonly DateTimePicker fecha = new() { Format = DateTimePickerFormat.Short, Width = 130 };
-    private readonly DateTimePicker inicio = new() { Format=DateTimePickerFormat.Time, ShowUpDown=true, Width=130, Value=DateTime.Today.AddHours(9) };
-    private readonly NumericUpDown saldo = Dinero(), saldoUsd = Dinero(), importe = Dinero();
-    private readonly ComboBox tipo = Lista("Gasto", "Ingreso extra", "Café"), medio = Lista(TiposCaja.Todos), moneda = Lista("ARS","USD");
-    private readonly TextBox motivo = new() { MaxLength=200, Width=310 }, cuenta = new() { MaxLength=100, Width=210 };
-    private readonly TextBox observaciones = new() { Multiline=true, Height=60, MaxLength=1000 };
-    private readonly Label estado = new() { Height=36 }, resumen = new() { Height=110 };
-    private readonly DataGridView movimientos = new() { Height=240 };
-    private readonly Button registrar = Boton("Registrar movimiento"), cerrar = Boton("Cerrar caja del día"), imprimir = Boton("Ver / imprimir cierre");
     private CierreCaja actual = new();
     private bool cargando;
 
     public frmCaja()
     {
-        Text="Caja y gastos"; ForeColor=Color.White; BackColor=EstiloGestion.Fondo; ClientSize=new Size(900,700);
-        var titulo = new Label { Text="Caja y gastos", Font=new Font("Segoe UI",18,FontStyle.Bold), Height=42 };
-        var actualizar = Boton("Consultar / actualizar");
-        var filtros = DistribucionAdaptable.Fila(Campo("Fecha",fecha), actualizar);
-        var nuevo = DistribucionAdaptable.Fila(Campo("Tipo",tipo),Campo("Motivo",motivo,310),Campo("Medio",medio),
-            Campo("Moneda",moneda,90),Campo("Importe",importe),Campo("Cuenta / referencia",cuenta,210),registrar);
-        var apertura = DistribucionAdaptable.Fila(Campo("Hora de inicio",inicio),Campo("Saldo inicial ARS",saldo),Campo("Saldo inicial USD",saldoUsd));
-        var anular = Boton("Anular movimiento seleccionado"); anular.Width=250;
-        var acciones = DistribucionAdaptable.Fila(cerrar,imprimir);
-        DistribucionAdaptable.Pagina(this,titulo,filtros,estado,Titulo("Registrar gasto u otro ingreso (hoy)"),nuevo,
-            Titulo("Cobros y movimientos del día"),movimientos,DistribucionAdaptable.Fila(anular),
-            Titulo("Resumen y cierre"),apertura,resumen,Titulo("Observaciones del cierre"),observaciones,acciones);
+        InitializeComponent();
+        inicio.Value = DateTime.Today.AddHours(9);
         EstiloGestion.Grilla(movimientos);
         foreach(var (prop,tituloCol,peso) in new[]{("Fecha","Hora",65),("Venta","Remito",70),("Tipo","Tipo",90),
             ("Concepto","Cliente / motivo",180),("Medio","Medio",90),("Moneda","Moneda",60),("Importe","Importe",90),("Cuenta","Cuenta",100)})
             EstiloGestion.Columna(movimientos,prop,tituloCol,peso,prop=="Importe"?"N2":prop=="Fecha"?"HH:mm":"");
-        movimientos.CellFormatting += (_,e)=> {
+    }
+
+    private void movimientos_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e) {
             if(movimientos.Columns[e.ColumnIndex].DataPropertyName=="Venta" && e.Value is int numero)
             { e.Value=$"RTO {numero}"; e.FormattingApplied=true; }
-        };
-        saldo.ValueChanged += (_,_)=>ActualizarResumen(); saldoUsd.ValueChanged += (_,_)=>ActualizarResumen();
-        actualizar.Click += (_,_)=>Ejecutar(Cargar); fecha.ValueChanged += (_,_)=>Ejecutar(Cargar);
-        registrar.Click += (_,_)=>Ejecutar(()=> {
+        }
+
+    private void saldo_ValueChanged(object? sender, EventArgs e) { ActualizarResumen(); }
+
+    private void saldoUsd_ValueChanged(object? sender, EventArgs e) { ActualizarResumen(); }
+
+    private void resumenMes_Click(object? sender, EventArgs e)
+    {
+        using var pantalla = new frmResumenMensualCaja(fecha.Value);
+        pantalla.ShowDialog(this);
+    }
+
+    private void actualizar_Click(object? sender, EventArgs e) { Ejecutar(Cargar); }
+
+    private void fecha_ValueChanged(object? sender, EventArgs e) { Ejecutar(Cargar); }
+
+    private void registrar_Click(object? sender, EventArgs e) { Ejecutar(()=> {
             negocio.Registrar(new MovimientoCaja { Concepto=motivo.Text, Tipo=tipo.Text,Medio=medio.Text,Moneda=moneda.Text,Importe=importe.Value,Cuenta=cuenta.Text });
             motivo.Clear(); cuenta.Clear(); importe.Value=0; Cargar();
-        });
-        cerrar.Click += (_,_)=>Ejecutar(Cerrar);
-        imprimir.Click += (_,_)=>Ejecutar(()=>DocumentosPrana.Abrir(DocumentosPrana.GuardarCierre(actual)));
-        anular.Click += (_,_)=>Ejecutar(()=> {
+        }); }
+
+    private void cerrar_Click(object? sender, EventArgs e) { Ejecutar(Cerrar); }
+
+    private void imprimir_Click(object? sender, EventArgs e) { Ejecutar(()=>DocumentosPrana.Abrir(DocumentosPrana.GuardarCierre(actual))); }
+
+    private void anular_Click(object? sender, EventArgs e) { Ejecutar(()=> {
             if(movimientos.CurrentRow?.DataBoundItem is not MovimientoCaja m || m.Venta.HasValue) throw new InvalidOperationException("Seleccione un gasto o ingreso manual. Los cobros de ventas no se anulan desde aquí.");
-            using var dialogo = new Form { Text="Motivo de anulación",ClientSize=new Size(440,130),StartPosition=FormStartPosition.CenterParent };
-            var texto = new TextBox { Left=16,Top=16,Width=405,MaxLength=200 };
-            var aceptar = new Button { Text="Anular",Left=310,Top=65,Width=110,DialogResult=DialogResult.OK };
-            dialogo.Controls.AddRange(new Control[]{texto,aceptar}); dialogo.AcceptButton=aceptar;
+            using var dialogo = new frmMotivoAnulacion();
             if(dialogo.ShowDialog(this)!=DialogResult.OK)return;
-            negocio.Anular(m.Id,texto.Text); Cargar();
-        });
-        Load += (_,_)=>Ejecutar(Cargar);
-    }
+            negocio.Anular(m.Id,dialogo.Motivo); Cargar();
+        }); }
+
+    private void frmCaja_Load(object? sender, EventArgs e) => Ejecutar(Cargar);
 
     private void Cargar()
     {
@@ -103,9 +99,4 @@ public class frmCaja : Form
     }
 
     private void Ejecutar(Action accion) { try { accion(); } catch(Exception ex) { MessageBox.Show(this,ex.Message,"Caja",MessageBoxButtons.OK,MessageBoxIcon.Warning); } }
-    private static Label Titulo(string texto)=>new(){Text=texto,Height=30,Font=new Font("Segoe UI",11,FontStyle.Bold)};
-    private static Panel Campo(string texto,Control entrada,int ancho=170)=>DistribucionAdaptable.Campo(new Label{Text=texto},entrada,ancho);
-    private static NumericUpDown Dinero()=>new(){DecimalPlaces=2,Maximum=999999999,ThousandsSeparator=true,Width=160};
-    private static ComboBox Lista(params string[] opciones) { var c=new ComboBox { DropDownStyle=ComboBoxStyle.DropDownList,Width=170 }; c.Items.AddRange(opciones); c.SelectedIndex=0; return c; }
-    private static Button Boton(string texto)=>new(){Text=texto,Width=180,Height=36,BackColor=Color.SteelBlue,ForeColor=Color.White,FlatStyle=FlatStyle.Flat};
 }

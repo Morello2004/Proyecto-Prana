@@ -175,40 +175,6 @@ PRIMARY KEY CLUSTERED
 GO
 
 /* =========================================================
-   TABLA: Devolucion
-   Registra las devoluciones de productos y la resolución aplicada.
-   ========================================================= */
--- Aplica el comportamiento estándar de SQL Server para las comparaciones con valores NULL.
-SET ANSI_NULLS ON
-GO
--- Permite utilizar identificadores delimitados y reserva las comillas simples para textos.
-SET QUOTED_IDENTIFIER ON
-GO
--- Comienza la creación física de la tabla y de sus columnas.
-CREATE TABLE [dbo].[Devolucion](
--- Define id_devolucion como número entero, generado automáticamente de uno en uno, obligatorio.
-	[id_devolucion] [int] IDENTITY(1,1) NOT NULL,
--- Define id_detalle_venta como número entero, obligatorio.
-	[id_detalle_venta] [int] NOT NULL,
--- Define cantidad como número entero, obligatorio.
-	[cantidad] [int] NOT NULL,
--- Define motivo como texto de hasta 300 caracteres, obligatorio.
-	[motivo] [nvarchar](300) NOT NULL,
--- Define id_tipo_resolucion como número entero, obligatorio.
-	[id_tipo_resolucion] [int] NOT NULL,
--- Define monto_diferencia como número decimal, opcional.
-	[monto_diferencia] [decimal](10, 2) NULL,
--- Define fecha_devolucion como fecha y hora, obligatorio.
-	[fecha_devolucion] [datetime2](7) NOT NULL,
--- Define la clave primaria que identifica de manera única cada registro de la tabla.
-PRIMARY KEY CLUSTERED
-(
-	[id_devolucion] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-
-/* =========================================================
    TABLA: Envio
    Registra los datos necesarios para realizar y controlar un envío.
    ========================================================= */
@@ -228,8 +194,8 @@ CREATE TABLE [dbo].[Envio](
 	[direccion] [nvarchar](200) NOT NULL,
 -- Define horario_sugerido como texto de hasta 50 caracteres, opcional.
 	[horario_sugerido] [nvarchar](50) NULL,
--- Define id_tipo_envio como número entero, obligatorio.
-	[id_tipo_envio] [int] NOT NULL,
+-- Define el tipo operativo del envío con uno de los dos valores permitidos.
+	[tipo_envio] [nvarchar](30) NOT NULL,
 -- Define costo como número decimal, obligatorio.
 	[costo] [decimal](10, 2) NOT NULL,
 -- Define id_estado_envio como número entero, obligatorio.
@@ -240,7 +206,8 @@ CREATE TABLE [dbo].[Envio](
 PRIMARY KEY CLUSTERED
 (
 	[id_envio] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+CONSTRAINT [CK_Envio_TipoEnvio] CHECK ([tipo_envio] IN (N'Envío a domicilio', N'Retiro en local'))
 ) ON [PRIMARY]
 GO
 
@@ -312,30 +279,6 @@ CREATE TABLE [dbo].[Estado_Venta](
 PRIMARY KEY CLUSTERED
 (
 	[id_estado_venta] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-
-/* =========================================================
-   TABLA: Formato_Documento
-   Contiene los formatos disponibles para emitir documentos comerciales.
-   ========================================================= */
--- Aplica el comportamiento estándar de SQL Server para las comparaciones con valores NULL.
-SET ANSI_NULLS ON
-GO
--- Permite utilizar identificadores delimitados y reserva las comillas simples para textos.
-SET QUOTED_IDENTIFIER ON
-GO
--- Comienza la creación física de la tabla y de sus columnas.
-CREATE TABLE [dbo].[Formato_Documento](
--- Define id_formato_documento como número entero, generado automáticamente de uno en uno, obligatorio.
-	[id_formato_documento] [int] IDENTITY(1,1) NOT NULL,
--- Define nombre_formato_documento como texto de hasta 30 caracteres, obligatorio.
-	[nombre_formato_documento] [nvarchar](30) NOT NULL,
--- Define la clave primaria que identifica de manera única cada registro de la tabla.
-PRIMARY KEY CLUSTERED
-(
-	[id_formato_documento] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -581,8 +524,6 @@ CREATE TABLE [dbo].[Recibo](
 	[id_pago] [int] NOT NULL,
 -- Define fecha_emision como fecha y hora, obligatorio.
 	[fecha_emision] [datetime2](7) NOT NULL,
--- Define id_formato_documento como número entero, obligatorio.
-	[id_formato_documento] [int] NOT NULL,
 -- Define la clave primaria que identifica de manera única cada registro de la tabla.
 PRIMARY KEY CLUSTERED
 (
@@ -609,8 +550,6 @@ CREATE TABLE [dbo].[Remito](
 	[id_venta] [int] NOT NULL,
 -- Define fecha_emision como fecha y hora, obligatorio.
 	[fecha_emision] [datetime2](7) NOT NULL,
--- Define id_formato_documento como número entero, obligatorio.
-	[id_formato_documento] [int] NOT NULL,
 -- Define la clave primaria que identifica de manera única cada registro de la tabla.
 PRIMARY KEY CLUSTERED
 (
@@ -644,54 +583,6 @@ PRIMARY KEY CLUSTERED
 GO
 
 /* =========================================================
-   TABLA: Tipo_Envio
-   Contiene los tipos de envío disponibles.
-   ========================================================= */
--- Aplica el comportamiento estándar de SQL Server para las comparaciones con valores NULL.
-SET ANSI_NULLS ON
-GO
--- Permite utilizar identificadores delimitados y reserva las comillas simples para textos.
-SET QUOTED_IDENTIFIER ON
-GO
--- Comienza la creación física de la tabla y de sus columnas.
-CREATE TABLE [dbo].[Tipo_Envio](
--- Define id_tipo_envio como número entero, generado automáticamente de uno en uno, obligatorio.
-	[id_tipo_envio] [int] IDENTITY(1,1) NOT NULL,
--- Define nombre_tipo_envio como texto de hasta 30 caracteres, obligatorio.
-	[nombre_tipo_envio] [nvarchar](30) NOT NULL,
--- Define la clave primaria que identifica de manera única cada registro de la tabla.
-PRIMARY KEY CLUSTERED
-(
-	[id_tipo_envio] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-
-/* =========================================================
-   TABLA: Tipo_Resolucion
-   Contiene las resoluciones posibles para una devolución.
-   ========================================================= */
--- Aplica el comportamiento estándar de SQL Server para las comparaciones con valores NULL.
-SET ANSI_NULLS ON
-GO
--- Permite utilizar identificadores delimitados y reserva las comillas simples para textos.
-SET QUOTED_IDENTIFIER ON
-GO
--- Comienza la creación física de la tabla y de sus columnas.
-CREATE TABLE [dbo].[Tipo_Resolucion](
--- Define id_tipo_resolucion como número entero, generado automáticamente de uno en uno, obligatorio.
-	[id_tipo_resolucion] [int] IDENTITY(1,1) NOT NULL,
--- Define nombre_tipo_resolucion como texto de hasta 50 caracteres, obligatorio.
-	[nombre_tipo_resolucion] [nvarchar](50) NOT NULL,
--- Define la clave primaria que identifica de manera única cada registro de la tabla.
-PRIMARY KEY CLUSTERED
-(
-	[id_tipo_resolucion] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-
-/* =========================================================
    TABLA: Usuario
    Guarda los usuarios que pueden iniciar sesión en Prana.
    ========================================================= */
@@ -715,6 +606,10 @@ CREATE TABLE [dbo].[Usuario](
 	[id_rol_usuario] [int] NOT NULL,
 -- Define activo como valor lógico: 1 representa verdadero y 0 representa falso, obligatorio.
 	[activo] [bit] NOT NULL,
+-- Conserva los intentos de inicio de sesion fallidos consecutivos.
+	[intentos_login_fallidos] [int] NOT NULL CONSTRAINT [DF_Usuario_IntentosLogin] DEFAULT ((0)),
+-- Conserva hasta cuando se bloquea temporalmente una cuenta.
+	[bloqueado_hasta] [datetime2](7) NULL,
 -- Define la clave primaria que identifica de manera única cada registro de la tabla.
 PRIMARY KEY CLUSTERED
 (
@@ -885,22 +780,6 @@ GO
 ALTER TABLE [dbo].[Detalle_Venta] CHECK CONSTRAINT [FK_DetalleVenta_Venta]
 GO
 -- Crea una clave externa para relacionar esta tabla con otra tabla del sistema.
-ALTER TABLE [dbo].[Devolucion]  WITH CHECK ADD  CONSTRAINT [FK_Devolucion_DetalleVenta] FOREIGN KEY([id_detalle_venta])
--- Indica la tabla y la columna que debe existir para mantener la integridad de la relación.
-REFERENCES [dbo].[Detalle_Venta] ([id_detalle_venta])
-GO
--- Activa y valida la relación definida en la instrucción anterior.
-ALTER TABLE [dbo].[Devolucion] CHECK CONSTRAINT [FK_Devolucion_DetalleVenta]
-GO
--- Crea una clave externa para relacionar esta tabla con otra tabla del sistema.
-ALTER TABLE [dbo].[Devolucion]  WITH CHECK ADD  CONSTRAINT [FK_Devolucion_TipoResolucion] FOREIGN KEY([id_tipo_resolucion])
--- Indica la tabla y la columna que debe existir para mantener la integridad de la relación.
-REFERENCES [dbo].[Tipo_Resolucion] ([id_tipo_resolucion])
-GO
--- Activa y valida la relación definida en la instrucción anterior.
-ALTER TABLE [dbo].[Devolucion] CHECK CONSTRAINT [FK_Devolucion_TipoResolucion]
-GO
--- Crea una clave externa para relacionar esta tabla con otra tabla del sistema.
 ALTER TABLE [dbo].[Envio]  WITH CHECK ADD  CONSTRAINT [FK_Envio_Estado] FOREIGN KEY([id_estado_envio])
 -- Indica la tabla y la columna que debe existir para mantener la integridad de la relación.
 REFERENCES [dbo].[Estado_Envio] ([id_estado_envio])
@@ -917,13 +796,6 @@ GO
 ALTER TABLE [dbo].[Envio] CHECK CONSTRAINT [FK_Envio_Remito]
 GO
 -- Crea una clave externa para relacionar esta tabla con otra tabla del sistema.
-ALTER TABLE [dbo].[Envio]  WITH CHECK ADD  CONSTRAINT [FK_Envio_Tipo] FOREIGN KEY([id_tipo_envio])
--- Indica la tabla y la columna que debe existir para mantener la integridad de la relación.
-REFERENCES [dbo].[Tipo_Envio] ([id_tipo_envio])
-GO
--- Activa y valida la relación definida en la instrucción anterior.
-ALTER TABLE [dbo].[Envio] CHECK CONSTRAINT [FK_Envio_Tipo]
-GO
 -- Crea una clave externa para relacionar esta tabla con otra tabla del sistema.
 ALTER TABLE [dbo].[Ingreso_Stock]  WITH CHECK ADD  CONSTRAINT [FK_IngresoStock_Proveedor] FOREIGN KEY([id_proveedor])
 -- Indica la tabla y la columna que debe existir para mantener la integridad de la relación.
@@ -973,28 +845,12 @@ GO
 ALTER TABLE [dbo].[Producto] CHECK CONSTRAINT [FK_Producto_Marca]
 GO
 -- Crea una clave externa para relacionar esta tabla con otra tabla del sistema.
-ALTER TABLE [dbo].[Recibo]  WITH CHECK ADD  CONSTRAINT [FK_Recibo_Formato] FOREIGN KEY([id_formato_documento])
--- Indica la tabla y la columna que debe existir para mantener la integridad de la relación.
-REFERENCES [dbo].[Formato_Documento] ([id_formato_documento])
-GO
--- Activa y valida la relación definida en la instrucción anterior.
-ALTER TABLE [dbo].[Recibo] CHECK CONSTRAINT [FK_Recibo_Formato]
-GO
--- Crea una clave externa para relacionar esta tabla con otra tabla del sistema.
 ALTER TABLE [dbo].[Recibo]  WITH CHECK ADD  CONSTRAINT [FK_Recibo_Pago] FOREIGN KEY([id_pago])
 -- Indica la tabla y la columna que debe existir para mantener la integridad de la relación.
 REFERENCES [dbo].[Pago] ([id_pago])
 GO
 -- Activa y valida la relación definida en la instrucción anterior.
 ALTER TABLE [dbo].[Recibo] CHECK CONSTRAINT [FK_Recibo_Pago]
-GO
--- Crea una clave externa para relacionar esta tabla con otra tabla del sistema.
-ALTER TABLE [dbo].[Remito]  WITH CHECK ADD  CONSTRAINT [FK_Remito_Formato] FOREIGN KEY([id_formato_documento])
--- Indica la tabla y la columna que debe existir para mantener la integridad de la relación.
-REFERENCES [dbo].[Formato_Documento] ([id_formato_documento])
-GO
--- Activa y valida la relación definida en la instrucción anterior.
-ALTER TABLE [dbo].[Remito] CHECK CONSTRAINT [FK_Remito_Formato]
 GO
 -- Crea una clave externa para relacionar esta tabla con otra tabla del sistema.
 ALTER TABLE [dbo].[Remito]  WITH CHECK ADD  CONSTRAINT [FK_Remito_Venta] FOREIGN KEY([id_venta])
@@ -1072,9 +928,6 @@ ALTER TABLE [dbo].[Detalle_Venta]  WITH CHECK ADD CHECK  (([precio_unitario]>=(0
 GO
 -- Agrega una regla que impide guardar valores que no cumplan la condición indicada.
 ALTER TABLE [dbo].[Detalle_Venta]  WITH CHECK ADD CHECK  (([subtotal]>=(0)))
-GO
--- Agrega una regla que impide guardar valores que no cumplan la condición indicada.
-ALTER TABLE [dbo].[Devolucion]  WITH CHECK ADD CHECK  (([cantidad]>(0)))
 GO
 -- Agrega una regla que impide guardar valores que no cumplan la condición indicada.
 ALTER TABLE [dbo].[Envio]  WITH CHECK ADD CHECK  (([costo]>=(0)))
@@ -1181,6 +1034,9 @@ IF OBJECT_ID(N'dbo.Usuario',N'U') IS NULL OR OBJECT_ID(N'dbo.Venta',N'U') IS NUL
 GO
 
 -- Recargos por cuotas y baja lógica de los medios de pago.
+IF COL_LENGTH(N'dbo.Medio_Pago',N'recargo_2') IS NULL
+    ALTER TABLE dbo.Medio_Pago ADD recargo_2 decimal(5,2) NOT NULL CONSTRAINT DF_MedioPago_Recargo2 DEFAULT(0) WITH VALUES;
+GO
 IF COL_LENGTH(N'dbo.Medio_Pago',N'recargo_3') IS NULL
     ALTER TABLE dbo.Medio_Pago ADD recargo_3 decimal(5,2) NOT NULL CONSTRAINT DF_MedioPago_Recargo3 DEFAULT(0) WITH VALUES;
 GO
@@ -1237,7 +1093,6 @@ BEGIN
         costo_envio decimal(10,2) NOT NULL,
         observacion_pago nvarchar(500) NULL,
         condicion_pago nvarchar(30) NOT NULL,
-        generar_remito bit NOT NULL,
         CONSTRAINT FK_VentaEntrega_Venta FOREIGN KEY(id_venta) REFERENCES dbo.Venta(id_venta)
     );
 END;

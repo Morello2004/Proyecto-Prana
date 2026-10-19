@@ -12,6 +12,12 @@ namespace Prana.Presentacion
         #region Windows Form Designer generated code
         private void InitializeComponent()
         {
+            ayuda = new Label();
+
+            documentos = new Button();
+
+            caja = new Button();
+
             pnlEncabezado = new Panel();
             lblTitulo = new Label();
             btnNuevaVenta = new Button();
@@ -241,6 +247,34 @@ namespace Prana.Presentacion
             Text = "Panel principal";
             Load += frmPanelPrincipal_Load;
             ((System.ComponentModel.ISupportInitialize)dgvUltimasVentas).EndInit();
+            caja.Name = "caja";
+            caja.Text = "Caja y gastos";
+            caja.Location = new Point(340, 65);
+            caja.Size = new Size(145, 34);
+            caja.BackColor = Color.SteelBlue;
+            caja.FlatStyle = FlatStyle.Flat;
+            pnlEncabezado.Controls.Add(caja);
+            caja.Click += caja_Click;
+            documentos.Name = "documentos";
+            documentos.Text = "Garantía / remito";
+            documentos.Location = new Point(500, 65);
+            documentos.Size = new Size(160, 34);
+            documentos.BackColor = Color.SteelBlue;
+            documentos.FlatStyle = FlatStyle.Flat;
+            pnlEncabezado.Controls.Add(documentos);
+            documentos.Click += documentos_Click;
+            ayuda.Name = "ayuda";
+            ayuda.Text = "Podés buscar por número de venta, nombre y apellido del cliente, DNI o estado.\r\n" +
+                       "Pago: por ejemplo, Pagada o Parcial.\r\n" +
+                       "Entrega: Pendiente, Preparada, Preparación parcial, Entrega parcial, Entregada o Cancelada.\r\n" +
+                       "Parcial puede coincidir con pago y entrega; usá Entrega parcial o Preparación parcial para precisar la entrega.";
+            ayuda.ForeColor = Color.FromArgb(145, 170, 210);
+            ayuda.Location = new Point(16, 78);
+            ayuda.Size = new Size(850, 80);
+            ayuda.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            ayuda.Font = new Font("Segoe UI", 9F);
+            pnlBusqueda.Controls.Add(ayuda);
+
             ResumeLayout(false);
         }
         #endregion
@@ -252,5 +286,11 @@ namespace Prana.Presentacion
         private TextBox txtBuscarVenta;
         private DataGridView dgvUltimasVentas;
         private DataGridViewTextBoxColumn colNumeroVenta, colCliente, colFecha, colTotal, colPagado, colSaldo, colEstado, colEstadoEntrega;
+        private Button caja;
+
+        private Button documentos;
+
+        private Label ayuda;
+
     }
 }

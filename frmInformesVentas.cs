@@ -6,61 +6,39 @@ using System.Windows.Forms;
 
 namespace Prana.Presentacion
 {
-    public class frmInformesVentas : Form
+    public partial class frmInformesVentas : Form
     {
         private readonly CN_InformeVentas negocio = new();
-        private readonly DateTimePicker desde = new() { Value = DateTime.Today.AddMonths(-1), Format = DateTimePickerFormat.Short };
-        private readonly DateTimePicker hasta = new() { Value = DateTime.Today, Format = DateTimePickerFormat.Short };
-        private readonly ComboBox producto = CrearSelector();
-        private readonly ComboBox categoria = CrearSelector();
-        private readonly ComboBox marca = CrearSelector();
-        private readonly ComboBox cliente = CrearSelector();
-        private readonly ComboBox envio = CrearSelector();
-        private readonly ComboBox ubicacion = CrearSelector();
-        private readonly TextBox montoMinimo = new();
-        private readonly TextBox montoMaximo = new();
-        private readonly DataGridView grilla = new();
-        private readonly Button exportar = new() { Text = "Exportar CSV", Enabled = false };
+        private readonly CN_DatosPrueba negocioDatosPrueba = new();
         private List<InformeVenta> datos = new();
 
+        // Inicializa los filtros y configura el acceso al lote de pruebas
         public frmInformesVentas()
         {
-            Text = "Informe de ventas";
-            BackColor = Color.FromArgb(13, 19, 27);
-            ForeColor = Color.White;
-            Padding = new Padding(16);
-            var titulo = new Label { Text = "Informe de ventas", Font = new Font("Segoe UI", 18, FontStyle.Bold), AutoSize = true, Dock = DockStyle.Top, Height = 42 };
-            var filtros = new FlowLayoutPanel { Dock = DockStyle.Top, Height = 132, WrapContents = true, AutoScroll = true, Padding = new Padding(0, 6, 0, 6) };
-            AgregarCampo(filtros, "Desde", desde, 100);
-            AgregarCampo(filtros, "Hasta", hasta, 100);
-            AgregarCampo(filtros, "Producto", producto, 150);
-            AgregarCampo(filtros, "Categoría", categoria, 130);
-            AgregarCampo(filtros, "Marca", marca, 130);
-            AgregarCampo(filtros, "Cliente", cliente, 160);
-            AgregarCampo(filtros, "Envío", envio, 130);
-            AgregarCampo(filtros, "Ubicación", ubicacion, 150);
-            AgregarCampo(filtros, "Monto mínimo", montoMinimo, 110);
-            AgregarCampo(filtros, "Monto máximo", montoMaximo, 110);
-            var buscar = new Button { Text = "Consultar", Width = 100, Height = 30, BackColor = Color.DodgerBlue, ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
-            buscar.Click += (_, _) => Consultar();
-            exportar.Click += (_, _) => Exportar();
-            filtros.Controls.Add(buscar);
-            filtros.Controls.Add(exportar);
+            InitializeComponent();
+            desde.Value = DateTime.Today.AddMonths(-1);
+            hasta.Value = DateTime.Today;
             ConfigurarGrilla();
-            Controls.Add(grilla);
-            Controls.Add(filtros);
-            Controls.Add(titulo);
-            CargarOpciones();
-            Consultar();
+            bool esAdministrador = SesionActual.Usuario?.IdRolUsuario == 1;
+            pruebaAdmin.Visible = esAdministrador;
+            eliminarPrueba.Visible = esAdministrador;
         }
 
-        private static ComboBox CrearSelector() => new()
+        // Carga las opciones del informe y el estado del lote de pruebas
+        private void frmInformesVentas_Load(object? sender, EventArgs e)
         {
-            DropDownStyle = ComboBoxStyle.DropDown,
-            AutoCompleteMode = AutoCompleteMode.SuggestAppend,
-            AutoCompleteSource = AutoCompleteSource.ListItems
-        };
+            CargarOpciones();
+            Consultar();
+            ActualizarEstadoPrueba();
+        }
 
+        // Ejecuta la consulta con los filtros actuales
+        private void buscar_Click(object? sender, EventArgs e) => Consultar();
+
+        // Exporta los resultados visibles a un archivo CSV
+        private void exportar_Click(object? sender, EventArgs e) => Exportar();
+
+        // Carga opciones de catalogo para los filtros del informe
         private void CargarOpciones()
         {
             try
@@ -76,6 +54,7 @@ namespace Prana.Presentacion
             catch (Exception ex) { MessageBox.Show(ex.Message, "Informe", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
 
+        // Llena un selector con una opcion vacia y los valores disponibles
         private static void CargarOpciones(ComboBox selector, List<string> valores)
         {
             selector.Items.Clear();
@@ -84,19 +63,10 @@ namespace Prana.Presentacion
             selector.SelectedIndex = 0;
         }
 
-        private static void AgregarCampo(FlowLayoutPanel panel, string etiqueta, Control control, int ancho)
-        {
-            var contenedor = new Panel { Width = ancho, Height = 56 };
-            contenedor.Controls.Add(new Label { Text = etiqueta, ForeColor = Color.FromArgb(180, 200, 225), AutoSize = true, Location = new Point(0, 0) });
-            control.Location = new Point(0, 22);
-            control.Width = ancho - 6;
-            contenedor.Controls.Add(control);
-            panel.Controls.Add(contenedor);
-        }
-
+        // Aplica estilos y comportamiento de solo lectura a la grilla
         private void ConfigurarGrilla()
         {
-            grilla.Dock = DockStyle.Fill;
+            grilla.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             grilla.ReadOnly = true;
             grilla.AllowUserToAddRows = false;
             grilla.AutoGenerateColumns = true;
@@ -110,6 +80,7 @@ namespace Prana.Presentacion
             grilla.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
         }
 
+        // Valida los filtros y consulta las ventas
         private void Consultar()
         {
             if (desde.Value.Date > hasta.Value.Date)
@@ -137,6 +108,7 @@ namespace Prana.Presentacion
             catch (Exception ex) { MessageBox.Show(ex.Message, "Informe", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
 
+        // Configura los titulos y formatos de las columnas del informe
         private void ConfigurarColumnas()
         {
             if (grilla.Columns.Count == 0) return;
@@ -157,6 +129,7 @@ namespace Prana.Presentacion
             grilla.Columns[nameof(InformeVenta.Cliente)].Width = 170;
         }
 
+        // Guarda los resultados actuales en formato CSV
         private void Exportar()
         {
             using SaveFileDialog dialogo = new() { Filter = "CSV (*.csv)|*.csv", FileName = "informe-ventas.csv" };
@@ -167,14 +140,86 @@ namespace Prana.Presentacion
             File.WriteAllText(dialogo.FileName, csv.ToString(), Encoding.UTF8);
         }
 
+        // Escapa un campo para el formato CSV
         private static string Csv(string valor) => "\"" + valor.Replace("\"", "\"\"") + "\"";
 
+        // Convierte un filtro numerico opcional respetando la cultura actual
         private static bool TryParseNullable(string texto, out decimal? valor)
         {
             if (string.IsNullOrWhiteSpace(texto)) { valor = null; return true; }
             if (decimal.TryParse(texto, NumberStyles.Number, CultureInfo.CurrentCulture, out decimal resultado)) { valor = resultado; return true; }
             valor = null;
             return false;
+        }
+
+        // Carga registros sinteticos para ejercitar ventas y cierres sin fechas operativas recientes
+        private void pruebaAdmin_Click(object? sender, EventArgs e)
+        {
+            if (MessageBox.Show(this, "Se agregaran 100 clientes, 100 productos, 100 ventas, 100 pagos, 100 entregas y 100 cierres en fechas historicas. Los datos quedaran identificados para poder eliminarlos. Continuar?",
+                "Cargar datos de prueba", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes) return;
+            try
+            {
+                LoteDatosPrueba lote = negocioDatosPrueba.Cargar();
+                if (!lote.FechaDesde.HasValue || !lote.FechaHasta.HasValue)
+                    throw new InvalidOperationException("El lote se creo sin fechas para mostrar sus operaciones.");
+                CargarOpciones();
+                desde.Value = lote.FechaDesde.Value;
+                hasta.Value = lote.FechaHasta.Value;
+                Consultar();
+                ActualizarEstadoPrueba();
+                MessageBox.Show(this, $"Lote {lote.Token} creado: {lote.Clientes} clientes, {lote.Productos} productos, {lote.Ventas} ventas, {lote.Pagos} pagos, {lote.Entregas} entregas y {lote.Cierres} cierres. Fechas: {lote.FechaDesde:dd/MM/yyyy} a {lote.FechaHasta:dd/MM/yyyy}.",
+                    "Datos de prueba", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, "No se pudieron cargar los datos de prueba: " + ex.Message, "Datos de prueba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // Elimina exclusivamente las filas que pertenecen al lote registrado
+        private void eliminarPrueba_Click(object? sender, EventArgs e)
+        {
+            if (MessageBox.Show(this, "Se eliminaran solo los registros del lote de prueba activo. Si algun registro de prueba ya se uso en datos ajenos al lote, la operacion se cancelara. Continuar?",
+                "Eliminar datos de prueba", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes) return;
+            try
+            {
+                negocioDatosPrueba.EliminarActivo();
+                CargarOpciones();
+                desde.Value = DateTime.Today.AddMonths(-1);
+                hasta.Value = DateTime.Today;
+                Consultar();
+                ActualizarEstadoPrueba();
+                MessageBox.Show(this, "Se elimino el lote de prueba activo.", "Datos de prueba", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, "No se pudo eliminar el lote de prueba: " + ex.Message, "Datos de prueba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // Habilita la carga o la eliminacion segun el estado persistido del lote
+        private void ActualizarEstadoPrueba()
+        {
+            bool esAdministrador = SesionActual.Usuario?.IdRolUsuario == 1;
+            pruebaAdmin.Visible = esAdministrador;
+            eliminarPrueba.Visible = esAdministrador;
+            if (!esAdministrador) return;
+            try
+            {
+                LoteDatosPrueba? lote = negocioDatosPrueba.ObtenerActivo();
+                pruebaAdmin.Enabled = lote == null;
+                eliminarPrueba.Enabled = lote != null;
+                estadoPrueba.Text = lote == null
+                    ? "No hay un lote de prueba activo"
+                    : $"Lote activo {lote.Token} | Creado {lote.Creado:dd/MM/yyyy HH:mm} | {lote.Cierres} cierres";
+            }
+            catch (Exception ex)
+            {
+                pruebaAdmin.Enabled = false;
+                eliminarPrueba.Enabled = false;
+                estadoPrueba.Text = "No se pudo consultar el estado del lote de prueba";
+                MessageBox.Show(this, "No se pudo consultar el estado de los datos de prueba: " + ex.Message, "Datos de prueba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

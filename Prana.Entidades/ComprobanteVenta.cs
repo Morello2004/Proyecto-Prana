@@ -24,6 +24,7 @@ public class ComprobanteVenta
     public decimal Recargos { get; set; }
     public decimal Total { get; set; }
     public decimal Pagado { get; set; }
+    public string SegundoTelefono { get; set; } = string.Empty;
     public decimal Saldo => Math.Max(0, Total - Pagado);
     public List<DetalleNuevaVenta> Productos { get; set; } = new();
 }

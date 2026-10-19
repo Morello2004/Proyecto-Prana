@@ -79,7 +79,8 @@ namespace Prana.negocio
         // solicita la busqueda de clientes
         public List<Cliente> buscarCliente(string? busqueda)
         {
-            // envia la busqueda a la capa de datos
+            // Normaliza los espacios antes de consultar nombre completo, DNI o teléfono.
+            busqueda = string.IsNullOrWhiteSpace(busqueda) ? null : Regex.Replace(busqueda.Trim(), @"\s+", " ");
             return datosCliente.buscarCliente(busqueda) ?? new List<Cliente>();
         }
 

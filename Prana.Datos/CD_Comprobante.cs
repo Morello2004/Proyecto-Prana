@@ -1,30 +1,18 @@
 ﻿using Microsoft.Data.SqlClient;
 using Prana.Entidades;
-using System.Text.Json;
 using static Prana.Datos.GestionVentaSql;
 
 namespace Prana.Datos;
 
 public class CD_Comprobante
 {
-    internal static void Guardar(SqlConnection cn, SqlTransaction tx, int venta)
-    {
-        var documento = LeerVenta(cn, tx, venta);
-        using var cmd = Comando(cn, tx, "INSERT Venta_Comprobante(id_venta,datos) VALUES(@venta,@datos)",
-            ("@venta",venta),("@datos",JsonSerializer.Serialize(documento)));
-        cmd.ExecuteNonQuery();
-    }
-
     public ComprobanteVenta Obtener(int venta)
     {
-        using var cn = new SqlConnection(Conexion.ObtenerCadena()); cn.Open(); using var tx = cn.BeginTransaction();
-        using var cmd = Comando(cn, tx, "SELECT datos FROM Venta_Comprobante WHERE id_venta=@venta", ("@venta",venta));
-        // Las ventas anteriores también se pueden imprimir; las nuevas conservan la copia emitida.
-        var documento = cmd.ExecuteScalar() is string json ? JsonSerializer.Deserialize<ComprobanteVenta>(json)! : LeerVenta(cn,tx,venta);
-        // Completa campos que las versiones anteriores no copiaban, sin reemplazar
-        // cliente, productos ni importes de la emisión original.
-        if (!documento.DatosEntregaCompletos) CompletarEntrega(cn,tx,documento);
-        tx.Commit(); return documento;
+        using var cn = new SqlConnection(Conexion.ObtenerCadena()); cn.Open();
+        using var tx = cn.BeginTransaction();
+        var documento = LeerVenta(cn, tx, venta);
+        tx.Commit();
+        return documento;
     }
 
     private static ComprobanteVenta LeerVenta(SqlConnection cn, SqlTransaction tx, int venta)

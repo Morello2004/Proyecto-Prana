@@ -2,6 +2,7 @@ using Prana.Datos;
 using Prana.Entidades;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Prana.negocio
 {
@@ -28,6 +29,26 @@ namespace Prana.negocio
             CN_Pago.Verificar(Permisos.GestionarEntregas);
             if (envio <= 0) throw new ArgumentException("Seleccione una entrega pendiente.");
             datos.Confirmar(envio, SesionActual.Usuario!.idUsuario);
+        }
+
+        // Obtiene las variantes cuyo stock disponible no alcanza para cubrir las ventas pendientes.
+        public List<AlertaStockPendiente> ObtenerAlertasStock()
+        {
+            // Comprueba que el usuario tenga permiso para consultar entregas.
+            CN_Pago.Verificar(Permisos.ConsultarEntregas);
+
+            // Solicita a la capa de datos las cantidades pendientes y el stock disponible.
+            var necesidades = datos.ObtenerNecesidadesStock();
+
+            // Calcula cuántas unidades faltan de cada variante.
+            foreach (var item in necesidades)
+            {
+                // Si el stock alcanza, el faltante queda en cero.
+                item.Faltantes = Math.Max(0, item.Pendientes - item.Disponible);
+            }
+
+            // Devuelve solamente las variantes que necesitan más stock.
+            return necesidades.Where(item => item.Faltantes > 0).ToList();
         }
     }
 }

@@ -17,8 +17,7 @@ public partial class frmNuevaVenta
         lblTotalPagoActual.ForeColor = Color.White;
         lblCobroPrevisto.AutoSize = false;
         lblCobroPrevisto.Height = 44;
-        btnConfirmarPagoActual.Location = new Point(20, 445);
-        // Distribuye domicilio, fecha y horario dentro del ancho útil.
+        // Distribuye domicilio, fecha y horario dentro del ancho util
         txtDomicilioEntrega.Width = 330;
         lblFechaEntrega.Left = dtpFechaEntrega.Left = 365;
         dtpFechaEntrega.Width = 185;
@@ -42,17 +41,19 @@ public partial class frmNuevaVenta
 
 public partial class frmMediosPagos
 {
+    // Reorganiza los recargos y el listado para distintos anchos de pantalla
     private void ConfigurarDistribucion()
     {
         var campos = DistribucionAdaptable.Fila(
             DistribucionAdaptable.Campo(lblNombre, txtNombreMedioPago),
             DistribucionAdaptable.Campo(lblGeneral, nudRecargoGeneral, 130),
+            DistribucionAdaptable.Campo(lblRecargo2, nudRecargo2, 130),
             DistribucionAdaptable.Campo(lblRecargo3, nudRecargo3, 130),
             DistribucionAdaptable.Campo(lblRecargo6, nudRecargo6, 130),
             DistribucionAdaptable.Campo(lblRecargo9, nudRecargo9, 130),
             DistribucionAdaptable.Campo(lblRecargo12, nudRecargo12, 130),
-            DistribucionAdaptable.Campo(new Label { Text = "Tipo en caja" }, cboTipoCaja, 160));
-        var acciones = DistribucionAdaptable.Fila(btnGuardar, btnNuevo, btnDesactivar);
+            DistribucionAdaptable.Campo(lblTipoCaja, cboTipoCaja, 160));
+        var acciones = DistribucionAdaptable.Fila(btnGuardar);
         lblSeccion.Height = 28;
         lblSeccion.AutoSize = false;
         pnlListado.Height = 300;
@@ -64,7 +65,7 @@ public partial class frmClientes
 {
     private void ConfigurarDistribucion()
     {
-        // El listado debajo del alta aprovecha todo el ancho del monitor.
+        // El listado debajo del alta aprovecha todo el ancho del monitor
         panel2.Height = 270;
         PnlBusquedaCliente.Height = 100;
         var listado = new Panel { Height = 290 };
@@ -103,7 +104,7 @@ public partial class frmStock
             iconButton1,
             DistribucionAdaptable.Campo(label19, comboBoxSeleccionaProveedor, 320),
             DistribucionAdaptable.Campo(label18, dtpFechaIngresoStock, 230),
-            DistribucionAdaptable.Campo(new Label { Text = "Remito del proveedor", ForeColor = Color.White }, textBoxRtoProveedor, 260));
+            DistribucionAdaptable.Campo(lblRemitoProveedor, textBoxRtoProveedor, 260));
         var totales = DistribucionAdaptable.Fila(label25, LblTotalIngresoDinero, label26,
             labelCantidadIngresada, ButtonRegistrarIngreso);
         foreach (var grid in new[] { dataGridViewBusquedaProducto, dgvVariantes, dataGridViewDetalleIngreso }) grid.Height = 175;
@@ -143,7 +144,7 @@ public partial class frmPagos
             DistribucionAdaptable.Campo(lblImporte, nudImporte, 215),
             DistribucionAdaptable.Campo(lblMedio, cboMedio, 220),
             DistribucionAdaptable.Campo(lblCuotas, cboCuotas, 90),
-            DistribucionAdaptable.Campo(new Label { Text="Cuenta destino / referencia" }, txtCuentaDestino, 220), btnRegistrar);
+            DistribucionAdaptable.Campo(lblCuentaDestino, txtCuentaDestino, 220), btnRegistrar);
         contenido.Controls.Remove(pnlVentas);
         contenido.Controls.Remove(pnlPagos);
         pnlVentas.Dock = pnlPagos.Dock = DockStyle.None;

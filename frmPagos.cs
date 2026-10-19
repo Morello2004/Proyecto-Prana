@@ -8,7 +8,6 @@ namespace Prana.Presentacion
     {
         private readonly CN_Pago negocio=new();
         private bool cargando;
-        private readonly TextBox txtCuentaDestino = new() { MaxLength=100 };
         private venta? Seleccionada => dgvVentas.CurrentRow?.DataBoundItem as venta;
         public frmPagos()
         {
@@ -30,14 +29,7 @@ namespace Prana.Presentacion
             EstiloGestion.Columna(dgvPagos,"Cobrado","Total cobrado",120,"C2");
             cboCuotas.SelectedIndex=0;
             ActualizarCuotas();
-            Load+=(_,_)=>Buscar();
-            btnBuscar.Click+=(_,_)=>Buscar();
-            txtBuscar.KeyDown+=(_,e)=>{if(e.KeyCode==Keys.Enter){e.SuppressKeyPress=true;Buscar();}};
-            dgvVentas.SelectionChanged+=(_,_)=>SeleccionarVenta();
-            nudImporte.ValueChanged+=(_,_)=>MostrarCobro();
-            cboMedio.SelectedIndexChanged+=(_,_)=>{ActualizarCuotas();MostrarCobro();};
-            cboCuotas.SelectedIndexChanged+=(_,_)=>MostrarCobro();
-            btnRegistrar.Click+=Registrar;
+
         }
         private void Buscar()
         {
@@ -118,5 +110,19 @@ namespace Prana.Presentacion
             catch(Exception ex){Error(ex);MostrarCobro();}
         }
         private void Error(Exception ex)=>MessageBox.Show(this,ex.Message,"Pagos",MessageBoxButtons.OK,MessageBoxIcon.Error);
+        private void btnBuscar_Click(object? sender, EventArgs e) { Buscar(); }
+
+        private void txtBuscar_KeyDown(object? sender, KeyEventArgs e) {if(e.KeyCode==Keys.Enter){e.SuppressKeyPress=true;Buscar();}}
+
+        private void dgvVentas_SelectionChanged(object? sender, EventArgs e) { SeleccionarVenta(); }
+
+        private void nudImporte_ValueChanged(object? sender, EventArgs e) { MostrarCobro(); }
+
+        private void cboMedio_SelectedIndexChanged(object? sender, EventArgs e) {ActualizarCuotas();MostrarCobro();}
+
+        private void cboCuotas_SelectedIndexChanged(object? sender, EventArgs e) { MostrarCobro(); }
+
+        private void frmPagos_Load(object? sender, EventArgs e) => Buscar();
+
     }
 }

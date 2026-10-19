@@ -1,0 +1,63 @@
+@startuml
+!pragma layout smetana
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam shadowing false
+skinparam ArrowColor #34495E
+skinparam packageStyle rectangle
+title Preparar y confirmar una entrega
+actor Administrador as U
+participant "frmEntregas" as F
+participant "CN_Entrega" as N
+participant "CD_Entrega" as D
+participant "GestionVentaSql" as G
+database "SQL Server LocalDB" as B
+F -> N : Pendientes(texto)
+N -> D : Pendientes(texto)
+D -> B : consultar ventas y variantes pendientes
+B --> D : filas pendientes
+D --> N : productos por entregar
+N --> F : productos con IdVenta e IdVariante
+U -> F : seleccionar producto y Preparar entrega
+F -> N : Preparar(producto, cantidad, dirección, horario)
+N -> N : verificar permiso y validar datos
+N -> D : Preparar(venta, variante, cantidad, dirección, horario, usuario)
+D -> B : iniciar transacción Serializable
+D -> G : ValidarVenta(conexión, transacción, venta)
+G -> B : validar venta vigente
+D -> B : consultar cantidad pendiente
+B --> D : pendiente
+D -> B : descontar stock si alcanza; insertar Remito, Detalle_Remito y Envio
+D -> G : RegistrarActividad(... PREPARAR_ENTREGA ...)
+G -> B : insertar LogActividad
+D -> B : confirmar transacción
+D --> N : preparación completada
+N --> F : preparación completada
+F --> U : stock reservado y entrega pendiente
+F -> N : Listar(texto, soloPendientes)
+N -> D : Listar(texto, soloPendientes)
+D -> B : consultar entregas preparadas
+B --> D : filas de envío
+D --> N : entregas con IdEnvio
+N --> F : entregas preparadas
+U -> F : seleccionar envío y Confirmar entrega
+F -> N : Confirmar(idEnvio)
+N -> N : verificar permiso y validar identificador
+N -> D : Confirmar(idEnvio, usuario)
+D -> B : iniciar transacción y consultar venta del envío
+B --> D : idVenta
+D -> G : ValidarVenta(conexión, transacción, idVenta)
+G -> B : validar venta vigente
+D -> B : actualizar Envio pendiente y fecha; marcar detalles completos
+D -> G : RegistrarActividad(... CONFIRMAR_ENTREGA ...)
+G -> B : insertar LogActividad
+D -> B : confirmar transacción
+D --> N : confirmación completada
+N --> F : confirmación completada
+F --> U : entrega confirmada
+note over D,B
+Confirmar no vuelve a descontar stock
+ni modifica el estado de pago.
+end note
+@enduml

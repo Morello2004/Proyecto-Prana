@@ -28,6 +28,8 @@ namespace Prana.Presentacion
         /// </summary>
         private void InitializeComponent()
         {
+            lblRemitoProveedor = new Label();
+
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
@@ -1133,6 +1135,14 @@ namespace Prana.Presentacion
             panel4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvVariantes).EndInit();
             ((System.ComponentModel.ISupportInitialize)nudPrecio).EndInit();
+            lblRemitoProveedor.Name = "lblRemitoProveedor";
+            lblRemitoProveedor.Text = "Remito del proveedor";
+            lblRemitoProveedor.Location = new Point(600, 900);
+            lblRemitoProveedor.Size = new Size(260, 23);
+            lblRemitoProveedor.ForeColor = Color.White;
+            Controls.Add(lblRemitoProveedor);
+
+            Load += frmStock_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -1229,5 +1239,7 @@ namespace Prana.Presentacion
         private DataGridViewTextBoxColumn colComprometidoBusqueda;
         private DataGridViewButtonColumn colModificar;
         private DataGridViewButtonColumn ColEliminar;
+        private Label lblRemitoProveedor;
+
     }
 }

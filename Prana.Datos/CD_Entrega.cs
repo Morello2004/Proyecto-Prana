@@ -14,6 +14,70 @@ namespace Prana.Datos
             WHERE NOT EXISTS(SELECT 1 FROM Envio e JOIN Estado_Envio ee ON ee.id_estado_envio=e.id_estado_envio
                 WHERE e.id_remito=r.id_remito AND ee.nombre LIKE N'Cancelad%') GROUP BY r.id_venta,dr.id_variante";
 
+        // Consulta las cantidades pendientes de preparar y el stock disponible de cada variante.
+        public List<AlertaStockPendiente> ObtenerNecesidadesStock()
+        {
+            // Crea la conexión con la base de datos.
+            using var cn = new SqlConnection(Conexion.ObtenerCadena());
+
+            // Vendidos suma las unidades de cada variante dentro de cada venta.
+            // Preparados reutiliza la consulta existente de unidades incluidas en remitos vigentes.
+            // Necesidades resta las unidades preparadas y suma lo pendiente entre todas las ventas.
+            // Se excluyen las ventas anuladas o canceladas.
+            using var cmd = new SqlCommand(@"
+        WITH Vendidos AS
+        (
+            SELECT id_venta, id_variante, SUM(cantidad) cantidad
+            FROM Detalle_Venta
+            GROUP BY id_venta, id_variante
+        ),
+        Preparados AS
+        (
+            " + PreparadosSql + @"
+        ),
+        Necesidades AS
+        (
+            SELECT d.id_variante, SUM(d.cantidad - COALESCE(r.cantidad, 0)) pendientes
+            FROM Vendidos d
+            JOIN Venta v ON v.id_venta = d.id_venta
+            JOIN Estado_Venta ev ON ev.id_estado_venta = v.id_estado_venta
+            LEFT JOIN Preparados r ON r.id_venta = d.id_venta AND r.id_variante = d.id_variante
+            WHERE d.cantidad > COALESCE(r.cantidad, 0)
+              AND ev.nombre_estado_venta NOT LIKE N'Anulad%'
+              AND ev.nombre_estado_venta NOT LIKE N'Cancelad%'
+            GROUP BY d.id_variante
+        )
+        SELECT vp.id_variante, CONCAT(p.nombre_producto, ' ', p.modelo, ' (', vp.color, ', ', vp.condicion_producto, ')') producto, n.pendientes, vp.stock_disponible disponible
+        FROM Necesidades n
+        JOIN Variante_Producto vp ON vp.id_variante = n.id_variante
+        JOIN Producto p ON p.id_producto = vp.id_producto
+        ORDER BY p.nombre_producto, vp.id_variante", cn);
+
+            // Abre la conexión y ejecuta la consulta.
+            cn.Open();
+            using var lector = cmd.ExecuteReader();
+
+            // Prepara la lista que se devuelve a la capa de negocio.
+            var resultado = new List<AlertaStockPendiente>();
+
+            // Recorre cada variante obtenida y carga sus cantidades.
+            while (lector.Read())
+            {
+                resultado.Add(new AlertaStockPendiente
+                {
+                    IdVariante = lector.GetInt32(0), // Identificador de la variante.
+                    Producto = lector.GetString(1), // Nombre, modelo, color y condición.
+                    Pendientes = lector.GetInt32(2), // Unidades vendidas que todavía no se prepararon.
+                    Disponible = lector.GetInt32(3) // Unidades disponibles para preparar.
+                });
+            }
+
+            // Devuelve los datos; la capa de negocio calcula y filtra los faltantes.
+            return resultado;
+        }
+
+      
+
         public List<ProductoPorEntregar> Pendientes(string texto)
         {
             using var cn = new SqlConnection(Conexion.ObtenerCadena());
@@ -84,21 +148,19 @@ namespace Prana.Datos
                 using var stock=Comando(cn,tx,"UPDATE Variante_Producto SET stock_disponible=stock_disponible-@cantidad WHERE id_variante=@variante AND stock_disponible>=@cantidad",
                     ("@cantidad",cantidad),("@variante",variante));
                 if(stock.ExecuteNonQuery()!=1) throw new InvalidOperationException("No hay stock disponible para preparar esa cantidad.");
-                int formato=Catalogo(cn,tx,"Formato_Documento","id_formato_documento","nombre_formato_documento","Interno");
                 int estado=Catalogo(cn,tx,"Estado_Envio","id_estado_envio","nombre","Pendiente");
                 using var modalidad=Comando(cn,tx,@"SELECT m.nombre_modalidad_entrega FROM Venta v JOIN Modalidad_Entrega m ON m.id_modalidad_entrega=v.id_modalidad_entrega WHERE id_venta=@venta",("@venta",venta));
                 string tipo=Convert.ToString(modalidad.ExecuteScalar())!.StartsWith("Retiro",StringComparison.OrdinalIgnoreCase)?"Retiro en local":"Envío a domicilio";
                 if(tipo=="Retiro en local") direccion="Retiro en local";
-                int tipoEnvio=Catalogo(cn,tx,"Tipo_Envio","id_tipo_envio","nombre_tipo_envio",tipo);
-                using var remito=Comando(cn,tx,@"INSERT INTO Remito(id_venta,fecha_emision,id_formato_documento) OUTPUT INSERTED.id_remito
-                    VALUES(@venta,SYSDATETIME(),@formato)",("@venta",venta),("@formato",formato));
+                using var remito=Comando(cn,tx,@"INSERT INTO Remito(id_venta,fecha_emision) OUTPUT INSERTED.id_remito
+                    VALUES(@venta,SYSDATETIME())",("@venta",venta));
                 int idRemito=Convert.ToInt32(remito.ExecuteScalar());
                 using var detalle=Comando(cn,tx,@"INSERT INTO Detalle_Remito(id_remito,id_variante,cantidad,descripcion)
                     SELECT @remito,vp.id_variante,@cantidad,LEFT(CONCAT(p.nombre_producto,' (',vp.color,', ',vp.condicion_producto,')'),300)
                     FROM Variante_Producto vp JOIN Producto p ON p.id_producto=vp.id_producto WHERE vp.id_variante=@variante;
-                    INSERT INTO Envio(id_remito,direccion,horario_sugerido,id_tipo_envio,costo,id_estado_envio)
+                    INSERT INTO Envio(id_remito,direccion,horario_sugerido,tipo_envio,costo,id_estado_envio)
                     VALUES(@remito,@direccion,@horario,@tipo,0,@estado)",("@remito",idRemito),("@cantidad",cantidad),("@variante",variante),
-                    ("@direccion",direccion),("@horario",horario),("@tipo",tipoEnvio),("@estado",estado));
+                    ("@direccion",direccion),("@horario",horario),("@tipo",tipo),("@estado",estado));
                 detalle.ExecuteNonQuery();
                 RegistrarActividad(cn,tx,usuario,"PREPARAR_ENTREGA",venta,$"Remito {venta}; preparación interna {idRemito}; variante {variante}; cantidad {cantidad}");
                 tx.Commit();
@@ -132,6 +194,129 @@ namespace Prana.Datos
                 tx.Commit();
             }
             catch { tx.Rollback(); throw; }
+        }
+
+        internal static void RegistrarRetiroInmediato(
+    SqlConnection conexion,
+    SqlTransaction transaccion,
+    int idVenta,
+    NuevaVenta venta)
+        {
+            // Comprueba la venta y bloquea su encabezado durante la operación.
+            ValidarVenta(conexion, transaccion, idVenta);
+
+            int estadoEnvio = Catalogo(
+                conexion, transaccion,
+                "Estado_Envio",
+                "id_estado_envio",
+                "nombre",
+                "Entregado");
+
+            int estadoDetalle = Catalogo(
+                conexion, transaccion,
+                "Estado_Variante_Producto",
+                "id_estado_variante_producto",
+                "nombre_estado_variante_producto",
+                "Entregado");
+
+            // Crea un remito para todos los productos retirados.
+            using var remito = Comando(
+                conexion,
+                transaccion,
+                @"INSERT INTO Remito
+            (id_venta, fecha_emision)
+          OUTPUT INSERTED.id_remito
+          VALUES (@venta, SYSDATETIME())",
+                ("@venta", idVenta));
+
+            int idRemito = Convert.ToInt32(remito.ExecuteScalar());
+
+            foreach (DetalleNuevaVenta producto in venta.Detalles)
+            {
+                // Descuenta stock solamente si alcanza para la cantidad solicitada.
+                using var stock = Comando(
+                    conexion,
+                    transaccion,
+                    @"UPDATE Variante_Producto
+              SET stock_disponible = stock_disponible - @cantidad
+              WHERE id_variante = @variante
+                AND stock_disponible >= @cantidad",
+                    ("@cantidad", producto.Cantidad),
+                    ("@variante", producto.IdVariante));
+
+                if (stock.ExecuteNonQuery() != 1)
+                {
+                    throw new InvalidOperationException(
+                        "No hay stock suficiente para registrar el retiro.");
+                }
+
+                // Registra la cantidad retirada y la descripción del producto.
+                using var detalle = Comando(
+                    conexion,
+                    transaccion,
+                    @"INSERT INTO Detalle_Remito
+                (id_remito, id_variante, cantidad, descripcion)
+              SELECT
+                @remito,
+                vp.id_variante,
+                @cantidad,
+                LEFT(
+                    CONCAT(
+                        p.nombre_producto,
+                        ' (', vp.color,
+                        ', ', vp.condicion_producto, ')'),
+                    300)
+              FROM Variante_Producto vp
+              JOIN Producto p ON p.id_producto = vp.id_producto
+              WHERE vp.id_variante = @variante",
+                    ("@remito", idRemito),
+                    ("@cantidad", producto.Cantidad),
+                    ("@variante", producto.IdVariante));
+
+                if (detalle.ExecuteNonQuery() != 1)
+                {
+                    throw new InvalidOperationException(
+                        "No se pudo registrar un producto en el remito.");
+                }
+            }
+
+            // Registra el retiro como entregado desde el momento de la venta.
+            using var envio = Comando(
+                conexion,
+                transaccion,
+                @"INSERT INTO Envio
+            (id_remito, direccion, horario_sugerido,
+             tipo_envio, costo, id_estado_envio, fecha_entrega)
+          VALUES
+            (@remito, @direccion, @horario,
+             N'Retiro en local', 0, @estado, SYSDATETIME())",
+                ("@remito", idRemito),
+                ("@direccion", "Retiro en local"),
+                ("@horario", ""),
+                ("@estado", estadoEnvio));
+
+            envio.ExecuteNonQuery();
+
+            // Marca los productos de esta venta como entregados.
+            using var actualizarDetalles = Comando(
+                conexion,
+                transaccion,
+                @"UPDATE Detalle_Venta
+          SET id_estado_variante_producto = @estado
+          WHERE id_venta = @venta",
+                ("@estado", estadoDetalle),
+                ("@venta", idVenta));
+
+            actualizarDetalles.ExecuteNonQuery();
+
+            // Deja constancia del retiro en el historial.
+            RegistrarActividad(
+                conexion,
+                transaccion,
+                venta.IdUsuario,
+                "CONFIRMAR_ENTREGA",
+                idVenta,
+                $"Retiro inmediato en local; remito interno {idRemito}");
         }
     }
 }

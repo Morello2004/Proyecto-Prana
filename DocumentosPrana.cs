@@ -46,6 +46,7 @@ public static class DocumentosPrana
 
     public static string VentaHtml(ComprobanteVenta venta,bool remito)
     {
+
         if(remito)return RemitoHtml(venta);
         string tipo=remito?"REMITO":"GARANTÍA";
         var html=new StringBuilder($"<header><div class='empresa'><strong class='marca'>PRANA Electrónica</strong><br><i>Electrodomésticos de primera y outlet</i><br>CUIT: 20-23132979-0<br>San Martín 687<br>Luján, Buenos Aires, 6700<br>+54 9 11 2671-0298</div><div class='derecha'><h1>{tipo}</h1><strong>N.º {venta.Numero}</strong><br>FECHA: {venta.Fecha:dd/MM/yyyy}<br>Venta N.º {venta.Numero}</div></header>");
@@ -77,7 +78,9 @@ public static class DocumentosPrana
 
     private static string RemitoHtml(ComprobanteVenta venta)
     {
-        string Texto(string valor)=>H(valor).Replace("\r\n","\n").Replace("\n","<br>");
+        string telefonos = string.IsNullOrWhiteSpace(venta.SegundoTelefono) ? venta.Telefono : $"{venta.Telefono} / {venta.SegundoTelefono}";
+
+        string Texto(string valor) => H(valor) .Replace("\r\n", "\n").Replace("\n", "<br>");
         var html=new StringBuilder("""
             <style>
             .remito{border:2px solid #777;padding:4px;font-size:11px}
@@ -94,7 +97,7 @@ public static class DocumentosPrana
             """);
         html.Append($"<div class='bloque empresa'>{Logo()}<div><strong>Razón social:</strong> PRANA ELECTRÓNICA<br><strong>CUIT:</strong> 20-23132979-0<br><strong>Web:</strong> www.pranaelectronica.com<br><strong>Dirección:</strong> San Martín 687<br><strong>Localidad:</strong> Luján<br><strong>Teléfono:</strong> +54 9 11 2671 0298</div></div>");
         html.Append($"<div class='bloque identificacion'><h1>REMITO</h1><strong>N.º {venta.Numero}</strong><br><strong>Fecha:</strong> {venta.Fecha:dd/MM/yyyy}</div></header>");
-        html.Append($"<section class='bloque datos'><div><strong>Nombre:</strong> {H(venta.Cliente)}</div><div><strong>Teléfono:</strong> {H(venta.Telefono)}</div><div><strong>DNI:</strong> {H(venta.Dni)}</div>{DatoOpcional("CP", venta.CodigoPostal, true)}{DatoOpcional("Dirección", venta.Direccion, true)}<div><strong>Ciudad:</strong> {H(venta.Localidad)}</div><div class='amplio'><strong>Otros datos / pago:</strong> {H(venta.CondicionPago)}<br>{Texto(venta.ObservacionPago)}</div></section>");
+        html.Append($"<section class='bloque datos'><div><strong>Nombre:</strong> {H(venta.Cliente)}</div><div><strong>Teléfono:</strong> {H(telefonos)}</div><div><strong>DNI:</strong> {H(venta.Dni)}</div>{DatoOpcional("CP", venta.CodigoPostal, true)}{DatoOpcional("Dirección", venta.Direccion, true)}<div><strong>Ciudad:</strong> {H(venta.Localidad)}</div><div class='amplio'><strong>Otros datos / pago:</strong> {H(venta.CondicionPago)}<br>{Texto(venta.ObservacionPago)}</div></section>");
         html.Append("<section class='bloque'><table><thead><tr><th style='width:15%'>ARTÍCULO</th><th>DESCRIPCIÓN</th><th style='width:17%'>CANTIDAD</th></tr></thead><tbody>");
         foreach(var p in venta.Productos)
             html.Append($"<tr><td>{p.IdVariante}</td><td>{Texto(p.Producto)}<br>{Texto(VarianteImpresa(p.Variante))}</td><td class='numero'>{p.Cantidad}</td></tr>");
@@ -145,19 +148,12 @@ public static class DocumentosPrana
     }
     public static void Abrir(string ruta)=>Process.Start(new ProcessStartInfo(ruta){UseShellExecute=true});
 
-    public static void MostrarVenta(IWin32Window propietario,int numero)
+    public static void MostrarVenta(IWin32Window propietario,int numero,string segundoTelefono = "")
     {
-        string carpeta=GuardarVenta(new CN_Comprobante().Obtener(numero));
-        using var ventana=new Form { Text=$"Venta N.º {numero} - comprobantes",ClientSize=new Size(520,180),StartPosition=FormStartPosition.CenterParent,MaximizeBox=false,MinimizeBox=false };
-        ventana.Controls.Add(new Label{Text=$"Garantía y remito N.º {numero} generados.\nAbra cada documento para imprimirlo o guardarlo como PDF.",AutoSize=false,Left=20,Top=20,Width=480,Height=55});
-        int x=20;
-        foreach(var tipo in new[]{"Garantia","Remito"})
-        {
-            string ruta=Path.Combine(carpeta,$"{tipo}-{numero}.html");
-            var boton=new Button{Text=tipo=="Garantia"?"Ver / imprimir garantía":"Ver / imprimir remito",Left=x,Top=90,Width=225,Height=40};
-            boton.Click+=(_,_)=>{try{Abrir(ruta);}catch(Exception ex){MessageBox.Show(ventana,ex.Message,"Abrir comprobante");}};
-            ventana.Controls.Add(boton); x+=245;
-        }
+        var documento = new CN_Comprobante().Obtener(numero);
+        documento.SegundoTelefono = segundoTelefono.Trim();
+        string carpeta=GuardarVenta(documento);
+        using var ventana = new frmComprobantes(numero, carpeta);
         ventana.ShowDialog(propietario);
     }
 }

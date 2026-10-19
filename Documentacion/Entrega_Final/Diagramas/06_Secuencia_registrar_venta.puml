@@ -1,0 +1,47 @@
+@startuml
+!pragma layout smetana
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam shadowing false
+skinparam ArrowColor #34495E
+skinparam packageStyle rectangle
+title Registrar una venta
+actor Usuario as U
+participant "frmNuevaVenta" as F
+participant "CN_RegistroVenta" as N
+participant "CD_RegistroVenta" as D
+participant "CD_Caja" as C
+participant "CD_Comprobante" as CO
+database "SQL Server LocalDB" as B
+U -> F : Registrar venta
+F -> N : Registrar(NuevaVenta)
+N -> N : validar datos e importes
+N -> D : Guardar(venta)
+D -> B : abrir conexión y transacción
+D -> C : Ahora(conexión, transacción)
+C -> B : SELECT SYSDATETIME()
+B --> C : fecha y hora
+C --> D : fecha y hora
+opt La venta contiene pagos
+D -> C : ExigirDiaAbierto(conexión, transacción, fecha)
+C -> B : bloquear caja y comprobar cierre
+B --> C : día habilitado
+end
+D -> B : resolver catálogos e insertar Venta
+B --> D : idVenta
+D -> B : insertar detalles, pagos y Venta_Entrega
+D -> CO : Guardar(conexión, transacción, idVenta)
+CO -> CO : LeerVenta(conexión, transacción, idVenta)
+CO -> B : consultar venta, cliente, productos y entrega
+B --> CO : datos persistidos
+CO -> B : insertar copia JSON en Venta_Comprobante
+D -> B : registrar actividad y confirmar transacción
+D --> N : idVenta
+N --> F : idVenta
+F --> U : número y acceso a comprobantes
+note over D,B
+Ante un error, Guardar revierte la transacción.
+Esta operación no descuenta stock al confirmar la venta.
+end note
+@enduml

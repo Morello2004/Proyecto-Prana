@@ -37,6 +37,13 @@ namespace Prana.Presentacion
             btnConfirmar.Text="Confirmar entrega seleccionada";btnConfirmar.Dock=DockStyle.Bottom;btnConfirmar.Height=36;btnConfirmar.BackColor=Color.SteelBlue;btnConfirmar.ForeColor=Color.White;btnConfirmar.FlatStyle=FlatStyle.Flat;btnConfirmar.FlatAppearance.BorderSize=0;btnConfirmar.Enabled=false;
             AutoScaleDimensions=new SizeF(7F,15F);AutoScaleMode=AutoScaleMode.Font;ClientSize=new Size(1200,840);BackColor=Color.FromArgb(13,19,27);ForeColor=Color.White;AutoScroll=true;AutoScrollMinSize=new Size(900,780);
             Controls.Add(contenido);Controls.Add(pnlFiltros);Controls.Add(pnlTitulo);Name="frmEntregas";Text="Entregas";
+            btnBuscar.Click += btnBuscar_Click;
+            txtBuscar.KeyDown += txtBuscar_KeyDown;
+            dgvPendientes.SelectionChanged += dgvPendientes_SelectionChanged;
+            dgvEntregas.SelectionChanged += dgvEntregas_SelectionChanged;
+            btnPreparar.Click += Preparar;
+            btnConfirmar.Click += Confirmar;
+            Load += frmEntregas_Load;
             ResumeLayout(false);
         }
         private Panel pnlTitulo,pnlFiltros,pnlPendientes,pnlPreparar,pnlEntregas;

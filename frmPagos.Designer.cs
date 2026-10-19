@@ -6,6 +6,10 @@ namespace Prana.Presentacion
         protected override void Dispose(bool disposing){if(disposing)components?.Dispose();base.Dispose(disposing);}
         private void InitializeComponent()
         {
+            lblCuentaDestino = new Label();
+
+            txtCuentaDestino = new TextBox();
+
             pnlTitulo=new Panel(); lblTitulo=new Label(); pnlFiltros=new Panel(); txtBuscar=new TextBox(); btnBuscar=new Button(); chkPendientes=new CheckBox();
             contenido=new TableLayoutPanel(); pnlVentas=new Panel(); lblVentas=new Label(); dgvVentas=new DataGridView();
             pnlCobro=new Panel(); lblSeleccion=new Label(); lblImporte=new Label(); nudImporte=new NumericUpDown(); lblMedio=new Label(); cboMedio=new ComboBox();
@@ -34,7 +38,7 @@ namespace Prana.Presentacion
             lblMedio.Text="Medio de pago"; lblMedio.AutoSize=true; lblMedio.Location=new Point(245,46); lblMedio.ForeColor=Color.FromArgb(145,170,210);
             cboMedio.Location=new Point(245,69); cboMedio.Size=new Size(220,27); cboMedio.DropDownStyle=ComboBoxStyle.DropDownList; cboMedio.TabIndex=1;
             lblCuotas.Text="Cuotas"; lblCuotas.AutoSize=true; lblCuotas.Location=new Point(485,46); lblCuotas.ForeColor=Color.FromArgb(145,170,210);
-            cboCuotas.Location=new Point(485,69); cboCuotas.Size=new Size(90,27); cboCuotas.DropDownStyle=ComboBoxStyle.DropDownList; cboCuotas.Items.AddRange(new object[]{1,3,6,9,12}); cboCuotas.TabIndex=2;
+            cboCuotas.Location=new Point(485,69); cboCuotas.Size=new Size(90,27); cboCuotas.DropDownStyle=ComboBoxStyle.DropDownList; cboCuotas.Items.AddRange(new object[]{1,2,3,6,9,12}); cboCuotas.TabIndex=2;
             btnRegistrar.Text="Registrar pago"; btnRegistrar.Location=new Point(600,63); btnRegistrar.Size=new Size(170,35); btnRegistrar.BackColor=Color.DodgerBlue;
             btnRegistrar.ForeColor=Color.White; btnRegistrar.FlatStyle=FlatStyle.Flat; btnRegistrar.FlatAppearance.BorderSize=0; btnRegistrar.Enabled=false; btnRegistrar.TabIndex=3;
             lblCobro.Location=new Point(12,115); lblCobro.Size=new Size(800,30); lblCobro.ForeColor=Color.FromArgb(255,195,95);
@@ -43,6 +47,27 @@ namespace Prana.Presentacion
             AutoScaleDimensions=new SizeF(7F,15F); AutoScaleMode=AutoScaleMode.Font; ClientSize=new Size(1200,820);
             BackColor=Color.FromArgb(13,19,27); ForeColor=Color.White; AutoScroll=true; AutoScrollMinSize=new Size(880,740);
             Controls.Add(contenido); Controls.Add(pnlFiltros); Controls.Add(pnlTitulo); Name="frmPagos"; Text="Pagos";
+            btnBuscar.Click += btnBuscar_Click;
+            txtBuscar.KeyDown += txtBuscar_KeyDown;
+            dgvVentas.SelectionChanged += dgvVentas_SelectionChanged;
+            nudImporte.ValueChanged += nudImporte_ValueChanged;
+            cboMedio.SelectedIndexChanged += cboMedio_SelectedIndexChanged;
+            cboCuotas.SelectedIndexChanged += cboCuotas_SelectedIndexChanged;
+            btnRegistrar.Click += Registrar;
+            Load += frmPagos_Load;
+            txtCuentaDestino.Name = "txtCuentaDestino";
+            txtCuentaDestino.MaxLength = 100;
+            txtCuentaDestino.Location = new Point(480, 500);
+            txtCuentaDestino.Size = new Size(220, 23);
+            Controls.Add(txtCuentaDestino);
+
+            lblCuentaDestino.Name = "lblCuentaDestino";
+            lblCuentaDestino.Text = "Cuenta destino / referencia";
+            lblCuentaDestino.Location = new Point(480, 475);
+            lblCuentaDestino.Size = new Size(220, 23);
+            lblCuentaDestino.ForeColor = Color.White;
+            Controls.Add(lblCuentaDestino);
+
             ResumeLayout(false);
         }
         private Panel pnlTitulo,pnlFiltros,pnlVentas,pnlCobro,pnlPagos;
@@ -54,5 +79,9 @@ namespace Prana.Presentacion
         private DataGridView dgvVentas,dgvPagos;
         private NumericUpDown nudImporte;
         private ComboBox cboMedio,cboCuotas;
+        private TextBox txtCuentaDestino;
+
+        private Label lblCuentaDestino;
+
     }
 }

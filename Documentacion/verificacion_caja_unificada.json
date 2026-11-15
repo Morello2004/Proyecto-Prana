@@ -1,0 +1,13 @@
+﻿{
+    "fecha":  "2026-11-15",
+    "estructura":  "Caja con estado y Caja_Movimiento",
+    "compilacion":  "cero errores",
+    "sql_migracion":  "sintaxis valida incluida comprobacion previa de cinco lotes dinamicos",
+    "consultas_cd_caja_analizadas":  14,
+    "presentacion":  "documentos y seleccion de productos aprobados",
+    "permisos":  "pruebas de anulacion aprobadas",
+    "integracion":  "no ejecutada por fallo de inicio de LocalDB error -1983577832",
+    "base_comercial":  "no modificada desde las herramientas",
+    "migracion":  "se aplica en la transaccion del inicializador al proximo inicio",
+    "pruebas_nuevas":  "--caja-unificada y adaptacion de --cierre-automatico"
+}

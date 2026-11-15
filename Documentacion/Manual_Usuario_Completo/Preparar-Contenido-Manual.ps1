@@ -43,6 +43,7 @@ $chapters[5].body = '<p>Al abrir Panel principal, arriba se muestran tres datos:
 . (Join-Path $root 'Ampliar-Manual-Empleados.ps1')
 . (Join-Path $root 'Aplicar-Correcciones-Empleados.ps1')
 . (Join-Path $root 'Ampliar-Acciones-Estados.ps1')
+. (Join-Path $root 'Actualizar-Cajas-Turnos.ps1')
 . (Join-Path $root 'Preparar-Imagenes-Manual.ps1')
 
 

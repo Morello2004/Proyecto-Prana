@@ -1,4 +1,4 @@
-# Funcionamiento del código del sistema
+﻿# Funcionamiento del código del sistema
 
 Cada pantalla tiene un título numerado. Los subtítulos identifican la parte del formulario o el método que se explica. Las ventanas auxiliares se desarrollan dentro de la pantalla que las abre. Los nombres de clases, propiedades y métodos aparecen en negrita para localizarlos en el código.
 
@@ -167,93 +167,49 @@ El nombre del estado de pago procede de **Estado_Venta**, mientras que el estado
 
 ## 4_ Caja — frmCaja.cs
 
-### 4.1 Para qué sirve la pantalla y qué clases utiliza
+La fecha sirve para buscar jornadas y el identificador **IdCaja** distingue cada apertura. Se permiten varios cierres de una misma fecha, pero una sola caja abierta a la vez, compartida entre los operadores. El formulario utiliza **CN_Caja** para validar y **CD_Caja** para consultar o guardar.
 
-El formulario **frmCaja** permite consultar los movimientos de caja de una fecha, registrar ingresos y gastos manuales, anular movimientos y consultar o imprimir los cierres. Se comunica con la clase **CN_Caja**, que valida las operaciones y utiliza **CD_Caja** para acceder a la base de datos.
+### 4.1 Inicialización y selección de una caja
 
-### 4.2 Constructor: hora actual, eventos y permiso de anulación
+El constructor crea los controles y deja la hora de inicio como dato de consulta. **Cargar** completa cierres pendientes de días anteriores, llama a **negocio.Listar** y carga las aperturas de la fecha en **cboCaja**. Si se estaba consultando una, conserva su identificador; de lo contrario selecciona la última. Después llama a **Consultar** con fecha e identificador. Consultar no abre una caja automáticamente.
 
-Al crear el formulario se ejecuta **InitializeComponent**, se toma la hora actual de la computadora mediante **DateTime.Now** y se configura el botón de anular, que solamente queda habilitado para el administrador. También se relacionan los cambios de la hora de inicio y las observaciones con el método que guarda esos datos automáticamente.
+**MostrarCaja** presenta los datos y habilita las acciones según el estado. Una caja abierta de hoy permite registrar, corregir saldos y observaciones y cerrar. Una cerrada permite imprimir. Si no hay apertura seleccionada, se pueden preparar los datos iniciales antes de abrir. **cargando** impide que completar los controles se interprete como una edición del usuario.
 
-### 4.3 actual y cargando: estado del formulario
+### 4.2 Abrir caja y preparar el turno siguiente
 
-El formulario mantiene un objeto **CierreCaja** llamado **actual**, que representa la caja consultada, y una variable booleana **cargando**, que evita ejecutar operaciones mientras se completan los controles de la pantalla.
+Si no hay caja, el usuario completa los saldos iniciales y presiona **Abrir caja**. Si está viendo un cierre y no existe otra apertura vigente, **Nueva caja** primero limpia los campos y deja la selección vacía para preparar otro turno; después se confirma con **Abrir caja**. No se copia automáticamente el balance anterior.
 
-### 4.4 Cargar: recuperar la caja y mostrar movimientos
+**CN_Caja.Abrir** exige sesión y valida saldos no negativos y observaciones de hasta mil caracteres. **CD_Caja.Abrir** obtiene un bloqueo compartido con todos los escritores, comprueba que no exista otra caja abierta y toma la fecha y hora de SQL Server. Inserta Caja con estado Abierta y responsable de apertura y conserva su identificador en IdCaja. La hora de inicio no se modifica desde la pantalla.
 
-Cuando se carga el formulario se ejecuta **Cargar**. Este método llama a **negocio.Consultar**, pasando la fecha seleccionada. Si existe un cierre guardado, obtiene sus datos; si no existe, recupera los datos de la caja abierta y consulta sus movimientos. Después completa los saldos iniciales, la hora de inicio y las observaciones, y asigna la lista de movimientos al **DataSource** de la grilla.
+### 4.3 Datos iniciales y JSON
 
-### 4.5 Numero y estado de caja: habilitar o bloquear controles
+Una vez abierta, los cambios de saldos y observaciones llaman a **GuardarDatosAbiertos**, negocio y datos. El UPDATE utiliza **id**, no solamente fecha. Si otra persona cerró ese turno y abrió otro, se rechaza la edición desactualizada. Se actualiza el JSON de la misma fila; no se crean archivos JSON ni una fila por cada cambio. Los movimientos mantienen sus registros originales.
 
-Para determinar si la caja está abierta se comprueba si **actual.Numero** es cero. Si está abierta y corresponde al día actual, permite registrar movimientos y modificar los datos iniciales. Si está cerrada, deshabilita esas modificaciones y habilita la impresión. Los cierres anteriores se pueden consultar seleccionando su fecha.
+**CierreCaja** contiene IdCaja, Cerrada, Numero, Fecha, Inicio, Fin, saldos, observaciones, usuario y listas de movimientos y billetes. Numero permanece en cero mientras está abierta y corresponde al identificador de la caja cuando está cerrada. No existe un contador independiente para cierres. Al consultar, las columnas SQL de identificación y horarios prevalecen sobre el JSON histórico.
 
-### 4.6 ActualizarResumen: ingresos, gastos y balances
+### 4.4 Cobros, ingresos y gastos de cada apertura
 
-Después de cargar los datos se ejecuta **ActualizarResumen**, que muestra los ingresos, gastos y balances. Los pesos y los dólares se calculan por separado. También se muestran los ingresos por café y los importes agrupados por medio de pago. Los cobros de ventas se incluyen según su fecha de pago y se suma su importe base, **sin agregar el recargo**.
+**Pago.id_caja** y **Caja_Movimiento.id_caja** relacionan cada operación con su apertura. Al registrar una venta o un pago posterior, **ExigirCajaAbierta** devuelve la caja vigente dentro de la misma transacción que guarda el cobro. Si no hay apertura, la operación se rechaza y se solicita abrirla desde Caja y gastos. Una misma venta puede tener cobros en cajas distintas.
 
-### 4.7 GuardarDatosAbiertos: conservar saldos y observaciones
+Al registrar un movimiento manual, el formulario también envía IdCaja. La capa de datos comprueba que siga siendo la activa. **LeerMovimientos** reúne cobros y movimientos manuales no anulados y filtra por id_caja. Así una consulta no incluye otros cierres del mismo día. Los pagos aportan su base sin recargo y los pesos y dólares se calculan por separado.
 
-Cuando se modifican los saldos iniciales, la hora de inicio o las observaciones, se ejecuta **GuardarDatosAbiertos**. Este método actualiza el objeto **actual** y llama a **negocio.GuardarCajaAbierta** para conservar esos datos en la tabla **Caja_Abierta**. Así se recuperan al salir y volver a entrar, y quedan disponibles para el cierre automático.
+### 4.5 Anulación y ventana de motivo
 
-### 4.8 Registrar y ObtenerMovimientoDelFormulario
+La anulación requiere administrador tanto en el formulario como en negocio. Se abre **frmMotivoAnulacion** mediante ShowDialog para solicitar el motivo. Datos comprueba que el movimiento pertenezca a la caja que sigue abierta, marca anulado, conserva el motivo y registra ANULAR_MOVIMIENTO. Una nueva apertura no permite anular operaciones del turno ya cerrado. Los cobros de ventas no se anulan desde esta pantalla.
 
-Al presionar **Registrar**, **ObtenerMovimientoDelFormulario** construye un objeto **MovimientoCaja** con el concepto, tipo, medio, moneda, importe y cuenta ingresados. Ese objeto se pasa a **negocio.Registrar**, donde se validan sus datos antes de guardarlo. Si la operación termina correctamente, se limpian el concepto, la cuenta y el importe, y se vuelve a cargar la caja.
+### 4.6 Cierre manual y control de concurrencia
 
-### 4.9 Anular: permiso, selección y solicitud del motivo
+**Cerrar** muestra una confirmación en mayúsculas que aclara que no se agregarán operaciones a esa caja y que se puede abrir otra para continuar. Datos bloquea la apertura, vuelve a consultar sus movimientos por identificador y los compara con lo mostrado. Si cambiaron, solicita actualizar. Si coinciden, completa el responsable y la hora final y actualiza la misma fila a Cerrada con su JSON definitivo.
 
-Para anular un movimiento se comprueba primero el permiso de administrador. Después se obtiene el objeto asociado a la fila seleccionada y se verifica que sea un movimiento manual, porque los cobros de ventas no se anulan desde esta pantalla. Se abre **frmMotivoAnulacion** para solicitar el motivo y, si se confirma, se llama a **negocio.Anular**. La clase de negocio vuelve a comprobar el permiso antes de acceder a los datos.
+El bloqueo de aplicación **Prana.Caja.Activa** se utiliza al abrir, cerrar, cobrar y registrar o anular movimientos. Un índice único filtrado impide además dos filas con estado Abierta. Después de un cierre no se pueden registrar nuevas operaciones hasta abrir otra caja. No se elimina la fila cerrada ni se bloquea toda la fecha.
 
-### 4.10 CD_Caja.Anular: baja lógica y actividad registrada
+### 4.7 Cierre automático y recuperación
 
-La anulación realiza un borrado lógico: **CD_Caja.Anular** cambia **anulado** a uno y guarda **motivo_anulacion**, sin eliminar la fila. Las consultas posteriores excluyen ese movimiento de la grilla y de los totales. También registra la acción **ANULAR_MOVIMIENTO** en **LogActividad**, con el usuario, la fecha y el motivo. Ese motivo se puede consultar en la columna **Detalle** del Historial.
+El temporizador de **Program** sigue comprobando el cambio de día cada segundo y también recupera pendientes antes del login. **CerrarDiasAnteriores** busca aperturas de fechas anteriores que continúan abiertas. Cierra cada una por identificador con CIERRE AUTOMÁTICO y medianoche como hora final. No vuelve a cerrar los turnos manuales anteriores ni abre automáticamente la caja del nuevo día.
 
-### 4.11 Cerrar: validación, confirmación y guardado manual
+### 4.8 Impresión y resumen mensual
 
-El cierre puede realizarse manualmente mediante el botón correspondiente. El método **Cerrar** ejecuta las validaciones de los controles, actualiza el resumen y muestra una confirmación en mayúsculas. Si el usuario acepta, llama a **negocio.Cerrar**. La capa de datos comprueba que los movimientos no hayan cambiado desde la consulta y guarda el cierre. Desde ese momento no se pueden agregar cobros ni movimientos para esa fecha.
-
-### 4.12 CerrarDiasAnteriores: cierre automático y recuperación
-
-El cierre automático se controla desde **Program**, mediante un temporizador de Windows Forms que permanece activo aunque no esté abierta la pantalla de caja. Cuando detecta el cambio de fecha, ejecuta **CerrarDiasAnteriores**. Este método busca días anteriores con actividad o datos de caja abierta que todavía no tengan cierre, consulta sus movimientos y guarda el cierre identificado como **CIERRE AUTOMÁTICO**. Si el programa estaba apagado, realiza esa recuperación al volver a iniciarse, antes de mostrar el login.
-
-### 4.13 ActualizarCambioDeDia: nueva fecha y saldo inicial
-
-Si la pantalla de caja estaba mostrando el día que terminó, pasa al nuevo día. El saldo inicial del nuevo día se ingresa de forma independiente; no se copia automáticamente el balance anterior.
-
-### 4.14 Botones de impresión y resumen mensual
-
-El botón de imprimir genera el documento del cierre y lo abre. El botón de resumen mensual crea un **frmResumenMensualCaja**, le pasa la fecha seleccionada y lo muestra mediante **ShowDialog**.
-
-### 4.15 Ejecutar: manejo compartido de excepciones
-
-Finalmente, el método **Ejecutar** recibe una acción y la ejecuta dentro de un **try**. Si ocurre un error, el **catch** muestra su mensaje. Esto permite reutilizar el mismo manejo de errores en las distintas operaciones del formulario.
-
-### 4.16 Ventana incluida: frmMotivoAnulacion
-
-#### 4.16.1 Constructor, Motivo y botones Anular y Cancelar
-
-El constructor ejecuta **InitializeComponent**. La propiedad **Motivo** devuelve el texto de **txtMotivo**. Aceptar asigna **DialogResult.OK** y Cancelar asigna **DialogResult.Cancel**.
-
-#### 4.16.2 ShowDialog: devolver el motivo a Caja
-
-Caja la abre mediante **ShowDialog(this)** y comprueba ese resultado. Si no es OK termina la operación. Si se acepta, obtiene **dialogo.Motivo** y lo envía con el identificador a **CN_Caja.Anular**. Esa ventana no anula por sí misma ni guarda el texto directamente en la base. La validación del motivo obligatorio y su longitud está en negocio.
-
-### 4.17 Ventana incluida: frmResumenMensualCaja
-
-#### 4.17.1 Apertura y constructores: recibir el mes
-
-**resumenMes_Click** crea **frmResumenMensualCaja** pasando la fecha seleccionada y la abre mediante **ShowDialog(this)**. El constructor que recibe fecha establece el primer día de ese mes. El constructor sin parámetros utiliza el mes actual y delega en el otro.
-
-#### 4.17.2 Cargar y ConsultarMes: consultar el período
-
-Al cargar y al presionar Consultar se llama a **Cargar**, que ejecuta **CN_Caja.ConsultarMes**. El negocio consulta desde el primer día del mes hasta el primero del siguiente y prepara un **ResumenMensualCaja** con movimientos y agrupaciones.
-
-#### 4.17.3 Mostrar: totales y desgloses en las grillas
-
-**Mostrar** asigna las listas a cinco grillas: totales, por día, por medio, por tipo y detalle. Presenta resultado como ingresos menos gastos, separa ARS y USD y no suma los saldos iniciales como si fueran ingresos. Incluye movimientos vigentes y cobros por fecha de pago, incluso si su día todavía no está cerrado.
-
-#### 4.17.4 CellFormatting: mostrar la referencia RTO
-
-**detalle_CellFormatting** muestra las referencias de venta como RTO seguido del número. La consulta mensual no realiza cierres, no arrastra saldos ni registra movimientos nuevos.
+**DocumentosPrana.GuardarCierre** genera el HTML del cierre seleccionado. El nombre del archivo contiene fecha y número, por lo que dos cierres del mismo día no se reemplazan entre sí. **frmResumenMensualCaja** consulta los movimientos originales del mes y agrupa por fecha, medio y tipo. No suma los JSON de los cierres ni agrega saldos iniciales como ingresos, evitando duplicar importes cuando existen varios turnos.
 
 ## 5_ Nueva venta — frmNuevaVenta.cs
 

@@ -1310,11 +1310,11 @@
       },
       {
         "name": "label3",
-        "text": "Telefono",
+        "text": "Tel\u00E9fono (con \u00E1rea)",
         "type": "Label",
         "x": 8,
         "y": 240,
-        "w": 52,
+        "w": 110,
         "h": 21
       },
       {
@@ -1614,11 +1614,11 @@
       },
       {
         "name": "label3",
-        "text": "Telefono",
+        "text": "Tel\u00E9fono (con \u00E1rea)",
         "type": "Label",
         "x": 8,
         "y": 240,
-        "w": 52,
+        "w": 110,
         "h": 21
       },
       {
@@ -2162,9 +2162,9 @@
       {
         "name": "txtColorVariante",
         "text": "",
-        "type": "TextBox",
-        "x": 228,
-        "y": 740,
+        "type": "ComboBox",
+        "x": 226,
+        "y": 738,
         "w": 160,
         "h": 25
       },
@@ -2259,10 +2259,19 @@
         "h": 25
       },
       {
+        "name": "btnOpcionesStock",
+        "text": "Administrar opciones",
+        "type": "Button",
+        "x": 155,
+        "y": 985,
+        "w": 180,
+        "h": 25
+      },
+      {
         "name": "btnCancelar",
         "text": "Cancelar",
         "type": "IconButton",
-        "x": 155,
+        "x": 351,
         "y": 985,
         "w": 124,
         "h": 25
@@ -2350,7 +2359,7 @@
       },
       {
         "name": "dtpFechaIngresoStock",
-        "text": "12/11/2026",
+        "text": "15/11/2026",
         "type": "DateTimePicker",
         "x": 657,
         "y": 1160,
@@ -2880,9 +2889,9 @@
       {
         "name": "txtColorVariante",
         "text": "",
-        "type": "TextBox",
-        "x": 228,
-        "y": 717,
+        "type": "ComboBox",
+        "x": 226,
+        "y": 715,
         "w": 160,
         "h": 25
       },
@@ -2977,10 +2986,19 @@
         "h": 25
       },
       {
+        "name": "btnOpcionesStock",
+        "text": "Administrar opciones",
+        "type": "Button",
+        "x": 155,
+        "y": 962,
+        "w": 180,
+        "h": 25
+      },
+      {
         "name": "btnCancelar",
         "text": "Cancelar",
         "type": "IconButton",
-        "x": 155,
+        "x": 351,
         "y": 962,
         "w": 124,
         "h": 25
@@ -3068,7 +3086,7 @@
       },
       {
         "name": "dtpFechaIngresoStock",
-        "text": "12/11/2026",
+        "text": "15/11/2026",
         "type": "DateTimePicker",
         "x": 657,
         "y": 1137,
@@ -3550,7 +3568,7 @@
       },
       {
         "name": "dtpFechaEntrega",
-        "text": "12/11/2026",
+        "text": "15/11/2026",
         "type": "DateTimePicker",
         "x": 262,
         "y": 796,
@@ -3802,7 +3820,7 @@
       },
       {
         "name": "dtpFechaPago",
-        "text": "12/11/2026",
+        "text": "15/11/2026",
         "type": "DateTimePicker",
         "x": 266,
         "y": 1200,
@@ -4286,7 +4304,7 @@
       },
       {
         "name": "dtpFechaEntrega",
-        "text": "12/11/2026",
+        "text": "15/11/2026",
         "type": "DateTimePicker",
         "x": 262,
         "y": 796,
@@ -4538,7 +4556,7 @@
       },
       {
         "name": "dtpFechaPago",
-        "text": "12/11/2026",
+        "text": "15/11/2026",
         "type": "DateTimePicker",
         "x": 266,
         "y": 1200,
@@ -6422,6 +6440,33 @@
         "h": 42
       },
       {
+        "name": "",
+        "text": "Caja / turno",
+        "type": "Label",
+        "x": 650,
+        "y": 65,
+        "w": 300,
+        "h": 23
+      },
+      {
+        "name": "cboCaja",
+        "text": "",
+        "type": "ComboBox",
+        "x": 650,
+        "y": 92,
+        "w": 300,
+        "h": 23
+      },
+      {
+        "name": "abrir",
+        "text": "Abrir caja",
+        "type": "Button",
+        "x": 480,
+        "y": 1038,
+        "w": 210,
+        "h": 36
+      },
+      {
         "name": "lblFecha",
         "text": "Fecha",
         "type": "Label",
@@ -6432,7 +6477,7 @@
       },
       {
         "name": "fecha",
-        "text": "12/11/2026",
+        "text": "15/11/2026",
         "type": "DateTimePicker",
         "x": 16,
         "y": 92,
@@ -6657,7 +6702,7 @@
       },
       {
         "name": "inicio",
-        "text": "16:23:12",
+        "text": "14:14:52",
         "type": "DateTimePicker",
         "x": 16,
         "y": 765,
@@ -6765,7 +6810,7 @@
       },
       {
         "name": "cerrar",
-        "text": "Cerrar caja del d\u00EDa",
+        "text": "Cerrar caja seleccionada",
         "type": "Button",
         "x": 16,
         "y": 1038,
@@ -6798,6 +6843,33 @@
         "h": 42
       },
       {
+        "name": "",
+        "text": "Caja / turno",
+        "type": "Label",
+        "x": 650,
+        "y": 65,
+        "w": 300,
+        "h": 23
+      },
+      {
+        "name": "cboCaja",
+        "text": "",
+        "type": "ComboBox",
+        "x": 650,
+        "y": 92,
+        "w": 300,
+        "h": 23
+      },
+      {
+        "name": "abrir",
+        "text": "Abrir caja",
+        "type": "Button",
+        "x": 480,
+        "y": 1038,
+        "w": 210,
+        "h": 36
+      },
+      {
         "name": "lblFecha",
         "text": "Fecha",
         "type": "Label",
@@ -6808,7 +6880,7 @@
       },
       {
         "name": "fecha",
-        "text": "12/11/2026",
+        "text": "15/11/2026",
         "type": "DateTimePicker",
         "x": 16,
         "y": 92,
@@ -7033,7 +7105,7 @@
       },
       {
         "name": "inicio",
-        "text": "16:23:12",
+        "text": "14:14:52",
         "type": "DateTimePicker",
         "x": 16,
         "y": 765,
@@ -7141,7 +7213,7 @@
       },
       {
         "name": "cerrar",
-        "text": "Cerrar caja del d\u00EDa",
+        "text": "Cerrar caja seleccionada",
         "type": "Button",
         "x": 16,
         "y": 1038,
@@ -7174,6 +7246,33 @@
         "h": 42
       },
       {
+        "name": "",
+        "text": "Caja / turno",
+        "type": "Label",
+        "x": 650,
+        "y": -309,
+        "w": 300,
+        "h": 23
+      },
+      {
+        "name": "cboCaja",
+        "text": "",
+        "type": "ComboBox",
+        "x": 650,
+        "y": -282,
+        "w": 300,
+        "h": 23
+      },
+      {
+        "name": "abrir",
+        "text": "Abrir caja",
+        "type": "Button",
+        "x": 480,
+        "y": 664,
+        "w": 210,
+        "h": 36
+      },
+      {
         "name": "lblFecha",
         "text": "Fecha",
         "type": "Label",
@@ -7184,7 +7283,7 @@
       },
       {
         "name": "fecha",
-        "text": "12/11/2026",
+        "text": "15/11/2026",
         "type": "DateTimePicker",
         "x": 16,
         "y": -282,
@@ -7409,7 +7508,7 @@
       },
       {
         "name": "inicio",
-        "text": "16:23:12",
+        "text": "14:14:52",
         "type": "DateTimePicker",
         "x": 16,
         "y": 391,
@@ -7517,7 +7616,7 @@
       },
       {
         "name": "cerrar",
-        "text": "Cerrar caja del d\u00EDa",
+        "text": "Cerrar caja seleccionada",
         "type": "Button",
         "x": 16,
         "y": 664,
@@ -8142,7 +8241,7 @@
       },
       {
         "name": "desde",
-        "text": "12/10/2026",
+        "text": "15/10/2026",
         "type": "DateTimePicker",
         "x": 16,
         "y": 96,
@@ -8160,7 +8259,7 @@
       },
       {
         "name": "hasta",
-        "text": "12/11/2026",
+        "text": "15/11/2026",
         "type": "DateTimePicker",
         "x": 206,
         "y": 96,
@@ -8392,7 +8491,7 @@
       },
       {
         "name": "desde",
-        "text": "12/10/2026",
+        "text": "15/10/2026",
         "type": "DateTimePicker",
         "x": 16,
         "y": 96,
@@ -8410,7 +8509,7 @@
       },
       {
         "name": "hasta",
-        "text": "12/11/2026",
+        "text": "15/11/2026",
         "type": "DateTimePicker",
         "x": 206,
         "y": 96,
@@ -8642,7 +8741,7 @@
       },
       {
         "name": "desde",
-        "text": "12/10/2026",
+        "text": "15/10/2026",
         "type": "DateTimePicker",
         "x": 16,
         "y": 96,
@@ -8660,7 +8759,7 @@
       },
       {
         "name": "hasta",
-        "text": "12/11/2026",
+        "text": "15/11/2026",
         "type": "DateTimePicker",
         "x": 206,
         "y": 96,
@@ -8919,7 +9018,7 @@
       },
       {
         "name": "dtpDesde",
-        "text": "12/10/2026",
+        "text": "15/10/2026",
         "type": "DateTimePicker",
         "x": 20,
         "y": 59,
@@ -8937,7 +9036,7 @@
       },
       {
         "name": "dtpHasta",
-        "text": "12/11/2026",
+        "text": "15/11/2026",
         "type": "DateTimePicker",
         "x": 195,
         "y": 59,
@@ -9088,7 +9187,7 @@
       },
       {
         "name": "dtpDesde",
-        "text": "12/10/2026",
+        "text": "15/10/2026",
         "type": "DateTimePicker",
         "x": 20,
         "y": 116,
@@ -9106,7 +9205,7 @@
       },
       {
         "name": "dtpHasta",
-        "text": "12/11/2026",
+        "text": "15/11/2026",
         "type": "DateTimePicker",
         "x": 195,
         "y": 116,
@@ -9257,7 +9356,7 @@
       },
       {
         "name": "dtpDesde",
-        "text": "12/10/2026",
+        "text": "15/10/2026",
         "type": "DateTimePicker",
         "x": 20,
         "y": 43,
@@ -9275,7 +9374,7 @@
       },
       {
         "name": "dtpHasta",
-        "text": "12/11/2026",
+        "text": "15/11/2026",
         "type": "DateTimePicker",
         "x": 195,
         "y": 43,
@@ -10139,33 +10238,6 @@
         "h": 23
       },
       {
-        "name": "pnlCampo8",
-        "text": "",
-        "type": "Panel",
-        "x": 166,
-        "y": 498,
-        "w": 160,
-        "h": 58
-      },
-      {
-        "name": "cboTipoCaja",
-        "text": "",
-        "type": "ComboBox",
-        "x": 166,
-        "y": 524,
-        "w": 160,
-        "h": 23
-      },
-      {
-        "name": "lblTipoCaja",
-        "text": "Tipo en caja",
-        "type": "Label",
-        "x": 166,
-        "y": 498,
-        "w": 160,
-        "h": 23
-      },
-      {
         "name": "flpAcciones",
         "text": "",
         "type": "FlowLayoutPanel",
@@ -10578,33 +10650,6 @@
         "h": 23
       },
       {
-        "name": "pnlCampo8",
-        "text": "",
-        "type": "Panel",
-        "x": 166,
-        "y": 498,
-        "w": 160,
-        "h": 58
-      },
-      {
-        "name": "cboTipoCaja",
-        "text": "",
-        "type": "ComboBox",
-        "x": 166,
-        "y": 524,
-        "w": 160,
-        "h": 23
-      },
-      {
-        "name": "lblTipoCaja",
-        "text": "Tipo en caja",
-        "type": "Label",
-        "x": 166,
-        "y": 498,
-        "w": 160,
-        "h": 23
-      },
-      {
         "name": "flpAcciones",
         "text": "",
         "type": "FlowLayoutPanel",
@@ -11014,33 +11059,6 @@
         "x": 20,
         "y": 498,
         "w": 130,
-        "h": 23
-      },
-      {
-        "name": "pnlCampo8",
-        "text": "",
-        "type": "Panel",
-        "x": 166,
-        "y": 498,
-        "w": 160,
-        "h": 58
-      },
-      {
-        "name": "cboTipoCaja",
-        "text": "",
-        "type": "ComboBox",
-        "x": 166,
-        "y": 524,
-        "w": 160,
-        "h": 23
-      },
-      {
-        "name": "lblTipoCaja",
-        "text": "Tipo en caja",
-        "type": "Label",
-        "x": 166,
-        "y": 498,
-        "w": 160,
         "h": 23
       },
       {

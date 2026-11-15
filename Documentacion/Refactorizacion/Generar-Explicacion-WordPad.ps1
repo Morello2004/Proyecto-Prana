@@ -1,10 +1,11 @@
 param(
-    [string]$Carpeta = $PSScriptRoot
+    [string]$Carpeta = $PSScriptRoot,
+    [string]$NombreBase = 'Explicacion_Tecnica_Formularios'
 )
 
 $ErrorActionPreference = 'Stop'
-$origen = Join-Path $Carpeta 'Explicacion_Tecnica_Formularios.md'
-$destino = Join-Path $Carpeta 'Explicacion_Tecnica_Formularios_WordPad.rtf'
+$origen = Join-Path $Carpeta ($NombreBase + '.md')
+$destino = Join-Path $Carpeta ($NombreBase + '_WordPad.rtf')
 $contenido = [System.IO.File]::ReadAllLines($origen, [System.Text.Encoding]::UTF8)
 
 # protege los caracteres especiales de rtf y conserva letras con acento mediante unicode

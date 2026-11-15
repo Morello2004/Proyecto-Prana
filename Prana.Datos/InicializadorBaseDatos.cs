@@ -119,6 +119,8 @@ namespace Prana.Datos
                 // el script comprueba las estructuras y aplica tambien eliminaciones de elementos antiguos; requiere respaldo previo
                 EjecutarScript(conexion, transaccion, actualizaciones);
                 EjecutarScript(conexion, transaccion, LeerScript("CajaYComprobantes.sql"));
+                // relaciona operaciones anteriores y habilita varias aperturas diarias dentro de la misma migracion
+                EjecutarScript(conexion, transaccion, LeerScript("CajasPorTurno.sql"));
                 // confirma todos los cambios de esta transaccion como una unidad
                 transaccion.Commit();
             }

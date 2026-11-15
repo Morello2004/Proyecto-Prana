@@ -1,4 +1,4 @@
-# Base de datos y scripts de Prana Electrónica
+﻿# Base de datos y scripts de Prana Electrónica
 
 Prácticas Profesionalizantes III · Tecnicatura Superior en Análisis de Sistemas
 
@@ -61,7 +61,7 @@ El script define tablas con tipos de datos, claves primarias, columnas IDENTITY,
 - LogActividad: registro de acciones, usuario, entidad afectada, detalle y fecha.
 - Recibo: tabla del esquema conservada; su existencia no significa que haya un circuito completo de emisión de recibos independientes en las pantallas.
 - Caja_Movimiento: gastos e ingresos manuales y sus anulaciones.
-- Caja_Cierre: fecha única de cierre y resumen guardado como JSON.
+- Caja: una fila por apertura con estado Abierta o Cerrada y datos guardados como JSON.
 
 Producto es la tabla del catálogo utilizada por la aplicación. Una tabla adicional llamada PRODUCTOS no se crea con los scripts actuales y no debe confundirse con aquella. Deben revisarse sus dependencias antes de eliminar una tabla ajena en una instalación existente.
 
@@ -103,9 +103,9 @@ Por estas eliminaciones, el comentario histórico que describe el script como si
 
 ## 9. Qué cambia CajaYComprobantes.sql
 
-Prepara la numeración de Venta; agrega la clasificación del medio en caja y conserva esa clasificación en cada Pago. Incorpora cuenta_destino, Caja_Movimiento y Caja_Cierre. Añade código postal al cliente cuando falta y puede recuperarlo desde la localidad para instalaciones anteriores.
+Prepara la numeración de Venta; agrega la clasificación del medio en caja y conserva esa clasificación en cada Pago. Incorpora cuenta_destino, Caja_Movimiento y Caja. Añade código postal al cliente cuando falta y puede recuperarlo desde la localidad para instalaciones anteriores.
 
-Elimina Venta_Comprobante cuando existe: los documentos actuales se construyen consultando venta, cliente, detalle y pagos; no dependen de esa copia JSON antigua. Esto es diferente del JSON de Caja_Cierre, que sí se conserva para los cierres.
+Elimina Venta_Comprobante cuando existe: los documentos actuales se construyen consultando venta, cliente, detalle y pagos; no dependen de esa copia JSON antigua. Esto es diferente del JSON de Caja, que sí se conserva para los cierres.
 
 Recupera eventos faltantes del historial a partir de ventas anteriores y descuentos, usando NOT EXISTS para no repetirlos en cada inicio. Esas inserciones reconstruyen historial de operaciones existentes; no crean ventas nuevas.
 
@@ -172,3 +172,11 @@ La verificación de índices, columnas y dependencias puede consultarse en sys.t
 Program.cs; Prana.Datos/InicializadorBaseDatos.cs; App.config; Prana.Datos/Conexion.cs; CrearEstructuraPrana_LocalDB.sql; ActualizarEstructuraPrana_LocalDB.sql; CajaYComprobantes.sql; CD_RegistroVenta.cs; CD_Pago.cs; CD_Caja.cs y CD_Comprobante.cs.
 
 Síntesis para la defensa: el instalador entrega el motor requerido y los scripts; al abrir Prana se crea la base si falta, se construye el esquema si está vacío y se aplican las actualizaciones. La instalación comienza con roles, una cuenta administradora y cuatro medios de pago, sin ventas ni productos de ejemplo. A partir de allí la operación diaria incorpora los datos del comercio.
+
+## Actualización de caja unificada
+
+Caja conserva la misma fila de cada apertura al cerrar. El script migra y verifica los cierres y datos abiertos anteriores antes de retirar sus tablas separadas. Se mantienen los identificadores de cierres existentes, los saldos y observaciones y el JSON de cada jornada. La migración se ejecuta en la transacción del inicializador. Los movimientos manuales siguen en Caja_Movimiento y los cobros en Pago.
+
+## Varias aperturas en la misma fecha
+
+El inicializador ejecuta CajasPorTurno.sql después de CajaYComprobantes.sql, dentro de la misma transacción. Agrega inicio, fin e id_usuario_apertura a Caja, relaciona Pago y Caja_Movimiento por id_caja y retira la unicidad de fecha. Un índice filtrado permite una sola apertura vigente. Los datos históricos se relacionan por su fecha antes de habilitar turnos; los cierres nuevos se consultan por identificador. Una caja cerrada no admite operaciones, pero se puede abrir otra el mismo día. No se copian saldos iniciales automáticamente ni se duplican movimientos en el resumen mensual.

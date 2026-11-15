@@ -11,13 +11,16 @@ public partial class frmCaja : Form
     private CierreCaja actual = new();
     // conserva cargando entre las operaciones de esta clase
     private bool cargando = true;
+    // conserva las aperturas visibles para saber si ya existe un turno abierto en la fecha
+    private List<CierreCaja> cajasDelDia = new List<CierreCaja>();
     // prepara frm caja antes de que se utilice la instancia
     public frmCaja()
     {
         InitializeComponent();
         inicio.Value = DateTime.Now;
         anular.Enabled = SesionActual.Usuario != null && Permisos.TienePermiso(Permisos.AnularMovimientosCaja);
-        inicio.ValueChanged += DatosCierreCambiados;
+        // el inicio es la hora real de apertura no un horario editable para mover cobros entre turnos
+        inicio.Enabled = false;
         observaciones.TextChanged += DatosCierreCambiados;
     }
 
@@ -45,10 +48,10 @@ public partial class frmCaja : Form
         DatosCierreCambiados(sender, e);
     }
 
-    // cada cambio queda guardado antes de abandonar la pantalla o llegar a medianoche
+    // guarda cambios solo despues de abrir la caja los datos de una apertura nueva se confirman con su boton
     private void DatosCierreCambiados(object? sender, EventArgs e)
     {
-        if (cargando || actual.Numero != 0 || actual.Fecha.Date != fecha.Value.Date || fecha.Value.Date != DateTime.Today)
+        if (cargando || actual.IdCaja == 0 || actual.Cerrada || actual.Fecha.Date != fecha.Value.Date || fecha.Value.Date != DateTime.Today)
         {
             return;
         }
@@ -60,7 +63,6 @@ public partial class frmCaja : Form
     {
         actual.SaldoInicial = saldo.Value;
         actual.SaldoInicialUsd = saldoUsd.Value;
-        actual.Inicio = actual.Fecha.Date + inicio.Value.TimeOfDay;
         actual.Observaciones = observaciones.Text.Trim();
         negocio.GuardarCajaAbierta(actual);
     }
@@ -149,33 +151,35 @@ public partial class frmCaja : Form
 
     // prepara la informacion inicial cuando se carga la ventana
     private void frmCaja_Load(object? sender, EventArgs e) => Ejecutar(Cargar);
-    // obtiene y presenta para actualizar los controles de la pantalla
+    // vuelve a consultar las aperturas y conserva la seleccion si todavia pertenece a la fecha elegida
     private void Cargar()
     {
-        CierreCaja consultado = negocio.Consultar(fecha.Value.Date);
+        negocio.CerrarDiasAnteriores();
+        int? seleccionada = null;
+        if (cboCaja.SelectedItem is CierreCaja elegida && elegida.Fecha.Date == fecha.Value.Date)
+        {
+            seleccionada = elegida.IdCaja;
+        }
         cargando = true;
         try
         {
-            actual = consultado;
-            saldo.Value = actual.SaldoInicial;
-            saldoUsd.Value = actual.SaldoInicialUsd;
-            inicio.Value = actual.Inicio;
-            observaciones.Text = actual.Observaciones;
-
-            movimientos.DataSource = actual.Movimientos;
-            bool abierta = actual.Numero == 0;
-            registrar.Enabled = abierta && fecha.Value.Date == DateTime.Today;
-            cerrar.Enabled = abierta && fecha.Value.Date <= DateTime.Today;
-            imprimir.Enabled = !abierta;
-            saldo.Enabled = saldoUsd.Enabled = inicio.Enabled = observaciones.Enabled = abierta && fecha.Value.Date == DateTime.Today;
-            if (abierta)
+            cajasDelDia = negocio.Listar(fecha.Value.Date);
+            cboCaja.DataSource = cajasDelDia;
+            CierreCaja? opcion = cajasDelDia.FirstOrDefault(caja => caja.IdCaja == seleccionada);
+            if (opcion == null)
             {
-                estado.Text = "Caja sin cerrar. Los datos se guardan automáticamente y el día se cierra a medianoche. Los cobros se incluyen por su fecha de pago.";
+                opcion = cajasDelDia.FirstOrDefault();
+            }
+            if (opcion != null)
+            {
+                cboCaja.SelectedItem = opcion;
+                actual = negocio.Consultar(fecha.Value.Date, opcion.IdCaja);
             }
             else
             {
-                estado.Text = $"Cierre N.º {actual.Numero} guardado el {actual.Fin:dd/MM/yyyy HH:mm}. Usuario: {actual.Usuario}.";
+                actual = new CierreCaja { Fecha = fecha.Value.Date, Inicio = DateTime.Now };
             }
+            MostrarCaja();
         }
         // realiza la limpieza de salida tanto si la operacion termina bien como si falla
         finally
@@ -184,10 +188,90 @@ public partial class frmCaja : Form
         }
 
         ActualizarResumen();
-        if (actual.Numero == 0 && actual.Fecha.Date == DateTime.Today)
+    }
+
+    // presenta un turno o prepara los campos de una nueva apertura sin guardarla automaticamente
+    private void MostrarCaja()
+    {
+        saldo.Value = actual.SaldoInicial;
+        saldoUsd.Value = actual.SaldoInicialUsd;
+        inicio.Value = actual.Inicio;
+        observaciones.Text = actual.Observaciones;
+        movimientos.DataSource = actual.Movimientos;
+        if (movimientos.Columns.Contains(nameof(MovimientoCaja.IdCaja)))
         {
-            GuardarDatosAbiertos();
+            movimientos.Columns[nameof(MovimientoCaja.IdCaja)].Visible = false;
         }
+        bool hoy = fecha.Value.Date == DateTime.Today;
+        bool abierta = actual.IdCaja > 0 && !actual.Cerrada && hoy;
+        bool puedeAbrir = hoy && !cajasDelDia.Any(caja => !caja.Cerrada);
+        registrar.Enabled = cerrar.Enabled = abierta;
+        imprimir.Enabled = actual.Cerrada && actual.Numero > 0;
+        saldo.Enabled = saldoUsd.Enabled = observaciones.Enabled = abierta || (puedeAbrir && actual.IdCaja == 0);
+        abrir.Enabled = puedeAbrir;
+        abrir.Text = "Abrir caja";
+        if (actual.IdCaja > 0)
+        {
+            abrir.Text = "Nueva caja";
+        }
+        anular.Enabled = abierta && SesionActual.Usuario != null && Permisos.TienePermiso(Permisos.AnularMovimientosCaja);
+        if (actual.Cerrada)
+        {
+            estado.Text = $"Caja N.º {actual.IdCaja} cerrada el {actual.Fin:dd/MM/yyyy HH:mm}. Usuario: {actual.Usuario}.";
+            if (puedeAbrir)
+            {
+                estado.Text += " Puede preparar otra apertura con Nueva caja.";
+            }
+        }
+        else if (abierta)
+        {
+            estado.Text = $"Caja N.º {actual.IdCaja} abierta desde {actual.Inicio:HH:mm}. Los movimientos corresponden solamente a esta apertura.";
+        }
+        else
+        {
+            estado.Text = "No hay cajas registradas para esta fecha.";
+            if (hoy)
+            {
+                estado.Text = "Complete los saldos iniciales y presione Abrir caja antes de registrar operaciones.";
+            }
+        }
+    }
+
+    // cambiar la seleccion consulta por identificador para no juntar cierres de la misma fecha
+    private void cboCaja_SelectedIndexChanged(object? sender, EventArgs e)
+    {
+        if (!cargando)
+        {
+            Ejecutar(Cargar);
+        }
+    }
+
+    // el primer paso prepara datos vacios y el segundo confirma la apertura sin copiar el balance anterior
+    private void abrir_Click(object? sender, EventArgs e)
+    {
+        Ejecutar(() =>
+        {
+            if (actual.IdCaja > 0)
+            {
+                cargando = true;
+                try
+                {
+                    cboCaja.SelectedIndex = -1;
+                    actual = new CierreCaja();
+                    MostrarCaja();
+                }
+                finally { cargando = false; }
+                ActualizarResumen();
+                saldo.Focus();
+                return;
+            }
+            CierreCaja nueva = negocio.Abrir(new CierreCaja
+            {
+                SaldoInicial = saldo.Value, SaldoInicialUsd = saldoUsd.Value, Observaciones = observaciones.Text.Trim()
+            });
+            Cargar();
+            MessageBox.Show(this, $"Caja N.º {nueva.IdCaja} abierta correctamente.", "Caja");
+        });
     }
 
     // resuelve actualizar resumen con los datos recibidos y entrega el resultado al codigo que lo llama
@@ -198,7 +282,7 @@ public partial class frmCaja : Form
             return;
         }
 
-        if (actual.Numero == 0)
+        if (!actual.Cerrada)
         {
             actual.SaldoInicial = saldo.Value;
             actual.SaldoInicialUsd = saldoUsd.Value;
@@ -216,13 +300,12 @@ public partial class frmCaja : Form
         }
 
         ActualizarResumen();
-        actual.Inicio = fecha.Value.Date + inicio.Value.TimeOfDay;
         actual.Observaciones = observaciones.Text.Trim();
         // conserva la caja confirmada aunque el reloj cambie de dia mientras el mensaje esta abierto
         CierreCaja cierreConfirmado = actual;
         if (MessageBox.Show(this,
             $"{resumen.Text}\n\nATENCIÓN: REVISE TODOS LOS COBROS, GASTOS Y SALDOS ANTES DE CERRAR LA CAJA DEL {fecha.Value:dd/MM/yyyy}.\n\n" +
-            "UNA VEZ CERRADA, NO SE PODRÁN REGISTRAR MÁS COBROS NI MOVIMIENTOS DE CAJA PARA ESA FECHA.\n\n" +
+            "UNA VEZ CERRADA, NO SE PODRÁN AGREGAR OPERACIONES A ESTA CAJA. PODRÁ ABRIR OTRA PARA CONTINUAR EN EL MISMO DÍA.\n\n" +
             "¿CONFIRMA QUE REVISÓ TODO Y DESEA CERRAR LA CAJA?",
             "CONFIRMAR CIERRE DE CAJA", MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
             MessageBoxDefaultButton.Button2) != DialogResult.Yes)
@@ -254,6 +337,7 @@ public partial class frmCaja : Form
     {
         return new MovimientoCaja
         {
+            IdCaja = actual.IdCaja,
             Concepto = motivo.Text,
             Tipo = tipo.Text,
             Medio = medio.Text,

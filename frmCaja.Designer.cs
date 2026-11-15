@@ -26,6 +26,9 @@ partial class frmCaja
         fecha = new DateTimePicker();
         actualizar = new Button();
         resumenMes = new Button();
+        cboCaja = new ComboBox();
+        lblCaja = new Label();
+        abrir = new Button();
         estado = new Label();
         lblRegistro = new Label();
         lbltipo = new Label();
@@ -115,6 +118,26 @@ partial class frmCaja
         resumenMes.Text = "Resumen del mes";
         resumenMes.UseVisualStyleBackColor = false;
         resumenMes.Click += resumenMes_Click;
+        // permite elegir una apertura concreta entre los cierres de una misma fecha
+        lblCaja.Text = "Caja / turno";
+        lblCaja.ForeColor = Color.White;
+        lblCaja.Location = new Point(650, 65);
+        lblCaja.Size = new Size(300, 23);
+        cboCaja.Name = "cboCaja";
+        cboCaja.DropDownStyle = ComboBoxStyle.DropDownList;
+        cboCaja.ForeColor = Color.Black;
+        cboCaja.Location = new Point(650, 92);
+        cboCaja.Size = new Size(300, 23);
+        cboCaja.SelectedIndexChanged += cboCaja_SelectedIndexChanged;
+        // crea el turno solo cuando el usuario confirma su saldo inicial
+        abrir.Name = "abrir";
+        abrir.Text = "Abrir caja";
+        abrir.BackColor = Color.SteelBlue;
+        abrir.ForeColor = Color.White;
+        abrir.FlatStyle = FlatStyle.Flat;
+        abrir.Location = new Point(480, 1038);
+        abrir.Size = new Size(210, 36);
+        abrir.Click += abrir_Click;
         // 
         // estado
         // 
@@ -425,7 +448,7 @@ partial class frmCaja
         cerrar.Name = "cerrar";
         cerrar.Size = new Size(200, 36);
         cerrar.TabIndex = 33;
-        cerrar.Text = "Cerrar caja del día";
+        cerrar.Text = "Cerrar caja seleccionada";
         cerrar.UseVisualStyleBackColor = false;
         cerrar.Click += cerrar_Click;
         // 
@@ -450,6 +473,9 @@ partial class frmCaja
         BackColor = Color.FromArgb(13, 19, 27);
         ClientSize = new Size(1000, 700);
         Controls.Add(titulo);
+        Controls.Add(lblCaja);
+        Controls.Add(cboCaja);
+        Controls.Add(abrir);
         Controls.Add(lblFecha);
         Controls.Add(fecha);
         Controls.Add(actualizar);
@@ -531,6 +557,9 @@ partial class frmCaja
     private TextBox observaciones;
     private Button cerrar;
     private Button imprimir;
+    private ComboBox cboCaja;
+    private Label lblCaja;
+    private Button abrir;
     private DataGridViewTextBoxColumn colDiseno57;
     private DataGridViewTextBoxColumn colDiseno58;
     private DataGridViewTextBoxColumn colDiseno59;

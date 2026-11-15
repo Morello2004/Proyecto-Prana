@@ -73,6 +73,10 @@ class Pruebas
             using SqlCommand comando = new SqlCommand(lote, conexion);
             comando.ExecuteNonQuery();
         }
+        if (Path.GetFileName(archivo) == "CajaYComprobantes.sql")
+        {
+            Script("BaseDeDatos/CajasPorTurno.sql");
+        }
     }
 
     // resuelve solicitud con los datos recibidos y entrega el resultado al codigo que lo llama
@@ -127,58 +131,151 @@ class Pruebas
     // comprueba recuperacion de datos cierres atrasados y dos intentos simultaneos en una base aislada
     static void PruebasCierreAutomatico()
     {
-        CD_Caja datos = new CD_Caja();
-        CierreCaja hoy = datos.Consultar(DateTime.Today);
-        hoy.SaldoInicial = 125;
-        hoy.SaldoInicialUsd = 20;
-        hoy.Observaciones = "Datos conservados al salir";
-        datos.GuardarCajaAbierta(hoy);
-        CierreCaja recuperada = datos.Consultar(DateTime.Today);
-        Ok(recuperada.SaldoInicial == 125 && recuperada.SaldoInicialUsd == 20 && recuperada.Observaciones == hoy.Observaciones,
-            "Recupera saldos y observaciones de una caja abierta");
+        PruebasTurnosCaja();
+    }
 
-        int venta = CD_RegistroVenta.Guardar(Solicitud(), false);
-        Sql($"UPDATE Pago SET fecha_pago=DATEADD(day,-1,SYSDATETIME()),monto=400,monto_final=480 WHERE id_venta={venta}");
-        CierreCaja ayer = new CierreCaja
+    // ejecuta los lotes de la migracion juntos como lo hace el inicializador real
+    static void MigrarCaja()
+    {
+        using SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena());
+        conexion.Open();
+        using SqlTransaction transaccion = conexion.BeginTransaction();
+        try
         {
-            Fecha = DateTime.Today.AddDays(-1), Inicio = DateTime.Today.AddDays(-1).AddHours(10),
-            SaldoInicial = 100, SaldoInicialUsd = 5, Observaciones = "Observacion anterior"
-        };
-        using (SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena()))
-        {
-            conexion.Open();
-            // prepara la consulta y su conexion los valores variables se envian mediante parametros
-            using SqlCommand insertar = new SqlCommand("INSERT Caja_Abierta(fecha,datos) VALUES(@fecha,@datos)", conexion);
-            insertar.Parameters.AddWithValue("@fecha", ayer.Fecha);
-            insertar.Parameters.AddWithValue("@datos", JsonSerializer.Serialize(ayer));
-            insertar.ExecuteNonQuery();
+            string texto = File.ReadAllText("BaseDeDatos/CajaYComprobantes.sql") + "\nGO\n" + File.ReadAllText("BaseDeDatos/CajasPorTurno.sql");
+            foreach (string lote in Regex.Split(texto, @"(?im)^\s*GO\s*$"))
+            {
+                if (string.IsNullOrWhiteSpace(lote)) continue;
+                using SqlCommand comando = new SqlCommand(lote, conexion, transaccion);
+                comando.ExecuteNonQuery();
+            }
+            transaccion.Commit();
         }
-        Sql(@"INSERT Caja_Movimiento(fecha,concepto,tipo,medio,moneda,importe,cuenta,id_usuario)
-            VALUES(DATEADD(day,-1,SYSDATETIME()),N'Gasto',N'Gasto',N'Efectivo','ARS',25,'',1),
-                  (DATEADD(day,-2,SYSDATETIME()),N'Ingreso',N'Ingreso extra',N'Efectivo','USD',10,'',1)");
-        Task.WaitAll(Task.Run(() => datos.CerrarDiasAnteriores()), Task.Run(() => new CD_Caja().CerrarDiasAnteriores()));
-        CierreCaja cerrado = datos.Consultar(ayer.Fecha);
-        Ok(cerrado.Numero > 0 && cerrado.Fin == DateTime.Today && cerrado.Usuario == "CIERRE AUTOMÁTICO",
-            "Cierre automatico identifica origen y limite de medianoche");
-        Ok(cerrado.SaldoInicial == 100 && cerrado.SaldoInicialUsd == 5 && cerrado.Observaciones == ayer.Observaciones,
-            "El cierre automatico conserva los datos editados");
-        Ok(cerrado.Ingresos("ARS") == 400 && cerrado.Gastos("ARS") == 25 && cerrado.BalanceArs == 475,
-            "El cierre suma la base del pago sin sumar su recargo");
-        Ok(Convert.ToInt32(Sql("SELECT COUNT(*) FROM Caja_Cierre")) == 2,
-            "Recupera dias pendientes sin duplicarlos ante dos procesos concurrentes");
-        Ok(datos.Consultar(DateTime.Today).Numero == 0 && datos.Consultar(DateTime.Today).SaldoInicial == 125,
-            "La caja de hoy sigue abierta con sus propios datos");
-        Ok(Convert.ToInt32(Sql("SELECT COUNT(*) FROM Caja_Cierre WHERE id_usuario IS NOT NULL")) == 0,
-            "Los cierres automaticos no se atribuyen a empleados");
-        Rechaza(() => datos.GuardarCajaAbierta(ayer), "editar una caja cerrada");
+        catch { transaccion.Rollback(); throw; }
+    }
+
+    // comprueba conservacion de datos idempotencia y cierre de la misma fila en una base exclusiva de pruebas
+    static void PruebasCajaUnificada()
+    {
+        // reconstruye la estructura anterior solamente en la base aislada y vacia de esta prueba
+        Ok(Convert.ToInt32(Sql("SELECT COUNT(*) FROM Caja")) == 0, "Migracion ensayada sobre cajas de prueba vacias");
+        Sql(@"ALTER TABLE Pago DROP CONSTRAINT FK_Pago_Caja;
+            ALTER TABLE Caja_Movimiento DROP CONSTRAINT FK_CajaMovimiento_Caja;
+            DROP INDEX IX_Pago_Caja ON Pago;
+            DROP INDEX IX_CajaMovimiento_Caja ON Caja_Movimiento;
+            ALTER TABLE Pago ALTER COLUMN id_caja int NULL;
+            ALTER TABLE Caja_Movimiento ALTER COLUMN id_caja int NULL;
+            DROP TABLE Caja;
+            CREATE TABLE Caja_Cierre(id int PRIMARY KEY,fecha date UNIQUE,id_usuario int NULL,fecha_cierre datetime2,datos nvarchar(max));
+            INSERT Caja_Cierre VALUES(77,DATEADD(day,-3,CONVERT(date,SYSDATETIME())),1,SYSDATETIME(),N'{""SaldoInicial"":350,""Observaciones"":""CIERRE ANTERIOR""}');
+            CREATE TABLE Caja_Abierta(fecha date PRIMARY KEY,datos nvarchar(max));
+            INSERT Caja_Abierta VALUES(CONVERT(date,SYSDATETIME()),N'{""SaldoInicial"":125,""Observaciones"":""CAJA INICIAL""}'),
+                (DATEADD(day,-2,CONVERT(date,SYSDATETIME())),N'{""SaldoInicial"":50}');
+            INSERT Caja_Movimiento(fecha,concepto,tipo,medio,moneda,importe,cuenta,id_usuario)
+                VALUES(DATEADD(day,-2,SYSDATETIME()),N'Anterior',N'Ingreso extra',N'Efectivo','ARS',15,N'',1);");
+        MigrarCaja();
+        CD_Caja datos = new CD_Caja();
+        CierreCaja anterior = datos.Consultar(DateTime.Today.AddDays(-3));
+        Ok(anterior.Cerrada && anterior.Numero == 77 && anterior.SaldoInicial == 350 && anterior.Observaciones == "CIERRE ANTERIOR", "Conserva los datos y el numero del cierre anterior");
+        CierreCaja recuperada = datos.Consultar(DateTime.Today.AddDays(-2));
+        Ok(recuperada.Cerrada && recuperada.Usuario == "CIERRE AUTOMÁTICO" && recuperada.BalanceArs == 65, "La migracion completa dias abiertos anteriores y conserva sus movimientos");
+        Ok(Convert.ToInt32(Sql("SELECT COUNT(*) FROM sys.tables WHERE name IN('Caja_Abierta','Caja_Cierre')")) == 0, "No conserva las tablas separadas anteriores");
+        CierreCaja hoy = datos.Consultar(DateTime.Today);
+        Ok(!hoy.Cerrada && hoy.SaldoInicial == 125 && hoy.IdCaja > 0, "Conserva la apertura actual con su saldo");
+        datos.Cerrar(hoy, 1);
+        CierreCaja otra = datos.Abrir(new CierreCaja { SaldoInicial = 200 }, 1);
+        Ok(otra.IdCaja != hoy.IdCaja && datos.Listar(DateTime.Today).Count == 2, "La migracion permite otra apertura del mismo dia");
+        MigrarCaja();
+        Ok(datos.Listar(DateTime.Today).Count == 2 && datos.Consultar(DateTime.Today, otra.IdCaja).SaldoInicial == 200, "Repetir la migracion no duplica ni altera aperturas");
+    }
+    // comprueba dos cierres del mismo dia separacion de cobros y recuperacion de un turno nocturno
+    static void PruebasTurnosCaja()
+    {
+        SesionActual.IniciarSesion(new usuario { idUsuario = 1, IdRolUsuario = 1 });
+        CD_Caja datos = new CD_Caja();
+        Ok(datos.Listar(DateTime.Today).Count == 0, "Consultar no abre una caja automaticamente");
+        Rechaza(() => CD_RegistroVenta.Guardar(Solicitud(), false), "vender antes de abrir la caja");
+        CierreCaja primeraCaja = datos.Abrir(new CierreCaja { SaldoInicial = 100 }, 1);
+        Rechaza(() => datos.Abrir(new CierreCaja(), 1), "abrir dos cajas simultaneas");
+        int ventaCaja = CD_RegistroVenta.Guardar(Solicitud(), false);
+        datos.Registrar(new MovimientoCaja { IdCaja = primeraCaja.IdCaja, Concepto = "Ingreso", Tipo = "Ingreso extra", Importe = 50 }, 1);
+        datos.Registrar(new MovimientoCaja { IdCaja = primeraCaja.IdCaja, Concepto = "Gasto", Tipo = "Gasto", Importe = 10 }, 1);
+        CierreCaja cierreUno = datos.Cerrar(datos.Consultar(DateTime.Today, primeraCaja.IdCaja), 1);
+        Ok(cierreUno.Cerrada && cierreUno.BalanceArs == 540 && cierreUno.Movimientos.All(item => item.IdCaja == primeraCaja.IdCaja), "Primer cierre incluye solo su apertura");
+        Rechaza(() => CD_RegistroVenta.Guardar(Solicitud(), false), "vender entre el cierre y la siguiente apertura");
+        CierreCaja segundaCaja = datos.Abrir(new CierreCaja { SaldoInicial = 20 }, 1);
+        Ok(segundaCaja.IdCaja != primeraCaja.IdCaja && segundaCaja.Movimientos.Count == 0 && segundaCaja.SaldoInicial == 20, "La segunda apertura tiene saldo y movimientos independientes");
+        Rechaza(() => datos.GuardarCajaAbierta(primeraCaja), "guardar desde una pantalla del turno anterior");
+        Rechaza(() => datos.Registrar(new MovimientoCaja { IdCaja = primeraCaja.IdCaja, Concepto = "Viejo", Importe = 1 }, 1), "agregar desde una seleccion desactualizada");
+        int movimientoAnterior = cierreUno.Movimientos.First(item => !item.Venta.HasValue).Id;
+        Rechaza(() => datos.Anular(movimientoAnterior, "Fuera de turno", 1), "anular movimientos del turno cerrado");
+        Sql("UPDATE Medio_Pago SET recargo_medio_pago=10 WHERE id_medio_pago=1");
+        new CD_Pago().Registrar(new Pago { IdVenta = ventaCaja, IdMedioPago = 1, Cuotas = 1, ImporteBase = 100, Porcentaje = 10, Recargo = 10 }, 1);
+        datos.Registrar(new MovimientoCaja { IdCaja = segundaCaja.IdCaja, Concepto = "Ingreso", Tipo = "Ingreso extra", Importe = 30 }, 1);
+        CierreCaja desactualizada = datos.Consultar(DateTime.Today, segundaCaja.IdCaja);
+        datos.Registrar(new MovimientoCaja { IdCaja = segundaCaja.IdCaja, Concepto = "Gasto", Tipo = "Gasto", Importe = 5 }, 1);
+        Rechaza(() => datos.Cerrar(desactualizada, 1), "cerrar con movimientos sin actualizar");
+        CierreCaja cierreDos = datos.Cerrar(datos.Consultar(DateTime.Today, segundaCaja.IdCaja), 1);
+        Ok(cierreDos.BalanceArs == 145 && cierreDos.Ingresos("ARS") == 130, "Segundo cierre suma la base del pago sin recargo");
+        Ok(datos.Listar(DateTime.Today).Count == 2 && datos.Consultar(DateTime.Today, primeraCaja.IdCaja).BalanceArs == 540, "Los dos cierres se consultan sin mezclar importes");
+        Ok(Convert.ToInt32(Sql($"SELECT id_caja FROM Pago WHERE id_venta={ventaCaja} AND monto=400")) == primeraCaja.IdCaja
+            && Convert.ToInt32(Sql($"SELECT id_caja FROM Pago WHERE id_venta={ventaCaja} AND monto=100")) == segundaCaja.IdCaja, "Una venta puede cobrarse en aperturas diferentes");
+        ResumenMensualCaja mensual = new CN_Caja().ConsultarMes(DateTime.Today);
+        Ok(mensual.Totales.Single(item => item.Moneda == "ARS").Resultado == 565 && mensual.Movimientos.Count == 6, "Resumen mensual no duplica cierres ni suma saldos iniciales");
+        // dos intentos de apertura concurrentes deben producir una sola caja vigente
+        bool IntentarAbrir()
+        {
+            try { new CD_Caja().Abrir(new CierreCaja(), 1); return true; }
+            catch (InvalidOperationException) { return false; }
+        }
+        Task<bool> intentoUno = Task.Run(IntentarAbrir);
+        Task<bool> intentoDos = Task.Run(IntentarAbrir);
+        Task.WaitAll(intentoUno, intentoDos);
+        Ok(intentoUno.Result != intentoDos.Result, "Solo una apertura simultanea tiene exito");
+        CierreCaja nocturna = datos.Listar(DateTime.Today).Single(item => !item.Cerrada);
+        Sql($"UPDATE Caja SET fecha=DATEADD(day,-1,CONVERT(date,SYSDATETIME())),inicio=DATEADD(day,-1,SYSDATETIME()) WHERE id={nocturna.IdCaja}");
         datos.CerrarDiasAnteriores();
-        Ok(Convert.ToInt32(Sql("SELECT COUNT(*) FROM Caja_Cierre")) == 2, "Repetir la recuperacion no genera mas cierres");
+        CierreCaja automatica = datos.Consultar(DateTime.Today.AddDays(-1), nocturna.IdCaja);
+        Ok(automatica.Cerrada && automatica.Usuario == "CIERRE AUTOMÁTICO" && automatica.Fin == DateTime.Today, "Cierra la apertura nocturna sin tocar otros turnos");
+        Script("BaseDeDatos/CajaYComprobantes.sql");
+        Ok(datos.Listar(DateTime.Today).Count == 2 && datos.Consultar(DateTime.Today, primeraCaja.IdCaja).BalanceArs == 540, "Repetir la migracion conserva los turnos y sus datos");
     }
 
     // punto de entrada: prepara el entorno y ejecuta el flujo inicial definido en este programa
     [STAThread]
     static void Main(string[] args)
     {
+        if (args.Contains("--turnos-validaciones"))
+        {
+            try
+            {
+                CN_Caja cajaNegocio = new CN_Caja();
+                SesionActual.CerrarSesion();
+                Rechaza(() => cajaNegocio.Abrir(new CierreCaja()), "abrir caja sin sesion");
+                SesionActual.IniciarSesion(new usuario { idUsuario = 1, IdRolUsuario = 1 });
+                Rechaza(() => cajaNegocio.Abrir(new CierreCaja { SaldoInicial = -1 }), "abrir con saldo negativo antes de consultar sql");
+                Rechaza(() => cajaNegocio.Abrir(new CierreCaja { Observaciones = new string('A', 1001) }), "abrir con observaciones demasiado largas");
+                // presenta estados simulados sin cargar el formulario ni consultar la base
+                using frmCaja pantalla = new frmCaja();
+                System.Reflection.BindingFlags privados = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
+                CierreCaja turno = new CierreCaja { IdCaja = 7, Fecha = DateTime.Today };
+                typeof(frmCaja).GetField("actual", privados)!.SetValue(pantalla, turno);
+                typeof(frmCaja).GetField("cajasDelDia", privados)!.SetValue(pantalla, new List<CierreCaja> { turno });
+                System.Reflection.MethodInfo mostrar = typeof(frmCaja).GetMethod("MostrarCaja", privados)!;
+                mostrar.Invoke(pantalla, null);
+                Ok(pantalla.Controls.Find("registrar", true).Single().Enabled && !pantalla.Controls.Find("abrir", true).Single().Enabled, "Una caja abierta permite registrar y bloquea otra apertura");
+                turno.Cerrada = true;
+                turno.Numero = 7;
+                turno.Fin = DateTime.Now;
+                mostrar.Invoke(pantalla, null);
+                Ok(!pantalla.Controls.Find("registrar", true).Single().Enabled && pantalla.Controls.Find("abrir", true).Single().Enabled, "Una caja cerrada permite preparar otro turno sin admitir movimientos");
+                typeof(frmCaja).GetField("actual", privados)!.SetValue(pantalla, new CierreCaja());
+                mostrar.Invoke(pantalla, null);
+                Ok(pantalla.Controls.Find("saldo", true).Single().Enabled && !pantalla.Controls.Find("cerrar", true).Single().Enabled, "Antes de abrir se puede completar el saldo pero no cerrar");
+                return;
+            }
+            finally { SesionActual.CerrarSesion(); }
+        }
         if (args.Contains("--permisos-opciones-stock"))
         {
             try
@@ -319,6 +416,23 @@ INSERT Cliente(nombre_cliente,apellido_cliente,dni,telefono,direccion,fecha_regi
 INSERT Medio_Pago(nombre_medio_pago,recargo_medio_pago,recargo_3,recargo_6,recargo_9,recargo_12,activo,tipo_caja) VALUES(N'Efectivo',0,0,0,0,0,1,N'Efectivo'),(N'Transferencia',0,0,0,0,0,1,N'Transferencia'),(N'Tarjeta',10,20,30,40,50,1,N'Crédito');");
             Script("BaseDeDatos/ActualizarEstructuraPrana_LocalDB.sql");
             // llama a new cd_usuario()crearusuario para realizar este paso del flujo
+            if (args.Contains("--turnos-caja"))
+            {
+                PruebasTurnosCaja();
+                return;
+            }
+            if (args.Contains("--caja-unificada"))
+            {
+                PruebasCajaUnificada();
+                return;
+            }
+            if (args.Contains("--cierre-automatico"))
+            {
+                PruebasTurnosCaja();
+                return;
+            }
+            // las restantes pruebas de ventas necesitan ahora una apertura explicita
+            new CD_Caja().Abrir(new CierreCaja(), 1);
             if (args.Contains("--opciones-stock-db"))
             {
                 SesionActual.IniciarSesion(new usuario { idUsuario = 1, IdRolUsuario = 1 });
@@ -363,11 +477,7 @@ INSERT Medio_Pago(nombre_medio_pago,recargo_medio_pago,recargo_3,recargo_6,recar
                     "Dos ventas simultaneas reciben numeros consecutivos distintos");
                 return;
             }
-            if (args.Contains("--cierre-automatico"))
-            {
-                PruebasCierreAutomatico();
-                return;
-            }
+
             if (args.Contains("--comprobante-venta"))
             {
                 SesionActual.IniciarSesion(new usuario { idUsuario = 1, IdRolUsuario = 1 });

@@ -22,8 +22,8 @@ namespace Prana.Datos
             {
                 // consulta la hora de sql server para usarla en los cobros
                 DateTime ahora = CD_Caja.Ahora(conexion, transaccion);
-                // exige que la caja del dia este abierta para registrar cualquier venta
-                CD_Caja.ExigirDiaAbierto(conexion, transaccion, ahora);
+                // obtiene la apertura vigente para relacionar todos los cobros de esta venta con el mismo turno
+                int idCaja = CD_Caja.ExigirCajaAbierta(conexion, transaccion, ahora);
                 // obtiene los identificadores de modalidad de entrega y estados necesarios para esta venta
                 int modalidad = ObtenerOCrearIdPorNombre(conexion, transaccion, "Modalidad_Entrega", "id_modalidad_entrega", "nombre_modalidad_entrega", venta.ModalidadEntrega);
                 string nombreEstadoVenta;
@@ -97,7 +97,9 @@ namespace Prana.Datos
                 foreach (Pago item in venta.Pagos)
                 {
                     // el select toma el tipo de caja del medio de pago y lo incluye en el registro
-                    using SqlCommand pago = new("INSERT INTO Pago (id_venta,id_usuario,id_medio_pago,cuotas,monto,monto_final,fecha_pago,tipo_caja,cuenta_destino) SELECT @venta,@usuario,@medio,@cuotas,@monto,@final,@fecha,tipo_caja,@cuenta FROM Medio_Pago WHERE id_medio_pago=@medio", conexion, transaccion);
+                    // todos los medios del pago inicial quedan asociados a la misma apertura protegida por la transaccion
+                    using SqlCommand pago = new("INSERT INTO Pago (id_venta,id_usuario,id_medio_pago,cuotas,monto,monto_final,fecha_pago,tipo_caja,cuenta_destino,id_caja) SELECT @venta,@usuario,@medio,@cuotas,@monto,@final,@fecha,tipo_caja,@cuenta,@caja FROM Medio_Pago WHERE id_medio_pago=@medio", conexion, transaccion);
+                    pago.Parameters.AddWithValue("@caja", idCaja);
                     pago.Parameters.AddWithValue("@cuenta", item.CuentaDestino);
                     pago.Parameters.AddWithValue("@venta", idVenta);
                     pago.Parameters.AddWithValue("@usuario", venta.IdUsuario);

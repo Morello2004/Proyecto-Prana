@@ -2,7 +2,11 @@
 // agrupa los datos y operaciones de cierre caja
 public class CierreCaja
 {
-    // conserva numero como int para intercambiar este dato entre las capas
+    // identifica la apertura tanto abierta como cerrada sin depender de su fecha ni del numero visible del cierre
+    public int IdCaja { get; set; }
+    // refleja el estado de la fila de caja y permite distinguirlo del numero del cierre
+    public bool Cerrada { get; set; }
+    // presenta el identificador de apertura como numero de cierre solo cuando ese turno esta cerrado
     public int Numero
     {
         get; set;
@@ -63,4 +67,15 @@ public class CierreCaja
     public decimal BalanceArs => SaldoInicial + Ingresos("ARS") - Gastos("ARS");
     // dato cafe ars de tipo decimal se obtiene al consultar la propiedad mediante la expresion siguiente
     public decimal CafeArs => Movimientos.Where(movimiento => movimiento.Tipo == "Café" && movimiento.Moneda == "ARS").Sum(m => m.Importe);
+
+    // describe el turno en el selector de cajas de una misma fecha
+    public override string ToString()
+    {
+        string estado = "Abierta";
+        if (Cerrada)
+        {
+            estado = "Cerrada";
+        }
+        return $"Caja N.º {IdCaja} · {Inicio:HH:mm} · {estado}";
+    }
 }

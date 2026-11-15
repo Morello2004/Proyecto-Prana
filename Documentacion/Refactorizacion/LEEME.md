@@ -56,3 +56,7 @@ La compilacion y las pruebas especificas de presentacion y recargos pasaron. El 
 ## Actualización de la explicación técnica
 
 La edición del 12 de noviembre de 2026 incorpora la numeración transaccional de ventas, las quince acciones del historial, su recorrido por negocio y datos, las diferencias de transacción y el cálculo de estados de pago, entrega y cliente. Medios de pago explica la clasificación interna sin mostrar el campo Tipo en caja. El archivo RTF se regeneró y su texto se comparó con el Markdown completo.
+
+## Explicación completa con el formato de exposición
+
+[Funcionamiento del código completo](Funcionamiento_Codigo_Completo.md) conserva el texto aportado por el usuario sobre inicio, login, navegación, panel y caja y completa las demás pantallas con sus ventanas auxiliares. Mantiene títulos por pantalla, subtítulos por operación y explicaciones en párrafos. [Abrir en WordPad](Funcionamiento_Codigo_Completo_WordPad.rtf). Verificación: verificacion_funcionamiento_codigo_completo.json.

@@ -7,14 +7,15 @@ namespace Prana.Datos
     internal static class GestionVentaSql
     {
         // resuelve comando con los datos recibidos y entrega el resultado al codigo que lo llama
-        internal static SqlCommand Comando(SqlConnection cn, SqlTransaction tx, string sql, params (string nombre, object valor)[] parametros)
+        internal static SqlCommand Comando(SqlConnection cn, SqlTransaction tx, string sql, params (string nombre, object? valor)[] parametros)
         {
             // prepara la consulta y su conexion los valores variables se envian mediante parametros
             SqlCommand comando = new SqlCommand(sql, cn, tx);
             // procesa cada p de parametros sin cambiar el orden de la coleccion
-            foreach ((string nombre, object valor) p in parametros)
+            foreach ((string nombre, object? valor) p in parametros)
             {
-                comando.Parameters.AddWithValue(p.nombre, p.valor);
+                // sql necesita dbnull para valores opcionales como destino de cierre automatico o filtro de caja
+                comando.Parameters.AddWithValue(p.nombre, p.valor ?? DBNull.Value);
             }
 
             return comando;

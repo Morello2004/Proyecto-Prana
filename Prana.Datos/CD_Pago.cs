@@ -60,7 +60,8 @@ namespace Prana.Datos
             try
             {
                 DateTime ahora = CD_Caja.Ahora(conexion, transaccion);
-                CD_Caja.ExigirDiaAbierto(conexion, transaccion, ahora);
+                // un cobro posterior puede pertenecer a otra apertura distinta de la que recibio el pago inicial
+                int idCaja = CD_Caja.ExigirCajaAbierta(conexion, transaccion, ahora);
                 ValidarVenta(conexion, transaccion, pago.IdVenta);
                 using SqlCommand saldoCmd = Comando(conexion, transaccion, "SELECT saldo FROM (" + CD_Venta.SaldosSql + ") v WHERE id_venta=@venta", ("@venta", pago.IdVenta));
                 decimal saldo = Convert.ToDecimal(saldoCmd.ExecuteScalar());
@@ -100,9 +101,9 @@ namespace Prana.Datos
 
                 // agrega solo el nuevo recargo: total y monto_final permanecen comparables
                 int estado = ObtenerOCrearIdPorNombre(conexion, transaccion, "Estado_Venta", "id_estado_venta", "nombre_estado_venta", nombreEstadoVenta);
-                using SqlCommand insertar = Comando(conexion, transaccion, @"INSERT INTO Pago(id_venta,id_usuario,id_medio_pago,cuotas,monto,monto_final,fecha_pago,tipo_caja,cuenta_destino)
-                    SELECT @venta,@usuario,@medio,@cuotas,@base,@final,@fecha,tipo_caja,@cuenta FROM Medio_Pago WHERE id_medio_pago=@medio;
-                    UPDATE Venta SET total=total+@recargo,id_estado_venta=@estado WHERE id_venta=@venta;", ("@venta", pago.IdVenta), ("@usuario", usuario), ("@medio", pago.IdMedioPago), ("@cuotas", pago.Cuotas), ("@base", pago.ImporteBase), ("@final", pago.ImporteBase + pago.Recargo), ("@recargo", pago.Recargo), ("@estado", estado), ("@fecha", ahora), ("@cuenta", pago.CuentaDestino));
+                using SqlCommand insertar = Comando(conexion, transaccion, @"INSERT INTO Pago(id_venta,id_usuario,id_medio_pago,cuotas,monto,monto_final,fecha_pago,tipo_caja,cuenta_destino,id_caja)
+                    SELECT @venta,@usuario,@medio,@cuotas,@base,@final,@fecha,tipo_caja,@cuenta,@caja FROM Medio_Pago WHERE id_medio_pago=@medio;
+                    UPDATE Venta SET total=total+@recargo,id_estado_venta=@estado WHERE id_venta=@venta;", ("@caja", idCaja), ("@venta", pago.IdVenta), ("@usuario", usuario), ("@medio", pago.IdMedioPago), ("@cuotas", pago.Cuotas), ("@base", pago.ImporteBase), ("@final", pago.ImporteBase + pago.Recargo), ("@recargo", pago.Recargo), ("@estado", estado), ("@fecha", ahora), ("@cuenta", pago.CuentaDestino));
                 insertar.ExecuteNonQuery();
                 RegistrarActividad(conexion, transaccion, usuario, "REGISTRAR_PAGO", pago.IdVenta, $"Base: {pago.ImporteBase:N2}; recargo: {pago.Recargo:N2}");
                 // confirma todos los cambios de esta transaccion como una unidad

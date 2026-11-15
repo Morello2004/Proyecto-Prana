@@ -7,13 +7,35 @@ public class CN_Caja
 {
     // conserva datos entre las operaciones de esta clase
     private readonly CD_Caja datos = new();
-    // conserva los datos editables de hoy para poder recuperarlos y cerrar automaticamente el dia
-    public void GuardarCajaAbierta(CierreCaja caja)
+    // abrir es una accion explicita y toma la hora real del servidor sin copiar saldos anteriores
+    public CierreCaja Abrir(CierreCaja caja)
+    {
+        if (SesionActual.Usuario == null)
+        {
+            throw new InvalidOperationException("Inicie sesión para abrir una caja.");
+        }
+        ValidarDatosIniciales(caja);
+        return datos.Abrir(caja, SesionActual.Usuario.idUsuario);
+    }
+
+    // mantiene la misma validacion para la apertura y las correcciones posteriores
+    private static void ValidarDatosIniciales(CierreCaja caja)
     {
         if (caja.SaldoInicial < 0 || caja.SaldoInicialUsd < 0 || caja.Observaciones.Length > 1000)
         {
             throw new ArgumentException("Revise los saldos iniciales y las observaciones de hasta 1000 caracteres.");
         }
+    }
+
+    // devuelve las aperturas de una fecha para seleccionar un turno concreto
+    public List<CierreCaja> Listar(DateTime fecha)
+    {
+        return datos.Listar(fecha);
+    }
+    // conserva los datos del turno abierto sin modificar otras cajas de la misma fecha
+    public void GuardarCajaAbierta(CierreCaja caja)
+    {
+        ValidarDatosIniciales(caja);
         datos.GuardarCajaAbierta(caja);
     }
 
@@ -22,10 +44,10 @@ public class CN_Caja
     {
         return datos.CerrarDiasAnteriores();
     }
-    // consulta el cierre de la fecha indicada
-    public CierreCaja Consultar(DateTime fecha)
+    // consulta el turno elegido o la ultima apertura de la fecha cuando no se indica identificador
+    public CierreCaja Consultar(DateTime fecha, int? idCaja = null)
     {
-        return datos.Consultar(fecha);
+        return datos.Consultar(fecha, idCaja);
     }
 
     // prepara el resumen de movimientos del mes

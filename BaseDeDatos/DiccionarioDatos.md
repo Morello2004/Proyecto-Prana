@@ -1,4 +1,4 @@
-# Diccionario de datos — Prana Electrónica
+﻿# Diccionario de datos — Prana Electrónica
 
 **Base de datos:** `PranaElectronica`  
 **Esquema:** `dbo`  
@@ -290,16 +290,22 @@ Datos complementarios de logística y condición de pago de una venta.
 
 ## Tablas de caja y auditoría
 
-### `Caja_Cierre`
-Cierre de caja por fecha; `datos` almacena información estructurada en JSON.
+### `Caja`
+Una fila por apertura, conservada al pasar de Abierta a Cerrada. Puede haber varios cierres por fecha y una sola caja abierta a la vez.
 
-| N.º | Columna | Tipo | Nulo | Clave | Predeterminado | Descripción |
-|---:|---|---|:---:|---|---|---|
-| 1 | `id` | `int` | No | PK, IDENTITY | — | Identificador del cierre. |
-| 2 | `fecha` | `date` | No | — | — | Día al que corresponde el cierre. La columna tiene restricción de unicidad en el script. |
-| 3 | `id_usuario` | `int` | No | FK → `Usuario.id_usuario` | — | Usuario que realiza el cierre. |
-| 4 | `fecha_cierre` | `datetime2(7)` | No | — | `(sysdatetime())` | Fecha y hora de registro del cierre. |
-| 5 | `datos` | `nvarchar(MAX)` | No | — | — | Resumen/detalle del cierre serializado como JSON; el script valida que el contenido sea JSON. |
+| Columna | Tipo | Nulo | Regla o significado |
+|---|---|:---:|---|
+| id | int | No | Identidad y clave primaria; se conserva al cerrar |
+| fecha | date | No | Fecha de la apertura; puede repetirse en varios turnos |
+| estado | nvarchar(8) | No | Abierta o Cerrada |
+| id_usuario | int | Sí | FK a Usuario; responsable del cierre manual |
+| fecha_cierre | datetime2 | Sí | Momento de registro del cierre |
+| datos | nvarchar(max) | No | JSON válido con los datos de la caja |
+| inicio | datetime2 | No | Hora real de apertura |
+| fin | datetime2 | Sí | Fin del turno; nulo mientras está abierto |
+| id_usuario_apertura | int | Sí | Usuario que abrió; puede faltar en datos históricos |
+
+Una caja abierta no tiene responsable ni fecha de cierre. La cerrada tiene fecha de registro y admite responsable nulo para cierres automáticos. Caja_Abierta y Caja_Cierre solo se consultan durante la migración de versiones anteriores y luego se retiran tras verificar la copia.
 
 ### `Caja_Movimiento`
 Movimientos de caja, incluidos gastos e ingresos no derivados directamente de pagos.
@@ -356,10 +362,14 @@ Tabla auxiliar que SQL Server puede crear para almacenar diagramas de base de da
 - `Venta_Entrega` → `Venta` (relación uno a uno por su clave primaria compartida).
 - `Usuario` → `Rol`.
 - `Cliente` → `Localidad` (relación opcional, porque `id_localidad` acepta nulos).
-- `Caja_Cierre`, `Caja_Movimiento` y `LogActividad` → `Usuario`.
+- `Caja`, `Caja_Movimiento` y `LogActividad` → `Usuario`.
 
 ## Observaciones sobre el alcance
 
 1. El diccionario refleja las columnas y tipos copiados desde la consulta de metadatos. Los scripts de actualización pueden haber agregado o modificado columnas entre versiones; para documentar otra instalación, volver a ejecutar la consulta sobre esa base.
 2. Se describen como `sysdiagrams` los metadatos de diagramas, no como datos de negocio.
 3. La consulta recibida no incluye todas las restricciones (por ejemplo, índices únicos y algunas restricciones `CHECK`). Se mencionan únicamente las reglas conocidas a partir del esquema y scripts disponibles; este documento no sustituye un inventario completo de restricciones.
+
+## Relaciones de cajas por turno
+
+Pago.id_caja y Caja_Movimiento.id_caja son claves foráneas obligatorias a Caja.id. Caja.fecha dejó de ser única. UX_Caja_UnicaAbierta permite una sola fila con estado Abierta. CajasPorTurno.sql asigna las operaciones históricas por fecha antes de habilitar varios turnos diarios y rechaza relaciones ambiguas.

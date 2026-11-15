@@ -64,23 +64,65 @@ IF COL_LENGTH(N'dbo.Pago',N'cuenta_destino') IS NULL
 
 GO
 
--- conserva el resumen del dia cerrado para impedir nuevas operaciones sobre esa fecha y permitir su consulta
-IF OBJECT_ID(N'dbo.Caja_Cierre',N'U') IS NULL
-    
-    CREATE TABLE dbo.Caja_Cierre (
-        id int IDENTITY PRIMARY KEY, fecha date NOT NULL UNIQUE,
-        id_usuario int NOT NULL REFERENCES dbo.Usuario(id_usuario),
-        fecha_cierre datetime2 NOT NULL DEFAULT(SYSDATETIME()), datos nvarchar(max) NOT NULL CHECK(ISJSON(datos)=1));
+-- una fila representa todo el dia primero abierta y luego cerrada sin eliminarla al cerrar
+-- fecha unica mantiene una sola caja diaria estado gobierna las operaciones y datos conserva el objeto como json
+-- id_usuario y fecha_cierre se completan al cerrar el responsable queda nulo en cierres automaticos
+IF OBJECT_ID(N'dbo.Caja',N'U') IS NULL
+    CREATE TABLE dbo.Caja (
+        id int IDENTITY PRIMARY KEY,
+        fecha date NOT NULL CONSTRAINT UQ_Caja_Fecha UNIQUE,
+        estado nvarchar(8) NOT NULL CONSTRAINT DF_Caja_Estado DEFAULT(N'Abierta')
+            CONSTRAINT CK_Caja_Estado CHECK(estado IN(N'Abierta',N'Cerrada')),
+        id_usuario int NULL REFERENCES dbo.Usuario(id_usuario),
+        fecha_cierre datetime2 NULL,
+        datos nvarchar(max) NOT NULL CONSTRAINT CK_Caja_Datos CHECK(ISJSON(datos)=1),
+        CONSTRAINT CK_Caja_Cierre CHECK(
+            (estado=N'Abierta' AND fecha_cierre IS NULL AND id_usuario IS NULL)
+            OR (estado=N'Cerrada' AND fecha_cierre IS NOT NULL)));
 
--- un cierre automatico no se atribuye a un empleado
-IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=OBJECT_ID(N'dbo.Caja_Cierre') AND name=N'id_usuario' AND is_nullable=0)
-    ALTER TABLE dbo.Caja_Cierre ALTER COLUMN id_usuario int NULL;
+GO
 
--- conserva los saldos y observaciones de una caja todavia abierta sin confundirlos con un cierre
-IF OBJECT_ID(N'dbo.Caja_Abierta',N'U') IS NULL
-    CREATE TABLE dbo.Caja_Abierta (
-        fecha date NOT NULL PRIMARY KEY,
-        datos nvarchar(max) NOT NULL CHECK(ISJSON(datos)=1));
+-- la migracion se ejecuta en la transaccion del inicializador conserva numeros fechas y json de cierres anteriores
+-- el sql dinamico permite iniciar bases nuevas donde las tablas antiguas nunca existieron
+IF OBJECT_ID(N'dbo.Caja_Cierre',N'U') IS NOT NULL
+    EXEC(N'
+        IF EXISTS(SELECT 1 FROM dbo.Caja_Cierre a JOIN dbo.Caja c ON c.fecha=a.fecha
+            WHERE c.id<>a.id OR c.estado<>N''Cerrada'' OR c.datos COLLATE Latin1_General_100_BIN2<>a.datos COLLATE Latin1_General_100_BIN2)
+            THROW 50020,N''Existen cajas incompatibles con los cierres anteriores. No se modificaron sus datos.'',1;
+        IF EXISTS(SELECT 1 FROM dbo.Caja_Cierre a JOIN dbo.Caja c ON c.id=a.id WHERE c.fecha<>a.fecha)
+            THROW 50021,N''Un numero de caja coincide con otro cierre anterior. Revise la migracion.'',1;
+        BEGIN TRY
+            SET IDENTITY_INSERT dbo.Caja ON;
+            INSERT dbo.Caja(id,fecha,estado,id_usuario,fecha_cierre,datos)
+                SELECT a.id,a.fecha,N''Cerrada'',a.id_usuario,a.fecha_cierre,a.datos
+                FROM dbo.Caja_Cierre a WHERE NOT EXISTS(SELECT 1 FROM dbo.Caja c WHERE c.fecha=a.fecha);
+            SET IDENTITY_INSERT dbo.Caja OFF;
+        END TRY
+        BEGIN CATCH
+            SET IDENTITY_INSERT dbo.Caja OFF;
+            THROW;
+        END CATCH;
+        IF EXISTS(SELECT 1 FROM dbo.Caja_Cierre a WHERE NOT EXISTS(
+            SELECT 1 FROM dbo.Caja c WHERE c.fecha=a.fecha AND c.id=a.id AND c.estado=N''Cerrada''
+                AND c.datos COLLATE Latin1_General_100_BIN2=a.datos COLLATE Latin1_General_100_BIN2))
+            THROW 50022,N''No se pudieron conservar todos los cierres anteriores.'',1;');
+
+-- copia los datos de dias abiertos solo cuando no hay un cierre definitivo para esa misma fecha
+IF OBJECT_ID(N'dbo.Caja_Abierta',N'U') IS NOT NULL
+    EXEC(N'
+        INSERT dbo.Caja(fecha,estado,datos)
+            SELECT a.fecha,N''Abierta'',a.datos FROM dbo.Caja_Abierta a
+            WHERE NOT EXISTS(SELECT 1 FROM dbo.Caja c WHERE c.fecha=a.fecha);
+        IF EXISTS(SELECT 1 FROM dbo.Caja_Abierta a WHERE NOT EXISTS(
+            SELECT 1 FROM dbo.Caja c WHERE c.fecha=a.fecha AND (c.estado=N''Cerrada''
+                OR c.datos COLLATE Latin1_General_100_BIN2=a.datos COLLATE Latin1_General_100_BIN2)))
+            THROW 50023,N''No se pudieron conservar todas las cajas abiertas.'',1;');
+
+-- retira las estructuras anteriores despues de verificar sus datos la misma transaccion revierte todo si hay un error
+IF OBJECT_ID(N'dbo.Caja_Abierta',N'U') IS NOT NULL
+    DROP TABLE dbo.Caja_Abierta;
+IF OBJECT_ID(N'dbo.Caja_Cierre',N'U') IS NOT NULL
+    DROP TABLE dbo.Caja_Cierre;
 
 GO
 -- los comprobantes se construyen desde las tablas de la venta retira la copia json de instalaciones anteriores; no elimina ventas ni pagos comprueba el estado actual antes de aplicar el bloque; evita repetir cambios o valida un requisito

@@ -2,6 +2,8 @@
 // agrupa los datos y operaciones de movimiento caja
 public class MovimientoCaja
 {
+    // relaciona el movimiento con su apertura para no mezclar turnos de la misma fecha
+    public int IdCaja { get; set; }
     // conserva id como int para intercambiar este dato entre las capas
     public int Id
     {

@@ -1,4 +1,4 @@
-using Prana.Entidades;
+﻿using Prana.Entidades;
 using Prana.negocio;
 using System;
 using System.Collections.Generic;
@@ -12,80 +12,75 @@ using System.Windows.Forms;
 
 namespace Prana.Presentacion
 {
+    // agrupa los datos y operaciones de frm clientes
     public partial class frmClientes : Form
     {
+        // conserva seleccionando cliente entre las operaciones de esta clase
         private bool seleccionandoCliente;
-
+        // prepara frm clientes antes de que se utilice la instancia
         public frmClientes()
         {
             InitializeComponent();
-            ConfigurarDistribucion();
-            Localidad.Text="Ciudad (opcional)";
-            colLocalidad.HeaderText="Ciudad";
-
-            // evita que se creen columnas adicionales automaticamente
+            // muestra el formato requerido y limita tambien la edicion del telefono en el listado
+            txtTelefonoCliente.PlaceholderText = "Ej.: 2323516501";
+            ColTelefono.MaxInputLength = 10;
+            ColTelefono.ToolTipText = "Código de área y número: 10 dígitos juntos, sin 0, 15, 54 ni 549";
+            Localidad.Text = "Ciudad (opcional)";
+            colLocalidad.HeaderText = "Ciudad";
+            // evita que se creen columnas adicionales automaticamente dgv_listadoclientesautogeneratecolumns: decide si el enlace de datos crea columnas automaticamente; desactivarlo conserva las columnas definidas
             dgv_listadoClientes.AutoGenerateColumns = false;
-            txtBuscarCliente.MaxLength = 200;
-            // El saldo llega desde negocio y nunca se edita como dato del cliente.
+            cboBuscarCliente.MaxLength = 201;
+            cboBuscarCliente.DropDownStyle = ComboBoxStyle.DropDown;
+            cboBuscarCliente.AutoCompleteMode = AutoCompleteMode.None;
+            cboBuscarCliente.AutoCompleteSource = AutoCompleteSource.None;
+            // el saldo llega desde negocio y nunca se edita como dato del cliente
             colDeudaPendiente.DisplayIndex = 3;
             dgv_listadoClientes.Columns["colEstadoCuenta"]!.DisplayIndex = 4;
             dgv_listadoClientes.Columns["colVerDeuda"]!.DisplayIndex = 5;
-
-            sugerenciasClientes.Font = txtBuscarCliente.Font;
-            sugerenciasClientes.Visible = false;
-            sugerenciasClientes.IntegralHeight = false;
-            sugerenciasClientes.HorizontalScrollbar = true;
-            txtBuscarCliente.PlaceholderText = "Buscar por nombre completo, DNI o teléfono";
-
         }
 
+        // limita el ingreso segun el tipo sin recortar un documento ya escrito actualiza los controles relacionados cuando cambia la seleccion puede dispararse tambien al cargar los datos
+        private void cboTipoDocumento_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            if (cboTipoDocumento.Text == "CUIT")
+            {
+                txtDocumentoCliente.MaxLength = 11;
+            }
+            else
+            {
+                txtDocumentoCliente.MaxLength = 8;
+            }
+        }
+
+        // ejecuta la accion de label10 cuando el usuario pulsa el control
         private void label10_Click(object sender, EventArgs e)
         {
-
         }
 
+        // ejecuta la accion de label2 cuando el usuario pulsa el control
         private void label2_Click(object sender, EventArgs e)
         {
-
         }
 
-        //viejo eliminar
+        // viejo eliminar atiende la pulsacion de btnagregarvariante y ejecuta la accion asociada el evento no significa que la operacion ya se haya guardado
         private void btnAgregarVariante_Click(object sender, EventArgs e)
         {
             CN_Cliente negocioCliente = new CN_Cliente();
-
         }
 
+        // ejecuta la accion de icon button1 cuando el usuario pulsa el control
         private void iconButton1_Click(object sender, EventArgs e)
         {
-
         }
 
+        // ejecuta la accion de btn crear cliente cuando el usuario pulsa el control
         private void btn_CrearCliente_Click(object sender, EventArgs e)
         {
             CN_Cliente negocioCliente = new CN_Cliente();
-
             try
             {
                 // crea el cliente con los datos ingresados
-                Cliente nuevoCliente = new Cliente
-                {
-                    Nombre = textBoxNombre.Text.Trim(),
-                    Apellido = textBoxApellido.Text.Trim(),
-                    DNI = textBoxDNI.Text.Trim(),
-                    Telefono = textBoxTelefono.Text.Trim(),
-                    Direccion = textBoxDireccion.Text.Trim(),
-                    CodigoPostal = txtCodigoPostal.Text.Trim(),
-
-                    Localidad = new Localidad
-                    {
-                        NombreLocalidad = textBoxLocalidad.Text.Trim()
-                    },
-
-                    FechaRegistro = DateTime.Now,
-                    SaldoFavor = 0
-                };
-
+                Cliente nuevoCliente = ObtenerClienteDelFormulario();
                 // intenta registrar el cliente
                 if (!negocioCliente.NuevoCliente(nuevoCliente))
                 {
@@ -95,45 +90,143 @@ namespace Prana.Presentacion
 
                 // informa que el cliente fue creado
                 MessageBox.Show("Cliente creado correctamente");
-
-                // limpia los datos ingresados
-                textBoxNombre.Clear();
-                textBoxApellido.Clear();
-                textBoxDNI.Clear();
-                textBoxTelefono.Clear();
-                textBoxDireccion.Clear();
-                textBoxLocalidad.Clear();
+                // limpia los datos ingresados vacia la coleccion o campo indicado revisar si es una carga temporal antes de reutilizarlo
+                txtNombreCliente.Clear();
+                txtApellidoCliente.Clear();
+                txtDocumentoCliente.Clear();
+                txtTelefonoCliente.Clear();
+                txtDireccionCliente.Clear();
+                txtLocalidadCliente.Clear();
                 txtCodigoPostal.Clear();
-
                 // actualiza el listado
                 CargarClientes();
             }
-            catch (Exception ex)
+            // atiende el error de esta operacion antes de informar o propagar el problema
+            catch (Exception error)
             {
                 // muestra el error enviado por la capa de negocio
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(error.Message);
             }
         }
 
-        // carga los clientes y coloca modificar en los botones
-        private void CargarClientes()
+        // carga el listado aplicando el filtro seleccionado en el disenador
+        private void CargarClientes(string? busqueda = null)
         {
-            // crea el objeto de la capa de negocio
             CN_Cliente negocioCliente = new CN_Cliente();
-
-            // elimina los datos anteriores del grid
             dgv_listadoClientes.DataSource = null;
-
-            // carga todos los clientes desde la base de datos
-            dgv_listadoClientes.DataSource = negocioCliente.buscarCliente(null);
-
-            // coloca modificar en el boton de cada fila
+            dgv_listadoClientes.DataSource = negocioCliente.buscarCliente(busqueda, Math.Max(cboFiltroEstadoCliente.SelectedIndex, 0));
+            // procesa cada fila de dgv listado clientesrows sin cambiar el orden de la coleccion
             foreach (DataGridViewRow fila in dgv_listadoClientes.Rows)
             {
+                // filacells["colaccion"]value: valor actual del control numerico o de fecha
                 fila.Cells["colAccion"].Value = "Modificar cliente";
+            }
+
+            ActualizarBotonEstadoCliente();
+        }
+
+        // resuelve actualizar boton estado cliente con los datos recibidos y entrega el resultado al codigo que lo llama
+        private void ActualizarBotonEstadoCliente()
+        {
+            Cliente? cliente = dgv_listadoClientes.CurrentRow?.DataBoundItem as Cliente;
+            bool puedeDarDeBaja = SesionActual.Usuario != null && Permisos.TienePermiso(Permisos.DarDeBajaClientes);
+            btnCambiarEstadoCliente.Enabled = cliente != null && (cliente.Eliminado || !cliente.Activo || puedeDarDeBaja);
+            if (cliente == null)
+            {
+                btnCambiarEstadoCliente.Text = "Cambiar estado";
+            }
+            else
+            {
+                if (cliente.Eliminado)
+                {
+                    btnCambiarEstadoCliente.Text = "Restaurar";
+                }
+                else
+                {
+                    if (cliente.Activo)
+                    {
+                        btnCambiarEstadoCliente.Text = "Dar de baja";
+                    }
+                    else
+                    {
+                        btnCambiarEstadoCliente.Text = "Activar";
+                    }
+                }
             }
         }
 
+        // actualiza los controles relacionados cuando cambia la seleccion puede dispararse tambien al cargar los datos
+        private void cboFiltroEstadoCliente_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            try
+            {
+                CargarClientes(cboBuscarCliente.Text.Trim());
+            }
+            // atiende el error de esta operacion antes de informar o propagar el problema
+            catch (Exception error)
+            {
+                MessageBox.Show(error.Message, "Consulta de clientes", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // actualiza los controles relacionados cuando cambia la seleccion puede dispararse tambien al cargar los datos
+        private void dgv_listadoClientes_SelectionChanged(object? sender, EventArgs e) => ActualizarBotonEstadoCliente();
+        // ejecuta la accion de btn cambiar estado cliente cuando el usuario pulsa el control
+        private void btnCambiarEstadoCliente_Click(object? sender, EventArgs e)
+        {
+            if (dgv_listadoClientes.CurrentRow?.DataBoundItem is not Cliente cliente)
+            {
+                return;
+            }
+
+            string accion;
+            if (cliente.Eliminado)
+            {
+                accion = "restaurar";
+            }
+            else
+            {
+                if (!cliente.Activo)
+                {
+                    accion = "activar";
+                }
+                else
+                {
+                    accion = "dar de baja";
+                }
+            }
+            if (MessageBox.Show(this, $"¿Confirma {accion} a {cliente.Nombre} {cliente.Apellido}?", "Estado del cliente", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            {
+                return;
+            }
+
+            try
+            {
+                CN_Cliente negocioCliente = new CN_Cliente();
+                if (cliente.Eliminado)
+                {
+                    negocioCliente.RestaurarCliente(cliente.IdCliente);
+                }
+                else 
+                    if (!cliente.Activo)
+                    {
+                        negocioCliente.ActivarCliente(cliente.IdCliente);
+                    }
+                    else
+                    {
+                        negocioCliente.DarDeBajaCliente(cliente.IdCliente);
+                    }
+
+                CargarClientes(cboBuscarCliente.Text.Trim());
+            }
+            // atiende el error de esta operacion antes de informar o propagar el problema
+            catch (Exception error)
+            {
+                MessageBox.Show(error.Message, "Estado del cliente", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // identifica la fila y la columna pulsadas antes de ejecutar la accion de la celda
         private void dgv_listadoClientes_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             // evita ejecutar el codigo al presionar los encabezados
@@ -144,11 +237,13 @@ namespace Prana.Presentacion
 
             if (dgv_listadoClientes.Columns[e.ColumnIndex].Name == "colVerDeuda")
             {
+                // comprueba que el clic corresponda a una fila de datos y no al encabezado
                 if (dgv_listadoClientes.Rows[e.RowIndex].DataBoundItem is Cliente cliente)
                 {
-                    using var detalle = new frmDeudaCliente(cliente);
+                    using frmDeudaCliente detalle = new frmDeudaCliente(cliente);
                     detalle.ShowDialog(this);
                 }
+
                 return;
             }
 
@@ -160,10 +255,8 @@ namespace Prana.Presentacion
 
             // obtiene la fila donde se presiono el boton
             DataGridViewRow filaSeleccionada = dgv_listadoClientes.Rows[e.RowIndex];
-
             // obtiene el cliente relacionado con la fila
             Cliente? clienteSeleccionado = filaSeleccionada.DataBoundItem as Cliente;
-
             // comprueba que la fila tenga un cliente
             if (clienteSeleccionado == null)
             {
@@ -171,30 +264,39 @@ namespace Prana.Presentacion
                 return;
             }
 
+            if (clienteSeleccionado.Eliminado)
+            {
+                MessageBox.Show("Restaure el cliente antes de modificar sus datos.");
+                return;
+            }
+
             // obtiene el texto actual del boton
             string textoBoton = filaSeleccionada.Cells["colAccion"].Value?.ToString() ?? "Modificar cliente";
-
             // comprueba si se debe habilitar la modificacion
             if (textoBoton == "Modificar cliente")
             {
-                // habilita solamente los datos que pueden modificarse
+                // habilita solamente los datos que pueden modificarse filaseleccionadacells["colnombre"]readonly: impide editar el contenido desde este control sin impedir su consulta
                 filaSeleccionada.Cells["colNombre"].ReadOnly = false;
+                // filaseleccionadacells["colapellido"]readonly: impide editar el contenido desde este control sin impedir su consulta
                 filaSeleccionada.Cells["colApellido"].ReadOnly = false;
+                // filaseleccionadacells["coldni"]readonly: impide editar el contenido desde este control sin impedir su consulta
                 filaSeleccionada.Cells["colDNI"].ReadOnly = false;
+                // filaseleccionadacells["coltipodocumento"]readonly: impide editar el contenido desde este control sin impedir su consulta
+                filaSeleccionada.Cells["colTipoDocumento"].ReadOnly = false;
+                // filaseleccionadacells["coltelefono"]readonly: impide editar el contenido desde este control sin impedir su consulta
                 filaSeleccionada.Cells["ColTelefono"].ReadOnly = false;
+                // filaseleccionadacells["coldireccion"]readonly: impide editar el contenido desde este control sin impedir su consulta
                 filaSeleccionada.Cells["colDireccion"].ReadOnly = false;
+                // filaseleccionadacells["collocalidad"]readonly: impide editar el contenido desde este control sin impedir su consulta
                 filaSeleccionada.Cells["colLocalidad"].ReadOnly = false;
+                // filaseleccionadacells["colcodigopostal"]readonly: impide editar el contenido desde este control sin impedir su consulta
                 filaSeleccionada.Cells["colCodigoPostal"].ReadOnly = false;
-
-                // cambia el texto del boton de esta fila
+                // cambia el texto del boton de esta fila filaseleccionadacells["colaccion"]value: valor actual del control numerico o de fecha
                 filaSeleccionada.Cells["colAccion"].Value = "Guardar cambios";
-
                 // coloca el cursor en el nombre
                 dgv_listadoClientes.CurrentCell = filaSeleccionada.Cells["colNombre"];
-
                 // permite comenzar a escribir
                 dgv_listadoClientes.BeginEdit(true);
-
                 return;
             }
 
@@ -202,27 +304,23 @@ namespace Prana.Presentacion
             {
                 // confirma el ultimo valor escrito
                 dgv_listadoClientes.EndEdit();
-
                 // quita el foco para terminar cualquier edicion pendiente
                 dgv_listadoClientes.CurrentCell = null;
-
                 // copia los datos de la fila al cliente
                 clienteSeleccionado.Nombre = filaSeleccionada.Cells["colNombre"].Value?.ToString()?.Trim() ?? string.Empty;
                 clienteSeleccionado.Apellido = filaSeleccionada.Cells["colApellido"].Value?.ToString()?.Trim() ?? string.Empty;
+                clienteSeleccionado.TipoDocumento = filaSeleccionada.Cells["colTipoDocumento"].Value?.ToString() ?? "";
                 clienteSeleccionado.DNI = filaSeleccionada.Cells["colDNI"].Value?.ToString()?.Trim() ?? string.Empty;
                 clienteSeleccionado.Telefono = filaSeleccionada.Cells["ColTelefono"].Value?.ToString()?.Trim() ?? string.Empty;
                 clienteSeleccionado.Direccion = filaSeleccionada.Cells["colDireccion"].Value?.ToString()?.Trim() ?? string.Empty;
-
                 clienteSeleccionado.CodigoPostal = filaSeleccionada.Cells["colCodigoPostal"].Value?.ToString()?.Trim() ?? string.Empty;
                 // guarda la localidad escrita en la fila
                 clienteSeleccionado.Localidad = new Localidad
                 {
                     NombreLocalidad = filaSeleccionada.Cells["colLocalidad"].Value?.ToString()?.Trim() ?? string.Empty
                 };
-
                 // crea el objeto de la capa de negocio
                 CN_Cliente negocioCliente = new CN_Cliente();
-
                 // valida y guarda la modificacion
                 if (!negocioCliente.ModificarCliente(clienteSeleccionado))
                 {
@@ -232,151 +330,220 @@ namespace Prana.Presentacion
 
                 // vuelve a cargar los datos guardados
                 CargarClientes();
-
                 // informa que la modificacion se realizo
                 MessageBox.Show("Cliente modificado correctamente");
             }
-            catch (Exception ex)
+            // atiende el error de esta operacion antes de informar o propagar el problema
+            catch (Exception error)
             {
                 // muestra el error y mantiene la fila en edicion
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(error.Message);
             }
         }
 
-        // busca clientes por nombre apellido dni o telefono
+        // busca clientes por nombre apellido dni o telefono atiende la pulsacion de btnbuscarclientes y ejecuta la accion asociada el evento no significa que la operacion ya se haya guardado
         private void btnBuscarClientes_Click(object sender, EventArgs e)
         {
             OcultarSugerencias();
             try
             {
                 // obtiene el texto ingresado
-                string busqueda = txtBuscarCliente.Text.Trim();
-
-                // crea el objeto de negocio
-                // carga los resultados encontrados
-                dgv_listadoClientes.DataSource = null;
-                var encontrados = BuscarClientes(busqueda);
-                dgv_listadoClientes.DataSource = encontrados;
-
-                // coloca modificar en cada boton
-                foreach (DataGridViewRow fila in dgv_listadoClientes.Rows)
-                {
-                    fila.Cells["colAccion"].Value = "Modificar cliente";
-                }
-
+                string busqueda = cboBuscarCliente.Text.Trim();
+                List<Cliente> encontrados = BuscarClientes(busqueda, Math.Max(cboFiltroEstadoCliente.SelectedIndex, 0));
+                MostrarClientes(encontrados);
                 // informa cuando no se encontraron clientes
                 if (encontrados.Count == 0)
                 {
                     MessageBox.Show("No se encontraron clientes");
                 }
             }
-            catch (Exception ex)
+            // atiende el error de esta operacion antes de informar o propagar el problema
+            catch (Exception error)
             {
                 // muestra el error producido
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(error.Message);
             }
         }
 
-        private void txtBuscarCliente_TextChanged(object sender, EventArgs e)
+        // responde al cambio del texto; revisa el estado de busqueda o de seleccion antes de continuar
+        private void cboBuscarCliente_TextUpdate(object sender, EventArgs e)
         {
             OcultarSugerencias();
-            if (!seleccionandoCliente && txtBuscarCliente.Text.Trim().Length >= 2)
+            if (!seleccionandoCliente)
+            {
                 esperaBusqueda.Start();
+            }
         }
 
-        private static List<Cliente> BuscarClientes(string texto)
+        // resuelve buscar clientes con los datos recibidos y entrega el resultado al codigo que lo llama
+        private static List<Cliente> BuscarClientes(string texto, int filtro)
         {
-            // La búsqueda completa y la consulta de deuda pertenecen a las capas inferiores.
-            return new CN_Cliente().buscarCliente(texto);
+            return new CN_Cliente().buscarCliente(texto, filtro, buscarPorPrefijo: true);
         }
 
+        // resuelve mostrar clientes con los datos recibidos y entrega el resultado al codigo que lo llama
+        private void MostrarClientes(List<Cliente> clientes)
+        {
+            dgv_listadoClientes.DataSource = null;
+            dgv_listadoClientes.DataSource = clientes;
+            // procesa cada fila de dgv listado clientesrows sin cambiar el orden de la coleccion
+            foreach (DataGridViewRow fila in dgv_listadoClientes.Rows)
+            {
+                // filacells["colaccion"]value: valor actual del control numerico o de fecha
+                fila.Cells["colAccion"].Value = "Modificar cliente";
+            }
+
+            ActualizarBotonEstadoCliente();
+        }
+
+        // resuelve ocultar sugerencias con los datos recibidos y entrega el resultado al codigo que lo llama
         private void OcultarSugerencias()
         {
             esperaBusqueda.Stop();
-            sugerenciasClientes.Visible = false;
+            cboBuscarCliente.DroppedDown = false;
         }
 
+        // mismo buscador que nueva venta: consulta por prefijo y conserva lo escrito
         private void ActualizarSugerencias()
         {
             esperaBusqueda.Stop();
-            if (!txtBuscarCliente.Focused) return;
+            string texto = cboBuscarCliente.Text;
             try
             {
-                sugerenciasClientes.Items.Clear();
-                foreach (var cliente in BuscarClientes(txtBuscarCliente.Text).Take(15))
-                    sugerenciasClientes.Items.Add(new OpcionCliente(cliente));
-                sugerenciasClientes.Location = PointToClient(txtBuscarCliente.PointToScreen(new Point(0, txtBuscarCliente.Height + 2)));
-                sugerenciasClientes.Size = new Size(txtBuscarCliente.Width,
-                    Math.Min(120, sugerenciasClientes.Items.Count * sugerenciasClientes.ItemHeight + 4));
-                sugerenciasClientes.Visible = sugerenciasClientes.Items.Count > 0;
-                sugerenciasClientes.BringToFront();
+                seleccionandoCliente = true;
+                cboBuscarCliente.Items.Clear();
+                // procesa cada cliente de buscar clientes(texto, mathmax(cbo filtro estado clienteselected index, 0)) sin cambiar el orden de la coleccion
+                foreach (Cliente cliente in BuscarClientes(texto, Math.Max(cboFiltroEstadoCliente.SelectedIndex, 0)))
+                {
+                    cboBuscarCliente.Items.Add(new OpcionCliente(cliente));
+                }
+
+                cboBuscarCliente.SelectedIndex = -1;
+                cboBuscarCliente.Text = texto;
+                cboBuscarCliente.SelectionStart = texto.Length;
+                // comprueba si hay elementos para continuar con esta operacion
+                if (cboBuscarCliente.Focused && cboBuscarCliente.Items.Count > 0)
+                {
+                    cboBuscarCliente.DroppedDown = true;
+                }
             }
-            catch (Exception ex)
+            // atiende el error de esta operacion antes de informar o propagar el problema
+            catch (Exception error)
             {
-                OcultarSugerencias();
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(error.Message);
+            }
+            // realiza la limpieza de salida tanto si la operacion termina bien como si falla
+            finally
+            {
+                seleccionandoCliente = false;
             }
         }
 
-        private void ElegirSugerencia()
+        // resuelve cbo buscar cliente enter con los datos recibidos y entrega el resultado al codigo que lo llama
+        private void cboBuscarCliente_Enter(object? sender, EventArgs e)
         {
-            if (sugerenciasClientes.SelectedItem is not OpcionCliente opcion) return;
-            OcultarSugerencias();
-            seleccionandoCliente = true;
-            txtBuscarCliente.Text = $"{opcion.Cliente.Nombre} {opcion.Cliente.Apellido}";
-            seleccionandoCliente = false;
-            dgv_listadoClientes.DataSource = new List<Cliente> { opcion.Cliente };
-            foreach (DataGridViewRow fila in dgv_listadoClientes.Rows)
-                fila.Cells["colAccion"].Value = "Modificar cliente";
-            txtBuscarCliente.Focus();
-            txtBuscarCliente.SelectionStart = txtBuscarCliente.TextLength;
+            ActualizarSugerencias();
         }
 
+        // recibe la opcion que el usuario confirmo en el desplegable; no confundirla con escribir texto sin elegir
+        private void cboBuscarCliente_SelectionChangeCommitted(object? sender, EventArgs e)
+        {
+            esperaBusqueda.Stop();
+            if (cboBuscarCliente.SelectedItem is OpcionCliente opcion)
+            {
+                MostrarClientes(new List<Cliente> { opcion.Cliente });
+            }
+        }
+
+        // interpreta la tecla pulsada y ejecuta la accion prevista por el formulario
         private void Buscador_KeyDown(object? sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Escape)
-                OcultarSugerencias();
-            else if (sugerenciasClientes.Visible && e.KeyCode == Keys.Down)
-                sugerenciasClientes.SelectedIndex = Math.Min(sugerenciasClientes.SelectedIndex + 1, sugerenciasClientes.Items.Count - 1);
-            else if (sugerenciasClientes.Visible && e.KeyCode == Keys.Up)
-                sugerenciasClientes.SelectedIndex = Math.Max(sugerenciasClientes.SelectedIndex - 1, 0);
-            else if (e.KeyCode == Keys.Enter)
+            if (e.KeyCode == Keys.Enter)
             {
-                if (sugerenciasClientes.Visible && sugerenciasClientes.SelectedIndex >= 0) ElegirSugerencia();
-                else btnBuscarClientes_Click(sender!, EventArgs.Empty);
+                if (cboBuscarCliente.SelectedItem is OpcionCliente)
+                {
+                    cboBuscarCliente_SelectionChangeCommitted(sender, EventArgs.Empty);
+                }
+                else
+                {
+                    btnBuscarClientes_Click(sender!, EventArgs.Empty);
+                }
+
+                e.SuppressKeyPress = true;
             }
-            else return;
-            e.SuppressKeyPress = true;
         }
 
+        // agrupa los datos y operaciones de opcion cliente
         private sealed class OpcionCliente
         {
-            public Cliente Cliente { get; }
+            // conserva cliente como cliente para intercambiar este dato entre las capas
+            public Cliente Cliente
+            {
+                get;
+            }
+
+            // prepara opcion cliente antes de que se utilice la instancia
             public OpcionCliente(Cliente cliente) => Cliente = cliente;
+            // resuelve to string con los datos recibidos y entrega el resultado al codigo que lo llama
             public override string ToString() => $"{Cliente.Nombre} {Cliente.Apellido} — DNI: {Cliente.DNI} — {Cliente.EstadoCuenta}";
         }
-        private void dgv_listadoClientes_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e) {
-                if (e.ColumnIndex == colDeudaPendiente.Index && e.Value is decimal saldo && saldo > 0)
-                    e.CellStyle!.ForeColor = Color.FromArgb(165, 72, 0);
-            }
 
-        private void frmClientes_Load(object? sender, EventArgs e) {
-                try { CargarClientes(); }
-                catch (Exception ex) { MessageBox.Show(ex.Message, "Consulta de clientes"); }
-            }
-
-        private void esperaBusqueda_Tick(object? sender, EventArgs e) { ActualizarSugerencias(); }
-
-        private void sugerenciasClientes_Click(object? sender, EventArgs e) { ElegirSugerencia(); }
-
-        private void txtBuscarCliente_Leave(object? sender, EventArgs e) { BeginInvoke(new Action(() =>
+        // ajusta la presentacion de una celda sin convertir ese formato en una escritura a la base
+        private void dgv_listadoClientes_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.ColumnIndex == colDeudaPendiente.Index && e.Value is decimal saldo && saldo > 0)
             {
-                if (!sugerenciasClientes.ContainsFocus) OcultarSugerencias();
-            })); }
+                // ecellstyle!forecolor: color del texto cuando la celda o el control no esta seleccionado
+                e.CellStyle!.ForeColor = Color.FromArgb(165, 72, 0);
+            }
+        }
 
-        private void sugerenciasClientes_Leave(object? sender, EventArgs e) { OcultarSugerencias(); }
+        // prepara la informacion inicial cuando se carga la ventana
+        private void frmClientes_Load(object? sender, EventArgs e)
+        {
+            try
+            {
+                CargarClientes();
+            }
+            // atiende el error de esta operacion antes de informar o propagar el problema
+            catch (Exception error)
+            {
+                MessageBox.Show(error.Message, "Consulta de clientes");
+            }
+        }
 
-        private void frmClientes_Disposed(object? sender, EventArgs e) { esperaBusqueda.Dispose(); }
+        // ejecuta la accion pendiente del temporizador, por ejemplo una consulta despues de una pausa al escribir
+        private void esperaBusqueda_Tick(object? sender, EventArgs e)
+        {
+            ActualizarSugerencias();
+        }
 
+        // resuelve frm clientes disposed con los datos recibidos y entrega el resultado al codigo que lo llama
+        private void frmClientes_Disposed(object? sender, EventArgs e)
+        {
+            esperaBusqueda.Dispose();
+        }
+
+        // lee los campos actuales y construye la solicitud; este metodo no guarda cambios ni modifica la seleccion
+        private Cliente ObtenerClienteDelFormulario()
+        {
+            return new Cliente
+            {
+                Nombre = txtNombreCliente.Text.Trim(),
+                Apellido = txtApellidoCliente.Text.Trim(),
+                DNI = txtDocumentoCliente.Text.Trim(),
+                TipoDocumento = cboTipoDocumento.Text,
+                Telefono = txtTelefonoCliente.Text.Trim(),
+                Direccion = txtDireccionCliente.Text.Trim(),
+                CodigoPostal = txtCodigoPostal.Text.Trim(),
+                Localidad = new Localidad
+                {
+                    NombreLocalidad = txtLocalidadCliente.Text.Trim()
+                },
+                FechaRegistro = DateTime.Now,
+                SaldoFavor = 0
+
+            };
+        }
     }
 }

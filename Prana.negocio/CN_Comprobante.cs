@@ -1,13 +1,14 @@
-using Prana.Datos;
+﻿using Prana.Datos;
 using Prana.Entidades;
 
 namespace Prana.negocio;
-
+// agrupa los datos y operaciones de cn comprobante
 public class CN_Comprobante
 {
-    public ComprobanteVenta Obtener(int venta)
+    // resuelve obtener con los datos recibidos y entrega el resultado al codigo que lo llama
+    public venta Obtener(int idVenta)
     {
-        CN_Pago.Verificar(Permisos.VerPanelPrincipal);
-        return new CD_Comprobante().Obtener(venta);
+        Permisos.Exigir(Permisos.VerPanelPrincipal);
+        return new CD_Comprobante().Obtener(idVenta);
     }
 }

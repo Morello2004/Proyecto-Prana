@@ -1,62 +1,57 @@
-namespace Prana.Presentacion
+﻿namespace Prana.Presentacion
 {
+    // parte visual de frmclientes crea controles y define su distribucion, colores y eventos; visual studio puede regenerar este archivo al editar el disenador
     partial class frmClientes
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
+        // /// required designer variable
         private System.ComponentModel.IContainer components = null;
-
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        // /// clean up any resources being used true if managed resources should be disposed; otherwise, false libera los recursos del formulario; disposing indica si tambien deben liberarse los componentes administrados
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
             {
                 components.Dispose();
             }
+
             base.Dispose(disposing);
         }
 
         #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
+        // /// required method for designer support - do not modify the contents of this method with the code editor construye la pantalla: instancia controles, asigna propiedades, agrega cada control a su contenedor y conecta los eventos no registra operaciones comerciales
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle10 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
             esperaBusqueda = new System.Windows.Forms.Timer(components);
             colVerDeuda = new DataGridViewButtonColumn();
             colEstadoCuenta = new DataGridViewTextBoxColumn();
             colDeudaPendiente = new DataGridViewTextBoxColumn();
             colCodigoPostal = new DataGridViewTextBoxColumn();
-            sugerenciasClientes = new ListBox();
+            pnlFiltroEstadoCliente = new Panel();
+            cboFiltroEstadoCliente = new ComboBox();
+            btnCambiarEstadoCliente = new Button();
             lblCodigoPostal = new Label();
             txtCodigoPostal = new TextBox();
             panel1 = new Panel();
             PnlBusquedaCliente = new Panel();
             btnBuscarClientes = new FontAwesome.Sharp.IconButton();
-            txtBuscarCliente = new TextBox();
+            cboBuscarCliente = new ComboBox();
             lblcodigo = new Label();
             label1 = new Label();
             panel2 = new Panel();
             btn_CrearCliente = new Button();
             Localidad = new Label();
-            textBoxLocalidad = new TextBox();
+            txtLocalidadCliente = new TextBox();
             label5 = new Label();
-            textBoxDireccion = new TextBox();
+            txtDireccionCliente = new TextBox();
             dgv_listadoClientes = new DataGridView();
             colNombre = new DataGridViewTextBoxColumn();
             colApellido = new DataGridViewTextBoxColumn();
+            colTipoDocumento = new DataGridViewComboBoxColumn();
             colDNI = new DataGridViewTextBoxColumn();
             ColTelefono = new DataGridViewTextBoxColumn();
             colDireccion = new DataGridViewTextBoxColumn();
@@ -66,73 +61,61 @@ namespace Prana.Presentacion
             colSaldoFavor = new DataGridViewTextBoxColumn();
             label4 = new Label();
             btnCancelar = new FontAwesome.Sharp.IconButton();
-            textBoxDNI = new TextBox();
-            textBoxTelefono = new TextBox();
+            txtDocumentoCliente = new TextBox();
+            cboTipoDocumento = new ComboBox();
+            txtTelefonoCliente = new TextBox();
             label10 = new Label();
             label8 = new Label();
-            textBoxApellido = new TextBox();
+            txtApellidoCliente = new TextBox();
             label3 = new Label();
             lblVC = new Label();
-            textBoxNombre = new TextBox();
+            txtNombreCliente = new TextBox();
             label2 = new Label();
             pnlEncabezadoClientes = new Panel();
             LBLtituloClientes = new Label();
-            panel1.SuspendLayout();
+            pnlListadoDiseno = new Panel();
+            pnlPagina = new Panel();
+            tlpSecciones = new TableLayoutPanel();
             PnlBusquedaCliente.SuspendLayout();
             panel2.SuspendLayout();
+            // llama a ((systemcomponentmodelisupportinitialize)dgv_listadoclientes)begininit para realizar este paso del flujo
             ((System.ComponentModel.ISupportInitialize)dgv_listadoClientes).BeginInit();
+            pnlFiltroEstadoCliente.SuspendLayout();
             pnlEncabezadoClientes.SuspendLayout();
+            pnlListadoDiseno.SuspendLayout();
+            pnlPagina.SuspendLayout();
+            tlpSecciones.SuspendLayout();
             SuspendLayout();
-            // 
-            // esperaBusqueda
-            // 
+            // esperabusqueda esperabusquedainterval: tiempo entre activaciones del temporizador, en milisegundos
             esperaBusqueda.Interval = 250;
             esperaBusqueda.Tick += esperaBusqueda_Tick;
-            // 
-            // colVerDeuda
-            // 
+            // colverdeuda colverdeudaheadertext: titulo de la columna; no es el nombre de la propiedad enlazada
             colVerDeuda.HeaderText = "Pendientes";
             colVerDeuda.Name = "colVerDeuda";
+            colVerDeuda.DefaultCellStyle.ForeColor = Color.Black;
+            colVerDeuda.DefaultCellStyle.SelectionForeColor = Color.Black;
+            colVerDeuda.DefaultCellStyle.BackColor = Color.Gainsboro;
+            colVerDeuda.DefaultCellStyle.SelectionBackColor = Color.Gainsboro;
             colVerDeuda.ReadOnly = true;
             colVerDeuda.Text = "Ver detalle";
             colVerDeuda.UseColumnTextForButtonValue = true;
-            // 
-            // colEstadoCuenta
-            // 
+            // colestadocuenta colestadocuentadatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colEstadoCuenta.DataPropertyName = "EstadoCuenta";
             colEstadoCuenta.HeaderText = "Cuenta";
             colEstadoCuenta.Name = "colEstadoCuenta";
             colEstadoCuenta.ReadOnly = true;
-            // 
-            // colDeudaPendiente
-            // 
+            // coldeudapendiente coldeudapendientedatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colDeudaPendiente.DataPropertyName = "DeudaPendiente";
             colDeudaPendiente.HeaderText = "Deuda pendiente";
             colDeudaPendiente.Name = "colDeudaPendiente";
             colDeudaPendiente.ReadOnly = true;
             colDeudaPendiente.Width = 125;
-            // 
-            // colCodigoPostal
-            // 
+            // colcodigopostal colcodigopostaldatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colCodigoPostal.DataPropertyName = "CodigoPostal";
             colCodigoPostal.HeaderText = "Código postal";
+            colCodigoPostal.MaxInputLength = 8;
             colCodigoPostal.Name = "colCodigoPostal";
-            // 
-            // sugerenciasClientes
-            // 
-            sugerenciasClientes.HorizontalScrollbar = true;
-            sugerenciasClientes.IntegralHeight = false;
-            sugerenciasClientes.Location = new Point(0, 0);
-            sugerenciasClientes.Name = "sugerenciasClientes";
-            sugerenciasClientes.Size = new Size(350, 120);
-            sugerenciasClientes.TabIndex = 1;
-            sugerenciasClientes.Visible = false;
-            sugerenciasClientes.Click += sugerenciasClientes_Click;
-            sugerenciasClientes.KeyDown += Buscador_KeyDown;
-            sugerenciasClientes.Leave += sugerenciasClientes_Leave;
-            // 
-            // lblCodigoPostal
-            // 
+            // lblcodigopostal
             lblCodigoPostal.AutoSize = true;
             lblCodigoPostal.ForeColor = Color.White;
             lblCodigoPostal.Location = new Point(410, 147);
@@ -140,45 +123,37 @@ namespace Prana.Presentacion
             lblCodigoPostal.Size = new Size(138, 15);
             lblCodigoPostal.TabIndex = 46;
             lblCodigoPostal.Text = "Código postal (opcional)";
-            // 
-            // txtCodigoPostal
-            // 
+            // txtcodigopostal
+            txtCodigoPostal.CharacterCasing = CharacterCasing.Upper;
             txtCodigoPostal.Location = new Point(410, 165);
-            txtCodigoPostal.MaxLength = 12;
+            txtCodigoPostal.MaxLength = 8;
             txtCodigoPostal.Name = "txtCodigoPostal";
             txtCodigoPostal.Size = new Size(170, 23);
             txtCodigoPostal.TabIndex = 45;
-            // 
-            // panel1
-            // 
+            // panel1 panel1anchor: bordes que mantienen su distancia cuando cambia el tamano del contenedor
             panel1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             panel1.AutoScroll = true;
             panel1.AutoSize = true;
             panel1.BackColor = Color.FromArgb(13, 19, 27);
-            panel1.Controls.Add(PnlBusquedaCliente);
-            panel1.Controls.Add(panel2);
-            panel1.Controls.Add(pnlEncabezadoClientes);
             panel1.Location = new Point(2, 1);
             panel1.Name = "panel1";
             panel1.Size = new Size(1460, 715);
             panel1.TabIndex = 0;
-            // 
-            // PnlBusquedaCliente
-            // 
-            PnlBusquedaCliente.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            panel1.Visible = false;
+            // pnlbusquedacliente
             PnlBusquedaCliente.AutoSize = true;
             PnlBusquedaCliente.BackColor = Color.FromArgb(21, 30, 41);
             PnlBusquedaCliente.Controls.Add(btnBuscarClientes);
-            PnlBusquedaCliente.Controls.Add(txtBuscarCliente);
+            PnlBusquedaCliente.Controls.Add(cboBuscarCliente);
             PnlBusquedaCliente.Controls.Add(lblcodigo);
             PnlBusquedaCliente.Controls.Add(label1);
-            PnlBusquedaCliente.Location = new Point(2, 72);
+            PnlBusquedaCliente.Dock = DockStyle.Top;
+            PnlBusquedaCliente.Location = new Point(8, 58);
+            PnlBusquedaCliente.Margin = new Padding(0, 0, 0, 8);
             PnlBusquedaCliente.Name = "PnlBusquedaCliente";
-            PnlBusquedaCliente.Size = new Size(1238, 145);
-            PnlBusquedaCliente.TabIndex = 8;
-            // 
-            // btnBuscarClientes
-            // 
+            PnlBusquedaCliente.Size = new Size(1427, 79);
+            PnlBusquedaCliente.TabIndex = 1;
+            // btnbuscarclientes btnbuscarclientesbackcolor: color del fondo del control o de la celda
             btnBuscarClientes.BackColor = Color.DodgerBlue;
             btnBuscarClientes.FlatAppearance.BorderSize = 0;
             btnBuscarClientes.FlatStyle = FlatStyle.Flat;
@@ -193,21 +168,18 @@ namespace Prana.Presentacion
             btnBuscarClientes.Text = "Buscar";
             btnBuscarClientes.UseVisualStyleBackColor = false;
             btnBuscarClientes.Click += btnBuscarClientes_Click;
-            // 
-            // txtBuscarCliente
-            // 
-            txtBuscarCliente.Font = new Font("Segoe UI", 10F);
-            txtBuscarCliente.Location = new Point(15, 51);
-            txtBuscarCliente.Name = "txtBuscarCliente";
-            txtBuscarCliente.PlaceholderText = "Buscar por DNI, telefono o nombre";
-            txtBuscarCliente.Size = new Size(378, 25);
-            txtBuscarCliente.TabIndex = 5;
-            txtBuscarCliente.TextChanged += txtBuscarCliente_TextChanged;
-            txtBuscarCliente.KeyDown += Buscador_KeyDown;
-            txtBuscarCliente.Leave += txtBuscarCliente_Leave;
-            // 
+            // cbobuscarcliente cbobuscarclientefont: tipografia, tamano y estilo con los que se muestra el contenido
+            cboBuscarCliente.Font = new Font("Segoe UI", 10F);
+            cboBuscarCliente.Location = new Point(15, 51);
+            cboBuscarCliente.MaxLength = 201;
+            cboBuscarCliente.Name = "cboBuscarCliente";
+            cboBuscarCliente.Size = new Size(378, 25);
+            cboBuscarCliente.TabIndex = 5;
+            cboBuscarCliente.TextUpdate += cboBuscarCliente_TextUpdate;
+            cboBuscarCliente.SelectionChangeCommitted += cboBuscarCliente_SelectionChangeCommitted;
+            cboBuscarCliente.Enter += cboBuscarCliente_Enter;
+            cboBuscarCliente.KeyDown += Buscador_KeyDown;
             // lblcodigo
-            // 
             lblcodigo.AutoSize = true;
             lblcodigo.ForeColor = Color.FromArgb(145, 170, 210);
             lblcodigo.Location = new Point(10, 33);
@@ -215,9 +187,7 @@ namespace Prana.Presentacion
             lblcodigo.Size = new Size(42, 15);
             lblcodigo.TabIndex = 4;
             lblcodigo.Text = "Buscar";
-            // 
             // label1
-            // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             label1.ForeColor = Color.White;
@@ -226,37 +196,33 @@ namespace Prana.Presentacion
             label1.Size = new Size(85, 21);
             label1.TabIndex = 0;
             label1.Text = "Busqueda";
-            // 
-            // panel2
-            // 
-            panel2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            // panel2 panel2backcolor: color del fondo del control o de la celda
             panel2.BackColor = Color.FromArgb(21, 30, 41);
             panel2.Controls.Add(btn_CrearCliente);
             panel2.Controls.Add(Localidad);
-            panel2.Controls.Add(textBoxLocalidad);
+            panel2.Controls.Add(txtLocalidadCliente);
             panel2.Controls.Add(label5);
-            panel2.Controls.Add(textBoxDireccion);
-            panel2.Controls.Add(dgv_listadoClientes);
-            panel2.Controls.Add(label4);
+            panel2.Controls.Add(txtDireccionCliente);
             panel2.Controls.Add(btnCancelar);
-            panel2.Controls.Add(textBoxDNI);
-            panel2.Controls.Add(textBoxTelefono);
+            panel2.Controls.Add(txtDocumentoCliente);
+            panel2.Controls.Add(cboTipoDocumento);
+            panel2.Controls.Add(txtTelefonoCliente);
             panel2.Controls.Add(label10);
             panel2.Controls.Add(label8);
-            panel2.Controls.Add(textBoxApellido);
+            panel2.Controls.Add(txtApellidoCliente);
             panel2.Controls.Add(label3);
             panel2.Controls.Add(lblVC);
-            panel2.Controls.Add(textBoxNombre);
+            panel2.Controls.Add(txtNombreCliente);
             panel2.Controls.Add(label2);
             panel2.Controls.Add(txtCodigoPostal);
             panel2.Controls.Add(lblCodigoPostal);
-            panel2.Location = new Point(3, 225);
+            panel2.Dock = DockStyle.Top;
+            panel2.Location = new Point(8, 145);
+            panel2.Margin = new Padding(0, 0, 0, 8);
             panel2.Name = "panel2";
-            panel2.Size = new Size(1439, 487);
-            panel2.TabIndex = 8;
-            // 
-            // btn_CrearCliente
-            // 
+            panel2.Size = new Size(1427, 270);
+            panel2.TabIndex = 2;
+            // btn_crearcliente btn_crearclientebackcolor: color del fondo del control o de la celda
             btn_CrearCliente.BackColor = Color.DodgerBlue;
             btn_CrearCliente.FlatAppearance.BorderSize = 0;
             btn_CrearCliente.FlatStyle = FlatStyle.Flat;
@@ -269,9 +235,7 @@ namespace Prana.Presentacion
             btn_CrearCliente.Text = "Crear cliente";
             btn_CrearCliente.UseVisualStyleBackColor = false;
             btn_CrearCliente.Click += btn_CrearCliente_Click;
-            // 
-            // Localidad
-            // 
+            // localidad
             Localidad.AutoSize = true;
             Localidad.ForeColor = Color.FromArgb(145, 170, 210);
             Localidad.Location = new Point(203, 147);
@@ -279,17 +243,15 @@ namespace Prana.Presentacion
             Localidad.Size = new Size(58, 15);
             Localidad.TabIndex = 43;
             Localidad.Text = "Localidad";
-            // 
-            // textBoxLocalidad
-            // 
-            textBoxLocalidad.Font = new Font("Segoe UI", 10F);
-            textBoxLocalidad.Location = new Point(203, 165);
-            textBoxLocalidad.Name = "textBoxLocalidad";
-            textBoxLocalidad.Size = new Size(187, 25);
-            textBoxLocalidad.TabIndex = 42;
-            // 
+            // txtlocalidadcliente
+            txtLocalidadCliente.CharacterCasing = CharacterCasing.Upper;
+            txtLocalidadCliente.Font = new Font("Segoe UI", 10F);
+            txtLocalidadCliente.Location = new Point(203, 165);
+            txtLocalidadCliente.MaxLength = 20;
+            txtLocalidadCliente.Name = "txtLocalidadCliente";
+            txtLocalidadCliente.Size = new Size(187, 25);
+            txtLocalidadCliente.TabIndex = 42;
             // label5
-            // 
             label5.AutoSize = true;
             label5.ForeColor = Color.FromArgb(145, 170, 210);
             label5.Location = new Point(2, 147);
@@ -297,132 +259,162 @@ namespace Prana.Presentacion
             label5.Size = new Size(114, 15);
             label5.TabIndex = 41;
             label5.Text = "Dirección (opcional)";
-            // 
-            // textBoxDireccion
-            // 
-            textBoxDireccion.Font = new Font("Segoe UI", 10F);
-            textBoxDireccion.Location = new Point(2, 165);
-            textBoxDireccion.Name = "textBoxDireccion";
-            textBoxDireccion.Size = new Size(168, 25);
-            textBoxDireccion.TabIndex = 40;
-            // 
-            // dgv_listadoClientes
-            // 
+            // txtdireccioncliente
+            txtDireccionCliente.CharacterCasing = CharacterCasing.Upper;
+            txtDireccionCliente.Font = new Font("Segoe UI", 10F);
+            txtDireccionCliente.Location = new Point(2, 165);
+            txtDireccionCliente.MaxLength = 50;
+            txtDireccionCliente.Name = "txtDireccionCliente";
+            txtDireccionCliente.Size = new Size(168, 25);
+            txtDireccionCliente.TabIndex = 40;
+            // pnlfiltroestadocliente pnlfiltroestadoclientebackcolor: color del fondo del control o de la celda
+            pnlFiltroEstadoCliente.BackColor = Color.FromArgb(21, 30, 41);
+            pnlFiltroEstadoCliente.Controls.Add(btnCambiarEstadoCliente);
+            pnlFiltroEstadoCliente.Controls.Add(cboFiltroEstadoCliente);
+            pnlFiltroEstadoCliente.Dock = DockStyle.Top;
+            pnlFiltroEstadoCliente.Location = new Point(0, 32);
+            pnlFiltroEstadoCliente.Name = "pnlFiltroEstadoCliente";
+            pnlFiltroEstadoCliente.Size = new Size(1427, 42);
+            pnlFiltroEstadoCliente.TabIndex = 40;
+            // cbofiltroestadocliente cbofiltroestadoclientedropdownstyle: establece si la lista permite escribir o solo elegir elementos
+            cboFiltroEstadoCliente.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboFiltroEstadoCliente.Items.AddRange(new object[] { "Activos", "Inactivos", "Dados de baja", "Todos" });
+            cboFiltroEstadoCliente.Location = new Point(8, 8);
+            cboFiltroEstadoCliente.Name = "cboFiltroEstadoCliente";
+            cboFiltroEstadoCliente.Size = new Size(150, 23);
+            cboFiltroEstadoCliente.TabIndex = 0;
+            cboFiltroEstadoCliente.SelectedIndex = 0;
+            cboFiltroEstadoCliente.SelectedIndexChanged += cboFiltroEstadoCliente_SelectedIndexChanged;
+            // btncambiarestadocliente btncambiarestadoclientebackcolor: color del fondo del control o de la celda
+            btnCambiarEstadoCliente.BackColor = Color.DodgerBlue;
+            btnCambiarEstadoCliente.FlatAppearance.BorderSize = 0;
+            btnCambiarEstadoCliente.FlatStyle = FlatStyle.Flat;
+            btnCambiarEstadoCliente.ForeColor = Color.White;
+            btnCambiarEstadoCliente.Location = new Point(170, 7);
+            btnCambiarEstadoCliente.Name = "btnCambiarEstadoCliente";
+            btnCambiarEstadoCliente.Size = new Size(130, 26);
+            btnCambiarEstadoCliente.TabIndex = 1;
+            btnCambiarEstadoCliente.Text = "Dar de baja";
+            btnCambiarEstadoCliente.UseVisualStyleBackColor = false;
+            btnCambiarEstadoCliente.Click += btnCambiarEstadoCliente_Click;
+            // dgv_listadoclientes
             dgv_listadoClientes.AllowUserToAddRows = false;
             dgv_listadoClientes.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle1.BackColor = Color.FromArgb(236, 242, 249);
-            dgv_listadoClientes.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            dgv_listadoClientes.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            dataGridViewCellStyle6.BackColor = Color.FromArgb(236, 242, 249);
+            dgv_listadoClientes.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle6;
             dgv_listadoClientes.BackgroundColor = Color.FromArgb(13, 19, 27);
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = Color.FromArgb(37, 52, 70);
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            dataGridViewCellStyle2.ForeColor = Color.White;
-            dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(37, 52, 70);
-            dataGridViewCellStyle2.SelectionForeColor = Color.White;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            dgv_listadoClientes.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = Color.FromArgb(37, 52, 70);
+            dataGridViewCellStyle7.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            dataGridViewCellStyle7.ForeColor = Color.White;
+            dataGridViewCellStyle7.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dataGridViewCellStyle7.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle7.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.True;
+            dgv_listadoClientes.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
             dgv_listadoClientes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgv_listadoClientes.Columns.AddRange(new DataGridViewColumn[] { colNombre, colApellido, colDNI, ColTelefono, colDireccion, colLocalidad, colAccion, colFechaRegistro, colSaldoFavor, colCodigoPostal, colDeudaPendiente, colEstadoCuenta, colVerDeuda });
-            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = Color.White;
-            dataGridViewCellStyle5.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle5.ForeColor = Color.FromArgb(21, 30, 41);
-            dataGridViewCellStyle5.Format = "c2";
-            dataGridViewCellStyle5.SelectionBackColor = Color.FromArgb(35, 100, 166);
-            dataGridViewCellStyle5.SelectionForeColor = Color.White;
-            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.False;
-            dgv_listadoClientes.DefaultCellStyle = dataGridViewCellStyle5;
+            dgv_listadoClientes.Columns.AddRange(new DataGridViewColumn[] { colNombre, colApellido, colTipoDocumento, colDNI, ColTelefono, colDireccion, colLocalidad, colAccion, colFechaRegistro, colSaldoFavor, colCodigoPostal, colDeudaPendiente, colEstadoCuenta, colVerDeuda });
+            dataGridViewCellStyle10.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle10.BackColor = Color.White;
+            dataGridViewCellStyle10.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle10.ForeColor = Color.White;
+            dataGridViewCellStyle10.Format = "c2";
+            dataGridViewCellStyle10.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dataGridViewCellStyle10.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle10.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dataGridViewCellStyle10.WrapMode = DataGridViewTriState.False;
+            dgv_listadoClientes.DefaultCellStyle = dataGridViewCellStyle10;
+            dgv_listadoClientes.Dock = DockStyle.Fill;
             dgv_listadoClientes.EnableHeadersVisualStyles = false;
-            dgv_listadoClientes.Location = new Point(7, 288);
+            dgv_listadoClientes.Location = new Point(0, 32);
             dgv_listadoClientes.Name = "dgv_listadoClientes";
+            dgv_listadoClientes.ForeColor = Color.Black;
+            dgv_listadoClientes.DefaultCellStyle.ForeColor = Color.Black;
+            dgv_listadoClientes.RowsDefaultCellStyle.ForeColor = Color.Black;
+            dgv_listadoClientes.AlternatingRowsDefaultCellStyle.ForeColor = Color.Black;
+            dgv_listadoClientes.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.Black;
+            dgv_listadoClientes.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dgv_listadoClientes.DefaultCellStyle.SelectionForeColor = Color.Black;
+            dgv_listadoClientes.DefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dgv_listadoClientes.AlternatingRowsDefaultCellStyle.SelectionForeColor = Color.Black;
+            dgv_listadoClientes.AlternatingRowsDefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
             dgv_listadoClientes.RowTemplate.Height = 30;
             dgv_listadoClientes.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgv_listadoClientes.Size = new Size(1429, 194);
+            dgv_listadoClientes.Size = new Size(1427, 258);
             dgv_listadoClientes.TabIndex = 39;
             dgv_listadoClientes.CellClick += dgv_listadoClientes_CellClick;
             dgv_listadoClientes.CellFormatting += dgv_listadoClientes_CellFormatting;
-            // 
-            // colNombre
-            // 
+            dgv_listadoClientes.SelectionChanged += dgv_listadoClientes_SelectionChanged;
+            // colnombre colnombredatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colNombre.DataPropertyName = "Nombre";
             colNombre.HeaderText = "Nombre";
             colNombre.Name = "colNombre";
-            // 
-            // colApellido
-            // 
+            // colapellido colapellidodatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colApellido.DataPropertyName = "Apellido";
             colApellido.HeaderText = "Apellido";
             colApellido.Name = "colApellido";
-            // 
-            // colDNI
-            // 
+            // coltipodocumento coltipodocumentodatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
+            colTipoDocumento.DataPropertyName = "TipoDocumento";
+            colTipoDocumento.HeaderText = "Tipo documento";
+            colTipoDocumento.Items.AddRange(new object[] { "DNI", "CUIT" });
+            colTipoDocumento.Name = "colTipoDocumento";
+            colTipoDocumento.ReadOnly = true;
+            // coldni coldnidatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colDNI.DataPropertyName = "DNI";
-            colDNI.HeaderText = "DNI";
+            colDNI.HeaderText = "Numero documento";
+            colDNI.MaxInputLength = 11;
             colDNI.Name = "colDNI";
-            // 
-            // ColTelefono
-            // 
+            // coltelefono coltelefonodatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             ColTelefono.DataPropertyName = "Telefono";
             ColTelefono.HeaderText = "Telefono";
             ColTelefono.Name = "ColTelefono";
-            // 
-            // colDireccion
-            // 
+            // coldireccion coldirecciondatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colDireccion.DataPropertyName = "Direccion";
             colDireccion.HeaderText = "Direccion";
             colDireccion.Name = "colDireccion";
-            // 
-            // colLocalidad
-            // 
+            // collocalidad collocalidaddatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colLocalidad.DataPropertyName = "NombreLocalidad";
             colLocalidad.HeaderText = "Localidad";
             colLocalidad.Name = "colLocalidad";
-            // 
-            // colAccion
-            // 
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.ForeColor = Color.FromArgb(21, 30, 41);
-            dataGridViewCellStyle3.NullValue = "Modificar cliente";
-            colAccion.DefaultCellStyle = dataGridViewCellStyle3;
+            // colaccion
+            dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle8.ForeColor = Color.FromArgb(21, 30, 41);
+            dataGridViewCellStyle8.NullValue = "Modificar cliente";
+            colAccion.DefaultCellStyle = dataGridViewCellStyle8;
             colAccion.HeaderText = "Acciones";
             colAccion.Name = "colAccion";
+            colAccion.DefaultCellStyle.ForeColor = Color.Black;
+            colAccion.DefaultCellStyle.SelectionForeColor = Color.Black;
+            colAccion.DefaultCellStyle.BackColor = Color.Gainsboro;
+            colAccion.DefaultCellStyle.SelectionBackColor = Color.Gainsboro;
             colAccion.Resizable = DataGridViewTriState.True;
             colAccion.SortMode = DataGridViewColumnSortMode.Automatic;
             colAccion.Text = "Modificar cliente";
             colAccion.Width = 145;
-            // 
-            // colFechaRegistro
-            // 
+            // colfecharegistro colfecharegistrodatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colFechaRegistro.DataPropertyName = "FechaRegistro";
-            dataGridViewCellStyle4.Format = "g";
-            dataGridViewCellStyle4.NullValue = null;
-            colFechaRegistro.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle9.Format = "g";
+            dataGridViewCellStyle9.NullValue = null;
+            colFechaRegistro.DefaultCellStyle = dataGridViewCellStyle9;
             colFechaRegistro.HeaderText = "Fecha de registro";
             colFechaRegistro.Name = "colFechaRegistro";
             colFechaRegistro.ReadOnly = true;
-            // 
-            // colSaldoFavor
-            // 
+            // colsaldofavor colsaldofavordatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colSaldoFavor.DataPropertyName = "SaldoFavor";
             colSaldoFavor.HeaderText = "Saldo a favor\n";
             colSaldoFavor.Name = "colSaldoFavor";
             colSaldoFavor.ReadOnly = true;
             colSaldoFavor.Resizable = DataGridViewTriState.False;
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
+            // label4 label4dock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            label4.Dock = DockStyle.Top;
             label4.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             label4.ForeColor = Color.White;
-            label4.Location = new Point(9, 264);
+            label4.Location = new Point(0, 0);
             label4.Name = "label4";
-            label4.Size = new Size(151, 21);
+            label4.Size = new Size(1427, 32);
             label4.TabIndex = 38;
             label4.Text = "Listado de clientes";
-            // 
-            // btnCancelar
-            // 
+            // btncancelar btncancelarbackcolor: color del fondo del control o de la celda
             btnCancelar.BackColor = Color.SteelBlue;
             btnCancelar.FlatAppearance.BorderSize = 0;
             btnCancelar.FlatStyle = FlatStyle.Flat;
@@ -437,36 +429,38 @@ namespace Prana.Presentacion
             btnCancelar.TabIndex = 37;
             btnCancelar.Text = "Cancelar";
             btnCancelar.UseVisualStyleBackColor = false;
-            // 
-            // textBoxDNI
-            // 
-            textBoxDNI.Font = new Font("Segoe UI", 10F);
-            textBoxDNI.Location = new Point(203, 107);
-            textBoxDNI.Name = "textBoxDNI";
-            textBoxDNI.Size = new Size(187, 25);
-            textBoxDNI.TabIndex = 33;
-            // 
-            // textBoxTelefono
-            // 
-            textBoxTelefono.Font = new Font("Segoe UI", 10F);
-            textBoxTelefono.Location = new Point(2, 107);
-            textBoxTelefono.Name = "textBoxTelefono";
-            textBoxTelefono.Size = new Size(168, 25);
-            textBoxTelefono.TabIndex = 32;
-            // 
+            // txtdocumentocliente txtdocumentoclientefont: tipografia, tamano y estilo con los que se muestra el contenido
+            txtDocumentoCliente.Font = new Font("Segoe UI", 10F);
+            txtDocumentoCliente.Location = new Point(203, 107);
+            txtDocumentoCliente.MaxLength = 8;
+            txtDocumentoCliente.Name = "txtDocumentoCliente";
+            txtDocumentoCliente.Size = new Size(187, 25);
+            txtDocumentoCliente.TabIndex = 33;
+            // cbotipodocumento cbotipodocumentodropdownstyle: establece si la lista permite escribir o solo elegir elementos
+            cboTipoDocumento.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboTipoDocumento.Items.AddRange(new object[] { "DNI", "CUIT" });
+            cboTipoDocumento.Location = new Point(410, 107);
+            cboTipoDocumento.Name = "cboTipoDocumento";
+            cboTipoDocumento.Size = new Size(110, 23);
+            cboTipoDocumento.TabIndex = 45;
+            cboTipoDocumento.SelectedIndexChanged += cboTipoDocumento_SelectedIndexChanged;
+            // txttelefonocliente txttelefonoclientefont: tipografia, tamano y estilo con los que se muestra el contenido
+            txtTelefonoCliente.Font = new Font("Segoe UI", 10F);
+            txtTelefonoCliente.Location = new Point(2, 107);
+            txtTelefonoCliente.MaxLength = 10;
+            txtTelefonoCliente.Name = "txtTelefonoCliente";
+            txtTelefonoCliente.Size = new Size(168, 25);
+            txtTelefonoCliente.TabIndex = 32;
             // label10
-            // 
             label10.AutoSize = true;
             label10.ForeColor = Color.FromArgb(145, 170, 210);
             label10.Location = new Point(203, 89);
             label10.Name = "label10";
-            label10.Size = new Size(27, 15);
+            label10.Size = new Size(168, 15);
             label10.TabIndex = 31;
-            label10.Text = "DNI";
+            label10.Text = "Documento (tipo a la derecha)";
             label10.Click += label10_Click;
-            // 
             // label8
-            // 
             label8.AutoSize = true;
             label8.ForeColor = Color.FromArgb(145, 170, 210);
             label8.Location = new Point(203, 34);
@@ -474,27 +468,23 @@ namespace Prana.Presentacion
             label8.Size = new Size(51, 15);
             label8.TabIndex = 29;
             label8.Text = "Apellido";
-            // 
-            // textBoxApellido
-            // 
-            textBoxApellido.Font = new Font("Segoe UI", 10F);
-            textBoxApellido.Location = new Point(203, 52);
-            textBoxApellido.Name = "textBoxApellido";
-            textBoxApellido.Size = new Size(187, 25);
-            textBoxApellido.TabIndex = 28;
-            // 
+            // txtapellidocliente
+            txtApellidoCliente.CharacterCasing = CharacterCasing.Upper;
+            txtApellidoCliente.Font = new Font("Segoe UI", 10F);
+            txtApellidoCliente.Location = new Point(203, 52);
+            txtApellidoCliente.MaxLength = 30;
+            txtApellidoCliente.Name = "txtApellidoCliente";
+            txtApellidoCliente.Size = new Size(187, 25);
+            txtApellidoCliente.TabIndex = 28;
             // label3
-            // 
             label3.AutoSize = true;
             label3.ForeColor = Color.FromArgb(145, 170, 210);
             label3.Location = new Point(0, 89);
             label3.Name = "label3";
             label3.Size = new Size(52, 15);
             label3.TabIndex = 27;
-            label3.Text = "Telefono";
-            // 
-            // lblVC
-            // 
+            label3.Text = "Teléfono (con área)";
+            // lblvc
             lblVC.AutoSize = true;
             lblVC.ForeColor = Color.FromArgb(145, 170, 210);
             lblVC.Location = new Point(2, 34);
@@ -502,17 +492,15 @@ namespace Prana.Presentacion
             lblVC.Size = new Size(51, 15);
             lblVC.TabIndex = 25;
             lblVC.Text = "Nombre";
-            // 
-            // textBoxNombre
-            // 
-            textBoxNombre.Font = new Font("Segoe UI", 10F);
-            textBoxNombre.Location = new Point(2, 52);
-            textBoxNombre.Name = "textBoxNombre";
-            textBoxNombre.Size = new Size(168, 25);
-            textBoxNombre.TabIndex = 24;
-            // 
+            // txtnombrecliente
+            txtNombreCliente.CharacterCasing = CharacterCasing.Upper;
+            txtNombreCliente.Font = new Font("Segoe UI", 10F);
+            txtNombreCliente.Location = new Point(2, 52);
+            txtNombreCliente.MaxLength = 30;
+            txtNombreCliente.Name = "txtNombreCliente";
+            txtNombreCliente.Size = new Size(168, 25);
+            txtNombreCliente.TabIndex = 24;
             // label2
-            // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             label2.ForeColor = Color.White;
@@ -522,21 +510,18 @@ namespace Prana.Presentacion
             label2.TabIndex = 1;
             label2.Text = "Crear cliente";
             label2.Click += label2_Click;
-            // 
-            // pnlEncabezadoClientes
-            // 
-            pnlEncabezadoClientes.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            // pnlencabezadoclientes
             pnlEncabezadoClientes.AutoScroll = true;
             pnlEncabezadoClientes.AutoSize = true;
             pnlEncabezadoClientes.BackColor = Color.FromArgb(21, 30, 41);
             pnlEncabezadoClientes.Controls.Add(LBLtituloClientes);
-            pnlEncabezadoClientes.Location = new Point(0, 0);
+            pnlEncabezadoClientes.Dock = DockStyle.Top;
+            pnlEncabezadoClientes.Location = new Point(8, 8);
+            pnlEncabezadoClientes.Margin = new Padding(0, 0, 0, 8);
             pnlEncabezadoClientes.Name = "pnlEncabezadoClientes";
-            pnlEncabezadoClientes.Size = new Size(1457, 65);
-            pnlEncabezadoClientes.TabIndex = 7;
-            // 
-            // LBLtituloClientes
-            // 
+            pnlEncabezadoClientes.Size = new Size(1427, 42);
+            pnlEncabezadoClientes.TabIndex = 0;
+            // lbltituloclientes
             LBLtituloClientes.AutoSize = true;
             LBLtituloClientes.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
             LBLtituloClientes.ForeColor = Color.White;
@@ -545,60 +530,104 @@ namespace Prana.Presentacion
             LBLtituloClientes.Size = new Size(104, 32);
             LBLtituloClientes.TabIndex = 0;
             LBLtituloClientes.Text = "Clientes";
-            // 
-            // frmClientes
-            // 
+            // pnllistadodiseno inserta el control en su contenedor; esto determina su jerarquia visual y posicion relativa
+            pnlListadoDiseno.Controls.Add(dgv_listadoClientes);
+            pnlListadoDiseno.Controls.Add(pnlFiltroEstadoCliente);
+            pnlListadoDiseno.Controls.Add(label4);
+            pnlListadoDiseno.Dock = DockStyle.Top;
+            pnlListadoDiseno.Location = new Point(8, 423);
+            pnlListadoDiseno.Margin = new Padding(0, 0, 0, 8);
+            pnlListadoDiseno.Name = "pnlListadoDiseno";
+            pnlListadoDiseno.Size = new Size(1427, 290);
+            pnlListadoDiseno.TabIndex = 3;
+            // pnlpagina
+            pnlPagina.AutoScroll = true;
+            pnlPagina.BackColor = Color.FromArgb(13, 19, 27);
+            pnlPagina.Controls.Add(tlpSecciones);
+            pnlPagina.Dock = DockStyle.Fill;
+            pnlPagina.ForeColor = Color.White;
+            pnlPagina.Location = new Point(0, 0);
+            pnlPagina.Name = "pnlPagina";
+            pnlPagina.Size = new Size(1460, 534);
+            pnlPagina.TabIndex = 2;
+            // tlpsecciones
+            tlpSecciones.AutoSize = true;
+            tlpSecciones.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tlpSecciones.ColumnCount = 1;
+            tlpSecciones.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tlpSecciones.Controls.Add(pnlEncabezadoClientes, 0, 0);
+            tlpSecciones.Controls.Add(PnlBusquedaCliente, 0, 1);
+            tlpSecciones.Controls.Add(panel2, 0, 2);
+            tlpSecciones.Controls.Add(pnlListadoDiseno, 0, 3);
+            tlpSecciones.Dock = DockStyle.Top;
+            tlpSecciones.Location = new Point(0, 0);
+            tlpSecciones.MinimumSize = new Size(760, 0);
+            tlpSecciones.Name = "tlpSecciones";
+            tlpSecciones.Padding = new Padding(8);
+            tlpSecciones.RowCount = 4;
+            tlpSecciones.RowStyles.Add(new RowStyle());
+            tlpSecciones.RowStyles.Add(new RowStyle());
+            tlpSecciones.RowStyles.Add(new RowStyle());
+            tlpSecciones.RowStyles.Add(new RowStyle());
+            tlpSecciones.Size = new Size(1443, 729);
+            tlpSecciones.TabIndex = 0;
+            // frmclientes
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            AutoScroll = true;
             AutoSize = true;
+            BackColor = Color.FromArgb(13, 19, 27);
             ClientSize = new Size(1460, 534);
-            Controls.Add(panel1);
-            Controls.Add(sugerenciasClientes);
+            Controls.Add(pnlPagina);
+            ForeColor = Color.White;
             Name = "frmClientes";
             Text = "frmClientes";
             Load += frmClientes_Load;
             Disposed += frmClientes_Disposed;
-            panel1.ResumeLayout(false);
-            panel1.PerformLayout();
             PnlBusquedaCliente.ResumeLayout(false);
             PnlBusquedaCliente.PerformLayout();
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
+            // llama a ((systemcomponentmodelisupportinitialize)dgv_listadoclientes)endinit para realizar este paso del flujo
             ((System.ComponentModel.ISupportInitialize)dgv_listadoClientes).EndInit();
+            pnlFiltroEstadoCliente.ResumeLayout(false);
             pnlEncabezadoClientes.ResumeLayout(false);
             pnlEncabezadoClientes.PerformLayout();
+            pnlListadoDiseno.ResumeLayout(false);
+            pnlPagina.ResumeLayout(false);
+            pnlPagina.PerformLayout();
+            tlpSecciones.ResumeLayout(false);
+            tlpSecciones.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
-
         private Panel panel1;
         private Panel pnlEncabezadoClientes;
         private Label LBLtituloClientes;
         private Panel PnlBusquedaCliente;
         private Label label1;
         private Label lblcodigo;
-        private TextBox txtBuscarCliente;
+        private ComboBox cboBuscarCliente;
         private Panel panel2;
         private Label label2;
         private FontAwesome.Sharp.IconButton btnBuscarClientes;
-        private TextBox textBoxTelefono;
+        private TextBox txtTelefonoCliente;
         private Label label10;
         private Label label8;
-        private TextBox textBoxApellido;
+        private TextBox txtApellidoCliente;
         private Label label3;
         private Label lblVC;
-        private TextBox textBoxNombre;
-        private TextBox textBoxDNI;
+        private TextBox txtNombreCliente;
+        private TextBox txtDocumentoCliente;
+        private ComboBox cboTipoDocumento;
+        private DataGridViewComboBoxColumn colTipoDocumento;
         private FontAwesome.Sharp.IconButton btnCancelar;
         private DataGridView dgv_listadoClientes;
         private Label label4;
         private Label label5;
-        private TextBox textBoxDireccion;
+        private TextBox txtDireccionCliente;
         private Label Localidad;
-        private TextBox textBoxLocalidad;
+        private TextBox txtLocalidadCliente;
         private Button btn_CrearCliente;
         private DataGridViewTextBoxColumn colNombre;
         private DataGridViewTextBoxColumn colApellido;
@@ -610,20 +639,17 @@ namespace Prana.Presentacion
         private DataGridViewTextBoxColumn colFechaRegistro;
         private DataGridViewTextBoxColumn colSaldoFavor;
         private TextBox txtCodigoPostal;
-
         private Label lblCodigoPostal;
-
-        private ListBox sugerenciasClientes;
-
         private DataGridViewTextBoxColumn colCodigoPostal;
-
         private DataGridViewTextBoxColumn colDeudaPendiente;
-
         private DataGridViewTextBoxColumn colEstadoCuenta;
-
         private DataGridViewButtonColumn colVerDeuda;
-
         private System.Windows.Forms.Timer esperaBusqueda;
-
+        private Panel pnlFiltroEstadoCliente;
+        private ComboBox cboFiltroEstadoCliente;
+        private Button btnCambiarEstadoCliente;
+        private Panel pnlListadoDiseno;
+        private Panel pnlPagina;
+        private TableLayoutPanel tlpSecciones;
     }
 }

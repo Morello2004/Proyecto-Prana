@@ -1,14 +1,20 @@
-namespace Prana.Presentacion;
-
+﻿namespace Prana.Presentacion;
+// parte visual de frmmotivoanulacion crea controles y define su distribucion, colores y eventos; visual studio puede regenerar este archivo al editar el disenador
 partial class frmMotivoAnulacion
 {
     private System.ComponentModel.IContainer? components = null;
+    // libera los recursos del formulario; disposing indica si tambien deben liberarse los componentes administrados
     protected override void Dispose(bool disposing)
     {
-        if (disposing) components?.Dispose();
+        if (disposing)
+        {
+            components?.Dispose();
+        }
+
         base.Dispose(disposing);
     }
 
+    // construye la pantalla: instancia controles, asigna propiedades, agrega cada control a su contenedor y conecta los eventos no registra operaciones comerciales
     private void InitializeComponent()
     {
         components = new System.ComponentModel.Container();

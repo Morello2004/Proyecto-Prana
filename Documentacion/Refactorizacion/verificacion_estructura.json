@@ -1,0 +1,674 @@
+[
+  {
+    "archivo": "DocumentosPrana.cs",
+    "variablesRenombradas": 4,
+    "bloquesConLlaves": 12,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Interfaz.Designer.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Interfaz.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 3,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Program.cs",
+    "variablesRenombradas": 1,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmAlertas.Designer.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 1,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmAlertas.cs",
+    "variablesRenombradas": 1,
+    "bloquesConLlaves": 4,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmComprobantes.Designer.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 1,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmComprobantes.cs",
+    "variablesRenombradas": 1,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmDeudaCliente.Designer.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 1,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmDeudaCliente.cs",
+    "variablesRenombradas": 1,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmEntregas.Designer.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 1,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmEntregas.cs",
+    "variablesRenombradas": 3,
+    "bloquesConLlaves": 3,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmHistorial.Designer.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmHistorial.cs",
+    "variablesRenombradas": 1,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmMotivoAnulacion.Designer.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 1,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmMotivoAnulacion.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmResumenMensualCaja.Designer.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 1,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmSeleccionarProducto.Designer.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmSeleccionarProducto.cs",
+    "variablesRenombradas": 1,
+    "bloquesConLlaves": 2,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmUsuarios.Designer.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "login.Designer.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "login.cs",
+    "variablesRenombradas": 1,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmPanelPrincipal.cs",
+    "variablesRenombradas": 2,
+    "bloquesConLlaves": 4,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmUsuarios.cs",
+    "variablesRenombradas": 5,
+    "bloquesConLlaves": 7,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmPanelPrincipal.Designer.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 1,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmMediosPagos.Designer.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 1,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmMediosPagos.cs",
+    "variablesRenombradas": 1,
+    "bloquesConLlaves": 2,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmPagos.Designer.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 1,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmPagos.cs",
+    "variablesRenombradas": 6,
+    "bloquesConLlaves": 7,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmInformesVentas.cs",
+    "variablesRenombradas": 3,
+    "bloquesConLlaves": 5,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmStock.cs",
+    "variablesRenombradas": 3,
+    "bloquesConLlaves": 9,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmInformesVentas.Designer.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 1,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmStock.Designer.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmClientes.Designer.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmClientes.cs",
+    "variablesRenombradas": 7,
+    "bloquesConLlaves": 14,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmNuevaVenta.Designer.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmNuevaVenta.cs",
+    "variablesRenombradas": 12,
+    "bloquesConLlaves": 22,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmCaja.cs",
+    "variablesRenombradas": 1,
+    "bloquesConLlaves": 5,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmCaja.Designer.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 1,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "frmResumenMensualCaja.cs",
+    "variablesRenombradas": 1,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_Caja.cs",
+    "variablesRenombradas": 18,
+    "bloquesConLlaves": 7,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_Categoria.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_Comprobante.cs",
+    "variablesRenombradas": 7,
+    "bloquesConLlaves": 5,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_Entrega.cs",
+    "variablesRenombradas": 11,
+    "bloquesConLlaves": 8,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_Localidad.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_LogActividad.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_Marca.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_MedioPago.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 1,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_Pago.cs",
+    "variablesRenombradas": 6,
+    "bloquesConLlaves": 3,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_Proveedor.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_RegistroVenta.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 1,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_Usuario.cs",
+    "variablesRenombradas": 2,
+    "bloquesConLlaves": 6,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_Venta.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Datos\\GestionVentaSql.cs",
+    "variablesRenombradas": 4,
+    "bloquesConLlaves": 3,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Datos\\InicializadorBaseDatos.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 3,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Datos\\conexion.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_InformeVentas.cs",
+    "variablesRenombradas": 4,
+    "bloquesConLlaves": 6,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_Cliente.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 3,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_Producto.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 1,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\AlertaPagoPendiente.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\AlertasStockPendiente.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\Categoria.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\ComprobanteVenta.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\FiltroInformeVentas.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\InformeVenta.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\Localidad.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\LogActividad.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\Marca.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\MedioPago.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\Proveedor.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\ResultadoInicioSesion.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\ResumenMensualCaja.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\ResumenVentas.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\VarianteProducto.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\producto.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\usuario.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\venta.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\CierreCaja.cs",
+    "variablesRenombradas": 3,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\ConteoBillete.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\EntregaRegistrada.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\MovimientoCaja.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\Pago.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\ProductoPorEntregar.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\TiposCaja.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\TotalMensualCaja.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\Cliente.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.Entidades\\DetalleNuevaVenta.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_Caja.cs",
+    "variablesRenombradas": 2,
+    "bloquesConLlaves": 9,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_Categoria.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_Comprobante.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_Entrega.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 5,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_LogActividad.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_Marca.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_MedioPago.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 6,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_Pago.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 7,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_Venta.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 2,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.negocio\\SesionActual.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_Proveedor.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.negocio\\NormalizarTexto.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_InformeVentas.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_Usuario.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 14,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.negocio\\Permisos.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 1,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_Cliente.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 8,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_RegistroVenta.cs",
+    "variablesRenombradas": 5,
+    "bloquesConLlaves": 29,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_Producto.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 40,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Properties\\Resources.Designer.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 0,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Pruebas\\CajaComprobantes\\Program.cs",
+    "variablesRenombradas": 11,
+    "bloquesConLlaves": 4,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Pruebas\\CajaComprobantes\\PruebasPresentacion.cs",
+    "variablesRenombradas": 1,
+    "bloquesConLlaves": 5,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Pruebas\\Disenador\\Program.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 6,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Pruebas\\ResumenMensual\\Program.cs",
+    "variablesRenombradas": 0,
+    "bloquesConLlaves": 3,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Pruebas\\ValidacionesVenta\\Program.cs",
+    "variablesRenombradas": 3,
+    "bloquesConLlaves": 8,
+    "literalesConservados": true
+  },
+  {
+    "archivo": "Pruebas\\Manual\\Program.cs",
+    "variablesRenombradas": 5,
+    "bloquesConLlaves": 6,
+    "literalesConservados": true
+  }
+]

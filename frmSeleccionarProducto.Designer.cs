@@ -1,31 +1,23 @@
 ﻿namespace Prana.Presentacion
 {
+    // parte visual de buttonseleccionarproducto crea controles y define su distribucion, colores y eventos; visual studio puede regenerar este archivo al editar el disenador
     partial class buttonSeleccionarProducto
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
+        // /// required designer variable
         private System.ComponentModel.IContainer components = null;
-
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        // /// clean up any resources being used true if managed resources should be disposed; otherwise, false libera los recursos del formulario; disposing indica si tambien deben liberarse los componentes administrados
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
             {
                 components.Dispose();
             }
+
             base.Dispose(disposing);
         }
 
         #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
+        // /// required method for designer support - do not modify the contents of this method with the code editor construye la pantalla: instancia controles, asigna propiedades, agrega cada control a su contenedor y conecta los eventos no registra operaciones comerciales
         private void InitializeComponent()
         {
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
@@ -43,11 +35,10 @@
             colAgregar = new DataGridViewButtonColumn();
             btnAgregarProducto = new Button();
             buttonCancelar = new Button();
+            // llama a ((systemcomponentmodelisupportinitialize)dgvproductos)begininit para realizar este paso del flujo
             ((System.ComponentModel.ISupportInitialize)dgvProductos).BeginInit();
             SuspendLayout();
-            // 
-            // buttonBuscarProducto
-            // 
+            // buttonbuscarproducto buttonbuscarproductolocation: posicion horizontal y vertical respecto del contenedor
             buttonBuscarProducto.Location = new Point(374, 12);
             buttonBuscarProducto.Name = "buttonBuscarProducto";
             buttonBuscarProducto.Size = new Size(75, 23);
@@ -55,17 +46,13 @@
             buttonBuscarProducto.Text = "Buscar";
             buttonBuscarProducto.UseVisualStyleBackColor = true;
             buttonBuscarProducto.Click += buttonBuscarProducto_Click;
-            // 
-            // textBox1
-            // 
+            // textbox1 textbox1location: posicion horizontal y vertical respecto del contenedor
             textBox1.Location = new Point(36, 12);
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(298, 23);
             textBox1.TabIndex = 3;
             textBox1.TextChanged += textBox1_TextChanged;
-            // 
-            // dgvProductos
-            // 
+            // dgvproductos
             dgvProductos.AllowUserToAddRows = false;
             dgvProductos.AllowUserToDeleteRows = false;
             dgvProductos.AllowUserToResizeRows = false;
@@ -77,13 +64,24 @@
             dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
             dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
             dataGridViewCellStyle2.Format = "C2";
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dataGridViewCellStyle2.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(190, 220, 250);
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
             dgvProductos.DefaultCellStyle = dataGridViewCellStyle2;
             dgvProductos.Location = new Point(12, 71);
             dgvProductos.MultiSelect = false;
             dgvProductos.Name = "dgvProductos";
+            dgvProductos.ForeColor = Color.Black;
+            dgvProductos.DefaultCellStyle.ForeColor = Color.Black;
+            dgvProductos.RowsDefaultCellStyle.ForeColor = Color.Black;
+            dgvProductos.AlternatingRowsDefaultCellStyle.ForeColor = Color.Black;
+            dgvProductos.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvProductos.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dgvProductos.DefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvProductos.DefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dgvProductos.AlternatingRowsDefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvProductos.AlternatingRowsDefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
             dgvProductos.ReadOnly = true;
             dgvProductos.RowHeadersVisible = false;
             dgvProductos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -91,45 +89,33 @@
             dgvProductos.TabIndex = 4;
             dgvProductos.CellClick += dgvProductos_CellClick;
             dgvProductos.CellContentClick += dgvProductos_CellContentClick;
-            // 
-            // colIdVariante
-            // 
+            // colidvariante colidvariantedatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colIdVariante.DataPropertyName = "IdVariante";
             colIdVariante.HeaderText = "Id variante";
             colIdVariante.Name = "colIdVariante";
             colIdVariante.ReadOnly = true;
             colIdVariante.Visible = false;
-            // 
-            // colProducto
-            // 
+            // colproducto colproductodatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colProducto.DataPropertyName = "NombreProducto";
             colProducto.HeaderText = "Producto";
             colProducto.Name = "colProducto";
             colProducto.ReadOnly = true;
-            // 
-            // colModelo
-            // 
+            // colmodelo colmodelodatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colModelo.DataPropertyName = "Modelo";
             colModelo.HeaderText = "Modelo";
             colModelo.Name = "colModelo";
             colModelo.ReadOnly = true;
-            // 
-            // colColor
-            // 
+            // colcolor colcolordatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colColor.DataPropertyName = "Color";
             colColor.HeaderText = "Color";
             colColor.Name = "colColor";
             colColor.ReadOnly = true;
-            // 
-            // colCondicion
-            // 
+            // colcondicion colcondiciondatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colCondicion.DataPropertyName = "CondicionProducto";
             colCondicion.HeaderText = "Condición";
             colCondicion.Name = "colCondicion";
             colCondicion.ReadOnly = true;
-            // 
-            // colStock
-            // 
+            // colstock colstockdatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colStock.DataPropertyName = "StockFisico";
             dataGridViewCellStyle1.Format = "N0";
             dataGridViewCellStyle1.NullValue = null;
@@ -137,33 +123,29 @@
             colStock.HeaderText = "Stock";
             colStock.Name = "colStock";
             colStock.ReadOnly = true;
-            // 
-            // colCosto
-            // 
+            // colcosto colcostodatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colCosto.DataPropertyName = "Costo";
             colCosto.HeaderText = "Costo actual";
             colCosto.Name = "colCosto";
             colCosto.ReadOnly = true;
-            // 
-            // colAgregar
-            // 
+            // colagregar colagregarheadertext: titulo de la columna; no es el nombre de la propiedad enlazada
             colAgregar.HeaderText = "Accion";
             colAgregar.Name = "colAgregar";
+            colAgregar.DefaultCellStyle.ForeColor = Color.Black;
+            colAgregar.DefaultCellStyle.SelectionForeColor = Color.Black;
+            colAgregar.DefaultCellStyle.BackColor = Color.Gainsboro;
+            colAgregar.DefaultCellStyle.SelectionBackColor = Color.Gainsboro;
             colAgregar.ReadOnly = true;
             colAgregar.Text = "Agregar";
             colAgregar.UseColumnTextForButtonValue = true;
-            // 
-            // btnAgregarProducto
-            // 
+            // btnagregarproducto btnagregarproductolocation: posicion horizontal y vertical respecto del contenedor
             btnAgregarProducto.Location = new Point(12, 307);
             btnAgregarProducto.Name = "btnAgregarProducto";
             btnAgregarProducto.Size = new Size(129, 23);
             btnAgregarProducto.TabIndex = 5;
             btnAgregarProducto.Text = "Seleccionar producto";
             btnAgregarProducto.UseVisualStyleBackColor = true;
-            // 
-            // buttonCancelar
-            // 
+            // buttoncancelar buttoncancelarlocation: posicion horizontal y vertical respecto del contenedor
             buttonCancelar.Location = new Point(162, 307);
             buttonCancelar.Name = "buttonCancelar";
             buttonCancelar.Size = new Size(129, 23);
@@ -171,9 +153,7 @@
             buttonCancelar.Text = "Cancelar";
             buttonCancelar.UseVisualStyleBackColor = true;
             buttonCancelar.Click += buttonCancelar_Click;
-            // 
-            // buttonSeleccionarProducto
-            // 
+            // buttonseleccionarproducto
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
@@ -185,13 +165,13 @@
             Name = "buttonSeleccionarProducto";
             Text = "frmSeleccionarProducto";
             Load += frmSeleccionarProducto_Load;
+            // llama a ((systemcomponentmodelisupportinitialize)dgvproductos)endinit para realizar este paso del flujo
             ((System.ComponentModel.ISupportInitialize)dgvProductos).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-
         private Button buttonBuscarProducto;
         private TextBox textBox1;
         private DataGridView dgvProductos;

@@ -1,0 +1,29 @@
+{
+  "frmNuevaVenta": {
+    "dataGridView2": "dgvClienteSeleccionado",
+    "numericUpDown1": "nudCostoEnvio",
+    "textBox1": "txtSegundoTelefono",
+    "label2": "lblCuotasPago"
+  },
+  "frmClientes": {
+    "textBoxNombre": "txtNombreCliente",
+    "textBoxApellido": "txtApellidoCliente",
+    "textBoxDNI": "txtDocumentoCliente",
+    "textBoxTelefono": "txtTelefonoCliente",
+    "textBoxDireccion": "txtDireccionCliente",
+    "textBoxLocalidad": "txtLocalidadCliente"
+  },
+  "frmStock": {
+    "textBoxNombreProducto": "txtNombreProducto",
+    "textBoxModelo": "txtModeloProducto",
+    "textBoxDescripcion": "txtDescripcionProducto",
+    "textBoxColor": "txtColorVariante",
+    "textBoxMarca": "txtMarcaProducto",
+    "textBoxCategoria": "txtCategoriaProducto",
+    "textBoxRtoProveedor": "txtDocumentoProveedor",
+    "dataGridViewBusquedaProducto": "dgvBusquedaProductos",
+    "dataGridViewDetalleIngreso": "dgvDetalleIngreso",
+    "comboBoxCondicion2": "cboCondicionVariante",
+    "comboBoxCondicion": "cboFiltroCondicion"
+  }
+}

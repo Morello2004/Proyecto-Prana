@@ -5,33 +5,31 @@ using System.Collections.Generic;
 
 namespace Prana.negocio
 {
-    // Coordina el registro de actividades de los usuarios.
+    // coordina el registro de actividades de los usuarios
     public class CN_LogActividad
     {
-        // Accede a la tabla de logs mediante la capa de datos.
+        // accede a la tabla de logs mediante la capa de datos
         private readonly CD_LogActividad datosLog = new CD_LogActividad();
-
-        // Registra una acción realizada por el usuario autenticado.
+        // registra una accion realizada por el usuario autenticado
         public void Registrar(string accion, string entidad, int? idEntidad, string detalle)
         {
-            // Obtiene el usuario actualmente autenticado.
+            // obtiene el usuario actualmente autenticado
             int idUsuario = SesionActual.Usuario!.idUsuario;
-
-            // Guarda la actividad en la base de datos.
+            // guarda la actividad en la base de datos
             datosLog.Registrar(idUsuario, accion, entidad, idEntidad, detalle);
         }
 
-        // Obtiene el historial de actividades para mostrarlo en pantalla.
+        // obtiene el historial de actividades para mostrarlo en pantalla
         public List<LogActividad> ObtenerTodos()
         {
-            // Solicita el historial a la capa de datos.
+            // solicita el historial a la capa de datos
             return datosLog.ObtenerTodos();
         }
 
-        // Obtiene actividades filtradas por fecha y cantidad máxima.
+        // obtiene actividades filtradas por fecha y cantidad maxima
         public List<LogActividad> ObtenerFiltrado(DateTime desde, DateTime hasta, int limite, int? remito = null, string accion = "", string usuario = "")
         {
-            // Solicita los registros filtrados a la capa de datos.
+            // solicita los registros filtrados a la capa de datos
             return datosLog.ObtenerFiltrado(desde, hasta, limite, remito, accion, usuario);
         }
     }

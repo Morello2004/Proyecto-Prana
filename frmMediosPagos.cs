@@ -1,100 +1,151 @@
-using Prana.Entidades;
+﻿using Prana.Entidades;
 using Prana.negocio;
 using System;
 using System.Windows.Forms;
 
 namespace Prana.Presentacion
 {
-    // Permite editar los recargos de los medios de pago fijos
+    // permite editar los recargos de los medios de pago fijos
     public partial class frmMediosPagos : Form
     {
-        // Coordina la consulta y edicion de recargos
+        // coordina la consulta y edicion de recargos
         private readonly CN_MedioPago cnMedioPago = new CN_MedioPago();
-
-        // Conserva el medio seleccionado para modificar sus recargos
+        // conserva el medio seleccionado para modificar sus recargos
         private int idMedioPagoSeleccionado;
-
-        // Inicializa el formulario y bloquea los datos que no se pueden editar
+        // conserva el tipo original para validar los recargos sin mostrar un campo redundante al usuario
+        private string tipoCajaSeleccionado = string.Empty;
+        // inicializa el formulario y bloquea los datos que no se pueden editar
         public frmMediosPagos()
         {
             InitializeComponent();
-            cboTipoCaja.Items.AddRange(TiposCaja.Todos);
-            cboTipoCaja.SelectedIndex = -1;
-            cboTipoCaja.Enabled = false;
             txtNombreMedioPago.ReadOnly = true;
             btnGuardar.Enabled = false;
             ConfigurarCuotas(false);
             lblSeccion.Text = "Selecciona un medio de pago para editar sus recargos";
-            ConfigurarDistribucion();
         }
 
-        // Carga los medios de pago fijos cuando se abre la pantalla
+        // consulta los medios de pago fijos al abrir la pantalla
         private void frmMediosPagos_Load(object? sender, EventArgs e)
         {
             CargarMedios();
         }
 
-        // Carga los cuatro medios de pago fijos en la grilla
+        // carga los cuatro medios de pago fijos en la grilla
         private void CargarMedios()
         {
             dgvMediosPagos.DataSource = null;
             dgvMediosPagos.DataSource = cnMedioPago.ObtenerTodos();
+            // dgvmediospagoscolumns[nameof(mediopagoidmediopago)]visible: determina si el control ocupa una zona visible de la pantalla
             dgvMediosPagos.Columns[nameof(MedioPago.IdMedioPago)].Visible = false;
+            // dgvmediospagoscolumns[nameof(mediopagoactivo)]visible: determina si el control ocupa una zona visible de la pantalla
             dgvMediosPagos.Columns[nameof(MedioPago.Activo)].Visible = false;
-            dgvMediosPagos.Columns[nameof(MedioPago.TipoCaja)].HeaderText = "Tipo en caja";
+            dgvMediosPagos.Columns[nameof(MedioPago.TipoCaja)].Visible = false;
+            // dgvmediospagoscolumns[nameof(mediopagonombremediopago)]headertext: titulo de la columna; no es el nombre de la propiedad enlazada
             dgvMediosPagos.Columns[nameof(MedioPago.NombreMedioPago)].HeaderText = "Medio de pago";
+            // dgvmediospagoscolumns[nameof(mediopagorecargomediopago)]headertext: titulo de la columna; no es el nombre de la propiedad enlazada
             dgvMediosPagos.Columns[nameof(MedioPago.RecargoMedioPago)].HeaderText = "Recargo general %";
+            // dgvmediospagoscolumns[nameof(mediopagorecargo2)]headertext: titulo de la columna; no es el nombre de la propiedad enlazada
             dgvMediosPagos.Columns[nameof(MedioPago.Recargo2)].HeaderText = "2 cuotas %";
+            // dgvmediospagoscolumns[nameof(mediopagorecargo3)]headertext: titulo de la columna; no es el nombre de la propiedad enlazada
             dgvMediosPagos.Columns[nameof(MedioPago.Recargo3)].HeaderText = "3 cuotas %";
+            // dgvmediospagoscolumns[nameof(mediopagorecargo6)]headertext: titulo de la columna; no es el nombre de la propiedad enlazada
             dgvMediosPagos.Columns[nameof(MedioPago.Recargo6)].HeaderText = "6 cuotas %";
+            // dgvmediospagoscolumns[nameof(mediopagorecargo9)]headertext: titulo de la columna; no es el nombre de la propiedad enlazada
             dgvMediosPagos.Columns[nameof(MedioPago.Recargo9)].HeaderText = "9 cuotas %";
+            // dgvmediospagoscolumns[nameof(mediopagorecargo12)]headertext: titulo de la columna; no es el nombre de la propiedad enlazada
             dgvMediosPagos.Columns[nameof(MedioPago.Recargo12)].HeaderText = "12 cuotas %";
             dgvMediosPagos.ClearSelection();
             LimpiarSeleccion();
         }
 
-        // Guarda los recargos del medio seleccionado
+        // guarda los recargos del medio seleccionado atiende la pulsacion de btnguardar y ejecuta la accion asociada el evento no significa que la operacion ya se haya guardado
         private void btnGuardar_Click(object? sender, EventArgs e)
         {
             try
             {
-                if (idMedioPagoSeleccionado == 0) throw new InvalidOperationException("Seleccione un medio de pago para editar sus recargos.");
+                if (idMedioPagoSeleccionado == 0)
+                {
+                    // interrumpe el flujo con una excepcion; el nivel que la atiende decide como informar o revertir la operacion
+                    throw new InvalidOperationException("Seleccione un medio de pago para editar sus recargos.");
+                }
+
                 MedioPago medio = ObtenerMedioDesdeFormulario();
                 medio.IdMedioPago = idMedioPagoSeleccionado;
                 cnMedioPago.Modificar(medio);
                 MessageBox.Show("Recargos guardados correctamente.", "Medios de pago", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 CargarMedios();
             }
-            catch (Exception ex)
+            // atiende el error de esta operacion antes de informar o propagar el problema
+            catch (Exception error)
             {
-                MessageBox.Show("No se pudieron guardar los recargos: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("No se pudieron guardar los recargos: " + error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        // Carga en el formulario el medio seleccionado
+        // carga en el formulario el medio seleccionado atiende el evento cellclick del control o formulario indicado por el nombre del metodo
         private void dgvMediosPagos_CellClick(object? sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0 || dgvMediosPagos.Rows[e.RowIndex].DataBoundItem is not MedioPago medio) return;
+            // comprueba que el clic corresponda a una fila de datos y no al encabezado
+            if (e.RowIndex < 0 || dgvMediosPagos.Rows[e.RowIndex].DataBoundItem is not MedioPago medio)
+            {
+                return;
+            }
+
             idMedioPagoSeleccionado = medio.IdMedioPago;
-            cboTipoCaja.SelectedItem = medio.TipoCaja;
+            tipoCajaSeleccionado = medio.TipoCaja;
             txtNombreMedioPago.Text = medio.NombreMedioPago;
             nudRecargoGeneral.Value = medio.RecargoMedioPago;
             bool permiteCuotas = medio.TipoCaja == "Crédito";
             ConfigurarCuotas(permiteCuotas);
-            nudRecargo2.Value = permiteCuotas ? medio.Recargo2 : 0;
-            nudRecargo3.Value = permiteCuotas ? medio.Recargo3 : 0;
-            nudRecargo6.Value = permiteCuotas ? medio.Recargo6 : 0;
-            nudRecargo9.Value = permiteCuotas ? medio.Recargo9 : 0;
-            nudRecargo12.Value = permiteCuotas ? medio.Recargo12 : 0;
+            if (permiteCuotas)
+            {
+                nudRecargo2.Value = medio.Recargo2;
+            }
+            else
+            {
+                nudRecargo2.Value = 0;
+            }
+            if (permiteCuotas)
+            {
+                nudRecargo3.Value = medio.Recargo3;
+            }
+            else
+            {
+                nudRecargo3.Value = 0;
+            }
+            if (permiteCuotas)
+            {
+                nudRecargo6.Value = medio.Recargo6;
+            }
+            else
+            {
+                nudRecargo6.Value = 0;
+            }
+            if (permiteCuotas)
+            {
+                nudRecargo9.Value = medio.Recargo9;
+            }
+            else
+            {
+                nudRecargo9.Value = 0;
+            }
+            if (permiteCuotas)
+            {
+                nudRecargo12.Value = medio.Recargo12;
+            }
+            else
+            {
+                nudRecargo12.Value = 0;
+            }
             btnGuardar.Enabled = true;
         }
 
-        // Convierte los recargos editables en una entidad
+        // convierte los recargos editables en una entidad
         private MedioPago ObtenerMedioDesdeFormulario()
         {
             return new MedioPago
             {
-                TipoCaja = cboTipoCaja.Text,
+                TipoCaja = tipoCajaSeleccionado,
                 NombreMedioPago = txtNombreMedioPago.Text,
                 RecargoMedioPago = nudRecargoGeneral.Value,
                 Recargo2 = nudRecargo2.Value,
@@ -103,10 +154,11 @@ namespace Prana.Presentacion
                 Recargo9 = nudRecargo9.Value,
                 Recargo12 = nudRecargo12.Value,
                 Activo = true
+
             };
         }
 
-        // Habilita las cuotas unicamente para el medio de credito
+        // habilita las cuotas unicamente para el medio de credito
         private void ConfigurarCuotas(bool habilitadas)
         {
             lblRecargo2.Enabled = habilitadas;
@@ -121,11 +173,11 @@ namespace Prana.Presentacion
             nudRecargo12.Enabled = habilitadas;
         }
 
-        // Limpia la seleccion y bloquea la edicion hasta elegir un medio
+        // limpia la seleccion y bloquea la edicion hasta elegir un medio
         private void LimpiarSeleccion()
         {
             idMedioPagoSeleccionado = 0;
-            cboTipoCaja.SelectedIndex = -1;
+            tipoCajaSeleccionado = string.Empty;
             txtNombreMedioPago.Clear();
             nudRecargoGeneral.Value = 0;
             nudRecargo2.Value = 0;

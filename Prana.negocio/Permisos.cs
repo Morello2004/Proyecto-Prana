@@ -1,101 +1,77 @@
-using Prana.Entidades;
+﻿using Prana.Entidades;
 
 namespace Prana.negocio
 {
-    // Centraliza los permisos fijos del sistema.
+    // centraliza los permisos fijos del sistema
     public static class Permisos
     {
-        public const string GestionarCaja = "GESTIONAR_CAJA";
-        // Identifica el rol Administrador.
+        // identifica el rol administrador
         private const int RolAdministrador = 1;
-
-        // Identifica el rol Vendedor.
+        // identifica el rol vendedor
         private const int RolVendedor = 2;
-
-        // Permite consultar el panel principal.
+        // permite consultar el panel principal
         public const string VerPanelPrincipal = "VER_PANEL_PRINCIPAL";
-
-        // Permite gestionar clientes.
+        // permite gestionar clientes
         public const string GestionarClientes = "GESTIONAR_CLIENTES";
-
-        // Permite consultar productos.
+        // solo el administrador puede dar de baja clientes
+        public const string DarDeBajaClientes = "DAR_DE_BAJA_CLIENTES";
+        // permite consultar productos
         public const string ConsultarProductos = "CONSULTAR_PRODUCTOS";
-
-        // Permite crear productos.
-        public const string CrearProductos = "CREAR_PRODUCTOS";
-
-        // Permite modificar productos.
-        public const string ModificarProductos = "MODIFICAR_PRODUCTOS";
-
-        // Permite modificar precios.
-        public const string ModificarPrecios = "MODIFICAR_PRECIOS";
-
-        // Permite consultar el stock.
+        // permite consultar el stock
         public const string ConsultarStock = "CONSULTAR_STOCK";
-
-        // Permite gestionar el stock.
-        public const string GestionarStock = "GESTIONAR_STOCK";
-
-        // Permite registrar ingresos de stock.
-        public const string RegistrarIngresoStock = "REGISTRAR_INGRESO_STOCK";
-
-        // Permite registrar ventas.
+        // permite registrar ventas
         public const string RegistrarVentas = "REGISTRAR_VENTAS";
-
-        // Permite consultar pagos.
+        // permite consultar pagos
         public const string ConsultarPagos = "CONSULTAR_PAGOS";
-
-        // Permite registrar pagos.
+        // permite registrar pagos
         public const string RegistrarPagos = "REGISTRAR_PAGOS";
-
-        // Permite consultar entregas.
+        // permite consultar entregas
         public const string ConsultarEntregas = "CONSULTAR_ENTREGAS";
-
-        // Permite gestionar entregas.
+        // permite al administrador y al vendedor preparar y confirmar entregas
         public const string GestionarEntregas = "GESTIONAR_ENTREGAS";
-
-        // Permite consultar alertas.
+        // permite consultar alertas
         public const string ConsultarAlertas = "CONSULTAR_ALERTAS";
-
-        // Permite modificar medios de pago.
+        // permite modificar medios de pago
         public const string ModificarMediosPago = "MODIFICAR_MEDIOS_PAGO";
-
-        // Permite gestionar usuarios.
+        // permite gestionar usuarios
         public const string GestionarUsuarios = "GESTIONAR_USUARIOS";
-
-        // Permite consultar el historial de actividades.
+        // permite consultar el historial de actividades
         public const string ConsultarHistorial = "CONSULTAR_HISTORIAL";
-
+        // conserva consultar informes entre las operaciones de esta clase
         public const string ConsultarInformes = "CONSULTAR_INFORMES";
+        // solo el administrador puede anular ingresos y gastos manuales de caja
+        public const string AnularMovimientosCaja = "ANULAR_MOVIMIENTOS_CAJA";
+        // solo el administrador puede corregir unificar o eliminar las opciones compartidas de stock
+        public const string AdministrarOpcionesStock = "ADMINISTRAR_OPCIONES_STOCK";
+        // exige una sesion iniciada y el permiso necesario antes de continuar comprueba exigir; si no se cumple la regla interrumpe con un mensaje antes de continuar
+        public static void Exigir(string permiso)
+        {
+            // comprueba la autorizacion de la cuenta antes de permitir esta accion
+            if (SesionActual.Usuario == null || !TienePermiso(permiso))
+            {
+                // interrumpe el flujo con una excepcion; el nivel que la atiende decide como informar o revertir la operacion
+                throw new InvalidOperationException("No tiene permisos para esta operación.");
+            }
+        }
 
-        // Comprueba si el usuario actual tiene el permiso solicitado.
-        // Comprueba los permisos del rol del usuario actual.
+        // comprueba si el usuario actual tiene el permiso solicitado comprueba los permisos del rol del usuario actual
         public static bool TienePermiso(string permiso)
         {
-            // Obtiene el usuario guardado en la sesión.
+            // obtiene el usuario guardado en la sesion
             usuario usuarioActual = SesionActual.Usuario!;
-
-            // El Administrador tiene acceso completo.
+            // el administrador tiene acceso completo
             if (usuarioActual.IdRolUsuario == RolAdministrador)
             {
                 return true;
             }
 
-            // Comprueba los permisos específicos del Vendedor.
+            // comprueba los permisos especificos del vendedor
             if (usuarioActual.IdRolUsuario == RolVendedor)
             {
-                return permiso == VerPanelPrincipal
-                    || permiso == GestionarClientes
-                    || permiso == ConsultarProductos
-                    || permiso == ConsultarStock
-                    || permiso == RegistrarVentas
-                    || permiso == ConsultarPagos
-                    || permiso == RegistrarPagos
-                    || permiso == ConsultarEntregas
-                    || permiso == ConsultarAlertas;
+                return permiso == VerPanelPrincipal || permiso == GestionarClientes || permiso == ConsultarProductos || permiso == ConsultarStock || permiso == RegistrarVentas || permiso == ConsultarPagos || permiso == RegistrarPagos || permiso == ConsultarEntregas || permiso == GestionarEntregas || permiso == ConsultarAlertas;
             }
 
-            // Deniega roles no definidos.
+            // deniega roles no definidos
             return false;
         }
     }

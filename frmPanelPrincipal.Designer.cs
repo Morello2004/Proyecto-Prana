@@ -1,25 +1,37 @@
-namespace Prana.Presentacion
+﻿namespace Prana.Presentacion
 {
+    // parte visual de frmpanelprincipal crea controles y define su distribucion, colores y eventos; visual studio puede regenerar este archivo al editar el disenador
     partial class frmPanelPrincipal
     {
         private System.ComponentModel.IContainer components = null;
+        // libera los recursos del formulario; disposing indica si tambien deben liberarse los componentes administrados
         protected override void Dispose(bool disposing)
         {
-            if (disposing) components?.Dispose();
+            if (disposing)
+            {
+                components?.Dispose();
+            }
+
             base.Dispose(disposing);
         }
 
         #region Windows Form Designer generated code
+        // construye la pantalla: instancia controles, asigna propiedades, agrega cada control a su contenedor y conecta los eventos no registra operaciones comerciales
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPanelPrincipal));
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             ayuda = new Label();
-
             documentos = new Button();
-
             caja = new Button();
-
             pnlEncabezado = new Panel();
             lblTitulo = new Label();
+            flpAccesos = new FlowLayoutPanel();
             btnNuevaVenta = new Button();
             btnStock = new Button();
             tlpContenido = new TableLayoutPanel();
@@ -42,241 +54,498 @@ namespace Prana.Presentacion
             btnBuscar = new Button();
             btnUltimas = new Button();
             pnlVentas = new Panel();
-            lblResultados = new Label();
             dgvUltimasVentas = new DataGridView();
             colNumeroVenta = new DataGridViewTextBoxColumn();
-            colCliente = new DataGridViewTextBoxColumn();
             colFecha = new DataGridViewTextBoxColumn();
+            colCliente = new DataGridViewTextBoxColumn();
             colTotal = new DataGridViewTextBoxColumn();
-            colPagado = new DataGridViewTextBoxColumn();
-            colSaldo = new DataGridViewTextBoxColumn();
-            colEstado = new DataGridViewTextBoxColumn();
-            colEstadoEntrega = new DataGridViewTextBoxColumn();
             lblDetalle = new Label();
-            SuspendLayout();
+            lblResultados = new Label();
+            pnlEncabezado.SuspendLayout();
+            flpAccesos.SuspendLayout();
+            tlpContenido.SuspendLayout();
+            tlpResumen.SuspendLayout();
+            pnlHoy.SuspendLayout();
+            pnlSaldo.SuspendLayout();
+            pnlPendientes.SuspendLayout();
+            pnlBusqueda.SuspendLayout();
+            pnlVentas.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvUltimasVentas).BeginInit();
+            SuspendLayout();
+            // 
+            // ayuda
+            // 
+            ayuda.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            ayuda.Font = new Font("Segoe UI", 9F);
+            ayuda.ForeColor = Color.FromArgb(145, 170, 210);
+            ayuda.Location = new Point(16, 78);
+            ayuda.Name = "ayuda";
+            ayuda.Size = new Size(1810, 80);
+            ayuda.TabIndex = 3;
+            ayuda.Text = resources.GetString("ayuda.Text");
+            // 
+            // documentos
+            // 
+            documentos.BackColor = Color.SteelBlue;
+            documentos.FlatStyle = FlatStyle.Flat;
+            documentos.Location = new Point(465, 12);
+            documentos.Margin = new Padding(4, 4, 12, 4);
+            documentos.Name = "documentos";
+            documentos.Size = new Size(160, 34);
+            documentos.TabIndex = 4;
+            documentos.Text = "Garantía / remito";
+            documentos.UseVisualStyleBackColor = false;
+            documentos.Click += documentos_Click;
+            // 
+            // caja
+            // 
+            caja.BackColor = Color.SteelBlue;
+            caja.FlatStyle = FlatStyle.Flat;
+            caja.Location = new Point(304, 12);
+            caja.Margin = new Padding(4, 4, 12, 4);
+            caja.Name = "caja";
+            caja.Size = new Size(145, 34);
+            caja.TabIndex = 3;
+            caja.Text = "Caja y gastos";
+            caja.UseVisualStyleBackColor = false;
+            caja.Click += caja_Click;
+            // 
+            // pnlencabezado
+            // 
             pnlEncabezado.BackColor = Color.FromArgb(21, 30, 41);
+            pnlEncabezado.Controls.Add(lblTitulo);
+            pnlEncabezado.Controls.Add(flpAccesos);
             pnlEncabezado.Dock = DockStyle.Top;
-            pnlEncabezado.Size = new Size(1190, 76);
-            pnlEncabezado.Controls.AddRange(new Control[] { lblTitulo, btnNuevaVenta, btnStock });
-            lblTitulo.Text = "Panel principal";
-            lblTitulo.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
+            pnlEncabezado.Location = new Point(0, 0);
+            pnlEncabezado.Name = "pnlEncabezado";
+            pnlEncabezado.Size = new Size(1190, 120);
+            pnlEncabezado.TabIndex = 1;
+            // 
+            // lbltitulo
+            // 
             lblTitulo.AutoSize = true;
-            lblTitulo.Location = new Point(20, 20);
-            btnNuevaVenta.Text = "Nueva venta";
-            btnNuevaVenta.Size = new Size(130, 34);
-            btnNuevaVenta.Location = new Point(896, 21);
+            lblTitulo.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
+            lblTitulo.Location = new Point(20, 8);
+            lblTitulo.Name = "lblTitulo";
+            lblTitulo.Size = new Size(184, 32);
+            lblTitulo.TabIndex = 0;
+            lblTitulo.Text = "Panel principal";
+            // 
+            // flpaccesos
+            // 
+            flpAccesos.Controls.Add(btnNuevaVenta);
+            flpAccesos.Controls.Add(btnStock);
+            flpAccesos.Controls.Add(caja);
+            flpAccesos.Controls.Add(documentos);
+            flpAccesos.Dock = DockStyle.Bottom;
+            flpAccesos.Location = new Point(0, 60);
+            flpAccesos.Name = "flpAccesos";
+            flpAccesos.Padding = new Padding(8);
+            flpAccesos.Size = new Size(1190, 60);
+            flpAccesos.TabIndex = 1;
+            // 
+            // btnnuevaventa
+            // 
             btnNuevaVenta.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnNuevaVenta.BackColor = Color.DodgerBlue;
-            btnNuevaVenta.FlatStyle = FlatStyle.Flat;
             btnNuevaVenta.FlatAppearance.BorderSize = 0;
+            btnNuevaVenta.FlatStyle = FlatStyle.Flat;
+            btnNuevaVenta.Location = new Point(12, 12);
+            btnNuevaVenta.Margin = new Padding(4, 4, 12, 4);
+            btnNuevaVenta.Name = "btnNuevaVenta";
+            btnNuevaVenta.Size = new Size(130, 34);
+            btnNuevaVenta.TabIndex = 1;
+            btnNuevaVenta.Text = "Nueva venta";
+            btnNuevaVenta.UseVisualStyleBackColor = false;
             btnNuevaVenta.Click += btnNuevaVenta_Click;
-            btnStock.Text = "Ver stock";
-            btnStock.Size = new Size(130, 34);
-            btnStock.Location = new Point(1042, 21);
+            // 
+            // btnstock
+            // 
             btnStock.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnStock.BackColor = Color.SteelBlue;
-            btnStock.FlatStyle = FlatStyle.Flat;
             btnStock.FlatAppearance.BorderSize = 0;
+            btnStock.FlatStyle = FlatStyle.Flat;
+            btnStock.Location = new Point(158, 12);
+            btnStock.Margin = new Padding(4, 4, 12, 4);
+            btnStock.Name = "btnStock";
+            btnStock.Size = new Size(130, 34);
+            btnStock.TabIndex = 2;
+            btnStock.Text = "Ver stock";
+            btnStock.UseVisualStyleBackColor = false;
             btnStock.Click += btnStock_Click;
-            tlpContenido.Dock = DockStyle.Fill;
-            tlpContenido.Padding = new Padding(12);
+            // 
+            // tlpcontenido
+            // 
             tlpContenido.ColumnCount = 1;
-            tlpContenido.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            tlpContenido.RowCount = 3;
-            tlpContenido.RowStyles.Add(new RowStyle(SizeType.Absolute, 128));
-            tlpContenido.RowStyles.Add(new RowStyle(SizeType.Absolute, 96));
-            tlpContenido.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+            tlpContenido.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tlpContenido.Controls.Add(tlpResumen, 0, 0);
             tlpContenido.Controls.Add(pnlBusqueda, 0, 1);
             tlpContenido.Controls.Add(pnlVentas, 0, 2);
-            tlpResumen.Dock = DockStyle.Fill;
+            tlpContenido.Dock = DockStyle.Fill;
+            tlpContenido.Location = new Point(0, 120);
+            tlpContenido.Name = "tlpContenido";
+            tlpContenido.Padding = new Padding(12);
+            tlpContenido.RowCount = 3;
+            tlpContenido.RowStyles.Add(new RowStyle(SizeType.Absolute, 128F));
+            tlpContenido.RowStyles.Add(new RowStyle(SizeType.Absolute, 96F));
+            tlpContenido.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tlpContenido.Size = new Size(1190, 620);
+            tlpContenido.TabIndex = 0;
+            // 
+            // tlpresumen
+            // 
             tlpResumen.ColumnCount = 3;
-            tlpResumen.RowCount = 1;
-            tlpResumen.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             tlpResumen.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33F));
             tlpResumen.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33F));
             tlpResumen.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.34F));
             tlpResumen.Controls.Add(pnlHoy, 0, 0);
             tlpResumen.Controls.Add(pnlSaldo, 1, 0);
             tlpResumen.Controls.Add(pnlPendientes, 2, 0);
-            pnlHoy.Dock = DockStyle.Fill;
+            tlpResumen.Dock = DockStyle.Fill;
+            tlpResumen.Location = new Point(15, 15);
+            tlpResumen.Name = "tlpResumen";
+            tlpResumen.RowCount = 1;
+            tlpResumen.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tlpResumen.Size = new Size(1160, 122);
+            tlpResumen.TabIndex = 0;
+            // 
+            // pnlhoy
+            // 
             pnlHoy.BackColor = Color.FromArgb(21, 30, 41);
-            pnlHoy.Controls.AddRange(new Control[] { lblHoy, lblTotalHoy, lblCantidadHoy });
-            lblHoy.Text = "Ventas de hoy";
+            pnlHoy.Controls.Add(lblHoy);
+            pnlHoy.Controls.Add(lblTotalHoy);
+            pnlHoy.Controls.Add(lblCantidadHoy);
+            pnlHoy.Dock = DockStyle.Fill;
+            pnlHoy.Location = new Point(3, 3);
+            pnlHoy.Name = "pnlHoy";
+            pnlHoy.Size = new Size(380, 116);
+            pnlHoy.TabIndex = 0;
+            // 
+            // lblhoy
+            // 
             lblHoy.AutoSize = true;
             lblHoy.Location = new Point(16, 12);
-            lblTotalHoy.Text = "—";
+            lblHoy.Name = "lblHoy";
+            lblHoy.Size = new Size(80, 15);
+            lblHoy.TabIndex = 0;
+            lblHoy.Text = "Ventas de hoy";
+            // 
+            // lbltotalhoy
+            // 
             lblTotalHoy.AutoSize = true;
             lblTotalHoy.Font = new Font("Segoe UI", 22F, FontStyle.Bold);
             lblTotalHoy.Location = new Point(12, 34);
-            lblCantidadHoy.Text = "Cargando operaciones…";
+            lblTotalHoy.Name = "lblTotalHoy";
+            lblTotalHoy.Size = new Size(48, 41);
+            lblTotalHoy.TabIndex = 1;
+            lblTotalHoy.Text = "—";
+            lblTotalHoy.Click += lblTotalHoy_Click;
+            // 
+            // lblcantidadhoy
+            // 
             lblCantidadHoy.AutoSize = true;
             lblCantidadHoy.ForeColor = Color.FromArgb(145, 170, 210);
             lblCantidadHoy.Location = new Point(16, 85);
-            pnlSaldo.Dock = DockStyle.Fill;
+            lblCantidadHoy.Name = "lblCantidadHoy";
+            lblCantidadHoy.Size = new Size(135, 15);
+            lblCantidadHoy.TabIndex = 2;
+            lblCantidadHoy.Text = "Cargando operaciones…";
+            // 
+            // pnlsaldo
+            // 
             pnlSaldo.BackColor = Color.FromArgb(21, 30, 41);
-            pnlSaldo.Controls.AddRange(new Control[] { lblSaldo, lblTotalPendiente, lblSaldoAyuda });
-            lblSaldo.Text = "Saldo pendiente de cobro";
+            pnlSaldo.Controls.Add(lblSaldo);
+            pnlSaldo.Controls.Add(lblTotalPendiente);
+            pnlSaldo.Controls.Add(lblSaldoAyuda);
+            pnlSaldo.Dock = DockStyle.Fill;
+            pnlSaldo.Location = new Point(389, 3);
+            pnlSaldo.Name = "pnlSaldo";
+            pnlSaldo.Size = new Size(380, 116);
+            pnlSaldo.TabIndex = 1;
+            // 
+            // lblsaldo
+            // 
             lblSaldo.AutoSize = true;
             lblSaldo.Location = new Point(16, 12);
-            lblTotalPendiente.Text = "—";
+            lblSaldo.Name = "lblSaldo";
+            lblSaldo.Size = new Size(142, 15);
+            lblSaldo.TabIndex = 0;
+            lblSaldo.Text = "Saldo pendiente de cobro";
+            // 
+            // lbltotalpendiente
+            // 
             lblTotalPendiente.AutoSize = true;
             lblTotalPendiente.Font = new Font("Segoe UI", 22F, FontStyle.Bold);
             lblTotalPendiente.ForeColor = Color.FromArgb(255, 195, 95);
             lblTotalPendiente.Location = new Point(12, 34);
-            lblSaldoAyuda.Text = "Total de ventas con saldo";
+            lblTotalPendiente.Name = "lblTotalPendiente";
+            lblTotalPendiente.Size = new Size(48, 41);
+            lblTotalPendiente.TabIndex = 1;
+            lblTotalPendiente.Text = "—";
+            // 
+            // lblsaldoayuda
+            // 
             lblSaldoAyuda.AutoSize = true;
             lblSaldoAyuda.ForeColor = Color.FromArgb(145, 170, 210);
             lblSaldoAyuda.Location = new Point(16, 85);
-            pnlPendientes.Dock = DockStyle.Fill;
+            lblSaldoAyuda.Name = "lblSaldoAyuda";
+            lblSaldoAyuda.Size = new Size(139, 15);
+            lblSaldoAyuda.TabIndex = 2;
+            lblSaldoAyuda.Text = "Total de ventas con saldo";
+            // 
+            // pnlpendientes
+            // 
             pnlPendientes.BackColor = Color.FromArgb(21, 30, 41);
-            pnlPendientes.Controls.AddRange(new Control[] { lblPendientes, lblCantidadPendientes, lblPendientesAyuda });
-            lblPendientes.Text = "Ventas por cobrar";
+            pnlPendientes.Controls.Add(lblPendientes);
+            pnlPendientes.Controls.Add(lblCantidadPendientes);
+            pnlPendientes.Controls.Add(lblPendientesAyuda);
+            pnlPendientes.Dock = DockStyle.Fill;
+            pnlPendientes.Location = new Point(775, 3);
+            pnlPendientes.Name = "pnlPendientes";
+            pnlPendientes.Size = new Size(382, 116);
+            pnlPendientes.TabIndex = 2;
+            // 
+            // lblpendientes
+            // 
             lblPendientes.AutoSize = true;
             lblPendientes.Location = new Point(16, 12);
-            lblCantidadPendientes.Text = "—";
+            lblPendientes.Name = "lblPendientes";
+            lblPendientes.Size = new Size(99, 15);
+            lblPendientes.TabIndex = 0;
+            lblPendientes.Text = "Ventas por cobrar";
+            // 
+            // lblcantidadpendientes
+            // 
             lblCantidadPendientes.AutoSize = true;
             lblCantidadPendientes.Font = new Font("Segoe UI", 22F, FontStyle.Bold);
             lblCantidadPendientes.Location = new Point(12, 34);
-            lblPendientesAyuda.Text = "Con pagos parciales o sin pagos";
+            lblCantidadPendientes.Name = "lblCantidadPendientes";
+            lblCantidadPendientes.Size = new Size(48, 41);
+            lblCantidadPendientes.TabIndex = 1;
+            lblCantidadPendientes.Text = "—";
+            // 
+            // lblpendientesayuda
+            // 
             lblPendientesAyuda.AutoSize = true;
             lblPendientesAyuda.ForeColor = Color.FromArgb(145, 170, 210);
             lblPendientesAyuda.Location = new Point(16, 85);
-            pnlBusqueda.Dock = DockStyle.Fill;
+            lblPendientesAyuda.Name = "lblPendientesAyuda";
+            lblPendientesAyuda.Size = new Size(176, 15);
+            lblPendientesAyuda.TabIndex = 2;
+            lblPendientesAyuda.Text = "Con pagos parciales o sin pagos";
+            // 
+            // pnlbusqueda
+            // 
             pnlBusqueda.BackColor = Color.FromArgb(21, 30, 41);
-            pnlBusqueda.Controls.AddRange(new Control[] { lblBuscar, txtBuscarVenta, btnBuscar, btnUltimas });
-            lblBuscar.Text = "Buscar ventas";
-            lblBuscar.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            pnlBusqueda.Controls.Add(lblBuscar);
+            pnlBusqueda.Controls.Add(txtBuscarVenta);
+            pnlBusqueda.Controls.Add(btnBuscar);
+            pnlBusqueda.Controls.Add(btnUltimas);
+            pnlBusqueda.Controls.Add(ayuda);
+            pnlBusqueda.Dock = DockStyle.Fill;
+            pnlBusqueda.Location = new Point(15, 143);
+            pnlBusqueda.Name = "pnlBusqueda";
+            pnlBusqueda.Size = new Size(1160, 90);
+            pnlBusqueda.TabIndex = 1;
+            // 
+            // lblbuscar
+            // 
             lblBuscar.AutoSize = true;
+            lblBuscar.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             lblBuscar.Location = new Point(14, 9);
+            lblBuscar.Name = "lblBuscar";
+            lblBuscar.Size = new Size(106, 20);
+            lblBuscar.TabIndex = 0;
+            lblBuscar.Text = "Buscar ventas";
+            // 
+            // txtbuscarventa
+            // 
             txtBuscarVenta.Location = new Point(16, 41);
-            txtBuscarVenta.Size = new Size(460, 27);
-            txtBuscarVenta.MaxLength = 200;
-            txtBuscarVenta.PlaceholderText = "N.º de venta, nombre completo, DNI o estado";
+            txtBuscarVenta.MaxLength = 50;
+            txtBuscarVenta.Name = "txtBuscarVenta";
+            txtBuscarVenta.PlaceholderText = "Nº de venta, cliente, DNI o estado";
+            txtBuscarVenta.Size = new Size(460, 23);
             txtBuscarVenta.TabIndex = 0;
-            txtBuscarVenta.KeyDown += txtBuscarVenta_KeyDown;
-            btnBuscar.Text = "Buscar";
-            btnBuscar.Location = new Point(488, 39);
-            btnBuscar.Size = new Size(100, 31);
+           
+            // 
+            // btnbuscar
+            // 
             btnBuscar.BackColor = Color.DodgerBlue;
-            btnBuscar.FlatStyle = FlatStyle.Flat;
             btnBuscar.FlatAppearance.BorderSize = 0;
+            btnBuscar.FlatStyle = FlatStyle.Flat;
+            btnBuscar.Location = new Point(488, 39);
+            btnBuscar.Name = "btnBuscar";
+            btnBuscar.Size = new Size(100, 31);
             btnBuscar.TabIndex = 1;
+            btnBuscar.Text = "Buscar";
+            btnBuscar.UseVisualStyleBackColor = false;
             btnBuscar.Click += btnBuscar_Click;
-            btnUltimas.Text = "Últimas 10 / Actualizar";
-            btnUltimas.Location = new Point(600, 39);
-            btnUltimas.Size = new Size(195, 31);
+            // 
+            // btnultimas
+            // 
             btnUltimas.BackColor = Color.SteelBlue;
-            btnUltimas.FlatStyle = FlatStyle.Flat;
             btnUltimas.FlatAppearance.BorderSize = 0;
+            btnUltimas.FlatStyle = FlatStyle.Flat;
+            btnUltimas.Location = new Point(600, 39);
+            btnUltimas.Name = "btnUltimas";
+            btnUltimas.Size = new Size(195, 31);
             btnUltimas.TabIndex = 2;
+            btnUltimas.Text = "Últimas 10 / Actualizar";
+            btnUltimas.UseVisualStyleBackColor = false;
             btnUltimas.Click += btnUltimas_Click;
-            pnlVentas.Dock = DockStyle.Fill;
-            pnlVentas.Padding = new Padding(12);
+            // 
+            // pnlventas
+            // 
             pnlVentas.BackColor = Color.FromArgb(21, 30, 41);
             pnlVentas.Controls.Add(dgvUltimasVentas);
             pnlVentas.Controls.Add(lblDetalle);
             pnlVentas.Controls.Add(lblResultados);
-            lblResultados.Dock = DockStyle.Top;
-            lblResultados.Height = 36;
-            lblResultados.Text = "Últimas 10 ventas";
-            lblResultados.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            lblDetalle.Dock = DockStyle.Bottom;
-            lblDetalle.Height = 64;
-            lblDetalle.Padding = new Padding(0, 8, 0, 0);
-            lblDetalle.ForeColor = Color.FromArgb(145, 170, 210);
-            lblDetalle.AutoEllipsis = true;
-            lblDetalle.Text = "Seleccione una venta para ver sus productos.";
-            dgvUltimasVentas.Dock = DockStyle.Fill;
-            dgvUltimasVentas.AutoGenerateColumns = false;
+            pnlVentas.Dock = DockStyle.Fill;
+            pnlVentas.Location = new Point(15, 239);
+            pnlVentas.Name = "pnlVentas";
+            pnlVentas.Padding = new Padding(12);
+            pnlVentas.Size = new Size(1160, 366);
+            pnlVentas.TabIndex = 2;
+            // 
+            // dgvultimasventas
+            // 
             dgvUltimasVentas.AllowUserToAddRows = false;
             dgvUltimasVentas.AllowUserToDeleteRows = false;
-            dgvUltimasVentas.ReadOnly = true;
-            dgvUltimasVentas.MultiSelect = false;
-            dgvUltimasVentas.RowHeadersVisible = false;
-            dgvUltimasVentas.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(236, 242, 249);
+            dataGridViewCellStyle1.ForeColor = Color.Black;
+            dataGridViewCellStyle1.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dataGridViewCellStyle1.SelectionForeColor = Color.Black;
+            dgvUltimasVentas.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             dgvUltimasVentas.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvUltimasVentas.BackgroundColor = Color.FromArgb(13, 19, 27);
             dgvUltimasVentas.BorderStyle = BorderStyle.None;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = SystemColors.Control;
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle2.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dataGridViewCellStyle2.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
+            dgvUltimasVentas.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             dgvUltimasVentas.ColumnHeadersHeight = 38;
+            dgvUltimasVentas.Columns.AddRange(new DataGridViewColumn[] { colNumeroVenta, colFecha, colCliente, colTotal });
+            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = Color.White;
+            dataGridViewCellStyle5.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle5.ForeColor = Color.White;
+            dataGridViewCellStyle5.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dataGridViewCellStyle5.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.False;
+            dgvUltimasVentas.DefaultCellStyle = dataGridViewCellStyle5;
+            dgvUltimasVentas.Dock = DockStyle.Fill;
+            dgvUltimasVentas.Location = new Point(12, 48);
+            dgvUltimasVentas.MultiSelect = false;
+            dgvUltimasVentas.Name = "dgvUltimasVentas";
+            dgvUltimasVentas.ReadOnly = true;
+            dgvUltimasVentas.RowHeadersVisible = false;
+            dataGridViewCellStyle6.ForeColor = Color.Black;
+            dgvUltimasVentas.RowsDefaultCellStyle = dataGridViewCellStyle6;
             dgvUltimasVentas.RowTemplate.Height = 32;
-            dgvUltimasVentas.DefaultCellStyle.ForeColor = Color.Black;
-            dgvUltimasVentas.DefaultCellStyle.BackColor = Color.White;
-            dgvUltimasVentas.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(236, 242, 249);
-            dgvUltimasVentas.DefaultCellStyle.SelectionBackColor = Color.FromArgb(35, 100, 166);
-            dgvUltimasVentas.DefaultCellStyle.SelectionForeColor = Color.White;
-            dgvUltimasVentas.Columns.AddRange(new DataGridViewColumn[] { colNumeroVenta, colCliente, colFecha, colTotal, colPagado, colSaldo, colEstado, colEstadoEntrega });
-            dgvUltimasVentas.SelectionChanged += dgvUltimasVentas_SelectionChanged;
+            dgvUltimasVentas.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvUltimasVentas.Size = new Size(1136, 242);
+            dgvUltimasVentas.TabIndex = 0;
             dgvUltimasVentas.CellFormatting += dgvUltimasVentas_CellFormatting;
-            colNumeroVenta.HeaderText = "N.º venta";
+            dgvUltimasVentas.SelectionChanged += dgvUltimasVentas_SelectionChanged;
+            // 
+            // colnumeroventa
+            // 
             colNumeroVenta.DataPropertyName = "IdVenta";
-            colNumeroVenta.FillWeight = 55;
-            colCliente.HeaderText = "Cliente";
-            colCliente.DataPropertyName = "NombreCompletoCliente";
-            colCliente.FillWeight = 170;
-            colFecha.HeaderText = "Fecha";
+            colNumeroVenta.FillWeight = 55F;
+            colNumeroVenta.HeaderText = "N.º venta";
+            colNumeroVenta.Name = "colNumeroVenta";
+            colNumeroVenta.ReadOnly = true;
+            // 
+            // colfecha
+            // 
             colFecha.DataPropertyName = "Fecha";
-            colFecha.DefaultCellStyle.Format = "dd/MM/yyyy HH:mm";
-            colFecha.FillWeight = 120;
-            colTotal.HeaderText = "Total";
+            dataGridViewCellStyle3.Format = "dd/MM/yyyy HH:mm";
+            colFecha.DefaultCellStyle = dataGridViewCellStyle3;
+            colFecha.FillWeight = 120F;
+            colFecha.HeaderText = "Fecha";
+            colFecha.Name = "colFecha";
+            colFecha.ReadOnly = true;
+            // 
+            // colcliente
+            // 
+            colCliente.DataPropertyName = "NombreCompletoCliente";
+            colCliente.FillWeight = 170F;
+            colCliente.HeaderText = "Cliente";
+            colCliente.Name = "colCliente";
+            colCliente.ReadOnly = true;
+            // 
+            // coltotal
+            // 
             colTotal.DataPropertyName = "Total";
-            colPagado.HeaderText = "Pagado";
-            colPagado.DataPropertyName = "Pagado";
-            colSaldo.HeaderText = "Saldo pendiente";
-            colSaldo.DataPropertyName = "SaldoPendiente";
-            colEstado.HeaderText = "Estado de pago";
-            colEstado.DataPropertyName = "Estado";
-            colEstadoEntrega.HeaderText = "Estado de entrega";
-            colEstadoEntrega.DataPropertyName = "EstadoEntrega";
-            colEstadoEntrega.FillWeight = 115;
-            colTotal.DefaultCellStyle.Format = "C2";
-            colPagado.DefaultCellStyle.Format = "C2";
-            colSaldo.DefaultCellStyle.Format = "C2";
+            dataGridViewCellStyle4.Format = "C2";
+            colTotal.DefaultCellStyle = dataGridViewCellStyle4;
+            colTotal.HeaderText = "Total";
+            colTotal.Name = "colTotal";
+            colTotal.ReadOnly = true;
+            // 
+            // 
+            // 
+            // 
+            // 
+            // lbldetalle
+            // 
+            lblDetalle.AutoEllipsis = true;
+            lblDetalle.Dock = DockStyle.Bottom;
+            lblDetalle.ForeColor = Color.FromArgb(145, 170, 210);
+            lblDetalle.Location = new Point(12, 290);
+            lblDetalle.Name = "lblDetalle";
+            lblDetalle.Padding = new Padding(0, 8, 0, 0);
+            lblDetalle.Size = new Size(1136, 64);
+            lblDetalle.TabIndex = 1;
+            lblDetalle.Text = "Seleccione una venta para ver sus productos.";
+            // 
+            // lblresultados
+            // 
+            lblResultados.Dock = DockStyle.Top;
+            lblResultados.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            lblResultados.Location = new Point(12, 12);
+            lblResultados.Name = "lblResultados";
+            lblResultados.Size = new Size(1136, 36);
+            lblResultados.TabIndex = 2;
+            lblResultados.Text = "Últimas 10 ventas";
+            // 
+            // frmpanelprincipal
+            // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.FromArgb(13, 19, 27);
-            ForeColor = Color.White;
-            Font = new Font("Segoe UI", 9F);
-            ClientSize = new Size(1190, 740);
             AutoScroll = true;
             AutoScrollMinSize = new Size(850, 650);
+            BackColor = Color.FromArgb(13, 19, 27);
+            ClientSize = new Size(1190, 740);
             Controls.Add(tlpContenido);
             Controls.Add(pnlEncabezado);
+            Font = new Font("Segoe UI", 9F);
+            ForeColor = Color.White;
             Name = "frmPanelPrincipal";
             Text = "Panel principal";
             Load += frmPanelPrincipal_Load;
+            pnlEncabezado.ResumeLayout(false);
+            pnlEncabezado.PerformLayout();
+            flpAccesos.ResumeLayout(false);
+            tlpContenido.ResumeLayout(false);
+            tlpResumen.ResumeLayout(false);
+            pnlHoy.ResumeLayout(false);
+            pnlHoy.PerformLayout();
+            pnlSaldo.ResumeLayout(false);
+            pnlSaldo.PerformLayout();
+            pnlPendientes.ResumeLayout(false);
+            pnlPendientes.PerformLayout();
+            pnlBusqueda.ResumeLayout(false);
+            pnlBusqueda.PerformLayout();
+            pnlVentas.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvUltimasVentas).EndInit();
-            caja.Name = "caja";
-            caja.Text = "Caja y gastos";
-            caja.Location = new Point(340, 65);
-            caja.Size = new Size(145, 34);
-            caja.BackColor = Color.SteelBlue;
-            caja.FlatStyle = FlatStyle.Flat;
-            pnlEncabezado.Controls.Add(caja);
-            caja.Click += caja_Click;
-            documentos.Name = "documentos";
-            documentos.Text = "Garantía / remito";
-            documentos.Location = new Point(500, 65);
-            documentos.Size = new Size(160, 34);
-            documentos.BackColor = Color.SteelBlue;
-            documentos.FlatStyle = FlatStyle.Flat;
-            pnlEncabezado.Controls.Add(documentos);
-            documentos.Click += documentos_Click;
-            ayuda.Name = "ayuda";
-            ayuda.Text = "Podés buscar por número de venta, nombre y apellido del cliente, DNI o estado.\r\n" +
-                       "Pago: por ejemplo, Pagada o Parcial.\r\n" +
-                       "Entrega: Pendiente, Preparada, Preparación parcial, Entrega parcial, Entregada o Cancelada.\r\n" +
-                       "Parcial puede coincidir con pago y entrega; usá Entrega parcial o Preparación parcial para precisar la entrega.";
-            ayuda.ForeColor = Color.FromArgb(145, 170, 210);
-            ayuda.Location = new Point(16, 78);
-            ayuda.Size = new Size(850, 80);
-            ayuda.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            ayuda.Font = new Font("Segoe UI", 9F);
-            pnlBusqueda.Controls.Add(ayuda);
-
             ResumeLayout(false);
         }
+
         #endregion
         private Panel pnlEncabezado, pnlHoy, pnlSaldo, pnlPendientes, pnlBusqueda, pnlVentas;
         private TableLayoutPanel tlpContenido, tlpResumen;
@@ -285,12 +554,10 @@ namespace Prana.Presentacion
         private Button btnNuevaVenta, btnStock, btnBuscar, btnUltimas;
         private TextBox txtBuscarVenta;
         private DataGridView dgvUltimasVentas;
-        private DataGridViewTextBoxColumn colNumeroVenta, colCliente, colFecha, colTotal, colPagado, colSaldo, colEstado, colEstadoEntrega;
+        private DataGridViewTextBoxColumn colNumeroVenta, colCliente, colFecha, colTotal;
         private Button caja;
-
         private Button documentos;
-
         private Label ayuda;
-
+        private FlowLayoutPanel flpAccesos;
     }
 }

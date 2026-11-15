@@ -1,14 +1,16 @@
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Prana.Entidades;
 using System.Data;
 
 namespace Prana.Datos
 {
+    // agrupa los datos y operaciones de cd informe ventas
     public class CD_InformeVentas
     {
+        // consulta obtener opciones y transforma cada fila recibida en los objetos que devuelve
         public Dictionary<string, List<string>> ObtenerOpciones()
         {
-            const string sql = @"
+            const string consultaSql = @"
 SELECT DISTINCT pr.nombre_producto FROM Producto pr ORDER BY pr.nombre_producto;
 SELECT DISTINCT nombre_categoria FROM Categoria ORDER BY nombre_categoria;
 SELECT DISTINCT nombre_marca FROM Marca ORDER BY nombre_marca;
@@ -20,23 +22,82 @@ SELECT DISTINCT valor FROM (
 ) envios ORDER BY valor;
 SELECT DISTINCT nombre_localidad FROM Localidad ORDER BY nombre_localidad;";
             using SqlConnection conexion = new(Conexion.ObtenerCadena());
-            using SqlCommand comando = new(sql, conexion);
+            using SqlCommand comando = new(consultaSql, conexion);
             conexion.Open();
             using SqlDataReader lector = comando.ExecuteReader();
-            var resultado = new Dictionary<string, List<string>>();
-            foreach (string nombre in new[] { "Producto", "Categoria", "Marca", "Cliente", "Envio", "Ubicacion" })
+            Dictionary<string, List<string>> resultado = new Dictionary<string, List<string>>();
+            // procesa cada nombre de new[] { "producto", "categoria", "marca", "cliente", "envio", "ubicacion" } sin cambiar el orden de la coleccion
+            foreach (string nombre in new[]
             {
-                var valores = new List<string>();
-                while (lector.Read()) valores.Add(lector.IsDBNull(0) ? string.Empty : lector.GetString(0));
-                resultado[nombre] = valores;
-                if (nombre != "Ubicacion") lector.NextResult();
+                "Producto",
+                "Categoria",
+                "Marca",
+                "Cliente",
+                "Envio",
+                "Ubicacion"
             }
+
+            )
+            {
+                List<string> valores = new List<string>();
+                while (lector.Read())
+                {
+                    string valorSeleccionado;
+                    if (lector.IsDBNull(0))
+                    {
+                        valorSeleccionado = string.Empty;
+                    }
+                    else
+                    {
+                        valorSeleccionado = lector.GetString(0);
+                    }
+                    valores.Add(valorSeleccionado);
+                }
+
+                resultado[nombre] = valores;
+                if (nombre != "Ubicacion")
+                {
+                    lector.NextResult();
+                }
+            }
+
             return resultado;
         }
 
+        // consulta obtener categoria marca producto y transforma cada fila recibida en los objetos que devuelve
+        public (string Categoria, string Marca)? ObtenerCategoriaMarcaProducto(string nombreProducto)
+        {
+            const string consultaSql = @"
+SELECT DISTINCT c.nombre_categoria, m.nombre_marca
+FROM Producto p
+JOIN Categoria c ON c.id_categoria = p.id_categoria
+JOIN Marca m ON m.id_marca = p.id_marca
+WHERE LTRIM(RTRIM(p.nombre_producto)) = @producto
+ORDER BY c.nombre_categoria, m.nombre_marca;";
+            using SqlConnection conexion = new(Conexion.ObtenerCadena());
+            using SqlCommand comando = new(consultaSql, conexion);
+            comando.Parameters.Add("@producto", SqlDbType.NVarChar, 150).Value = nombreProducto.Trim();
+            conexion.Open();
+            using SqlDataReader lector = comando.ExecuteReader();
+            if (!lector.Read())
+            {
+                return null;
+            }
+
+            (string Categoria, string Marca) resultado = (Categoria: lector.GetString(0), Marca: lector.GetString(1));
+            if (lector.Read())
+            {
+                // interrumpe el flujo con una excepcion; el nivel que la atiende decide como informar o revertir la operacion
+                throw new InvalidOperationException("Hay productos con el mismo nombre y distintas categorías o marcas; no se pueden completar esos filtros automáticamente.");
+            }
+
+            return resultado;
+        }
+
+        // consulta buscar y transforma cada fila recibida en los objetos que devuelve
         public List<InformeVenta> Buscar(FiltroInformeVentas filtro)
         {
-            const string sql = @"
+            const string consultaSql = @"
 SELECT v.id_venta, v.fecha_venta,
        CONCAT(c.nombre_cliente, N' ', c.apellido_cliente) AS cliente,
        COALESCE(loc.nombre_localidad, N'') AS ubicacion,
@@ -81,9 +142,8 @@ WHERE v.fecha_venta >= @Desde AND v.fecha_venta < @Hasta
   AND (@MontoMinimo IS NULL OR v.total >= @MontoMinimo)
   AND (@MontoMaximo IS NULL OR v.total <= @MontoMaximo)
 ORDER BY v.fecha_venta DESC, v.id_venta DESC;";
-
             using SqlConnection conexion = new(Conexion.ObtenerCadena());
-            using SqlCommand comando = new(sql, conexion);
+            using SqlCommand comando = new(consultaSql, conexion);
             comando.Parameters.Add("@Desde", SqlDbType.DateTime2).Value = filtro.Desde;
             comando.Parameters.Add("@Hasta", SqlDbType.DateTime2).Value = filtro.Hasta;
             AgregarTexto(comando, "@Producto", filtro.Producto);
@@ -97,24 +157,46 @@ ORDER BY v.fecha_venta DESC, v.id_venta DESC;";
             conexion.Open();
             using SqlDataReader lector = comando.ExecuteReader();
             List<InformeVenta> resultado = new();
-            while (lector.Read()) resultado.Add(new InformeVenta
+            while (lector.Read())
             {
-                IdVenta=(int)lector["id_venta"], Fecha=(DateTime)lector["fecha_venta"], Cliente=(string)lector["cliente"],
-                Ubicacion=(string)lector["ubicacion"], Productos=(string)lector["productos"], Categorias=(string)lector["categorias"],
-                Marcas=(string)lector["marcas"], Total=(decimal)lector["total"], Pagado=(decimal)lector["pagado"],
-                Saldo=(decimal)lector["saldo"], Envio=(string)lector["envio"]
-            });
+                resultado.Add(new InformeVenta
+                {
+                    IdVenta = (int)lector["id_venta"],
+                    Fecha = (DateTime)lector["fecha_venta"],
+                    Cliente = (string)lector["cliente"],
+                    Ubicacion = (string)lector["ubicacion"],
+                    Productos = (string)lector["productos"],
+                    Categorias = (string)lector["categorias"],
+                    Marcas = (string)lector["marcas"],
+                    Total = (decimal)lector["total"],
+                    Pagado = (decimal)lector["pagado"],
+                    Saldo = (decimal)lector["saldo"],
+                    Envio = (string)lector["envio"]
+
+                });
+            }
+
             return resultado;
         }
 
+        // resuelve agregar texto con los datos recibidos y entrega el resultado al codigo que lo llama
         private static void AgregarTexto(SqlCommand comando, string nombre, string valor)
         {
-            comando.Parameters.Add(nombre, SqlDbType.NVarChar, -1).Value = string.IsNullOrWhiteSpace(valor) ? "" : "%" + valor.Trim() + "%";
+            // distingue un dato vacio de un valor ingresado antes de continuar
+            if (string.IsNullOrWhiteSpace(valor))
+            {
+                comando.Parameters.Add(nombre, SqlDbType.NVarChar, -1).Value = "";
+            }
+            else
+            {
+                comando.Parameters.Add(nombre, SqlDbType.NVarChar, -1).Value = "%" + valor.Trim() + "%";
+            }
         }
 
+        // consulta obtener alertas y transforma cada fila recibida en los objetos que devuelve
         public List<AlertaPagoPendiente> ObtenerAlertas(DateTime ahora)
         {
-            const string sql = @"
+            const string consultaSql = @"
 WITH Pagos AS
 (
     SELECT id_venta, MIN(fecha_pago) primer_pago, SUM(monto_final) monto
@@ -141,17 +223,27 @@ WHERE DATEADD(MONTH, 1, pagos.primer_pago) <= @Ahora AND v.total > pagos.monto
   AND NOT EXISTS (SELECT 1 FROM Estado_Venta ev WHERE ev.id_estado_venta=v.id_estado_venta AND (ev.nombre_estado_venta LIKE N'Anulad%' OR ev.nombre_estado_venta LIKE N'Cancelad%'))
 ORDER BY dias_vencida DESC, pagos.primer_pago;";
             using SqlConnection conexion = new(Conexion.ObtenerCadena());
-            using SqlCommand comando = new(sql, conexion);
+            using SqlCommand comando = new(consultaSql, conexion);
             comando.Parameters.Add("@Ahora", SqlDbType.DateTime2).Value = ahora;
             conexion.Open();
             using SqlDataReader lector = comando.ExecuteReader();
             List<AlertaPagoPendiente> resultado = new();
-            while (lector.Read()) resultado.Add(new AlertaPagoPendiente
+            while (lector.Read())
             {
-                IdVenta=(int)lector["id_venta"], Cliente=(string)lector["cliente"], Productos=(string)lector["productos"],
-                PrimerPago=(DateTime)lector["primer_pago"], Total=(decimal)lector["total"], Pagado=(decimal)lector["pagado"],
-                Saldo=(decimal)lector["saldo"], DiasVencida=(int)lector["dias_vencida"]
-            });
+                resultado.Add(new AlertaPagoPendiente
+                {
+                    IdVenta = (int)lector["id_venta"],
+                    Cliente = (string)lector["cliente"],
+                    Productos = (string)lector["productos"],
+                    PrimerPago = (DateTime)lector["primer_pago"],
+                    Total = (decimal)lector["total"],
+                    Pagado = (decimal)lector["pagado"],
+                    Saldo = (decimal)lector["saldo"],
+                    DiasVencida = (int)lector["dias_vencida"]
+
+                });
+            }
+
             return resultado;
         }
     }

@@ -6,55 +6,43 @@ using System.Text;
 
 namespace Prana.Datos
 {
+    // agrupa los datos y operaciones de cd categoria
     public class CD_Categoria
     {
-
+        // consulta obtener categorias y transforma cada fila recibida en los objetos que devuelve
         public List<Categoria> obtenerCategorias()
         {
-            // Crea la lista donde se guardarán las categorías
+            // crea la lista donde se guardaran las categorias
             List<Categoria> categorias = new List<Categoria>();
-
             string consulta = @"
         SELECT
             id_categoria,
             nombre_categoria
         FROM Categoria
         ORDER BY nombre_categoria";
-
-            // Crea la conexión con SQL Server
-            using SqlConnection conexion =
-                new SqlConnection(Conexion.ObtenerCadena());
-
-            // Crea el comando que contiene la consulta
-            using SqlCommand comando =
-                new SqlCommand(consulta, conexion);
-
-            // Abre la conexión
+            // crea la conexion con sql server
+            using SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena());
+            // crea el comando que contiene la consulta
+            using SqlCommand comando = new SqlCommand(consulta, conexion);
+            // abre la conexion abre el recurso antes de usarlo; una conexion debe estar abierta para enviar consultas
             conexion.Open();
-
-            // Ejecuta la consulta
+            // ejecuta la consulta
             using SqlDataReader lector = comando.ExecuteReader();
-
-            // Recorre todas las categorías devueltas
+            // recorre todas las categorias devueltas avanza el lector de sql una fila por vez hasta agotar el resultado
             while (lector.Read())
             {
-                // Crea una categoría con los datos de la fila actual
+                // crea una categoria con los datos de la fila actual
                 Categoria categoriaEncontrada = new Categoria
                 {
-                    IdCategoria = lector.GetInt32(
-                        lector.GetOrdinal("id_categoria")
-                    ),
+                    IdCategoria = lector.GetInt32(lector.GetOrdinal("id_categoria")),
+                    NombreCategoria = lector.GetString(lector.GetOrdinal("nombre_categoria"))
 
-                    NombreCategoria = lector.GetString(
-                        lector.GetOrdinal("nombre_categoria")
-                    )
                 };
-
-                // Agrega la categoría a la lista
+                // agrega la categoria a la lista
                 categorias.Add(categoriaEncontrada);
             }
 
-            // Devuelve todas las categorías
+            // devuelve todas las categorias
             return categorias;
         }
     }

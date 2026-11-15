@@ -5,90 +5,116 @@ using System.Data;
 
 namespace Prana.Datos
 {
-    // Guarda las actividades realizadas por los usuarios.
+    // guarda las actividades realizadas por los usuarios
     public class CD_LogActividad
     {
-        // Inserta un registro de actividad en la base de datos.
+        // inserta un registro de actividad en la base de datos
         public void Registrar(int idUsuario, string accion, string entidad, int? idEntidad, string detalle)
         {
-            // Define la consulta para guardar el log.
+            // define la consulta para guardar el log
             string consulta = "INSERT INTO dbo.LogActividad (id_usuario, accion, entidad, id_entidad, detalle) VALUES (@IdUsuario, @Accion, @Entidad, @IdEntidad, @Detalle);";
-
-            // Abre la conexión con la base de datos.
+            // abre la conexion con la base de datos
             using SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena());
-
-            // Prepara la consulta SQL.
+            // prepara la consulta y su conexion los valores variables se envian mediante parametros
             using SqlCommand comando = new SqlCommand(consulta, conexion);
-
-            // Agrega el usuario que realizó la acción.
+            // agrega el usuario que realizo la accion
             comando.Parameters.Add("@IdUsuario", SqlDbType.Int).Value = idUsuario;
-
-            // Agrega el nombre de la acción realizada.
+            // agrega el nombre de la accion realizada
             comando.Parameters.Add("@Accion", SqlDbType.NVarChar, 100).Value = accion;
-
-            // Agrega el tipo de entidad afectada.
+            // agrega el tipo de entidad afectada
             comando.Parameters.Add("@Entidad", SqlDbType.NVarChar, 100).Value = entidad;
-
-            // Agrega el identificador de la entidad afectada.
-            comando.Parameters.Add("@IdEntidad", SqlDbType.Int).Value = idEntidad.HasValue ? idEntidad.Value : DBNull.Value;
-
-            // Agrega los detalles del cambio.
-            comando.Parameters.Add("@Detalle", SqlDbType.NVarChar, 1000).Value = string.IsNullOrWhiteSpace(detalle) ? DBNull.Value : detalle;
-
-            // Abre la conexión.
+            // agrega el identificador de la entidad afectada
+            if (idEntidad.HasValue)
+            {
+                comando.Parameters.Add("@IdEntidad", SqlDbType.Int).Value = idEntidad.Value;
+            }
+            else
+            {
+                comando.Parameters.Add("@IdEntidad", SqlDbType.Int).Value = DBNull.Value;
+            }
+            // agrega los detalles del cambio
+            if (string.IsNullOrWhiteSpace(detalle))
+            {
+                comando.Parameters.Add("@Detalle", SqlDbType.NVarChar, 1000).Value = DBNull.Value;
+            }
+            else
+            {
+                comando.Parameters.Add("@Detalle", SqlDbType.NVarChar, 1000).Value = detalle;
+            }
+            // abre la conexion abre el recurso antes de usarlo; una conexion debe estar abierta para enviar consultas
             conexion.Open();
-
-            // Ejecuta el registro de actividad.
+            // ejecuta el registro de actividad
             comando.ExecuteNonQuery();
         }
 
-        // Obtiene todas las actividades ordenadas desde la más reciente.
+        // obtiene todas las actividades ordenadas desde la mas reciente
         public List<LogActividad> ObtenerTodos()
         {
-            // Consulta las últimas 10 actividades sin limitar el período.
+            // consulta las ultimas 10 actividades sin limitar el periodo
             return ObtenerFiltrado(DateTime.MinValue, DateTime.MaxValue, 10);
         }
 
-        // Obtiene una cantidad limitada de actividades dentro de un período.
+        // obtiene una cantidad limitada de actividades dentro de un periodo
         public List<LogActividad> ObtenerFiltrado(DateTime desde, DateTime hasta, int limite, int? remito = null, string accion = "", string usuario = "")
         {
-            // Consulta las actividades junto con el nombre del usuario y el rango solicitado.
+            // consulta las actividades junto con el nombre del usuario y el rango solicitado
             string consulta = "SELECT TOP (@Limite) l.id_log, l.id_usuario, u.nombre_usuario, l.accion, l.entidad, l.id_entidad, l.detalle, l.fecha FROM dbo.LogActividad AS l INNER JOIN dbo.Usuario AS u ON u.id_usuario = l.id_usuario WHERE l.fecha >= @Desde AND l.fecha < @Hasta AND (@Remito IS NULL OR (l.entidad=N'Venta' AND l.id_entidad=@Remito)) AND (@Accion=N'' OR CHARINDEX(@Accion,l.accion)>0) AND (@Usuario=N'' OR CHARINDEX(@Usuario,u.nombre_usuario)>0) ORDER BY l.fecha DESC,l.id_log DESC;";
-
-            // Crea la conexión con la base de datos.
+            // crea la conexion con la base de datos
             using SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena());
-
-            // Prepara la consulta SQL.
+            // prepara la consulta y su conexion los valores variables se envian mediante parametros
             using SqlCommand comando = new SqlCommand(consulta, conexion);
-
-            // Agrega el límite de registros solicitado.
+            // agrega el limite de registros solicitado
             comando.Parameters.Add("@Limite", SqlDbType.Int).Value = limite;
             comando.Parameters.Add("@Remito", SqlDbType.Int).Value = (object?)remito ?? DBNull.Value;
             comando.Parameters.Add("@Accion", SqlDbType.NVarChar, 100).Value = accion.Trim();
             comando.Parameters.Add("@Usuario", SqlDbType.NVarChar, 100).Value = usuario.Trim();
-
-            // Agrega el inicio del período.
+            // agrega el inicio del periodo
             comando.Parameters.Add("@Desde", SqlDbType.DateTime2).Value = desde;
-
-            // Agrega el final exclusivo del período.
+            // agrega el final exclusivo del periodo
             comando.Parameters.Add("@Hasta", SqlDbType.DateTime2).Value = hasta;
-
-            // Abre la conexión.
+            // abre la conexion abre el recurso antes de usarlo; una conexion debe estar abierta para enviar consultas
             conexion.Open();
-
-            // Ejecuta la consulta y obtiene sus resultados.
+            // ejecuta la consulta y obtiene sus resultados
             using SqlDataReader lector = comando.ExecuteReader();
-
-            // Crea la lista de actividades.
+            // crea la lista de actividades
             List<LogActividad> actividades = new List<LogActividad>();
-
-            // Recorre cada actividad devuelta por la base.
+            // recorre cada actividad devuelta por la base avanza el lector de sql una fila por vez hasta agotar el resultado
             while (lector.Read())
             {
-                actividades.Add(new LogActividad { IdLog = lector.GetInt32(lector.GetOrdinal("id_log")), IdUsuario = lector.GetInt32(lector.GetOrdinal("id_usuario")), NombreUsuario = lector.GetString(lector.GetOrdinal("nombre_usuario")), Accion = lector.GetString(lector.GetOrdinal("accion")), Entidad = lector.GetString(lector.GetOrdinal("entidad")), IdEntidad = lector.IsDBNull(lector.GetOrdinal("id_entidad")) ? null : lector.GetInt32(lector.GetOrdinal("id_entidad")), Detalle = lector.IsDBNull(lector.GetOrdinal("detalle")) ? null : lector.GetString(lector.GetOrdinal("detalle")), Fecha = lector.GetDateTime(lector.GetOrdinal("fecha")) });
+                int? valorIdEntidad;
+                if (lector.IsDBNull(lector.GetOrdinal("id_entidad")))
+                {
+                    valorIdEntidad = null;
+                }
+                else
+                {
+                    valorIdEntidad = lector.GetInt32(lector.GetOrdinal("id_entidad"));
+                }
+
+                string valorDetalle;
+                if (lector.IsDBNull(lector.GetOrdinal("detalle")))
+                {
+                    valorDetalle = null;
+                }
+                else
+                {
+                    valorDetalle = lector.GetString(lector.GetOrdinal("detalle"));
+                }
+                actividades.Add(new LogActividad
+                {
+                    IdLog = lector.GetInt32(lector.GetOrdinal("id_log")),
+                    IdUsuario = lector.GetInt32(lector.GetOrdinal("id_usuario")),
+                    NombreUsuario = lector.GetString(lector.GetOrdinal("nombre_usuario")),
+                    Accion = lector.GetString(lector.GetOrdinal("accion")),
+                    Entidad = lector.GetString(lector.GetOrdinal("entidad")),
+                    IdEntidad = valorIdEntidad,
+                    Detalle = valorDetalle,
+                    Fecha = lector.GetDateTime(lector.GetOrdinal("fecha"))
+
+                });
             }
 
-            // Devuelve las actividades encontradas.
+            // devuelve las actividades encontradas
             return actividades;
         }
     }

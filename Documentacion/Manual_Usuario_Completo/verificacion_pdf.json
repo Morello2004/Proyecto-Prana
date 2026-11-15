@@ -1,0 +1,8 @@
+﻿{
+    "renderizado":  "Windows.Data.Pdf",
+    "fecha":  "2026-11-12",
+    "contenido":  "misma edicion que Word",
+    "paginas":  76,
+    "figuras":  32,
+    "desbordamiento":  "sin contenedores de alto fijo que recorten texto"
+}

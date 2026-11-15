@@ -1,0 +1,859 @@
+[
+    {
+        "title":  "Cómo usar este manual",
+        "body":  "\u003cp\u003eGuía de operación de \u003cb\u003ePrana Electrónica\u003c/b\u003e, dirigida a vendedores y administradores. Describe las funciones presentes en el código de la copia de trabajo revisada el \u003cb\u003e10 de noviembre de 2026\u003c/b\u003e.\u003c/p\u003e\u003cul\u003e\u003cli\u003eSeguí el orden de los pasos. Las flechas numeradas señalan el control o la zona que se explica debajo de cada imagen.\u003c/li\u003e\u003cli\u003eLas imágenes son capturas de los formularios reales renderizados sin consultas a la base. Por eso las grillas y las listas pueden estar vacías y algunos botones aparecen deshabilitados. No son operaciones realizadas ni comprobantes de transacciones.\u003c/li\u003e\u003cli\u003eLos recortes muestran partes de pantallas extensas. Usá la barra de desplazamiento para llegar a los bloques inferiores.\u003c/li\u003e\u003cli\u003eLos ejemplos monetarios y los datos de capacitación son ficticios. No los registres en la base comercial.\u003c/li\u003e\u003cli\u003eUna \u003cb\u003eregla del sistema\u003c/b\u003e describe una validación del código; una \u003cb\u003erecomendación operativa\u003c/b\u003e indica una práctica de trabajo.\u003c/li\u003e\u003c/ul\u003e\u003caside\u003eAlcance: acceso, navegación, clientes, deudas, catálogo, variantes, proveedores, ingresos, ventas, cobros, entregas, documentos, caja, resumen mensual, alertas, informes, historial, usuarios y recargos. No se presupone una función que no aparece en esta versión.\u003c/aside\u003e\u003cp\u003eFuente revisada: repositorio \u003cb\u003eD:\\ISFT\\source\\repos\\PranaElectronica\u003c/b\u003e. La pestaña del IDE indica otra copia en el Escritorio; las imágenes y reglas de este documento corresponden a la copia de trabajo citada.\u003c/p\u003e",
+        "img":  null,
+        "crop":  null,
+        "marks":  [
+
+                  ]
+    },
+    {
+        "title":  "Preparación del puesto de trabajo",
+        "body":  "\u003col\u003e\u003cli\u003eSolicitá al responsable la instalación vigente del sistema y el motor SQL Server LocalDB. El instalador documentado no incorpora ese motor.\u003c/li\u003e\u003cli\u003eAbrí Prana Electrónica con la cuenta habitual de Windows. El inicio prepara la base local antes de presentar el acceso.\u003c/li\u003e\u003cli\u003eVerificá fecha y hora de Windows: los cobros utilizan el día actual y el cierre impide nuevos movimientos en ese día.\u003c/li\u003e\u003cli\u003eIngresá con una cuenta personal. El administrador entrega las credenciales iniciales; este manual no publica contraseñas.\u003c/li\u003e\u003cli\u003eAntes de operar, revisá clientes, catálogo, variantes, existencias y porcentajes de los medios de pago.\u003c/li\u003e\u003cli\u003eMaximizá la ventana. Si no ves Guardar, Registrar o el último bloque, desplazate hacia abajo.\u003c/li\u003e\u003c/ol\u003e\u003caside\u003eLa versión del instalador puede ser anterior al código revisado. Si una pantalla difiere, el responsable debe verificar la versión instalada antes de aplicar el procedimiento.\u003c/aside\u003e\u003ch3\u003eResponsabilidades\u003c/h3\u003e\u003ctable\u003e\u003cthead\u003e\u003ctr\u003e\u003cth\u003eQuién\u003c/th\u003e\u003cth\u003eTarea\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\u003ctbody\u003e\u003ctr\u003e\u003ctd\u003eOperador\u003c/td\u003e\u003ctd\u003eRegistrar datos completos, verificar importes y confirmar que la operación figure en los listados.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eAdministrador\u003c/td\u003e\u003ctd\u003eGestionar usuarios y recargos, supervisar stock, entregas y caja; resolver diferencias.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eResponsable técnico\u003c/td\u003e\u003ctd\u003eInstalar, actualizar, respaldar y restaurar la base; atender errores de conexión.\u003c/td\u003e\u003c/tr\u003e\u003c/tbody\u003e\u003c/table\u003e",
+        "img":  null,
+        "crop":  null,
+        "marks":  [
+
+                  ]
+    },
+    {
+        "title":  "Acceso y bloqueo de cuentas",
+        "body":  "\u003col\u003e\u003cli\u003eEscribí tu nombre de usuario en el campo correspondiente.\u003c/li\u003e\u003cli\u003eIngresá tu contraseña respetando mayúsculas y números.\u003c/li\u003e\u003cli\u003ePresioná \u003cb\u003eIngresar\u003c/b\u003e. Si las credenciales son correctas, se abre el menú principal.\u003c/li\u003e\u003cli\u003ePara abandonar el acceso utilizá \u003cb\u003eCancelar\u003c/b\u003e.\u003c/li\u003e\u003c/ol\u003e\u003caside\u003eRegla: después de 3 intentos fallidos de contraseña, la cuenta queda bloqueada durante 15 minutos. Esperá el plazo o solicitá al administrador que la desbloquee desde Usuarios.\u003c/aside\u003e\u003cp\u003eUna cuenta dada de baja no puede ingresar. Si aparece un error de conexión, no lo confundas con una contraseña equivocada: comunicá el texto exacto al responsable.\u003c/p\u003e\u003cp\u003ePara cambiar de operador, primero guardá o cancelá las operaciones que tengas en preparación. Después cerrá solamente la ventana principal de Prana con la X de la esquina superior derecha. Se vuelve a mostrar el inicio de sesión con los campos vacíos: ingresá el usuario y la contraseña del siguiente operador y presioná Ingresar. No hace falta finalizar por completo el programa. Si querés salir del programa, presioná Cancelar en el inicio de sesión.\u003c/p\u003e",
+        "img":  "login",
+        "crop":  null,
+        "marks":  [
+                      [
+                          470,
+                          135,
+                          "Usuario y contraseña"
+                      ],
+                      [
+                          455,
+                          245,
+                          "Ingresar"
+                      ],
+                      [
+                          690,
+                          245,
+                          "Cancelar"
+                      ]
+                  ]
+    },
+    {
+        "title":  "Navegación y hábitos básicos",
+        "body":  "\u003cp\u003eEl menú de la izquierda permite cambiar de sección. Panel principal muestra las ventas recientes; Nueva venta permite registrar una venta; Clientes permite buscar o crear un cliente; Stock permite consultar productos y sus cantidades; Pagos permite registrar cobros de ventas existentes; Entregas permite preparar y confirmar la entrega de productos.\u003c/p\u003e\u003cp\u003ePara abrir una sección, presioná su nombre en el menú. Las opciones de Usuarios, Medios pagos, Informes e Historial aparecen según el rol de la cuenta.\u003c/p\u003e\u003cp\u003eDesde Panel principal, el botón Caja y gastos abre la caja del día. Dentro de Caja se puede abrir el resumen mensual.\u003c/p\u003e\u003caside\u003eAntes de cambiar de sección, terminá o cancelá la venta, la creación de un producto o el ingreso de mercadería que estés preparando. Cambiar de sección cierra la pantalla anterior.\u003c/aside\u003e",
+        "img":  "Interfaz",
+        "crop":  [
+                     0,
+                     0,
+                     168,
+                     515
+                 ],
+        "marks":  [
+                      [
+                          80,
+                          82,
+                          "Panel principal"
+                      ],
+                      [
+                          80,
+                          123,
+                          "Nueva venta"
+                      ],
+                      [
+                          80,
+                          202,
+                          "Stock"
+                      ]
+                  ],
+        "imageHeight":  70
+    },
+    {
+        "title":  "Perfiles y permisos",
+        "body":  "\u003cp\u003ePrana dispone de cuentas de Administrador y de Vendedor. Cada empleado debe utilizar su propia cuenta.\u003c/p\u003e\u003ch2\u003eVendedor\u003c/h2\u003e\u003cp\u003ePuede consultar Panel principal, crear y modificar clientes, crear productos y variantes, modificar sus datos, precios, costos y stock físico, desactivar variantes, registrar ingresos de mercadería, registrar ventas y cobrar saldos desde Pagos. En Entregas puede preparar productos para entregar y confirmar las entregas realizadas. También puede consultar Alertas.\u003c/p\u003e\u003cp\u003eDesde Caja y gastos puede consultar la caja, registrar ingresos o gastos, cerrarla y consultar el resumen mensual. No puede anular movimientos de caja.\u003c/p\u003e\u003ch2\u003eAdministrador\u003c/h2\u003e\u003cp\u003eAdemás de las tareas anteriores, puede administrar usuarios, modificar los recargos de los medios de pago, dar de baja clientes, anular movimientos de caja y acceder a Informes e Historial.\u003c/p\u003e\u003caside\u003ePreparar una entrega y confirmar que se entregó son dos pasos distintos. Ambos están disponibles para el vendedor y el administrador. La anulación de un ingreso o gasto de caja requiere un administrador.\u003c/aside\u003e",
+        "img":  null,
+        "crop":  null,
+        "marks":  [
+
+                  ]
+    },
+    {
+        "title":  "Panel principal y consulta de ventas",
+        "body":  "\u003cp\u003eAl abrir Panel principal, arriba se muestran tres datos:\u003c/p\u003e\u003cul\u003e\u003cli\u003e\u003cb\u003eVentas de hoy:\u003c/b\u003e importe de las ventas registradas hoy y cantidad de operaciones.\u003c/li\u003e\u003cli\u003e\u003cb\u003eSaldo pendiente de cobro:\u003c/b\u003e dinero que falta cobrar de las ventas con deuda.\u003c/li\u003e\u003cli\u003e\u003cb\u003eVentas por cobrar:\u003c/b\u003e cantidad de ventas que todavía tienen saldo pendiente.\u003c/li\u003e\u003c/ul\u003e\u003cp\u003eDebajo aparece el listado de las últimas diez ventas con número de venta, fecha, cliente y total.\u003c/p\u003e\u003col\u003e\u003cli\u003ePara localizar una venta, escribí su número, el nombre del cliente, el documento o el estado en \u003cb\u003eBuscar ventas\u003c/b\u003e y presioná \u003cb\u003eBuscar\u003c/b\u003e.\u003c/li\u003e\u003cli\u003ePara volver a las ventas recientes, presioná \u003cb\u003eÚltimas 10 / Actualizar\u003c/b\u003e.\u003c/li\u003e\u003cli\u003ePara consultar documentos, seleccioná la venta que corresponda por su número y cliente y presioná \u003cb\u003eGarantía / remito\u003c/b\u003e.\u003c/li\u003e\u003cli\u003ePara empezar otra operación, utilizá \u003cb\u003eNueva venta\u003c/b\u003e, \u003cb\u003eVer stock\u003c/b\u003e o \u003cb\u003eCaja y gastos\u003c/b\u003e.\u003c/li\u003e\u003c/ol\u003e\u003caside\u003eSi falló la apertura de un documento, buscá primero la venta en este listado y comprobá su número, cliente y total. Podés volver a emitir sus documentos sin registrar otra venta.\u003c/aside\u003e",
+        "img":  "frmPanelPrincipal",
+        "crop":  null,
+        "marks":  [
+                      [
+                          550,
+                          90,
+                          "Comprobantes de la venta seleccionada"
+                      ],
+                      [
+                          555,
+                          318,
+                          "Buscar"
+                      ],
+                      [
+                          690,
+                          318,
+                          "Actualizar"
+                      ]
+                  ]
+    },
+    {
+        "title":  "Clientes: crear un registro",
+        "body":  "\u003col\u003e\u003cli\u003eAbrí \u003cb\u003eClientes\u003c/b\u003e y buscá primero por documento, nombre completo o teléfono para evitar duplicados.\u003c/li\u003e\u003cli\u003eCompletá nombre, apellido, tipo de documento, número y teléfono.\u003c/li\u003e\u003cli\u003eIndicá dirección, ciudad y código postal cuando estén disponibles. La ciudad es opcional.\u003c/li\u003e\u003cli\u003ePresioná \u003cb\u003eCrear cliente\u003c/b\u003e y esperá la confirmación.\u003c/li\u003e\u003cli\u003eBuscá nuevamente el registro y verificá sus datos. Usá Cancelar para limpiar la carga que no vas a guardar.\u003c/li\u003e\u003c/ol\u003e\u003ctable\u003e\u003cthead\u003e\u003ctr\u003e\u003cth\u003eDato\u003c/th\u003e\u003cth\u003eRegla\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\u003ctbody\u003e\u003ctr\u003e\u003ctd\u003eDNI\u003c/td\u003e\u003ctd\u003e7 u 8 números, sin puntos ni espacios.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eCUIT\u003c/td\u003e\u003ctd\u003e11 números, sin guiones; se valida el dígito verificador.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eNombre y apellido\u003c/td\u003e\u003ctd\u003eObligatorios; letras, espacios, apóstrofes y guiones admitidos.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eTeléfono\u003c/td\u003e\u003ctd\u003eEntre 8 y 20 caracteres; números, +, -, espacios y paréntesis.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eCódigo postal\u003c/td\u003e\u003ctd\u003eOpcional: 4 números o formato CPA admitido, por ejemplo B6700 o B6700ABC.\u003c/td\u003e\u003c/tr\u003e\u003c/tbody\u003e\u003c/table\u003e",
+        "img":  "frmClientes_completa",
+        "crop":  [
+                     0,
+                     145,
+                     1443,
+                     275
+                 ],
+        "marks":  [
+                      [
+                          115,
+                          237,
+                          "Completar datos"
+                      ],
+                      [
+                          123,
+                          389,
+                          "Crear cliente"
+                      ]
+                  ]
+    },
+    {
+        "title":  "Clientes: buscar, corregir y consultar deuda",
+        "body":  "\u003col\u003e\u003cli\u003eEn el buscador escribí nombre completo, documento o teléfono. Elegí la sugerencia o presioná Buscar.\u003c/li\u003e\u003cli\u003eEn la fila correcta presioná \u003cb\u003eModificar cliente\u003c/b\u003e. Se habilitan las celdas editables.\u003c/li\u003e\u003cli\u003eCorregí nombre, apellido, documento, teléfono, dirección, ciudad o código postal.\u003c/li\u003e\u003cli\u003ePresioná \u003cb\u003eGuardar cambios\u003c/b\u003e en la misma fila. Las validaciones del documento y del teléfono vuelven a aplicarse.\u003c/li\u003e\u003cli\u003ePresioná \u003cb\u003eVer deuda\u003c/b\u003e para abrir las ventas pendientes de ese cliente.\u003c/li\u003e\u003c/ol\u003e\u003caside\u003eLa deuda y el estado de cuenta se calculan desde las ventas y los cobros. No se editan como datos del cliente. Para reducir el saldo, registrá el pago en Pagos.\u003c/aside\u003e\u003cp\u003eLa consulta de deuda usa el identificador del cliente, lo que permite distinguir personas con el mismo nombre. Verificá el documento antes de actuar.\u003c/p\u003e",
+        "img":  "frmClientes_completa",
+        "crop":  [
+                     0,
+                     420,
+                     1443,
+                     310
+                 ],
+        "marks":  [
+                      [
+                          300,
+                          485,
+                          "Listado y datos del cliente"
+                      ],
+                      [
+                          960,
+                          485,
+                          "Acciones de cada fila"
+                      ]
+                  ]
+    },
+    {
+        "title":  "Deudas del cliente",
+        "body":  "\u003cp\u003eDesde Clientes → Ver deuda se abre una consulta de ventas con saldo. Cada fila identifica una venta completa: no se debe interpretar una fila como una cuota aislada.\u003c/p\u003e\u003col\u003e\u003cli\u003eConfirmá el cliente mostrado en el encabezado.\u003c/li\u003e\u003cli\u003eIdentificá la venta y el saldo pendiente.\u003c/li\u003e\u003cli\u003eCerrá la consulta y abrí Pagos para registrar el cobro correspondiente.\u003c/li\u003e\u003cli\u003eDespués del cobro, volvé a consultar la deuda para comprobar la actualización.\u003c/li\u003e\u003c/ol\u003e\u003caside\u003eSi el cliente tiene varias ventas, confirmá cuál está pagando. No apliques el dinero a la primera fila sin cotejar el número de venta o remito.\u003c/aside\u003e\u003cp\u003eUna lista vacía después de una consulta correcta indica que no hay ventas pendientes para ese cliente. Si aparece un error, la ausencia de filas no acredita ausencia de deuda.\u003c/p\u003e",
+        "img":  "frmDeudaCliente",
+        "crop":  null,
+        "marks":  [
+                      [
+                          220,
+                          35,
+                          "Identidad del cliente"
+                      ],
+                      [
+                          220,
+                          140,
+                          "Ventas pendientes"
+                      ]
+                  ]
+    },
+    {
+        "title":  "Stock: buscar y entender las existencias",
+        "body":  "\u003col\u003e\u003cli\u003eAbrí \u003cb\u003eStock\u003c/b\u003e. Escribí el modelo o código y, cuando corresponda, elegí categoría, marca y condición.\u003c/li\u003e\u003cli\u003ePresioná \u003cb\u003eBuscar\u003c/b\u003e. Revisá producto, variante, color y condición antes de seleccionar una fila.\u003c/li\u003e\u003cli\u003eCompará precio, costo, stock físico y comprometido.\u003c/li\u003e\u003cli\u003eUsá \u003cb\u003eLimpiar filtros\u003c/b\u003e para quitar criterios y resultados anteriores; luego ejecutá una nueva búsqueda.\u003c/li\u003e\u003c/ol\u003e\u003ctable\u003e\u003cthead\u003e\u003ctr\u003e\u003cth\u003eConcepto\u003c/th\u003e\u003cth\u003eInterpretación\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\u003ctbody\u003e\u003ctr\u003e\u003ctd\u003eProducto\u003c/td\u003e\u003ctd\u003eDatos generales: nombre, modelo, categoría, marca y descripción.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eVariante\u003c/td\u003e\u003ctd\u003ePresentación concreta del producto: color, condición y precio.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eStock físico\u003c/td\u003e\u003ctd\u003eUnidades que permanecen físicamente registradas.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eComprometido\u003c/td\u003e\u003ctd\u003eUnidades reservadas al preparar entregas.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eDisponible\u003c/td\u003e\u003ctd\u003eStock físico menos comprometido.\u003c/td\u003e\u003c/tr\u003e\u003c/tbody\u003e\u003c/table\u003e\u003caside\u003eUna venta pendiente puede existir sin stock disponible. Eso no permite retirarla inmediatamente ni preparar una entrega sin unidades suficientes.\u003c/aside\u003e",
+        "img":  "frmStock_completa",
+        "crop":  [
+                     0,
+                     60,
+                     1499,
+                     325
+                 ],
+        "marks":  [
+                      [
+                          150,
+                          169,
+                          "Criterios de búsqueda"
+                      ],
+                      [
+                          965,
+                          145,
+                          "Buscar"
+                      ],
+                      [
+                          1100,
+                          230,
+                          "Físico y comprometido"
+                      ]
+                  ]
+    },
+    {
+        "title":  "Stock: alta del producto y sus variantes",
+        "body":  "\u003col\u003e\u003cli\u003eDesplazate hasta \u003cb\u003eNuevo producto\u003c/b\u003e. Completá nombre, modelo, categoría, marca y descripción.\u003c/li\u003e\u003cli\u003eElegí o escribí categoría y marca según las sugerencias. Revisá la ortografía antes de guardar una opción nueva.\u003c/li\u003e\u003cli\u003eEn \u003cb\u003eVariantes del producto\u003c/b\u003e, elegí PRIMERA u OUTLET, indicá color y precio.\u003c/li\u003e\u003cli\u003ePresioná \u003cb\u003eAgregar variante\u003c/b\u003e. Repetí por cada presentación que quieras incorporar.\u003c/li\u003e\u003cli\u003eRevisá la tabla temporal y presioná \u003cb\u003eGuardar Producto\u003c/b\u003e. El alta necesita al menos una variante.\u003c/li\u003e\u003cli\u003ePara descartar la carga, presioná Cancelar y leé la confirmación de borrado de datos temporales.\u003c/li\u003e\u003c/ol\u003e\u003caside\u003eAgregar variante todavía no guarda el producto. Para incorporar unidades a las existencias utilizá después el bloque Ingreso de stock.\u003c/aside\u003e\u003cp\u003eReglas: nombre hasta 150 caracteres; modelo hasta 15; marca y categoría hasta 100; descripción hasta 500; color hasta 50. El precio de alta debe ser mayor que cero, con hasta dos decimales y máximo 99.999.999,99.\u003c/p\u003e",
+        "img":  "frmStock_completa",
+        "crop":  [
+                     0,
+                     390,
+                     1499,
+                     620
+                 ],
+        "marks":  [
+                      [
+                          360,
+                          530,
+                          "Datos generales"
+                      ],
+                      [
+                          625,
+                          700,
+                          "Agregar variante"
+                      ],
+                      [
+                          80,
+                          975,
+                          "Guardar producto"
+                      ]
+                  ]
+    },
+    {
+        "title":  "Stock: modificar o desactivar una variante",
+        "body":  "\u003col\u003e\u003cli\u003eBuscá el producto y ubicá la variante exacta.\u003c/li\u003e\u003cli\u003eUsá la acción de modificación de su fila. Terminá de guardar la fila en edición antes de abrir otra.\u003c/li\u003e\u003cli\u003eCorregí los datos habilitados: modelo, producto, descripción, color, condición, costo, precio o stock físico.\u003c/li\u003e\u003cli\u003eGuardá la fila y verificá el resultado de una nueva búsqueda.\u003c/li\u003e\u003cli\u003ePara retirar una variante del uso, presioná su acción de desactivación y confirmá únicamente si corresponde.\u003c/li\u003e\u003c/ol\u003e\u003ctable\u003e\u003cthead\u003e\u003ctr\u003e\u003cth\u003eControl\u003c/th\u003e\u003cth\u003eRegla / cuidado\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\u003ctbody\u003e\u003ctr\u003e\u003ctd\u003eDatos obligatorios al editar\u003c/td\u003e\u003ctd\u003eModelo, producto, color y condición.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eCosto y precio\u003c/td\u003e\u003ctd\u003eValores válidos, no negativos, hasta 99.999.999,99 y dos decimales; el alta exige precio positivo.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eStock físico\u003c/td\u003e\u003ctd\u003eEntero no negativo. Una corrección manual debe justificarse con el recuento.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eDesactivación\u003c/td\u003e\u003ctd\u003eComprueba la variante seleccionada; no equivale a anular una venta histórica.\u003c/td\u003e\u003c/tr\u003e\u003c/tbody\u003e\u003c/table\u003e\u003caside\u003eRecomendación: para una recepción de mercadería usá Registrar ingreso, que conserva proveedor y documento. Reservá la edición directa de stock a correcciones autorizadas.\u003c/aside\u003e",
+        "img":  null,
+        "crop":  null,
+        "marks":  [
+
+                  ]
+    },
+    {
+        "title":  "Ingreso de mercadería y proveedor",
+        "body":  "\u003col\u003e\u003cli\u003eEn Stock bajá a \u003cb\u003eIngreso de stock\u003c/b\u003e y presioná Buscar producto.\u003c/li\u003e\u003cli\u003eEn la ventana de selección, buscá nombre o modelo, elegí la variante y presioná Seleccionar producto.\u003c/li\u003e\u003cli\u003eSeleccioná o escribí el proveedor. Completá fecha y documento del proveedor / remito.\u003c/li\u003e\u003cli\u003eEn cada fila del detalle completá cantidad y costo unitario. Revisá variante, condición y totales.\u003c/li\u003e\u003cli\u003ePresioná \u003cb\u003eRegistrar ingreso\u003c/b\u003e. Esperá la confirmación y consultá nuevamente el stock.\u003c/li\u003e\u003c/ol\u003e\u003ctable\u003e\u003cthead\u003e\u003ctr\u003e\u003cth\u003eDato\u003c/th\u003e\u003cth\u003eRegla\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\u003ctbody\u003e\u003ctr\u003e\u003ctd\u003eProveedor\u003c/td\u003e\u003ctd\u003eObligatorio; el nombre admite hasta 100 caracteres en la validación.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eDocumento del proveedor\u003c/td\u003e\u003ctd\u003eObligatorio, hasta 50 caracteres.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eDetalle\u003c/td\u003e\u003ctd\u003eAl menos un producto; cantidades enteras mayores que cero.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eCosto unitario\u003c/td\u003e\u003ctd\u003eNo negativo, dos decimales y máximo 99.999.999,99.\u003c/td\u003e\u003c/tr\u003e\u003c/tbody\u003e\u003c/table\u003e\u003caside\u003eSi el mensaje indica que el ingreso se guardó pero falló la actualización del listado o historial, consultá el stock antes de repetirlo. Repetir puede duplicar las unidades.\u003c/aside\u003e",
+        "img":  "frmStock_completa",
+        "crop":  [
+                     0,
+                     1000,
+                     1499,
+                     454
+                 ],
+        "marks":  [
+                      [
+                          170,
+                          1124,
+                          "Seleccionar producto"
+                      ],
+                      [
+                          500,
+                          1145,
+                          "Proveedor y documento"
+                      ],
+                      [
+                          460,
+                          1400,
+                          "Registrar ingreso"
+                      ]
+                  ]
+    },
+    {
+        "title":  "Selector de productos",
+        "body":  "\u003col\u003e\u003cli\u003eEscribí una parte del nombre o modelo en el buscador.\u003c/li\u003e\u003cli\u003ePresioná Buscar para cargar coincidencias.\u003c/li\u003e\u003cli\u003eSeleccioná la fila de la variante requerida. Compará color, condición y demás datos visibles.\u003c/li\u003e\u003cli\u003ePresioná \u003cb\u003eSeleccionar producto\u003c/b\u003e para enviarlo al ingreso de stock.\u003c/li\u003e\u003cli\u003eCon \u003cb\u003eCancelar\u003c/b\u003e cerrás la selección sin incorporar esa variante.\u003c/li\u003e\u003c/ol\u003e\u003caside\u003eNo confundas productos de igual nombre con variantes de distinto color o condición. La recepción y la venta se vinculan a la variante elegida.\u003c/aside\u003e\u003cp\u003eAl volver a Stock, completá la cantidad y el costo en el detalle del ingreso. Seleccionar un producto en esta ventana no guarda una recepción.\u003c/p\u003e",
+        "img":  "buttonSeleccionarProducto",
+        "crop":  null,
+        "marks":  [
+                      [
+                          410,
+                          23,
+                          "Buscar"
+                      ],
+                      [
+                          250,
+                          160,
+                          "Elegir variante"
+                      ],
+                      [
+                          80,
+                          319,
+                          "Confirmar selección"
+                      ]
+                  ]
+    },
+    {
+        "title":  "Nueva venta: elegir cliente y productos",
+        "body":  "\u003col\u003e\u003cli\u003eAbrí \u003cb\u003eNueva venta\u003c/b\u003e. Buscá el cliente con al menos 2 caracteres y elegí una sugerencia.\u003c/li\u003e\u003cli\u003eVerificá documento, nombre, teléfono y dirección del cliente seleccionado. Si falta el cliente, crealo primero en Clientes.\u003c/li\u003e\u003cli\u003eBuscá un producto con al menos 2 caracteres y seleccioná la variante exacta.\u003c/li\u003e\u003cli\u003eIndicá la cantidad y presioná \u003cb\u003eAgregar\u003c/b\u003e. Repetí para los demás artículos.\u003c/li\u003e\u003cli\u003eRevisá precio unitario y subtotal de cada fila. Para retirar una fila temporal usá Quitar en la columna Eliminar.\u003c/li\u003e\u003c/ol\u003e\u003caside\u003eEl sistema exige cliente y al menos un producto válido. Admite como máximo 99 filas de detalle; aunque el mensaje habla de productos distintos, la validación cuenta las filas.\u003c/aside\u003e\u003cp\u003eLas sugerencias muestran stock físico y comprometido; también pueden aparecer productos agotados. Si falta disponibilidad, acordá una entrega posterior. El retiro inmediato requiere disponibilidad.\u003c/p\u003e",
+        "img":  "frmNuevaVenta_completa",
+        "crop":  [
+                     0,
+                     75,
+                     1330,
+                     600
+                 ],
+        "marks":  [
+                      [
+                          240,
+                          125,
+                          "Seleccionar cliente"
+                      ],
+                      [
+                          220,
+                          407,
+                          "Seleccionar variante"
+                      ],
+                      [
+                          620,
+                          407,
+                          "Agregar cantidad"
+                      ]
+                  ]
+    },
+    {
+        "title":  "Nueva venta: forma de entrega",
+        "body":  "\u003ctable\u003e\u003cthead\u003e\u003ctr\u003e\u003cth\u003eModalidad\u003c/th\u003e\u003cth\u003eQué completar y qué ocurre\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\u003ctbody\u003e\u003ctr\u003e\u003ctd\u003eRetiro en el local\u003c/td\u003e\u003ctd\u003eEntrega inmediata. La operación registra el retiro y descuenta existencias dentro del registro de la venta.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eRetiro posterior en el local\u003c/td\u003e\u003ctd\u003eIndicá fecha estimada y observaciones; luego se prepara y confirma en Entregas.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eEnvío a domicilio\u003c/td\u003e\u003ctd\u003eDomicilio y logística obligatorios. Completá fecha estimada, horario, observaciones, segundo teléfono y costo cuando corresponda.\u003c/td\u003e\u003c/tr\u003e\u003c/tbody\u003e\u003c/table\u003e\u003col\u003e\u003cli\u003eSeleccioná la modalidad acordada con el cliente.\u003c/li\u003e\u003cli\u003ePara envío, marcá \u003cb\u003eUsar dirección registrada\u003c/b\u003e si corresponde; si no, escribí la dirección de entrega.\u003c/li\u003e\u003cli\u003eRevisá logística y costo. El costo de envío se incorpora al total cuando elegís envío a domicilio.\u003c/li\u003e\u003cli\u003eConfirmá los datos con el cliente antes de continuar.\u003c/li\u003e\u003c/ol\u003e\u003caside\u003eEl domicilio guardado del cliente y el domicilio de esta entrega pueden ser diferentes. No des por hecho que seleccionar un cliente completa automáticamente el destino.\u003c/aside\u003e",
+        "img":  "frmNuevaVenta_completa",
+        "crop":  [
+                     0,
+                     678,
+                     1330,
+                     269
+                 ],
+        "marks":  [
+                      [
+                          220,
+                          744,
+                          "Elegir modalidad"
+                      ],
+                      [
+                          590,
+                          742,
+                          "Usar dirección registrada"
+                      ],
+                      [
+                          190,
+                          919,
+                          "Costo de envío"
+                      ]
+                  ]
+    },
+    {
+        "title":  "Nueva venta: descuento y totales",
+        "body":  "\u003cp\u003eEl descuento se ingresa como \u003cb\u003eimporte monetario\u003c/b\u003e, no como porcentaje. La validación limita el descuento al 50 % del subtotal de productos.\u003c/p\u003e\u003ctable\u003e\u003cthead\u003e\u003ctr\u003e\u003cth\u003eCálculo\u003c/th\u003e\u003cth\u003eEjemplo ficticio\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\u003ctbody\u003e\u003ctr\u003e\u003ctd\u003eSubtotal = cantidades × precios\u003c/td\u003e\u003ctd\u003e2 × $100.000 = $200.000\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eMenos descuento\u003c/td\u003e\u003ctd\u003e$200.000 − $10.000 = $190.000\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eMás envío\u003c/td\u003e\u003ctd\u003e$190.000 + $5.000 = $195.000 de base\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eMás recargos de pagos\u003c/td\u003e\u003ctd\u003eCon $19.500 de recargo: total $214.500\u003c/td\u003e\u003c/tr\u003e\u003c/tbody\u003e\u003c/table\u003e\u003caside\u003eTOTAL EST. puede incluir el recargo previsto para el saldo con el medio seleccionado. Revisá el total final y la lista de pagos agregados antes de registrar.\u003c/aside\u003e\u003cp\u003eSi cambiás cantidades, descuento o envío después de agregar pagos, volvé a revisar esos pagos. No pueden superar el nuevo total base.\u003c/p\u003e\u003cp\u003eLos precios, subtotales de producto, descuento y envío controlados por negocio admiten hasta 99.999.999,99 y dos decimales. La pantalla además rechaza ventas mayores a $100.000.000,00. No uses el tope general como garantía de que todos los importes particulares sean válidos.\u003c/p\u003e",
+        "img":  "frmNuevaVenta_completa",
+        "crop":  [
+                     0,
+                     952,
+                     680,
+                     165
+                 ],
+        "marks":  [
+                      [
+                          145,
+                          1024,
+                          "Descuento en pesos"
+                      ],
+                      [
+                          400,
+                          1080,
+                          "Total / total estimado"
+                      ]
+                  ]
+    },
+    {
+        "title":  "Nueva venta: pago inicial y medios combinados",
+        "body":  "\u003col\u003e\u003cli\u003eElegí \u003cb\u003ePago total\u003c/b\u003e o \u003cb\u003ePago parcial\u003c/b\u003e. La fecha del cobro es la actual.\u003c/li\u003e\u003cli\u003eSeleccioná Efectivo, Transferencia, Débito o Crédito.\u003c/li\u003e\u003cli\u003eSi corresponde a Crédito, elegí cuotas: 1, 2, 3, 6, 9 o 12.\u003c/li\u003e\u003cli\u003eEn \u003cb\u003eImporte cobrado\u003c/b\u003e ingresá el dinero efectivamente cobrado, incluyendo su recargo. En la captura sin carga este campo conserva el rótulo de diseño Monto.\u003c/li\u003e\u003cli\u003eCompletá cuenta destino / referencia si corresponde y presioná \u003cb\u003eAgregar medio al pago\u003c/b\u003e.\u003c/li\u003e\u003cli\u003eRepetí para combinar medios. Revisá cada total cobrado y el saldo. Usá Quitar para corregir un pago temporal.\u003c/li\u003e\u003c/ol\u003e\u003caside\u003ePago total exige cancelar exactamente la base de la venta. Pago parcial exige un pago inicial positivo y un saldo pendiente: no admite cero ni cancelar toda la base.\u003c/aside\u003e\u003cp\u003eLa cuenta o referencia admite hasta 100 caracteres. Las cuotas mayores a una solo corresponden al tipo Crédito. La observación sirve para aclaraciones; no sustituye el importe ni el medio.\u003c/p\u003e",
+        "img":  "frmNuevaVenta_completa",
+        "crop":  [
+                     0,
+                     1122,
+                     1330,
+                     491
+                 ],
+        "marks":  [
+                      [
+                          140,
+                          1210,
+                          "Condición"
+                      ],
+                      [
+                          355,
+                          1272,
+                          "Importe cobrado"
+                      ],
+                      [
+                          590,
+                          1272,
+                          "Agregar medio"
+                      ]
+                  ]
+    },
+    {
+        "title":  "Ejemplos de recargos y saldos",
+        "body":  "\u003ch3\u003eEjemplo A · Cobro total con 10 % de recargo\u003c/h3\u003e\u003cp\u003eBase de venta $100.000. Medio con recargo del 10 %. El cliente paga $110.000. En Nueva venta ingresás \u003cb\u003e$110.000 como importe cobrado\u003c/b\u003e. El sistema separa $100.000 de base y $10.000 de recargo.\u003c/p\u003e\u003ch3\u003eEjemplo B · Dos medios en una misma venta\u003c/h3\u003e\u003cp\u003eBase $100.000. Agregás $40.000 en efectivo sin recargo. Para la base restante de $60.000, con recargo del 10 %, agregás $66.000 cobrados. Total cobrado $106.000; base cancelada $100.000; saldo cero.\u003c/p\u003e\u003ch3\u003eEjemplo C · Seña y cobro posterior\u003c/h3\u003e\u003cp\u003eBase $100.000. Elegís Pago parcial y agregás $30.000 en efectivo. Queda una base pendiente de $70.000. Después, en Pagos, cargás \u003cb\u003e$70.000 como importe a cancelar\u003c/b\u003e; con 10 % de recargo, la pantalla calcula $77.000 a cobrar.\u003c/p\u003e\u003caside\u003eNueva venta: ingresás el cobro final con recargo. Pagos posteriores: ingresás la base a cancelar y el sistema suma el recargo. No ingreses $77.000 como base si la deuda base es $70.000.\u003c/aside\u003e\u003cp\u003eLos porcentajes de estos ejemplos son ilustrativos. Usá siempre la configuración vigente y el total mostrado por el sistema. El recargo se redondea a dos decimales.\u003c/p\u003e",
+        "img":  null,
+        "crop":  null,
+        "marks":  [
+
+                  ]
+    },
+    {
+        "title":  "Registrar la venta y verificar el resultado",
+        "body":  "\u003col\u003e\u003cli\u003eRevisá cliente, variantes, cantidades, modalidad, destino, descuento, envío y pagos.\u003c/li\u003e\u003cli\u003eDesplazate al bloque \u003cb\u003eDocumentos\u003c/b\u003e y presioná \u003cb\u003eRegistrar venta\u003c/b\u003e una sola vez.\u003c/li\u003e\u003cli\u003eAnotá el número de venta que se muestra. El botón queda deshabilitado cuando se obtuvo un registro correcto.\u003c/li\u003e\u003cli\u003eAbrí garantía y remito. La aplicación ofrece continuar con otra venta después del proceso.\u003c/li\u003e\u003cli\u003eVerificá la operación en Panel principal, Pagos y, si corresponde, Entregas.\u003c/li\u003e\u003c/ol\u003e\u003caside\u003eEn esta versión el aviso «La venta se registró correctamente» puede mostrarse incluso después de una excepción. Ante un error previo, ese aviso por sí solo no acredita el guardado: verificá número de venta y listado antes de volver a intentar.\u003c/aside\u003e\u003cp\u003eSi se informó que la venta quedó registrada pero falló la exportación o apertura de documentos, usá Garantía / remito en el Panel principal. No crees otra venta para recuperar el comprobante.\u003c/p\u003e",
+        "img":  "frmNuevaVenta_completa",
+        "crop":  [
+                     0,
+                     1618,
+                     800,
+                     124
+                 ],
+        "marks":  [
+                      [
+                          365,
+                          1687,
+                          "Registrar venta"
+                      ],
+                      [
+                          140,
+                          1729,
+                          "Garantía y remito vinculados"
+                      ]
+                  ]
+    },
+    {
+        "title":  "Garantía, remito e impresión",
+        "body":  "\u003col\u003e\u003cli\u003eAl completar la venta, o desde Panel principal → Garantía / remito, abrí la ventana de comprobantes.\u003c/li\u003e\u003cli\u003eElegí \u003cb\u003eVer / imprimir garantía\u003c/b\u003e o \u003cb\u003eVer / imprimir remito\u003c/b\u003e.\u003c/li\u003e\u003cli\u003eSe abre un archivo HTML en el navegador asociado.\u003c/li\u003e\u003cli\u003ePresioná \u003cb\u003eImprimir / guardar como PDF\u003c/b\u003e. En el diálogo de impresión elegí la impresora o el destino PDF disponible.\u003c/li\u003e\u003cli\u003eRevisá vista previa, tamaño de papel y cantidad de copias. Guardá con un nombre que incluya el número de venta.\u003c/li\u003e\u003c/ol\u003e\u003ctable\u003e\u003cthead\u003e\u003ctr\u003e\u003cth\u003eDocumento\u003c/th\u003e\u003cth\u003eRevisión\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\u003ctbody\u003e\u003ctr\u003e\u003ctd\u003eGarantía\u003c/td\u003e\u003ctd\u003eCliente, artículos, importes, condiciones y datos de la venta.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eRemito\u003c/td\u003e\u003ctd\u003eCliente, artículos, cantidades, saldo al emitir, destino, logística, fecha y firma de conformidad.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eNumeración\u003c/td\u003e\u003ctd\u003eGarantía y remito comparten el número de venta.\u003c/td\u003e\u003c/tr\u003e\u003c/tbody\u003e\u003c/table\u003e\u003cp\u003eLos originales HTML se guardan en \u003cb\u003eDocumentos\\PranaElectronica\\Comprobantes\\\u0026lt;número\u0026gt;\u003c/b\u003e. El PDF se guarda en el destino que elijas al imprimir.\u003c/p\u003e\u003caside\u003eEsta versión genera garantía y remito. No presenta un circuito de factura fiscal ni una pantalla completa de emisión de recibos independientes.\u003c/aside\u003e",
+        "img":  "frmComprobantes",
+        "crop":  null,
+        "marks":  [
+                      [
+                          130,
+                          107,
+                          "Abrir garantía"
+                      ],
+                      [
+                          375,
+                          107,
+                          "Abrir remito"
+                      ]
+                  ]
+    },
+    {
+        "title":  "Pagos: registrar un cobro posterior",
+        "body":  "\u003col\u003e\u003cli\u003eAbrí \u003cb\u003ePagos\u003c/b\u003e. Buscá la venta y utilizá el filtro de pendientes cuando corresponda.\u003c/li\u003e\u003cli\u003eSeleccioná la fila y verificá cliente, número de venta, saldo y pagos ya registrados.\u003c/li\u003e\u003cli\u003eCompletá \u003cb\u003eImporte a cancelar\u003c/b\u003e: es la base de deuda que vas a cancelar, sin sumar manualmente el recargo.\u003c/li\u003e\u003cli\u003eElegí medio, cuotas de Crédito y cuenta destino / referencia.\u003c/li\u003e\u003cli\u003eLeé \u003cb\u003eTotal a cobrar\u003c/b\u003e y confirmá que coincide con el dinero recibido.\u003c/li\u003e\u003cli\u003ePresioná \u003cb\u003eRegistrar pago\u003c/b\u003e. Verificá la nueva fila del historial de pagos y la reducción del saldo.\u003c/li\u003e\u003c/ol\u003e\u003caside\u003eEl importe debe ser positivo, con hasta dos decimales y no mayor al saldo. Los cobros corresponden al día actual; una caja cerrada impide agregar cobros a ese día.\u003c/aside\u003e\u003cp\u003eSi el botón sigue deshabilitado, revisá venta seleccionada, importe, medio, cuotas y permiso de la sesión. Ante una respuesta incierta, consultá los pagos antes de repetir.\u003c/p\u003e",
+        "img":  "frmPagos",
+        "crop":  null,
+        "marks":  [
+                      [
+                          520,
+                          135,
+                          "Buscar / actualizar"
+                      ],
+                      [
+                          220,
+                          280,
+                          "Seleccionar venta"
+                      ],
+                      [
+                          905,
+                          480,
+                          "Registrar pago"
+                      ]
+                  ]
+    },
+    {
+        "title":  "Entregas: preparar y reservar unidades",
+        "body":  "\u003col\u003e\u003cli\u003eAbrí \u003cb\u003eEntregas\u003c/b\u003e y buscá la venta o el cliente.\u003c/li\u003e\u003cli\u003eEn \u003cb\u003eProductos por preparar\u003c/b\u003e, seleccioná el producto pendiente.\u003c/li\u003e\u003cli\u003eIndicá una cantidad positiva que no supere las unidades pendientes.\u003c/li\u003e\u003cli\u003ePara envío, verificá dirección y horario; para retiro se utiliza Retiro en local.\u003c/li\u003e\u003cli\u003ePresioná \u003cb\u003ePreparar entrega\u003c/b\u003e. El sistema reserva stock y crea la entrega pendiente.\u003c/li\u003e\u003cli\u003eComprobá que aparezca en \u003cb\u003eEntregas preparadas\u003c/b\u003e.\u003c/li\u003e\u003c/ol\u003e\u003caside\u003ePreparar no significa que el cliente ya recibió el producto. La disponibilidad se controla aquí: si falta stock, primero registrá el ingreso de mercadería. Solo el administrador puede gestionar entregas.\u003c/aside\u003e\u003cp\u003eDirección: hasta 200 caracteres. Horario: hasta 50. Podés preparar una parte de las unidades pendientes si hay disponibilidad; revisá lo que queda para futuras entregas.\u003c/p\u003e",
+        "img":  "frmEntregas",
+        "crop":  [
+                     0,
+                     90,
+                     1200,
+                     445
+                 ],
+        "marks":  [
+                      [
+                          240,
+                          260,
+                          "Producto pendiente"
+                      ],
+                      [
+                          67,
+                          476,
+                          "Cantidad"
+                      ],
+                      [
+                          685,
+                          455,
+                          "Preparar entrega"
+                      ]
+                  ]
+    },
+    {
+        "title":  "Entregas: confirmar la salida",
+        "body":  "\u003col\u003e\u003cli\u003eVerificá físicamente producto, variante y cantidad antes de entregarlos.\u003c/li\u003e\u003cli\u003eEn el listado inferior, seleccioná la entrega preparada cuyo estado sea Pendiente.\u003c/li\u003e\u003cli\u003eConfirmá que cliente y número de venta coincidan con la documentación.\u003c/li\u003e\u003cli\u003eSolo cuando se concretó la entrega, presioná \u003cb\u003eConfirmar entrega seleccionada\u003c/b\u003e.\u003c/li\u003e\u003cli\u003eActualizá el listado y comprobá el cambio de estado. Revisá el stock si corresponde.\u003c/li\u003e\u003c/ol\u003e\u003ctable\u003e\u003cthead\u003e\u003ctr\u003e\u003cth\u003eEstado / paso\u003c/th\u003e\u003cth\u003eEfecto\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\u003ctbody\u003e\u003ctr\u003e\u003ctd\u003eVenta pendiente\u003c/td\u003e\u003ctd\u003ePuede esperar mercadería y preparación.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003ePreparación\u003c/td\u003e\u003ctd\u003eReserva unidades disponibles; genera una entrega pendiente.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eConfirmación\u003c/td\u003e\u003ctd\u003eRegistra la entrega y aplica la salida de las unidades reservadas.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eRetiro inmediato\u003c/td\u003e\u003ctd\u003eSe registra como entregado durante la venta.\u003c/td\u003e\u003c/tr\u003e\u003c/tbody\u003e\u003c/table\u003e\u003caside\u003eNo confirmes para hacer desaparecer un pendiente si la mercadería todavía no salió. El sistema rechaza una entrega ya confirmada o que no esté pendiente.\u003c/aside\u003e",
+        "img":  "frmEntregas",
+        "crop":  [
+                     0,
+                     555,
+                     1200,
+                     280
+                 ],
+        "marks":  [
+                      [
+                          260,
+                          675,
+                          "Elegir entrega pendiente"
+                      ],
+                      [
+                          600,
+                          807,
+                          "Confirmar entrega seleccionada"
+                      ]
+                  ]
+    },
+    {
+        "title":  "Caja: consultar el día y registrar movimientos",
+        "body":  "\u003col\u003e\u003cli\u003eComo administrador, abrí Panel principal → \u003cb\u003eCaja y gastos\u003c/b\u003e.\u003c/li\u003e\u003cli\u003eElegí la fecha y presioná Consultar / actualizar.\u003c/li\u003e\u003cli\u003eRevisá los cobros automáticos de ventas y los movimientos manuales.\u003c/li\u003e\u003cli\u003ePara un movimiento del día actual, indicá tipo, motivo, medio, moneda, importe y cuenta o referencia.\u003c/li\u003e\u003cli\u003ePresioná \u003cb\u003eRegistrar movimiento\u003c/b\u003e y verificá la fila incorporada.\u003c/li\u003e\u003c/ol\u003e\u003ctable\u003e\u003cthead\u003e\u003ctr\u003e\u003cth\u003eRegla\u003c/th\u003e\u003cth\u003eAplicación\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\u003ctbody\u003e\u003ctr\u003e\u003ctd\u003eTipos manuales\u003c/td\u003e\u003ctd\u003eGasto, Ingreso extra o Café.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eImporte\u003c/td\u003e\u003ctd\u003ePositivo y con hasta dos decimales.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eMoneda\u003c/td\u003e\u003ctd\u003eARS o USD; USD solo con medio Efectivo.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eMotivo / cuenta\u003c/td\u003e\u003ctd\u003eMotivo obligatorio hasta 200 caracteres; cuenta hasta 100.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eFecha\u003c/td\u003e\u003ctd\u003eSolo permite registrar manualmente en el día actual con caja sin cerrar.\u003c/td\u003e\u003c/tr\u003e\u003c/tbody\u003e\u003c/table\u003e\u003caside\u003eLos cobros de ventas ingresan desde Pagos y Nueva venta. No los vuelvas a cargar como ingreso extra: duplicarías el dinero en caja.\u003c/aside\u003e",
+        "img":  "frmCaja",
+        "crop":  [
+                     0,
+                     0,
+                     1001,
+                     690
+                 ],
+        "marks":  [
+                      [
+                          300,
+                          105,
+                          "Consultar fecha"
+                      ],
+                      [
+                          660,
+                          329,
+                          "Registrar movimiento"
+                      ],
+                      [
+                          140,
+                          668,
+                          "Anular movimiento manual"
+                      ]
+                  ],
+        "imageHeight":  70
+    },
+    {
+        "title":  "Caja: anular un movimiento manual",
+        "body":  "\u003col\u003e\u003cli\u003eConsultá la fecha y seleccioná el gasto o ingreso manual que contiene el error.\u003c/li\u003e\u003cli\u003ePresioná \u003cb\u003eAnular movimiento seleccionado\u003c/b\u003e.\u003c/li\u003e\u003cli\u003eEscribí el motivo de la anulación de forma concreta, por ejemplo «Importe duplicado».\u003c/li\u003e\u003cli\u003ePresioná Anular para confirmar o Cancelar para conservar el movimiento.\u003c/li\u003e\u003cli\u003eVerificá el resultado en caja y, si corresponde, en el historial.\u003c/li\u003e\u003c/ol\u003e\u003caside\u003eEsta acción no permite anular cobros vinculados a ventas. No uses un gasto ficticio para ocultar un cobro erróneo. Elevá el caso al administrador con número de venta, importe y mensaje.\u003c/aside\u003e\u003cp\u003eEl motivo es obligatorio y admite hasta 200 caracteres. Las restricciones del estado de la caja siguen aplicándose. Una venta, un pago o una entrega no tienen en estas pantallas una anulación general equivalente.\u003c/p\u003e",
+        "img":  "frmMotivoAnulacion",
+        "crop":  null,
+        "marks":  [
+                      [
+                          220,
+                          45,
+                          "Motivo obligatorio"
+                      ],
+                      [
+                          360,
+                          104,
+                          "Confirmar anulación"
+                      ]
+                  ]
+    },
+    {
+        "title":  "Caja: conciliación y cierre diario",
+        "body":  "\u003col\u003e\u003cli\u003eAntes del cierre, registrá todos los cobros y movimientos que realmente correspondan al día.\u003c/li\u003e\u003cli\u003eEn la parte inferior, verificá saldo inicial ARS, saldo inicial USD y hora de apertura.\u003c/li\u003e\u003cli\u003eCompará movimientos con comprobantes, efectivo y referencias de transferencias o tarjetas. ARS y USD se controlan por separado.\u003c/li\u003e\u003cli\u003eRevisá ingresos, gastos y balance. Completá observaciones si hay aclaraciones.\u003c/li\u003e\u003cli\u003ePresioná \u003cb\u003eCerrar caja del día\u003c/b\u003e y leé la confirmación. Confirmá solo después de terminar la revisión.\u003c/li\u003e\u003cli\u003eGuardá el número de cierre y utilizá \u003cb\u003eVer / imprimir cierre\u003c/b\u003e.\u003c/li\u003e\u003c/ol\u003e\u003caside\u003eEl cierre impide agregar cobros o movimientos al día cerrado. La interfaz revisada no ofrece una reapertura. No cierres mientras quedan operaciones del día por registrar.\u003c/aside\u003e\u003cp\u003eBalance ARS = saldo inicial + ingresos − gastos. Los ingresos por café ya están incluidos en ingresos: no se suman por segunda vez. Los dólares se muestran sin convertir a pesos. La fecha y hora de apertura no pueden ser futuras.\u003c/p\u003e",
+        "img":  "frmCaja_inferior",
+        "crop":  null,
+        "marks":  [
+                      [
+                          200,
+                          565,
+                          "Resumen antes de confirmar"
+                      ],
+                      [
+                          110,
+                          660,
+                          "Cerrar caja"
+                      ],
+                      [
+                          340,
+                          660,
+                          "Ver / imprimir cierre"
+                      ]
+                  ]
+    },
+    {
+        "title":  "Resumen mensual de caja",
+        "body":  "\u003col\u003e\u003cli\u003eDesde Caja presioná \u003cb\u003eResumen del mes\u003c/b\u003e.\u003c/li\u003e\u003cli\u003eElegí el mes y presioná Consultar / actualizar.\u003c/li\u003e\u003cli\u003eRevisá totales y desgloses por día, medio y tipo.\u003c/li\u003e\u003cli\u003eConsultá el detalle de movimientos para localizar diferencias. Desplazate para ver las tablas inferiores.\u003c/li\u003e\u003cli\u003eCompará ARS con ARS y USD con USD.\u003c/li\u003e\u003c/ol\u003e\u003ctable\u003e\u003cthead\u003e\u003ctr\u003e\u003cth\u003eConcepto\u003c/th\u003e\u003cth\u003eQué incluye\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\u003ctbody\u003e\u003ctr\u003e\u003ctd\u003eIngresos\u003c/td\u003e\u003ctd\u003eCobros por su fecha de pago y movimientos de ingreso vigentes.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eGastos\u003c/td\u003e\u003ctd\u003eMovimientos de gasto del período.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eResultado\u003c/td\u003e\u003ctd\u003eIngresos menos gastos.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eDías sin cerrar\u003c/td\u003e\u003ctd\u003eTambién pueden aportar movimientos al resumen.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eSaldos iniciales\u003c/td\u003e\u003ctd\u003eNo se suman como ingresos mensuales.\u003c/td\u003e\u003c/tr\u003e\u003c/tbody\u003e\u003c/table\u003e\u003caside\u003eEsta consulta no cierra la caja. El resultado mensual no es igual a sumar todos los balances diarios, porque esos balances pueden incluir saldos iniciales.\u003c/aside\u003e",
+        "img":  "frmResumenMensualCaja",
+        "crop":  null,
+        "marks":  [
+                      [
+                          335,
+                          100,
+                          "Consultar el mes"
+                      ],
+                      [
+                          270,
+                          240,
+                          "Totales y desgloses"
+                      ]
+                  ],
+        "imageHeight":  70
+    },
+    {
+        "title":  "Alertas: pendientes de cobro y faltantes",
+        "body":  "\u003cp\u003eAlertas reúne dos necesidades de seguimiento: pagos pendientes vencidos y stock insuficiente para ventas que esperan preparación.\u003c/p\u003e\u003col\u003e\u003cli\u003eAbrí Alertas y esperá la consulta.\u003c/li\u003e\u003cli\u003eEn pagos pendientes revisá venta, cliente, productos, primer pago, total, pagado, saldo y días vencida.\u003c/li\u003e\u003cli\u003eConsultá la venta antes de contactar al cliente. Registrá el cobro real en Pagos.\u003c/li\u003e\u003cli\u003eEn faltantes revisá variante, pendientes de preparar, disponible y unidades faltantes.\u003c/li\u003e\u003cli\u003eCoordiná el ingreso de mercadería y después prepará la entrega.\u003c/li\u003e\u003c/ol\u003e\u003caside\u003eEl faltante se obtiene comparando las unidades pendientes de preparar con el stock disponible; si no falta, el resultado es cero. La alerta no es una orden de compra ni registra el ingreso.\u003c/aside\u003e\u003cp\u003e«No hay pagos pendientes vencidos» no significa que no exista ningún saldo: puede haber deudas que todavía no cumplan el criterio de vencimiento de la consulta. Si la pantalla informa un error, no tomes las grillas vacías como situación resuelta.\u003c/p\u003e\u003cp\u003e\u003cb\u003eCriterio de vencimiento:\u003c/b\u003e saldo positivo y al menos un mes calendario desde el primer pago; no equivale siempre a 30 días. La consulta excluye estados de venta anulada o cancelada.\u003c/p\u003e",
+        "img":  "frmAlertas",
+        "crop":  null,
+        "marks":  [
+                      [
+                          220,
+                          190,
+                          "Seguimiento de cobros"
+                      ],
+                      [
+                          220,
+                          520,
+                          "Faltantes para entregas"
+                      ]
+                  ]
+    },
+    {
+        "title":  "Informe de ventas",
+        "body":  "\u003col\u003e\u003cli\u003eAbrí \u003cb\u003eInformes\u003c/b\u003e con una cuenta administradora.\u003c/li\u003e\u003cli\u003eSeleccioná Desde y Hasta. Agregá filtros de producto, categoría, marca, cliente, envío, localidad y montos cuando correspondan.\u003c/li\u003e\u003cli\u003eAl seleccionar un producto conocido, el sistema puede completar categoría y marca y bloquear esos dos campos.\u003c/li\u003e\u003cli\u003ePresioná \u003cb\u003eConsultar\u003c/b\u003e.\u003c/li\u003e\u003cli\u003eRevisá venta, fecha, cliente, ubicación, productos, categorías, marcas, total, pagado, saldo y envío.\u003c/li\u003e\u003c/ol\u003e\u003caside\u003eLos filtros se combinan. Si faltan resultados, ampliá fechas y quitá criterios innecesarios. Verificá también que el mínimo y el máximo sean coherentes.\u003c/aside\u003e\u003cp\u003eAl cambiar el texto de producto, categoría y marca vuelven a habilitarse. Este formulario es de consulta: no corrige ventas ni sustituye el registro de pagos. La versión revisada no presenta un botón de exportación del informe.\u003c/p\u003e\u003cp\u003eUn monto mínimo o máximo en cero se interpreta como filtro sin aplicar. El rango incluye todo el día Hasta.\u003c/p\u003e",
+        "img":  "frmInformesVentas",
+        "crop":  [
+                     0,
+                     0,
+                     1000,
+                     400
+                 ],
+        "marks":  [
+                      [
+                          230,
+                          165,
+                          "Combinar filtros"
+                      ],
+                      [
+                          80,
+                          222,
+                          "Consultar"
+                      ]
+                  ]
+    },
+    {
+        "title":  "Historial de actividad",
+        "body":  "\u003col\u003e\u003cli\u003eAbrí \u003cb\u003eHistorial\u003c/b\u003e. Al cargar, se consultan las diez actividades más recientes.\u003c/li\u003e\u003cli\u003eCompletá Desde y Hasta; opcionalmente indicá número de remito, acción o usuario.\u003c/li\u003e\u003cli\u003ePresioná \u003cb\u003eFiltrar\u003c/b\u003e o Enter desde los campos de filtro.\u003c/li\u003e\u003cli\u003eRevisá usuario, acción, entidad, detalle y fecha. El filtro consulta hasta 100 actividades.\u003c/li\u003e\u003cli\u003ePresioná \u003cb\u003eÚltimas 10\u003c/b\u003e para volver a la consulta reciente; si querés una vista sin restricciones adicionales, vaciá remito, acción y usuario.\u003c/li\u003e\u003c/ol\u003e\u003caside\u003eDesde no puede ser posterior a Hasta. El remito debe ser un número entero positivo; escribí el número, sin el prefijo RTO.\u003c/aside\u003e\u003cp\u003eEl historial permite investigar lo registrado por la aplicación. No es una herramienta de restauración, no revierte operaciones y no reemplaza una copia de seguridad. Si no encontrás un evento, revisá filtros y límite de resultados.\u003c/p\u003e",
+        "img":  "frmHistorial",
+        "crop":  null,
+        "marks":  [
+                      [
+                          425,
+                          72,
+                          "Aplicar filtros"
+                      ],
+                      [
+                          550,
+                          72,
+                          "Últimas diez"
+                      ],
+                      [
+                          220,
+                          310,
+                          "Actividad registrada"
+                      ]
+                  ]
+    },
+    {
+        "title":  "Usuarios: crear y modificar cuentas",
+        "body":  "\u003col\u003e\u003cli\u003eAbrí \u003cb\u003eUsuarios\u003c/b\u003e con una cuenta administradora.\u003c/li\u003e\u003cli\u003eElegí Nuevo usuario o la opción de creación del selector.\u003c/li\u003e\u003cli\u003eCompletá nombre de usuario, contraseña y rol: Administrador o Vendedor.\u003c/li\u003e\u003cli\u003ePresioná Crear usuario / Guardar usuario, según el estado del formulario.\u003c/li\u003e\u003cli\u003ePara modificar, seleccioná una cuenta, corregí nombre o rol e ingresá una nueva contraseña solo si querés reemplazarla.\u003c/li\u003e\u003cli\u003ePresioná Guardar cambios y verificá la cuenta seleccionada.\u003c/li\u003e\u003c/ol\u003e\u003caside\u003eContraseña: al menos 5 caracteres, una mayúscula y un número. Al editar, dejar Nueva contraseña vacía conserva la actual.\u003c/aside\u003e\u003cp\u003eRecomendación operativa: usá una cuenta por persona, asigná Vendedor para la operación habitual y reservá Administrador para tareas de gestión. No envíes contraseñas en capturas o comprobantes.\u003c/p\u003e",
+        "img":  "frmUsuarios",
+        "crop":  null,
+        "marks":  [
+                      [
+                          220,
+                          190,
+                          "Seleccionar cuenta"
+                      ],
+                      [
+                          220,
+                          310,
+                          "Datos y rol"
+                      ]
+                  ]
+    },
+    {
+        "title":  "Usuarios: desbloquear y dar de baja",
+        "body":  "\u003col\u003e\u003cli\u003ePara desbloquear, seleccioná la cuenta y revisá el estado de bloqueo.\u003c/li\u003e\u003cli\u003ePresioná \u003cb\u003eDesbloquear usuario\u003c/b\u003e, leé la confirmación y continuá. Se restablecen los intentos fallidos.\u003c/li\u003e\u003cli\u003ePara retirar acceso, seleccioná la cuenta y presioná \u003cb\u003eDar de baja usuario\u003c/b\u003e.\u003c/li\u003e\u003cli\u003eLeé la advertencia: la cuenta pierde acceso y se conservan ventas y registros históricos.\u003c/li\u003e\u003cli\u003eConfirmá únicamente después de verificar la identidad de la cuenta.\u003c/li\u003e\u003c/ol\u003e\u003caside\u003eLa cuenta administradora principal, identificada como usuario 1, no puede darse de baja. Las cuentas dadas de baja se conservan en la base, pero el selector habitual muestra las activas.\u003c/aside\u003e\u003cp\u003eEl desbloqueo no cambia la contraseña. Si la persona no la recuerda, el administrador debe establecer una nueva desde la edición. Esta pantalla no ofrece una acción de reactivación de cuentas dadas de baja.\u003c/p\u003e",
+        "img":  "frmUsuarios_inferior",
+        "crop":  null,
+        "marks":  [
+                      [
+                          140,
+                          295,
+                          "Desbloquear"
+                      ],
+                      [
+                          140,
+                          365,
+                          "Dar de baja"
+                      ]
+                  ]
+    },
+    {
+        "title":  "Medios de pago y recargos",
+        "body":  "\u003col\u003e\u003cli\u003eAbrí \u003cb\u003eMedios pagos\u003c/b\u003e como administrador.\u003c/li\u003e\u003cli\u003eSeleccioná en la grilla uno de los cuatro medios predefinidos: Efectivo, Transferencia, Débito o Crédito.\u003c/li\u003e\u003cli\u003eEditá el porcentaje general y, en Crédito, los porcentajes de 2, 3, 6, 9 y 12 cuotas.\u003c/li\u003e\u003cli\u003ePresioná \u003cb\u003eGuardar\u003c/b\u003e.\u003c/li\u003e\u003cli\u003eVerificá la confirmación y revisá la cotización antes de cobrar una nueva operación.\u003c/li\u003e\u003c/ol\u003e\u003ctable\u003e\u003cthead\u003e\u003ctr\u003e\u003cth\u003eRegla\u003c/th\u003e\u003cth\u003eDetalle\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\u003ctbody\u003e\u003ctr\u003e\u003ctd\u003eCatálogo\u003c/td\u003e\u003ctd\u003eSe modifican recargos de los cuatro medios fijos; no se crean medios nuevos en esta pantalla.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003ePorcentajes\u003c/td\u003e\u003ctd\u003eNo negativos y hasta 999,99 %.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eCuotas\u003c/td\u003e\u003ctd\u003eSolo Crédito puede tener recargos por cantidad de cuotas.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eUna cuota\u003c/td\u003e\u003ctd\u003eUtiliza el recargo general del medio.\u003c/td\u003e\u003c/tr\u003e\u003c/tbody\u003e\u003c/table\u003e\u003caside\u003eUn 10 significa 10 %, no $10. Comunicale al operador cualquier cambio autorizado y comprobá siempre el Total a cobrar. El límite técnico no constituye una recomendación comercial.\u003c/aside\u003e",
+        "img":  "frmMediosPagos",
+        "crop":  null,
+        "marks":  [
+                      [
+                          240,
+                          215,
+                          "Seleccionar medio"
+                      ],
+                      [
+                          590,
+                          470,
+                          "Porcentajes configurables"
+                      ]
+                  ],
+        "imageHeight":  70
+    },
+    {
+        "title":  "Circuito completo: venta con entrega posterior",
+        "body":  "\u003cdiv class=\"flow\"\u003eCliente → Producto y variante → Pago inicial → Venta\u003cbr\u003e↓\u003cbr\u003eIngreso de stock si falta → Preparar entrega → Confirmar entrega\u003cbr\u003e↓\u003cbr\u003eCobrar saldo → Revisar documentos → Cerrar caja\u003c/div\u003e\u003col\u003e\u003cli\u003eBuscá o creá al cliente con documento correcto.\u003c/li\u003e\u003cli\u003eComprobá variante y acordá retiro posterior o envío. Si falta stock, no selecciones retiro inmediato.\u003c/li\u003e\u003cli\u003eAgregá el producto, completá logística y cargá una seña como Pago parcial.\u003c/li\u003e\u003cli\u003eRegistrá la venta y verificá número, saldo y documentos.\u003c/li\u003e\u003cli\u003eSi hace falta, registrá el ingreso del proveedor.\u003c/li\u003e\u003cli\u003ePrepará las unidades disponibles en Entregas; confirmalas cuando se entreguen realmente.\u003c/li\u003e\u003cli\u003eRegistrá el saldo en Pagos con el medio efectivamente recibido.\u003c/li\u003e\u003cli\u003eRevisá la caja del día de cada cobro. El pago posterior aparece por su fecha de pago, aunque la venta sea anterior.\u003c/li\u003e\u003c/ol\u003e\u003caside\u003eEl orden entre cobro final y entrega depende del acuerdo comercial. No supongas que una entrega confirmada acredita el pago o que una venta pagada acredita la entrega.\u003c/aside\u003e",
+        "img":  null,
+        "crop":  null,
+        "marks":  [
+
+                  ]
+    },
+    {
+        "title":  "Errores frecuentes: datos y operaciones",
+        "body":  "\u003ctable\u003e\u003cthead\u003e\u003ctr\u003e\u003cth\u003eMensaje o síntoma\u003c/th\u003e\u003cth\u003eQué hacer\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\u003ctbody\u003e\u003ctr\u003e\u003ctd\u003eSeleccione un cliente / producto de la lista\u003c/td\u003e\u003ctd\u003eElegí una sugerencia válida; no basta escribir el texto.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eDocumento duplicado\u003c/td\u003e\u003ctd\u003eBuscá al cliente existente. Corregí solo si el documento fue cargado erróneamente.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eCUIT inválido / teléfono inválido\u003c/td\u003e\u003ctd\u003eVerificá cantidad de caracteres, formato y dígito verificador del CUIT.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eAgregue al menos una variante\u003c/td\u003e\u003ctd\u003eCompletá color, condición y precio; presioná Agregar variante antes de guardar.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eDescuento mayor al 50 %\u003c/td\u003e\u003ctd\u003eReducí el importe de descuento y revisá pagos ya agregados.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eEl pago total debe cubrir la venta\u003c/td\u003e\u003ctd\u003eAgregá los pagos por la base restante o corregí la condición de pago.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eIngrese un pago inicial parcial\u003c/td\u003e\u003ctd\u003eLa seña debe ser mayor que cero y menor que la base total.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eEl cobro supera el saldo\u003c/td\u003e\u003ctd\u003eRevisá diferencia entre cobro final y base a cancelar; quitá o corregí pagos temporales.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eNo hay stock disponible\u003c/td\u003e\u003ctd\u003eRevisá variante, físico y comprometido; registrá el ingreso antes de preparar.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eCantidad mayor a pendientes\u003c/td\u003e\u003ctd\u003eActualizá Entregas y utilizá la cantidad todavía pendiente.\u003c/td\u003e\u003c/tr\u003e\u003c/tbody\u003e\u003c/table\u003e",
+        "img":  null,
+        "crop":  null,
+        "marks":  [
+
+                  ]
+    },
+    {
+        "title":  "Errores frecuentes: acceso y recuperación",
+        "body":  "\u003ctable\u003e\u003cthead\u003e\u003ctr\u003e\u003cth\u003eSituación\u003c/th\u003e\u003cth\u003eRespuesta operativa\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\u003ctbody\u003e\u003ctr\u003e\u003ctd\u003eCuenta bloqueada\u003c/td\u003e\u003ctd\u003eEsperá 15 minutos o solicitá desbloqueo al administrador.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eAcceso denegado / botón deshabilitado\u003c/td\u003e\u003ctd\u003eRevisá rol, selección de fila, estado de la operación y campos obligatorios.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eCaja cerrada\u003c/td\u003e\u003ctd\u003eNo reiteres cobros para el mismo día. Informá al responsable; no hay reapertura en la interfaz.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eVenta registrada, documento no abre\u003c/td\u003e\u003ctd\u003eBuscá la venta y regenerá / abrí Garantía y remito desde el Panel principal.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eIngreso guardado, listado no actualizado\u003c/td\u003e\u003ctd\u003eConsultá de nuevo stock y movimientos antes de registrar otro ingreso.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eMensaje de error y luego aviso de venta correcta\u003c/td\u003e\u003ctd\u003eConfirmá la existencia y número en Panel principal. No confíes solo en el segundo aviso.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eNo se puede conectar a la base\u003c/td\u003e\u003ctd\u003eInformá el texto, hora y módulo al responsable técnico. Verificará motor e instalación.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eCierre inesperado / corte de luz\u003c/td\u003e\u003ctd\u003eVolvé a abrir y consultá la operación por su número antes de repetirla.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eNo se ven botones inferiores\u003c/td\u003e\u003ctd\u003eMaximizá y desplazate hacia abajo; en tablas anchas desplazate horizontalmente.\u003c/td\u003e\u003c/tr\u003e\u003c/tbody\u003e\u003c/table\u003e\u003caside\u003eAl pedir soporte, incluí módulo, acción, número de venta o cierre, fecha y mensaje exacto. Evitá compartir contraseñas y datos personales innecesarios.\u003c/aside\u003e",
+        "img":  null,
+        "crop":  null,
+        "marks":  [
+
+                  ]
+    },
+    {
+        "title":  "Lista de control del trabajo diario",
+        "body":  "\u003ch3\u003eAl comenzar\u003c/h3\u003e\u003cul\u003e\u003cli\u003e□ Fecha y hora correctas; cuenta del operador identificada.\u003c/li\u003e\u003cli\u003e□ Revisar pendientes de cobro, entregas y faltantes de stock.\u003c/li\u003e\u003cli\u003e□ Confirmar recargos vigentes y datos necesarios para cobrar.\u003c/li\u003e\u003cli\u003e□ Revisar caja y saldos iniciales con el administrador.\u003c/li\u003e\u003c/ul\u003e\u003ch3\u003eAntes de registrar una venta\u003c/h3\u003e\u003cul\u003e\u003cli\u003e□ Cliente y documento; producto, color, condición y cantidad.\u003c/li\u003e\u003cli\u003e□ Disponibilidad o compromiso de entrega posterior.\u003c/li\u003e\u003cli\u003e□ Domicilio, logística, fecha, horario, teléfono y costo de envío.\u003c/li\u003e\u003cli\u003e□ Descuento, condición de pago, medio, cuotas y total cobrado.\u003c/li\u003e\u003c/ul\u003e\u003ch3\u003eDespués de cada operación\u003c/h3\u003e\u003cul\u003e\u003cli\u003e□ Confirmar número y existencia en el listado.\u003c/li\u003e\u003cli\u003e□ Revisar saldo y pagos; preparar o confirmar entrega cuando corresponda.\u003c/li\u003e\u003cli\u003e□ Abrir documentos y conservar copia si se necesita.\u003c/li\u003e\u003c/ul\u003e\u003ch3\u003eAntes de cerrar caja\u003c/h3\u003e\u003cul\u003e\u003cli\u003e□ Todos los cobros y gastos del día registrados una sola vez.\u003c/li\u003e\u003cli\u003e□ Conciliar por medio y por moneda; revisar diferencias.\u003c/li\u003e\u003cli\u003e□ Guardar cierre, imprimir / archivar y cerrar la aplicación.\u003c/li\u003e\u003cli\u003e□ Verificar con el responsable que el respaldo previsto se haya realizado.\u003c/li\u003e\u003c/ul\u003e",
+        "img":  null,
+        "crop":  null,
+        "marks":  [
+
+                  ]
+    },
+    {
+        "title":  "Respaldo, cuidado de datos y límites",
+        "body":  "\u003cp\u003e\u003cb\u003eRecomendaciones operativas:\u003c/b\u003e conservar respaldos periódicos de la base, verificar que puedan restaurarse en un entorno separado y mantener copias fuera del equipo principal. Estas tareas corresponden al responsable técnico.\u003c/p\u003e\u003cul\u003e\u003cli\u003eLa aplicación revisada no ofrece una pantalla de copia de seguridad ni restauración.\u003c/li\u003e\u003cli\u003eCopiar una garantía, remito o cierre no respalda clientes, ventas, pagos ni stock.\u003c/li\u003e\u003cli\u003eNo borres archivos de la base ni reinstales para intentar corregir una venta.\u003c/li\u003e\u003cli\u003eNo edites directamente tablas para cambiar saldos o existencias: se pueden romper relaciones entre ventas, pagos y entregas.\u003c/li\u003e\u003cli\u003eLa instalación local usa archivos de datos asociados a la cuenta de Windows. Una mudanza de equipo debe incluir la base y la validación técnica.\u003c/li\u003e\u003c/ul\u003e\u003ch3\u003eFunciones que no deben suponerse\u003c/h3\u003e\u003ctable\u003e\u003cthead\u003e\u003ctr\u003e\u003cth\u003eNo hay procedimiento de usuario revisado para\u003c/th\u003e\u003cth\u003eCómo proceder\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\u003ctbody\u003e\u003ctr\u003e\u003ctd\u003eAnular ventas, devolver productos o revertir pagos de ventas\u003c/td\u003e\u003ctd\u003eElevar el caso al responsable, sin simular movimientos compensatorios.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eReabrir cierres de caja\u003c/td\u003e\u003ctd\u003eSolicitar revisión técnica y administrativa.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eFacturación fiscal o gestión completa de recibos\u003c/td\u003e\u003ctd\u003eUtilizar el circuito autorizado por el comercio fuera de estas pantallas.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eExportar informes o resumen mensual con botón dedicado\u003c/td\u003e\u003ctd\u003eConsultar en pantalla; no confundir con la impresión de comprobantes y cierres.\u003c/td\u003e\u003c/tr\u003e\u003c/tbody\u003e\u003c/table\u003e",
+        "img":  null,
+        "crop":  null,
+        "marks":  [
+
+                  ]
+    },
+    {
+        "title":  "Glosario y consulta rápida",
+        "body":  "\u003ctable\u003e\u003cthead\u003e\u003ctr\u003e\u003cth\u003eTérmino\u003c/th\u003e\u003cth\u003eSignificado\u003c/th\u003e\u003c/tr\u003e\u003c/thead\u003e\u003ctbody\u003e\u003ctr\u003e\u003ctd\u003eBase de venta\u003c/td\u003e\u003ctd\u003eProductos menos descuento más envío, antes de recargos.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eRecargo\u003c/td\u003e\u003ctd\u003eAdicional del medio de pago y cantidad de cuotas.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eImporte cobrado\u003c/td\u003e\u003ctd\u003eDinero recibido, incluyendo el recargo; se usa al armar la venta.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eImporte a cancelar\u003c/td\u003e\u003ctd\u003eBase pendiente que se reduce con un cobro posterior.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eSaldo pendiente\u003c/td\u003e\u003ctd\u003eDeuda restante según ventas y pagos registrados.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eVariante\u003c/td\u003e\u003ctd\u003eColor y condición concreta de un producto.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eComprometido\u003c/td\u003e\u003ctd\u003eStock reservado para entregas preparadas.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eRemito / RTO\u003c/td\u003e\u003ctd\u003eDocumento de mercadería vinculado a la venta.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eGarantía\u003c/td\u003e\u003ctd\u003eDocumento generado con el mismo número de venta.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eCierre\u003c/td\u003e\u003ctd\u003eRegistro del resumen diario que bloquea nuevos movimientos del día.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eResultado mensual\u003c/td\u003e\u003ctd\u003eIngresos menos gastos del mes, sin sumar saldos iniciales.\u003c/td\u003e\u003c/tr\u003e\u003ctr\u003e\u003ctd\u003eBaja lógica\u003c/td\u003e\u003ctd\u003eRetira el acceso o uso conservando el registro histórico.\u003c/td\u003e\u003c/tr\u003e\u003c/tbody\u003e\u003c/table\u003e\u003caside\u003eRegla general ante una duda: consultar primero, identificar el registro exacto y recién después ejecutar una acción que cambie datos.\u003c/aside\u003e",
+        "img":  null,
+        "crop":  null,
+        "marks":  [
+
+                  ]
+    },
+    {
+        "title":  "Ejemplo visual · garantía",
+        "body":  "\u003cp\u003e\u003cb\u003eDocumento ficticio de capacitación.\u003c/b\u003e Generado con la plantilla real. Verificá cliente, artículo y variante, número de venta y fecha.\u003c/p\u003e\u003cp\u003eEl total es $105.000, se abonaron $30.000 y el saldo al emitir es $75.000. Consultá Pagos para comprobar el estado actual.\u003c/p\u003e",
+        "img":  "ejemplo_garantia",
+        "crop":  [
+                     110,
+                     80,
+                     680,
+                     830
+                 ],
+        "marks":  [
+                      [
+                          700,
+                          195,
+                          "Número y fecha"
+                      ],
+                      [
+                          680,
+                          600,
+                          "Importes y saldo"
+                      ]
+                  ],
+        "imageHeight":  169
+    },
+    {
+        "title":  "Ejemplo visual · remito",
+        "body":  "\u003cp\u003e\u003cb\u003eDocumento ficticio de capacitación.\u003c/b\u003e Cotejá artículos, cantidades, domicilio y horario. El remito muestra el saldo al emitir y un espacio para la conformidad de recepción.\u003c/p\u003e\u003cp\u003eImprimir el remito no confirma la salida: la entrega efectiva se registra en Entregas.\u003c/p\u003e",
+        "img":  "ejemplo_remito",
+        "crop":  [
+                     110,
+                     80,
+                     680,
+                     870
+                 ],
+        "marks":  [
+                      [
+                          710,
+                          410,
+                          "Cantidad"
+                      ],
+                      [
+                          625,
+                          770,
+                          "Conformidad"
+                      ],
+                      [
+                          420,
+                          835,
+                          "Datos de entrega"
+                      ]
+                  ],
+        "imageHeight":  169
+    },
+    {
+        "title":  "Ejemplo visual · cierre diario",
+        "body":  "\u003cp\u003e\u003cb\u003eDocumento ficticio de capacitación.\u003c/b\u003e Saldo inicial $10.000 + cobro $30.000 − gasto $2.000 = balance ARS $38.000. El saldo pendiente de la venta no es ingreso.\u003c/p\u003e\u003cp\u003eEl cierre identifica usuario, fecha y número. Los HTML se guardan en Documentos\\PranaElectronica\\Cierres; desde el navegador se imprimen o guardan como PDF.\u003c/p\u003e",
+        "img":  "ejemplo_cierre",
+        "crop":  [
+                     110,
+                     80,
+                     680,
+                     1000
+                 ],
+        "marks":  [
+                      [
+                          690,
+                          250,
+                          "Identificación"
+                      ],
+                      [
+                          680,
+                          452,
+                          "Cobro vinculado al remito"
+                      ],
+                      [
+                          685,
+                          915,
+                          "Balance"
+                      ]
+                  ],
+        "imageHeight":  169
+    }
+]

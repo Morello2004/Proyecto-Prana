@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -30,9 +30,6 @@
     <EmbeddedResource Update="frmNuevaVenta.Logica.resx">
       <ManifestResourceName>Prana.Presentacion.frmNuevaVenta.Logica</ManifestResourceName>
     </EmbeddedResource>
-    <EmbeddedResource Update="PantallasAdaptables.resx">
-      <ManifestResourceName>Prana.Presentacion.PantallasAdaptables</ManifestResourceName>
-    </EmbeddedResource>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -52,6 +49,11 @@
     <Compile Remove="Prana.Entidades\**\*.cs" />
     <Compile Remove="Prana.negocio\**\*.cs" />
     <Compile Remove="Pruebas\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="BaseDeDatos\DiagnosticarTablasProducto.sql" />
+    <None Remove="BaseDeDatos\DiagnosticarTablasProducto.sql" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="frmResumenMensualCaja.cs"><SubType>Form</SubType></Compile>

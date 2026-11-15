@@ -6,12 +6,12 @@ using System.Text;
 
 namespace Prana.negocio
 {
+    // agrupa los datos y operaciones de cn marca
     public class CN_Marca
     {
-        // Permite acceder a los métodos de la capa de Datos
+        // permite acceder a los metodos de la capa de datos
         private readonly CD_Marca cdMarca = new CD_Marca();
-
-        // Solicita todas las marcas registradas
+        // solicita todas las marcas registradas
         public List<Marca> obtenerMarcas()
         {
             return cdMarca.obtenerMarcas();

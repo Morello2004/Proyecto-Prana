@@ -1,0 +1,562 @@
+[
+  {
+    "archivo": "DocumentosPrana.cs",
+    "comentarios": 100,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Interfaz.Designer.cs",
+    "comentarios": 317,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Interfaz.cs",
+    "comentarios": 57,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Program.cs",
+    "comentarios": 8,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmAlertas.Designer.cs",
+    "comentarios": 106,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmAlertas.cs",
+    "comentarios": 43,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmComprobantes.Designer.cs",
+    "comentarios": 50,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmComprobantes.cs",
+    "comentarios": 16,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmDeudaCliente.Designer.cs",
+    "comentarios": 64,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmDeudaCliente.cs",
+    "comentarios": 13,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmEntregas.Designer.cs",
+    "comentarios": 519,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmEntregas.cs",
+    "comentarios": 63,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmHistorial.Designer.cs",
+    "comentarios": 234,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmHistorial.cs",
+    "comentarios": 43,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmMotivoAnulacion.Designer.cs",
+    "comentarios": 57,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmMotivoAnulacion.cs",
+    "comentarios": 8,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmResumenMensualCaja.Designer.cs",
+    "comentarios": 669,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmSeleccionarProducto.Designer.cs",
+    "comentarios": 153,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmSeleccionarProducto.cs",
+    "comentarios": 35,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmUsuarios.Designer.cs",
+    "comentarios": 200,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "login.Designer.cs",
+    "comentarios": 134,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "login.cs",
+    "comentarios": 30,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmPanelPrincipal.cs",
+    "comentarios": 55,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmUsuarios.cs",
+    "comentarios": 64,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmPanelPrincipal.Designer.cs",
+    "comentarios": 439,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmMediosPagos.Designer.cs",
+    "comentarios": 492,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmMediosPagos.cs",
+    "comentarios": 79,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmPagos.Designer.cs",
+    "comentarios": 510,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmPagos.cs",
+    "comentarios": 104,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmInformesVentas.cs",
+    "comentarios": 115,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmStock.cs",
+    "comentarios": 388,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmInformesVentas.Designer.cs",
+    "comentarios": 232,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmStock.Designer.cs",
+    "comentarios": 1362,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmClientes.Designer.cs",
+    "comentarios": 582,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmClientes.cs",
+    "comentarios": 186,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmNuevaVenta.Designer.cs",
+    "comentarios": 1166,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmNuevaVenta.cs",
+    "comentarios": 308,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmCaja.cs",
+    "comentarios": 85,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmCaja.Designer.cs",
+    "comentarios": 418,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "frmResumenMensualCaja.cs",
+    "comentarios": 23,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_Caja.cs",
+    "comentarios": 80,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_Categoria.cs",
+    "comentarios": 12,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_Comprobante.cs",
+    "comentarios": 36,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_Entrega.cs",
+    "comentarios": 108,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_Localidad.cs",
+    "comentarios": 12,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_LogActividad.cs",
+    "comentarios": 30,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_Marca.cs",
+    "comentarios": 12,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_MedioPago.cs",
+    "comentarios": 27,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_Pago.cs",
+    "comentarios": 35,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_Proveedor.cs",
+    "comentarios": 26,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_RegistroVenta.cs",
+    "comentarios": 68,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_Usuario.cs",
+    "comentarios": 106,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_Venta.cs",
+    "comentarios": 32,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Datos\\GestionVentaSql.cs",
+    "comentarios": 21,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Datos\\InicializadorBaseDatos.cs",
+    "comentarios": 60,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Datos\\conexion.cs",
+    "comentarios": 6,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_InformeVentas.cs",
+    "comentarios": 62,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_Cliente.cs",
+    "comentarios": 118,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Datos\\CD_Producto.cs",
+    "comentarios": 165,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\AlertaPagoPendiente.cs",
+    "comentarios": 9,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\AlertasStockPendiente.cs",
+    "comentarios": 6,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\Categoria.cs",
+    "comentarios": 3,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\ComprobanteVenta.cs",
+    "comentarios": 28,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\FiltroInformeVentas.cs",
+    "comentarios": 11,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\InformeVenta.cs",
+    "comentarios": 12,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\Localidad.cs",
+    "comentarios": 4,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\LogActividad.cs",
+    "comentarios": 9,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\Marca.cs",
+    "comentarios": 3,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\MedioPago.cs",
+    "comentarios": 11,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\Proveedor.cs",
+    "comentarios": 4,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\ResultadoInicioSesion.cs",
+    "comentarios": 6,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\ResumenMensualCaja.cs",
+    "comentarios": 7,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\ResumenVentas.cs",
+    "comentarios": 5,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\VarianteProducto.cs",
+    "comentarios": 8,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\producto.cs",
+    "comentarios": 8,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\usuario.cs",
+    "comentarios": 11,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\venta.cs",
+    "comentarios": 27,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\CierreCaja.cs",
+    "comentarios": 18,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\ConteoBillete.cs",
+    "comentarios": 5,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\EntregaRegistrada.cs",
+    "comentarios": 10,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\MovimientoCaja.cs",
+    "comentarios": 11,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\Pago.cs",
+    "comentarios": 13,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\ProductoPorEntregar.cs",
+    "comentarios": 10,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\TiposCaja.cs",
+    "comentarios": 2,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\TotalMensualCaja.cs",
+    "comentarios": 7,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\Cliente.cs",
+    "comentarios": 22,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.Entidades\\DetalleNuevaVenta.cs",
+    "comentarios": 8,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_Caja.cs",
+    "comentarios": 48,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_Categoria.cs",
+    "comentarios": 4,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_Comprobante.cs",
+    "comentarios": 4,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_Entrega.cs",
+    "comentarios": 34,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_LogActividad.cs",
+    "comentarios": 9,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_Marca.cs",
+    "comentarios": 4,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_MedioPago.cs",
+    "comentarios": 22,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_Pago.cs",
+    "comentarios": 31,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_Venta.cs",
+    "comentarios": 12,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.negocio\\SesionActual.cs",
+    "comentarios": 6,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_Proveedor.cs",
+    "comentarios": 13,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.negocio\\NormalizarTexto.cs",
+    "comentarios": 3,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_InformeVentas.cs",
+    "comentarios": 6,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_Usuario.cs",
+    "comentarios": 54,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.negocio\\Permisos.cs",
+    "comentarios": 34,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_Cliente.cs",
+    "comentarios": 84,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_RegistroVenta.cs",
+    "comentarios": 98,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Prana.negocio\\CN_Producto.cs",
+    "comentarios": 119,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Properties\\Resources.Designer.cs",
+    "comentarios": 12,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Pruebas\\CajaComprobantes\\Program.cs",
+    "comentarios": 192,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Pruebas\\CajaComprobantes\\PruebasPresentacion.cs",
+    "comentarios": 92,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Pruebas\\Disenador\\Program.cs",
+    "comentarios": 32,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Pruebas\\ResumenMensual\\Program.cs",
+    "comentarios": 25,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Pruebas\\ValidacionesVenta\\Program.cs",
+    "comentarios": 123,
+    "codigoIdentico": true
+  },
+  {
+    "archivo": "Pruebas\\Manual\\Program.cs",
+    "comentarios": 63,
+    "codigoIdentico": true
+  }
+]

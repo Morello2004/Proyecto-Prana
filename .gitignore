@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# los instaladores se distribuyen por separado del codigo fuente
+/Instaladores/*.exe
+/Instalador/SqlLocalDB.msi
+# perfil temporal utilizado para generar documentos
+/outputs/manual-edge/

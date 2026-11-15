@@ -1,0 +1,46 @@
+﻿[
+    {
+        "comentarios":  57,
+        "archivo":  "CajaYComprobantes.sql",
+        "sqlSinCambios":  true
+    },
+    {
+        "comentarios":  507,
+        "archivo":  "CrearEstructuraPrana_LocalDB.sql",
+        "sqlSinCambios":  true
+    },
+    {
+        "comentarios":  180,
+        "archivo":  "ActualizarEstructuraPrana_LocalDB.sql",
+        "sqlSinCambios":  true
+    },
+    {
+        "comentarios":  14,
+        "archivo":  "DiagnosticarTablasProducto.sql",
+        "sqlSinCambios":  true
+    },
+    {
+        "archivo":  "PranaActual.iss",
+        "contenidoOriginalConservado":  true
+    },
+    {
+        "comentarios":  30,
+        "archivo":  "Generar-Anexo-Instalador.ps1",
+        "tokensSinCambios":  true
+    },
+    {
+        "comentarios":  51,
+        "archivo":  "Generar-Manual.ps1",
+        "tokensSinCambios":  true
+    },
+    {
+        "comentarios":  113,
+        "archivo":  "Generar-Word.ps1",
+        "tokensSinCambios":  true
+    },
+    {
+        "comentarios":  42,
+        "archivo":  "Ampliar-Manual-Empleados.ps1",
+        "tokensSinCambios":  true
+    }
+]

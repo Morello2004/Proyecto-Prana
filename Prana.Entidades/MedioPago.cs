@@ -1,35 +1,51 @@
-namespace Prana.Entidades
+﻿namespace Prana.Entidades
 {
-    // Representa un medio de pago y sus recargos por cuotas
+    // agrupa los datos y operaciones de medio pago
     public class MedioPago
     {
-        // Conserva la clasificacion fija del medio para los cierres de caja
+        // conserva la clasificacion fija del medio para los cierres de caja clasificacion del medio para agrupar los movimientos de caja
         public string TipoCaja { get; set; } = "Otros";
-        // Identifica el medio de pago
-        public int IdMedioPago { get; set; }
-
-        // Contiene el nombre del medio de pago
+        // identifica el medio de pago
+        public int IdMedioPago
+        {
+            get; set;
+        }
+        // contiene el nombre del medio de pago
         public string NombreMedioPago { get; set; } = string.Empty;
-
-        // Conserva el recargo general del medio de pago
-        public decimal RecargoMedioPago { get; set; }
-
-        // Conserva el recargo para dos cuotas
-        public decimal Recargo2 { get; set; }
-
-        // Conserva el recargo para tres cuotas
-        public decimal Recargo3 { get; set; }
-
-        // Conserva el recargo para seis cuotas
-        public decimal Recargo6 { get; set; }
-
-        // Conserva el recargo para nueve cuotas
-        public decimal Recargo9 { get; set; }
-
-        // Conserva el recargo para doce cuotas
-        public decimal Recargo12 { get; set; }
-
-        // Indica si el medio de pago esta disponible
-        public bool Activo { get; set; }
+        // conserva el recargo general del medio de pago
+        public decimal RecargoMedioPago
+        {
+            get; set;
+        }
+        // conserva el recargo para dos cuotas
+        public decimal Recargo2
+        {
+            get; set;
+        }
+        // conserva el recargo para tres cuotas
+        public decimal Recargo3
+        {
+            get; set;
+        }
+        // conserva el recargo para seis cuotas
+        public decimal Recargo6
+        {
+            get; set;
+        }
+        // conserva el recargo para nueve cuotas
+        public decimal Recargo9
+        {
+            get; set;
+        }
+        // conserva el recargo para doce cuotas
+        public decimal Recargo12
+        {
+            get; set;
+        }
+        // indica si el medio de pago esta disponible marca si el registro esta habilitado para el uso habitual; no elimina su historial
+        public bool Activo
+        {
+            get; set;
+        }
     }
 }

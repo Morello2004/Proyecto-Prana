@@ -1,13 +1,21 @@
-namespace Prana.Presentacion
+﻿namespace Prana.Presentacion
 {
+    // parte visual de frmdeudacliente crea controles y define su distribucion, colores y eventos; visual studio puede regenerar este archivo al editar el disenador
     partial class frmDeudaCliente
     {
         private System.ComponentModel.IContainer components = null;
+        // libera los recursos del formulario; disposing indica si tambien deben liberarse los componentes administrados
         protected override void Dispose(bool disposing)
         {
-            if (disposing) components?.Dispose();
+            if (disposing)
+            {
+                components?.Dispose();
+            }
+
             base.Dispose(disposing);
         }
+
+        // construye la pantalla: instancia controles, asigna propiedades, agrega cada control a su contenedor y conecta los eventos no registra operaciones comerciales
         private void InitializeComponent()
         {
             lblCliente = new Label();
@@ -15,6 +23,7 @@ namespace Prana.Presentacion
             dgvDeudas = new DataGridView();
             btnCerrar = new Button();
             SuspendLayout();
+            // llama a ((systemcomponentmodelisupportinitialize)dgvdeudas)begininit para realizar este paso del flujo
             ((System.ComponentModel.ISupportInitialize)dgvDeudas).BeginInit();
             lblCliente.Dock = DockStyle.Top;
             lblCliente.Height = 65;
@@ -38,13 +47,70 @@ namespace Prana.Presentacion
             dgvDeudas.DefaultCellStyle.SelectionForeColor = Color.White;
             dgvDeudas.BackgroundColor = Color.FromArgb(13, 19, 27);
             dgvDeudas.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvDeudas.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "N.º venta", DataPropertyName = "IdVenta", FillWeight = 55 });
-            dgvDeudas.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Fecha", DataPropertyName = "Fecha", DefaultCellStyle = new DataGridViewCellStyle { Format = "dd/MM/yyyy" } });
-            dgvDeudas.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Productos de la venta", DataPropertyName = "Productos", FillWeight = 280 });
-            dgvDeudas.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Total", DataPropertyName = "Total", DefaultCellStyle = new DataGridViewCellStyle { Format = "C2", FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("es-AR") } });
-            dgvDeudas.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Pagado", DataPropertyName = "Pagado", DefaultCellStyle = new DataGridViewCellStyle { Format = "C2", FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("es-AR") } });
-            dgvDeudas.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Saldo pendiente", DataPropertyName = "SaldoPendiente", DefaultCellStyle = new DataGridViewCellStyle { Format = "C2", FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("es-AR"), ForeColor = Color.FromArgb(165, 72, 0) } });
-            dgvDeudas.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Estado", DataPropertyName = "Estado" });
+            dgvDeudas.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                HeaderText = "N.º venta",
+                DataPropertyName = "IdVenta",
+                FillWeight = 55
+
+            });
+            dgvDeudas.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                HeaderText = "Fecha",
+                DataPropertyName = "Fecha",
+                DefaultCellStyle = new DataGridViewCellStyle { Format = "dd/MM/yyyy" }
+
+            });
+            dgvDeudas.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                HeaderText = "Productos de la venta",
+                DataPropertyName = "Productos",
+                FillWeight = 280
+
+            });
+            dgvDeudas.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                HeaderText = "Total",
+                DataPropertyName = "Total",
+                DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    Format = "C2",
+                    FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("es-AR")
+
+                }
+
+            });
+            dgvDeudas.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                HeaderText = "Pagado",
+                DataPropertyName = "Pagado",
+                DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    Format = "C2",
+                    FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("es-AR")
+
+                }
+
+            });
+            dgvDeudas.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                HeaderText = "Saldo pendiente",
+                DataPropertyName = "SaldoPendiente",
+                DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    Format = "C2",
+                    FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("es-AR"),
+                    ForeColor = Color.FromArgb(165, 72, 0)
+
+                }
+
+            });
+            dgvDeudas.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                HeaderText = "Estado",
+                DataPropertyName = "Estado"
+
+            });
             btnCerrar.Text = "Cerrar";
             btnCerrar.Dock = DockStyle.Bottom;
             btnCerrar.Height = 36;
@@ -63,9 +129,11 @@ namespace Prana.Presentacion
             StartPosition = FormStartPosition.CenterParent;
             Text = "Ventas pendientes del cliente";
             Load += frmDeudaCliente_Load;
+            // llama a ((systemcomponentmodelisupportinitialize)dgvdeudas)endinit para realizar este paso del flujo
             ((System.ComponentModel.ISupportInitialize)dgvDeudas).EndInit();
             ResumeLayout(false);
         }
+
         private Label lblCliente, lblEstado;
         private DataGridView dgvDeudas;
         private Button btnCerrar;

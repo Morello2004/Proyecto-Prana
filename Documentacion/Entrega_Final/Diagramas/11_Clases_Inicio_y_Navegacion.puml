@@ -1,0 +1,53 @@
+@startuml
+allowmixing
+title 01 - Inicio y navegacion
+top to bottom direction
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 16
+skinparam shadowing false
+skinparam linetype ortho
+skinparam classAttributeIconSize 0
+skinparam nodesep 32
+skinparam ranksep 42
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #40576B
+  ArrowColor #40576B
+}
+
+class Program <<inicio>> {
+  -Main()
+}
+class login <<formulario>> {
+  -iconButton1_Click()
+  -frm_closing()
+}
+class Interfaz <<formulario principal>> {
+  -formularioActivo : Form
+  +AbrirFormulario(Form)
+}
+class frmPanelPrincipal <<formulario>> {
+  -CargarVentas()
+  -documentos_Click()
+  -caja_Click()
+}
+
+rectangle "Datos\nInicializadorBaseDatos" as datos #ECEFF1
+rectangle "Negocio\nCN_Usuario, CN_Venta\nPermisos, SesionActual" as negocio #E8F5E9
+rectangle "Entidades\nusuario, ResultadoInicioSesion\nventa" as entidades #FFF8E1
+
+Program --> datos : prepara
+Program --> login : inicia
+login --> negocio : autentica
+login --> entidades : crea sesion
+login --> Interfaz : acceso correcto
+Interfaz o-down-> frmPanelPrincipal : muestra
+frmPanelPrincipal ..> negocio : consulta ventas
+
+note bottom of Interfaz
+Interfaz aloja cada pantalla en el panel principal
+Los formularios de catalogo y operacion se detallan en 12-16
+Todos los formularios heredan de Form (Windows Forms)
+end note
+@enduml

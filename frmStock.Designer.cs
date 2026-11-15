@@ -1,49 +1,42 @@
-namespace Prana.Presentacion
+﻿namespace Prana.Presentacion
 {
+    // parte visual de frmstock crea controles y define su distribucion, colores y eventos; visual studio puede regenerar este archivo al editar el disenador
     partial class frmStock
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
+        // /// required designer variable
         private System.ComponentModel.IContainer components = null;
-
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        // /// clean up any resources being used true if managed resources should be disposed; otherwise, false libera los recursos del formulario; disposing indica si tambien deben liberarse los componentes administrados
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
             {
                 components.Dispose();
             }
+
             base.Dispose(disposing);
         }
 
         #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
+        // /// required method for designer support - do not modify the contents of this method with the code editor construye la pantalla: instancia controles, asigna propiedades, agrega cada control a su contenedor y conecta los eventos no registra operaciones comerciales
         private void InitializeComponent()
         {
+            Label label28;
+            DataGridViewCellStyle dataGridViewCellStyle15 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle16 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle17 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle19 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle20 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle18 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle21 = new DataGridViewCellStyle();
             lblRemitoProveedor = new Label();
-
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
             label1 = new Label();
             pnlEncabezadostock = new Panel();
             lblstock = new Label();
+            btnOpcionesStock = new Button();
             pnlbuscarproducto = new Panel();
             panel3 = new Panel();
             label30 = new Label();
-            dataGridViewBusquedaProducto = new DataGridView();
+            dgvBusquedaProductos = new DataGridView();
             colIdVariante = new DataGridViewTextBoxColumn();
             colModelo = new DataGridViewTextBoxColumn();
             colNombre2 = new DataGridViewTextBoxColumn();
@@ -58,7 +51,7 @@ namespace Prana.Presentacion
             ColEliminar = new DataGridViewButtonColumn();
             comboBoxCateogria = new ComboBox();
             label2 = new Label();
-            comboBoxCondicion = new ComboBox();
+            cboFiltroCondicion = new ComboBox();
             label7 = new Label();
             label6 = new Label();
             cboMarca = new ComboBox();
@@ -67,10 +60,11 @@ namespace Prana.Presentacion
             btnBuscarProducto = new FontAwesome.Sharp.IconButton();
             txtBuscarProducto = new TextBox();
             panel1 = new Panel();
+            PnlNuevoStock = new Panel();
+            panel2 = new Panel();
             panel5 = new Panel();
             label14 = new Label();
-            PnlNuevoStock = new Panel();
-            textBoxRtoProveedor = new TextBox();
+            txtDocumentoProveedor = new TextBox();
             iconButton1 = new FontAwesome.Sharp.IconButton();
             label31 = new Label();
             ButtonRegistrarIngreso = new FontAwesome.Sharp.IconButton();
@@ -78,24 +72,24 @@ namespace Prana.Presentacion
             label26 = new Label();
             label25 = new Label();
             LblTotalIngresoDinero = new Label();
-            dataGridViewDetalleIngreso = new DataGridView();
+            dgvDetalleIngreso = new DataGridView();
             colProducto = new DataGridViewTextBoxColumn();
             idVariante = new DataGridViewTextBoxColumn();
             colVarianteIngreso = new DataGridViewTextBoxColumn();
             colCantidad = new DataGridViewTextBoxColumn();
+            colEliminarIngreso = new DataGridViewButtonColumn();
             colCosto = new DataGridViewTextBoxColumn();
             colTotal = new DataGridViewTextBoxColumn();
             label19 = new Label();
             label18 = new Label();
             dtpFechaIngresoStock = new DateTimePicker();
             comboBoxSeleccionaProveedor = new ComboBox();
-            panel2 = new Panel();
             label15 = new Label();
-            textBoxModelo = new TextBox();
+            txtModeloProducto = new TextBox();
             panel4 = new Panel();
             label9 = new Label();
             label29 = new Label();
-            textBoxMarca = new ComboBox();
+            txtMarcaProducto = new ComboBox();
             btnCancelar = new FontAwesome.Sharp.IconButton();
             btnGuardarProducto = new FontAwesome.Sharp.IconButton();
             dgvVariantes = new DataGridView();
@@ -108,67 +102,126 @@ namespace Prana.Presentacion
             ColDisponible = new DataGridViewTextBoxColumn();
             NombreProducto = new DataGridViewTextBoxColumn();
             label13 = new Label();
-            textBoxDescripcion = new TextBox();
+            txtDescripcionProducto = new TextBox();
             nudPrecio = new NumericUpDown();
             label11 = new Label();
             label10 = new Label();
-            textBoxCategoria = new ComboBox();
-            textBoxColor = new TextBox();
+            txtCategoriaProducto = new ComboBox();
+            txtColorVariante = new ComboBox();
             label8 = new Label();
-            textBoxNombreProducto = new TextBox();
+            txtNombreProducto = new TextBox();
             label3 = new Label();
-            comboBoxCondicion2 = new ComboBox();
+            cboCondicionVariante = new ComboBox();
             label4 = new Label();
             label5 = new Label();
             btnAgregarVariante = new FontAwesome.Sharp.IconButton();
+            flpFiltros = new FlowLayoutPanel();
+            pnlCampo9 = new Panel();
+            pnlCampo10 = new Panel();
+            pnlCampo11 = new Panel();
+            pnlCampo12 = new Panel();
+            flpGenerales = new FlowLayoutPanel();
+            pnlCampo13 = new Panel();
+            pnlCampo14 = new Panel();
+            pnlCampo15 = new Panel();
+            pnlCampo16 = new Panel();
+            pnlCampo17 = new Panel();
+            flpVariantes = new FlowLayoutPanel();
+            pnlCampo18 = new Panel();
+            pnlCampo19 = new Panel();
+            pnlCampo20 = new Panel();
+            flpAcciones = new FlowLayoutPanel();
+            flpProveedor = new FlowLayoutPanel();
+            pnlCampo21 = new Panel();
+            pnlCampo22 = new Panel();
+            pnlCampo23 = new Panel();
+            flpTotales = new FlowLayoutPanel();
+            pnlPagina = new Panel();
+            tlpSecciones = new TableLayoutPanel();
+            label12 = new Label();
             label28 = new Label();
             pnlEncabezadostock.SuspendLayout();
-            pnlbuscarproducto.SuspendLayout();
             panel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridViewBusquedaProducto).BeginInit();
+            // llama a ((systemcomponentmodelisupportinitialize)dgvbusquedaproductos)begininit para realizar este paso del flujo
+            ((System.ComponentModel.ISupportInitialize)dgvBusquedaProductos).BeginInit();
             panel1.SuspendLayout();
             panel5.SuspendLayout();
-            PnlNuevoStock.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridViewDetalleIngreso).BeginInit();
-            panel2.SuspendLayout();
+            // llama a ((systemcomponentmodelisupportinitialize)dgvdetalleingreso)begininit para realizar este paso del flujo
+            ((System.ComponentModel.ISupportInitialize)dgvDetalleIngreso).BeginInit();
             panel4.SuspendLayout();
+            // llama a ((systemcomponentmodelisupportinitialize)dgvvariantes)begininit para realizar este paso del flujo
             ((System.ComponentModel.ISupportInitialize)dgvVariantes).BeginInit();
+            // llama a ((systemcomponentmodelisupportinitialize)nudprecio)begininit para realizar este paso del flujo
             ((System.ComponentModel.ISupportInitialize)nudPrecio).BeginInit();
+            flpFiltros.SuspendLayout();
+            pnlCampo9.SuspendLayout();
+            pnlCampo10.SuspendLayout();
+            pnlCampo11.SuspendLayout();
+            pnlCampo12.SuspendLayout();
+            flpGenerales.SuspendLayout();
+            pnlCampo13.SuspendLayout();
+            pnlCampo14.SuspendLayout();
+            pnlCampo15.SuspendLayout();
+            pnlCampo16.SuspendLayout();
+            pnlCampo17.SuspendLayout();
+            flpVariantes.SuspendLayout();
+            pnlCampo18.SuspendLayout();
+            pnlCampo19.SuspendLayout();
+            pnlCampo20.SuspendLayout();
+            flpAcciones.SuspendLayout();
+            flpProveedor.SuspendLayout();
+            pnlCampo21.SuspendLayout();
+            pnlCampo22.SuspendLayout();
+            pnlCampo23.SuspendLayout();
+            flpTotales.SuspendLayout();
+            pnlPagina.SuspendLayout();
+            tlpSecciones.SuspendLayout();
             SuspendLayout();
-            // 
-            // label28
-            // 
-            label28.AutoSize = true;
+            // label28 label28dock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            label28.Dock = DockStyle.Top;
             label28.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             label28.ForeColor = Color.LightSkyBlue;
-            label28.Location = new Point(12, 71);
+            label28.Location = new Point(8, 431);
+            label28.Margin = new Padding(0, 0, 0, 8);
             label28.Name = "label28";
-            label28.Size = new Size(231, 20);
-            label28.TabIndex = 38;
+            label28.Size = new Size(1483, 28);
+            label28.TabIndex = 5;
             label28.Text = "1. Datos generales del producto";
-            // 
+            // lblremitoproveedor lblremitoproveedordock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            lblRemitoProveedor.Dock = DockStyle.Top;
+            lblRemitoProveedor.ForeColor = Color.White;
+            lblRemitoProveedor.Location = new Point(0, 0);
+            lblRemitoProveedor.Name = "lblRemitoProveedor";
+            lblRemitoProveedor.Size = new Size(1516, 23);
+            lblRemitoProveedor.TabIndex = 9;
+            lblRemitoProveedor.Click += lblRemitoProveedor_Click;
             // label1
-            // 
             label1.AutoSize = true;
             label1.Location = new Point(60, 72);
             label1.Name = "label1";
             label1.Size = new Size(0, 15);
             label1.TabIndex = 0;
-            // 
-            // pnlEncabezadostock
-            // 
-            pnlEncabezadostock.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            // pnlencabezadostock
             pnlEncabezadostock.AutoSize = true;
             pnlEncabezadostock.BackColor = Color.FromArgb(21, 30, 41);
             pnlEncabezadostock.Controls.Add(lblstock);
-            pnlEncabezadostock.Location = new Point(6, 5);
+            // abre la administracion de nombres compartidos solo para el rol administrador
+            btnOpcionesStock.Text = "Administrar opciones";
+            btnOpcionesStock.Name = "btnOpcionesStock";
+            btnOpcionesStock.Size = new Size(180, 25);
+            btnOpcionesStock.Margin = new Padding(4, 4, 12, 4);
+            btnOpcionesStock.BackColor = Color.SteelBlue;
+            btnOpcionesStock.ForeColor = Color.White;
+            btnOpcionesStock.Visible = false;
+            btnOpcionesStock.Click += btnOpcionesStock_Click;
+            pnlEncabezadostock.Dock = DockStyle.Top;
+            pnlEncabezadostock.Location = new Point(8, 8);
+            pnlEncabezadostock.Margin = new Padding(0, 0, 0, 8);
             pnlEncabezadostock.Name = "pnlEncabezadostock";
-            pnlEncabezadostock.Size = new Size(1268, 65);
-            pnlEncabezadostock.TabIndex = 6;
+            pnlEncabezadostock.Size = new Size(1483, 42);
+            pnlEncabezadostock.TabIndex = 0;
             pnlEncabezadostock.Paint += pnlEncabezadostock_Paint;
-            // 
             // lblstock
-            // 
             lblstock.AutoSize = true;
             lblstock.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblstock.ForeColor = Color.White;
@@ -178,46 +231,29 @@ namespace Prana.Presentacion
             lblstock.TabIndex = 0;
             lblstock.Text = "Stock";
             lblstock.Click += lblTituloNuevaVenta_Click;
-            // 
-            // pnlbuscarproducto
-            // 
+            // pnlbuscarproducto pnlbuscarproductoanchor: bordes que mantienen su distancia cuando cambia el tamano del contenedor
             pnlbuscarproducto.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             pnlbuscarproducto.AutoScroll = true;
             pnlbuscarproducto.AutoSize = true;
             pnlbuscarproducto.BackColor = Color.FromArgb(21, 30, 41);
-            pnlbuscarproducto.Controls.Add(panel3);
-            pnlbuscarproducto.Controls.Add(dataGridViewBusquedaProducto);
-            pnlbuscarproducto.Controls.Add(comboBoxCateogria);
-            pnlbuscarproducto.Controls.Add(label2);
-            pnlbuscarproducto.Controls.Add(comboBoxCondicion);
-            pnlbuscarproducto.Controls.Add(label7);
-            pnlbuscarproducto.Controls.Add(label6);
-            pnlbuscarproducto.Controls.Add(cboMarca);
-            pnlbuscarproducto.Controls.Add(BtnLimpiarFiltros);
-            pnlbuscarproducto.Controls.Add(lblcodigo);
-            pnlbuscarproducto.Controls.Add(btnBuscarProducto);
-            pnlbuscarproducto.Controls.Add(txtBuscarProducto);
             pnlbuscarproducto.ForeColor = Color.White;
             pnlbuscarproducto.Location = new Point(9, 76);
             pnlbuscarproducto.Name = "pnlbuscarproducto";
-            pnlbuscarproducto.Size = new Size(1265, 366);
+            pnlbuscarproducto.Size = new Size(1231, 366);
             pnlbuscarproducto.TabIndex = 7;
             pnlbuscarproducto.Paint += pnlCliente_Paint;
-            // 
             // panel3
-            // 
-            panel3.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             panel3.AutoSize = true;
             panel3.BackColor = Color.MidnightBlue;
             panel3.Controls.Add(label30);
-            panel3.Location = new Point(3, 0);
+            panel3.Dock = DockStyle.Top;
+            panel3.Location = new Point(8, 58);
+            panel3.Margin = new Padding(0, 0, 0, 8);
             panel3.Name = "panel3";
-            panel3.Size = new Size(1254, 65);
-            panel3.TabIndex = 49;
+            panel3.Size = new Size(1483, 42);
+            panel3.TabIndex = 1;
             panel3.Paint += panel3_Paint;
-            // 
             // label30
-            // 
             label30.AutoSize = true;
             label30.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label30.ForeColor = Color.White;
@@ -226,185 +262,180 @@ namespace Prana.Presentacion
             label30.Size = new Size(214, 32);
             label30.TabIndex = 0;
             label30.Text = "Buscar productos";
-            // 
-            // dataGridViewBusquedaProducto
-            // 
-            dataGridViewBusquedaProducto.AllowUserToAddRows = false;
-            dataGridViewBusquedaProducto.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle1.ForeColor = Color.Black;
-            dataGridViewBusquedaProducto.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            dataGridViewBusquedaProducto.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            dataGridViewBusquedaProducto.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewBusquedaProducto.BackgroundColor = SystemColors.Control;
-            dataGridViewBusquedaProducto.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewBusquedaProducto.Columns.AddRange(new DataGridViewColumn[] { colIdVariante, colModelo, colNombre2, colDescripcion, colColorb, colCondicion, colPrecio, colCosto2, colStockFisicoBusqueda, colComprometidoBusqueda, colModificar, ColEliminar });
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = SystemColors.Window;
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle2.ForeColor = Color.White;
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
-            dataGridViewBusquedaProducto.DefaultCellStyle = dataGridViewCellStyle2;
-            dataGridViewBusquedaProducto.EditMode = DataGridViewEditMode.EditProgrammatically;
-            dataGridViewBusquedaProducto.Location = new Point(8, 160);
-            dataGridViewBusquedaProducto.MultiSelect = false;
-            dataGridViewBusquedaProducto.Name = "dataGridViewBusquedaProducto";
-            dataGridViewBusquedaProducto.RowHeadersWidth = 51;
-            dataGridViewBusquedaProducto.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridViewBusquedaProducto.Size = new Size(1217, 150);
-            dataGridViewBusquedaProducto.TabIndex = 48;
-            dataGridViewBusquedaProducto.CellClick += dataGridViewBusquedaProducto_CellClick;
-            dataGridViewBusquedaProducto.CellContentClick += dataGridViewBusquedaProducto_CellContentClick;
-            // 
-            // colIdVariante
-            // 
+            // dgvbusquedaproductos
+            dgvBusquedaProductos.AllowUserToAddRows = false;
+            dgvBusquedaProductos.AllowUserToDeleteRows = false;
+            dataGridViewCellStyle15.ForeColor = Color.Black;
+            dgvBusquedaProductos.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle15;
+            dgvBusquedaProductos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvBusquedaProductos.BackgroundColor = SystemColors.Control;
+            dgvBusquedaProductos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvBusquedaProductos.Columns.AddRange(new DataGridViewColumn[] { colIdVariante, colModelo, colNombre2, colDescripcion, colColorb, colCondicion, colPrecio, colCosto2, colStockFisicoBusqueda, colComprometidoBusqueda, colModificar, ColEliminar });
+            dataGridViewCellStyle16.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle16.BackColor = SystemColors.Window;
+            dataGridViewCellStyle16.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle16.ForeColor = Color.White;
+            dataGridViewCellStyle16.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dataGridViewCellStyle16.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle16.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dataGridViewCellStyle16.WrapMode = DataGridViewTriState.False;
+            dgvBusquedaProductos.DefaultCellStyle = dataGridViewCellStyle16;
+            dgvBusquedaProductos.Dock = DockStyle.Top;
+            dgvBusquedaProductos.EditMode = DataGridViewEditMode.EditProgrammatically;
+            dgvBusquedaProductos.Location = new Point(8, 198);
+            dgvBusquedaProductos.Margin = new Padding(0, 0, 0, 8);
+            dgvBusquedaProductos.MultiSelect = false;
+            dgvBusquedaProductos.Name = "dgvBusquedaProductos";
+            dgvBusquedaProductos.ForeColor = Color.Black;
+            dgvBusquedaProductos.DefaultCellStyle.ForeColor = Color.Black;
+            dgvBusquedaProductos.RowsDefaultCellStyle.ForeColor = Color.Black;
+            dgvBusquedaProductos.AlternatingRowsDefaultCellStyle.ForeColor = Color.Black;
+            dgvBusquedaProductos.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvBusquedaProductos.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dgvBusquedaProductos.DefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvBusquedaProductos.DefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dgvBusquedaProductos.AlternatingRowsDefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvBusquedaProductos.AlternatingRowsDefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dgvBusquedaProductos.RowHeadersWidth = 51;
+            dgvBusquedaProductos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvBusquedaProductos.Size = new Size(1483, 175);
+            dgvBusquedaProductos.TabIndex = 3;
+            dgvBusquedaProductos.CellClick += dgvBusquedaProductos_CellClick;
+            dgvBusquedaProductos.CellContentClick += dgvBusquedaProductos_CellContentClick;
+            // colidvariante colidvarianteheadertext: titulo de la columna; no es el nombre de la propiedad enlazada
             colIdVariante.HeaderText = "";
             colIdVariante.MinimumWidth = 6;
             colIdVariante.Name = "colIdVariante";
             colIdVariante.Visible = false;
-            // 
-            // colModelo
-            // 
+            // colmodelo colmodelodatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colModelo.DataPropertyName = "Modelo";
             colModelo.HeaderText = "Modelo";
+            colModelo.MaxInputLength = 15;
             colModelo.MinimumWidth = 6;
             colModelo.Name = "colModelo";
-            // 
-            // colNombre2
-            // 
+            // colnombre2 colnombre2headertext: titulo de la columna; no es el nombre de la propiedad enlazada
             colNombre2.HeaderText = "Producto";
+            colNombre2.MaxInputLength = 150;
             colNombre2.MinimumWidth = 6;
             colNombre2.Name = "colNombre2";
-            // 
-            // colDescripcion
-            // 
+            // coldescripcion coldescripcionheadertext: titulo de la columna; no es el nombre de la propiedad enlazada
             colDescripcion.HeaderText = "Descripcion";
+            colDescripcion.MaxInputLength = 500;
             colDescripcion.MinimumWidth = 6;
             colDescripcion.Name = "colDescripcion";
-            // 
-            // colColorb
-            // 
+            // colcolorb colcolorbdatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colColorb.DataPropertyName = "Color";
             colColorb.HeaderText = "Color";
+            colColorb.MaxInputLength = 50;
             colColorb.MinimumWidth = 6;
             colColorb.Name = "colColorb";
-            // 
-            // colCondicion
-            // 
+            // colcondicion colcondiciondatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colCondicion.DataPropertyName = "Condicion";
             colCondicion.HeaderText = "Condicion";
+            colCondicion.MaxInputLength = 10;
             colCondicion.MinimumWidth = 6;
             colCondicion.Name = "colCondicion";
-            // 
-            // colPrecio
-            // 
+            // colprecio colpreciodatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colPrecio.DataPropertyName = "Precio";
             colPrecio.HeaderText = "Precio";
+            colPrecio.MaxInputLength = 11;
             colPrecio.MinimumWidth = 6;
             colPrecio.Name = "colPrecio";
-            // 
-            // colCosto2
-            // 
+            // colcosto2 colcosto2headertext: titulo de la columna; no es el nombre de la propiedad enlazada
             colCosto2.HeaderText = "Costo";
+            colCosto2.MaxInputLength = 11;
             colCosto2.MinimumWidth = 6;
             colCosto2.Name = "colCosto2";
-            // 
-            // colStockFisicoBusqueda
-            // 
+            // colstockfisicobusqueda colstockfisicobusquedadatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colStockFisicoBusqueda.DataPropertyName = "StockFisico";
             colStockFisicoBusqueda.HeaderText = "Stock fisico";
+            colStockFisicoBusqueda.MaxInputLength = 10;
             colStockFisicoBusqueda.MinimumWidth = 6;
             colStockFisicoBusqueda.Name = "colStockFisicoBusqueda";
-            // 
-            // colComprometidoBusqueda
-            // 
+            // colcomprometidobusqueda colcomprometidobusquedadatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colComprometidoBusqueda.DataPropertyName = "StockComprometido";
             colComprometidoBusqueda.HeaderText = "Comprometido";
+            colComprometidoBusqueda.MaxInputLength = 10;
             colComprometidoBusqueda.MinimumWidth = 6;
             colComprometidoBusqueda.Name = "colComprometidoBusqueda";
-            // 
-            // colModificar
-            // 
+            // colmodificar colmodificarheadertext: titulo de la columna; no es el nombre de la propiedad enlazada
             colModificar.HeaderText = "Accion";
             colModificar.MinimumWidth = 6;
             colModificar.Name = "colModificar";
+            colModificar.DefaultCellStyle.ForeColor = Color.Black;
+            colModificar.DefaultCellStyle.SelectionForeColor = Color.Black;
+            colModificar.DefaultCellStyle.BackColor = Color.Gainsboro;
+            colModificar.DefaultCellStyle.SelectionBackColor = Color.Gainsboro;
             colModificar.Resizable = DataGridViewTriState.True;
             colModificar.SortMode = DataGridViewColumnSortMode.Automatic;
             colModificar.Text = "Modificar";
-            // 
-            // ColEliminar
-            // 
+            // coleliminar coleliminarheadertext: titulo de la columna; no es el nombre de la propiedad enlazada
             ColEliminar.HeaderText = "Accion";
             ColEliminar.MinimumWidth = 6;
             ColEliminar.Name = "ColEliminar";
+            ColEliminar.DefaultCellStyle.ForeColor = Color.Black;
+            ColEliminar.DefaultCellStyle.SelectionForeColor = Color.Black;
+            ColEliminar.DefaultCellStyle.BackColor = Color.Gainsboro;
+            ColEliminar.DefaultCellStyle.SelectionBackColor = Color.Gainsboro;
             ColEliminar.SortMode = DataGridViewColumnSortMode.Automatic;
             ColEliminar.Text = "Eliminar";
             ColEliminar.UseColumnTextForButtonValue = true;
-            // 
-            // comboBoxCateogria
-            // 
+            // comboboxcateogria comboboxcateogriaanchor: bordes que mantienen su distancia cuando cambia el tamano del contenedor
+            comboBoxCateogria.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             comboBoxCateogria.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBoxCateogria.FormattingEnabled = true;
-            comboBoxCateogria.Location = new Point(308, 106);
+            comboBoxCateogria.Location = new Point(0, 26);
+            comboBoxCateogria.MaxLength = 20;
             comboBoxCateogria.Name = "comboBoxCateogria";
-            comboBoxCateogria.Size = new Size(220, 23);
+            comboBoxCateogria.Size = new Size(196, 23);
             comboBoxCateogria.TabIndex = 19;
             comboBoxCateogria.SelectedIndexChanged += comboBox4_SelectedIndexChanged;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
+            // label2 label2dock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            label2.Dock = DockStyle.Top;
             label2.ForeColor = Color.FromArgb(145, 170, 210);
-            label2.Location = new Point(802, 88);
+            label2.Location = new Point(0, 0);
             label2.Name = "label2";
-            label2.Size = new Size(62, 15);
+            label2.Size = new Size(190, 23);
             label2.TabIndex = 18;
             label2.Text = "Condicion";
-            // 
-            // comboBoxCondicion
-            // 
-            comboBoxCondicion.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBoxCondicion.FormattingEnabled = true;
-            comboBoxCondicion.Items.AddRange(new object[] { "Primera", "Outlet" });
-            comboBoxCondicion.Location = new Point(802, 106);
-            comboBoxCondicion.Name = "comboBoxCondicion";
-            comboBoxCondicion.Size = new Size(220, 23);
-            comboBoxCondicion.TabIndex = 17;
-            comboBoxCondicion.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
-            // 
-            // label7
-            // 
-            label7.AutoSize = true;
+            // cbofiltrocondicion cbofiltrocondicionanchor: bordes que mantienen su distancia cuando cambia el tamano del contenedor
+            cboFiltroCondicion.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            cboFiltroCondicion.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboFiltroCondicion.FormattingEnabled = true;
+            cboFiltroCondicion.Items.AddRange(new object[] { "PRIMERA", "OUTLET" });
+            cboFiltroCondicion.Location = new Point(0, 26);
+            cboFiltroCondicion.MaxLength = 8;
+            cboFiltroCondicion.Name = "cboFiltroCondicion";
+            cboFiltroCondicion.Size = new Size(196, 23);
+            cboFiltroCondicion.TabIndex = 17;
+            cboFiltroCondicion.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
+            // label7 label7dock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            label7.Dock = DockStyle.Top;
             label7.ForeColor = Color.FromArgb(145, 170, 210);
-            label7.Location = new Point(556, 88);
+            label7.Location = new Point(0, 0);
             label7.Name = "label7";
-            label7.Size = new Size(40, 15);
+            label7.Size = new Size(190, 23);
             label7.TabIndex = 16;
             label7.Text = "Marca";
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
+            // label6 label6dock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            label6.Dock = DockStyle.Top;
             label6.ForeColor = Color.FromArgb(145, 170, 210);
-            label6.Location = new Point(308, 88);
+            label6.Location = new Point(0, 0);
             label6.Name = "label6";
-            label6.Size = new Size(58, 15);
+            label6.Size = new Size(190, 23);
             label6.TabIndex = 15;
             label6.Text = "Categoria";
-            // 
-            // cboMarca
-            // 
+            // cbomarca cbomarcaanchor: bordes que mantienen su distancia cuando cambia el tamano del contenedor
+            cboMarca.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             cboMarca.DropDownStyle = ComboBoxStyle.DropDownList;
             cboMarca.FormattingEnabled = true;
-            cboMarca.Location = new Point(556, 106);
+            cboMarca.Location = new Point(0, 26);
+            cboMarca.MaxLength = 20;
             cboMarca.Name = "cboMarca";
-            cboMarca.Size = new Size(220, 23);
+            cboMarca.Size = new Size(196, 23);
             cboMarca.TabIndex = 14;
             cboMarca.SelectedIndexChanged += cboMarca_SelectedIndexChanged;
-            // 
-            // BtnLimpiarFiltros
-            // 
+            // btnlimpiarfiltros btnlimpiarfiltrosbackcolor: color del fondo del control o de la celda
             BtnLimpiarFiltros.BackColor = Color.DodgerBlue;
             BtnLimpiarFiltros.FlatAppearance.BorderSize = 0;
             BtnLimpiarFiltros.FlatStyle = FlatStyle.Flat;
@@ -412,26 +443,23 @@ namespace Prana.Presentacion
             BtnLimpiarFiltros.IconChar = FontAwesome.Sharp.IconChar.None;
             BtnLimpiarFiltros.IconColor = Color.Black;
             BtnLimpiarFiltros.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            BtnLimpiarFiltros.Location = new Point(1159, 104);
+            BtnLimpiarFiltros.Location = new Point(1022, 12);
+            BtnLimpiarFiltros.Margin = new Padding(4, 4, 12, 4);
             BtnLimpiarFiltros.Name = "BtnLimpiarFiltros";
             BtnLimpiarFiltros.Size = new Size(100, 25);
             BtnLimpiarFiltros.TabIndex = 4;
             BtnLimpiarFiltros.Text = "Limpiar filtros";
             BtnLimpiarFiltros.UseVisualStyleBackColor = false;
             BtnLimpiarFiltros.Click += BtnLimpiarFiltros_Click;
-            // 
-            // lblcodigo
-            // 
-            lblcodigo.AutoSize = true;
+            // lblcodigo lblcodigodock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            lblcodigo.Dock = DockStyle.Top;
             lblcodigo.ForeColor = Color.FromArgb(145, 170, 210);
-            lblcodigo.Location = new Point(13, 88);
+            lblcodigo.Location = new Point(0, 0);
             lblcodigo.Name = "lblcodigo";
-            lblcodigo.Size = new Size(167, 15);
+            lblcodigo.Size = new Size(260, 23);
             lblcodigo.TabIndex = 3;
             lblcodigo.Text = "Modelo / codigo del producto";
-            // 
-            // btnBuscarProducto
-            // 
+            // btnbuscarproducto btnbuscarproductobackcolor: color del fondo del control o de la celda
             btnBuscarProducto.BackColor = Color.DodgerBlue;
             btnBuscarProducto.FlatAppearance.BorderSize = 0;
             btnBuscarProducto.FlatStyle = FlatStyle.Flat;
@@ -439,55 +467,72 @@ namespace Prana.Presentacion
             btnBuscarProducto.IconChar = FontAwesome.Sharp.IconChar.None;
             btnBuscarProducto.IconColor = Color.Black;
             btnBuscarProducto.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnBuscarProducto.Location = new Point(1043, 104);
+            btnBuscarProducto.Location = new Point(906, 12);
+            btnBuscarProducto.Margin = new Padding(4, 4, 12, 4);
             btnBuscarProducto.Name = "btnBuscarProducto";
             btnBuscarProducto.Size = new Size(100, 25);
             btnBuscarProducto.TabIndex = 2;
             btnBuscarProducto.Text = "Buscar";
             btnBuscarProducto.UseVisualStyleBackColor = false;
             btnBuscarProducto.Click += btnBuscarProducto_Click;
-            // 
-            // txtBuscarProducto
-            // 
+            // txtbuscarproducto txtbuscarproductoanchor: bordes que mantienen su distancia cuando cambia el tamano del contenedor
+            txtBuscarProducto.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             txtBuscarProducto.Font = new Font("Segoe UI", 10F);
-            txtBuscarProducto.Location = new Point(13, 106);
+            txtBuscarProducto.Location = new Point(0, 26);
+            txtBuscarProducto.MaxLength = 150;
             txtBuscarProducto.Name = "txtBuscarProducto";
             txtBuscarProducto.PlaceholderText = "Buscar por codigo o nombre";
-            txtBuscarProducto.Size = new Size(277, 25);
+            txtBuscarProducto.Size = new Size(266, 25);
             txtBuscarProducto.TabIndex = 1;
             txtBuscarProducto.TextChanged += txtBuscarProducto_TextChanged;
-            // 
             // panel1
-            // 
             panel1.AutoScroll = true;
             panel1.AutoSize = true;
             panel1.BackColor = Color.FromArgb(13, 19, 27);
-            panel1.Controls.Add(panel5);
             panel1.Controls.Add(PnlNuevoStock);
             panel1.Controls.Add(panel2);
             panel1.Controls.Add(label1);
             panel1.Controls.Add(pnlbuscarproducto);
-            panel1.Controls.Add(pnlEncabezadostock);
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1516, 761);
+            panel1.Size = new Size(1499, 923);
             panel1.TabIndex = 8;
+            panel1.Visible = false;
             panel1.Paint += panel1_Paint;
-            // 
+            // pnlnuevostock pnlnuevostockanchor: bordes que mantienen su distancia cuando cambia el tamano del contenedor
+            PnlNuevoStock.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            PnlNuevoStock.AutoScroll = true;
+            PnlNuevoStock.AutoSize = true;
+            PnlNuevoStock.BackColor = Color.FromArgb(21, 30, 41);
+            PnlNuevoStock.Location = new Point(5, 1095);
+            PnlNuevoStock.Name = "PnlNuevoStock";
+            PnlNuevoStock.Size = new Size(1235, 517);
+            PnlNuevoStock.TabIndex = 9;
+            PnlNuevoStock.Visible = false;
+            // panel2 panel2anchor: bordes que mantienen su distancia cuando cambia el tamano del contenedor
+            panel2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            panel2.AutoScroll = true;
+            panel2.AutoSize = true;
+            panel2.BackColor = Color.FromArgb(21, 30, 41);
+            panel2.ForeColor = Color.White;
+            panel2.Location = new Point(6, 448);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(1234, 641);
+            panel2.TabIndex = 8;
+            panel2.Visible = false;
+            panel2.Paint += panel2_Paint;
             // panel5
-            // 
-            panel5.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             panel5.AutoSize = true;
             panel5.BackColor = Color.MidnightBlue;
             panel5.Controls.Add(label14);
-            panel5.Location = new Point(3, 1095);
+            panel5.Dock = DockStyle.Top;
+            panel5.Location = new Point(8, 989);
+            panel5.Margin = new Padding(0, 0, 0, 8);
             panel5.Name = "panel5";
-            panel5.Size = new Size(1271, 65);
-            panel5.TabIndex = 54;
-            // 
+            panel5.Size = new Size(1483, 42);
+            panel5.TabIndex = 11;
             // label14
-            // 
             label14.AutoSize = true;
             label14.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label14.ForeColor = Color.White;
@@ -496,43 +541,16 @@ namespace Prana.Presentacion
             label14.Size = new Size(203, 32);
             label14.TabIndex = 0;
             label14.Text = "Ingreso de stock";
-            // 
-            // PnlNuevoStock
-            // 
-            PnlNuevoStock.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            PnlNuevoStock.AutoScroll = true;
-            PnlNuevoStock.AutoSize = true;
-            PnlNuevoStock.BackColor = Color.FromArgb(21, 30, 41);
-            PnlNuevoStock.Controls.Add(textBoxRtoProveedor);
-            PnlNuevoStock.Controls.Add(iconButton1);
-            PnlNuevoStock.Controls.Add(label31);
-            PnlNuevoStock.Controls.Add(ButtonRegistrarIngreso);
-            PnlNuevoStock.Controls.Add(labelCantidadIngresada);
-            PnlNuevoStock.Controls.Add(label26);
-            PnlNuevoStock.Controls.Add(label25);
-            PnlNuevoStock.Controls.Add(LblTotalIngresoDinero);
-            PnlNuevoStock.Controls.Add(dataGridViewDetalleIngreso);
-            PnlNuevoStock.Controls.Add(label19);
-            PnlNuevoStock.Controls.Add(label18);
-            PnlNuevoStock.Controls.Add(dtpFechaIngresoStock);
-            PnlNuevoStock.Controls.Add(comboBoxSeleccionaProveedor);
-            PnlNuevoStock.Location = new Point(5, 1095);
-            PnlNuevoStock.Name = "PnlNuevoStock";
-            PnlNuevoStock.Size = new Size(1269, 517);
-            PnlNuevoStock.TabIndex = 9;
-            // 
-            // textBoxRtoProveedor
-            // 
-            textBoxRtoProveedor.Font = new Font("Segoe UI", 10F);
-            textBoxRtoProveedor.Location = new Point(602, 144);
-            textBoxRtoProveedor.Name = "textBoxRtoProveedor";
-            textBoxRtoProveedor.MaxLength = 50;
-            textBoxRtoProveedor.PlaceholderText = "Numero de doc de proveedor";
-            textBoxRtoProveedor.Size = new Size(285, 25);
-            textBoxRtoProveedor.TabIndex = 56;
-            // 
-            // iconButton1
-            // 
+            // txtdocumentoproveedor txtdocumentoproveedoranchor: bordes que mantienen su distancia cuando cambia el tamano del contenedor
+            txtDocumentoProveedor.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtDocumentoProveedor.Font = new Font("Segoe UI", 10F);
+            txtDocumentoProveedor.Location = new Point(0, 26);
+            txtDocumentoProveedor.MaxLength = 12;
+            txtDocumentoProveedor.Name = "txtDocumentoProveedor";
+            txtDocumentoProveedor.PlaceholderText = "Numero de doc de proveedor";
+            txtDocumentoProveedor.Size = new Size(260, 25);
+            txtDocumentoProveedor.TabIndex = 56;
+            // iconbutton1 iconbutton1backcolor: color del fondo del control o de la celda
             iconButton1.BackColor = Color.ForestGreen;
             iconButton1.FlatAppearance.BorderSize = 0;
             iconButton1.FlatStyle = FlatStyle.Flat;
@@ -541,27 +559,25 @@ namespace Prana.Presentacion
             iconButton1.IconChar = FontAwesome.Sharp.IconChar.None;
             iconButton1.IconColor = Color.Black;
             iconButton1.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            iconButton1.Location = new Point(24, 192);
+            iconButton1.Location = new Point(12, 12);
+            iconButton1.Margin = new Padding(4, 4, 12, 4);
             iconButton1.Name = "iconButton1";
             iconButton1.Size = new Size(285, 25);
             iconButton1.TabIndex = 55;
             iconButton1.Text = "Buscar producto";
             iconButton1.UseVisualStyleBackColor = false;
             iconButton1.Click += iconButton1_Click;
-            // 
-            // label31
-            // 
-            label31.AutoSize = true;
+            // label31 label31dock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            label31.Dock = DockStyle.Top;
             label31.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             label31.ForeColor = Color.LightSkyBlue;
-            label31.Location = new Point(10, 78);
+            label31.Location = new Point(8, 1039);
+            label31.Margin = new Padding(0, 0, 0, 8);
             label31.Name = "label31";
-            label31.Size = new Size(131, 20);
-            label31.TabIndex = 54;
+            label31.Size = new Size(1483, 28);
+            label31.TabIndex = 12;
             label31.Text = "Datos del ingreso";
-            // 
-            // ButtonRegistrarIngreso
-            // 
+            // buttonregistraringreso buttonregistraringresobackcolor: color del fondo del control o de la celda
             ButtonRegistrarIngreso.BackColor = Color.DarkGreen;
             ButtonRegistrarIngreso.FlatAppearance.BorderSize = 0;
             ButtonRegistrarIngreso.FlatStyle = FlatStyle.Flat;
@@ -570,246 +586,209 @@ namespace Prana.Presentacion
             ButtonRegistrarIngreso.IconChar = FontAwesome.Sharp.IconChar.None;
             ButtonRegistrarIngreso.IconColor = Color.White;
             ButtonRegistrarIngreso.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            ButtonRegistrarIngreso.Location = new Point(480, 447);
+            ButtonRegistrarIngreso.Location = new Point(379, 12);
+            ButtonRegistrarIngreso.Margin = new Padding(4, 4, 12, 4);
             ButtonRegistrarIngreso.Name = "ButtonRegistrarIngreso";
             ButtonRegistrarIngreso.Size = new Size(197, 42);
             ButtonRegistrarIngreso.TabIndex = 52;
             ButtonRegistrarIngreso.Text = "Registrar ingreso";
             ButtonRegistrarIngreso.UseVisualStyleBackColor = false;
             ButtonRegistrarIngreso.Click += ButtonRegistrarIngreso_Click;
-            // 
-            // labelCantidadIngresada
-            // 
+            // labelcantidadingresada
             labelCantidadIngresada.AutoSize = true;
             labelCantidadIngresada.Font = new Font("Segoe UI", 15F, FontStyle.Bold, GraphicsUnit.Point, 0);
             labelCantidadIngresada.ForeColor = Color.White;
-            labelCantidadIngresada.Location = new Point(281, 447);
+            labelCantidadIngresada.Location = new Point(339, 12);
+            labelCantidadIngresada.Margin = new Padding(4, 4, 12, 4);
             labelCantidadIngresada.Name = "labelCantidadIngresada";
             labelCantidadIngresada.Size = new Size(24, 28);
             labelCantidadIngresada.TabIndex = 51;
             labelCantidadIngresada.Text = "0";
-            // 
             // label26
-            // 
             label26.AutoSize = true;
             label26.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             label26.ForeColor = Color.FromArgb(145, 170, 210);
-            label26.Location = new Point(229, 475);
+            label26.Location = new Point(176, 12);
+            label26.Margin = new Padding(4, 4, 12, 4);
             label26.Name = "label26";
             label26.Size = new Size(147, 19);
             label26.TabIndex = 50;
             label26.Text = "Unidades ingresadas";
-            // 
             // label25
-            // 
             label25.AutoSize = true;
             label25.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             label25.ForeColor = Color.FromArgb(145, 170, 210);
-            label25.Location = new Point(19, 475);
+            label25.Location = new Point(12, 12);
+            label25.Margin = new Padding(4, 4, 12, 4);
             label25.Name = "label25";
             label25.Size = new Size(96, 19);
             label25.TabIndex = 49;
             label25.Text = "Total ingreso";
-            // 
-            // LblTotalIngresoDinero
-            // 
+            // lbltotalingresodinero
             LblTotalIngresoDinero.AutoSize = true;
             LblTotalIngresoDinero.Font = new Font("Segoe UI", 15F, FontStyle.Bold, GraphicsUnit.Point, 0);
             LblTotalIngresoDinero.ForeColor = Color.White;
-            LblTotalIngresoDinero.Location = new Point(45, 447);
+            LblTotalIngresoDinero.Location = new Point(124, 12);
+            LblTotalIngresoDinero.Margin = new Padding(4, 4, 12, 4);
             LblTotalIngresoDinero.Name = "LblTotalIngresoDinero";
             LblTotalIngresoDinero.Size = new Size(36, 28);
             LblTotalIngresoDinero.TabIndex = 48;
             LblTotalIngresoDinero.Text = "$0";
-            // 
-            // dataGridViewDetalleIngreso
-            // 
-            dataGridViewDetalleIngreso.AllowUserToAddRows = false;
-            dataGridViewDetalleIngreso.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle3.ForeColor = Color.Black;
-            dataGridViewCellStyle3.SelectionBackColor = Color.Transparent;
-            dataGridViewCellStyle3.SelectionForeColor = Color.Black;
-            dataGridViewDetalleIngreso.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
-            dataGridViewDetalleIngreso.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            dataGridViewDetalleIngreso.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewDetalleIngreso.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewDetalleIngreso.Columns.AddRange(new DataGridViewColumn[] { colProducto, idVariante, colVarianteIngreso, colCantidad, colCosto, colTotal });
-            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = SystemColors.Window;
-            dataGridViewCellStyle5.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle5.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle5.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = SystemColors.Desktop;
-            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.False;
-            dataGridViewDetalleIngreso.DefaultCellStyle = dataGridViewCellStyle5;
-            dataGridViewDetalleIngreso.Location = new Point(10, 271);
-            dataGridViewDetalleIngreso.Name = "dataGridViewDetalleIngreso";
-            dataGridViewDetalleIngreso.RowHeadersWidth = 51;
-            dataGridViewCellStyle6.ForeColor = Color.Black;
-            dataGridViewDetalleIngreso.RowsDefaultCellStyle = dataGridViewCellStyle6;
-            dataGridViewDetalleIngreso.Size = new Size(1242, 150);
-            dataGridViewDetalleIngreso.TabIndex = 47;
-            dataGridViewDetalleIngreso.CellContentClick += dataGridViewDetalleIngreso_CellContentClick;
-            dataGridViewDetalleIngreso.CellEndEdit += dataGridViewDetalleIngreso_CellEndEdit;
-            // 
-            // colProducto
-            // 
+            // dgvdetalleingreso
+            dgvDetalleIngreso.AllowUserToAddRows = false;
+            dgvDetalleIngreso.AllowUserToDeleteRows = false;
+            dataGridViewCellStyle17.ForeColor = Color.Black;
+            dataGridViewCellStyle17.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dataGridViewCellStyle17.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle17.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dgvDetalleIngreso.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle17;
+            dgvDetalleIngreso.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvDetalleIngreso.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvDetalleIngreso.Columns.AddRange(new DataGridViewColumn[] { colProducto, idVariante, colVarianteIngreso, colCantidad, colCosto, colTotal, colEliminarIngreso });
+            dataGridViewCellStyle19.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle19.BackColor = SystemColors.Window;
+            dataGridViewCellStyle19.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle19.ForeColor = Color.White;
+            dataGridViewCellStyle19.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dataGridViewCellStyle19.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle19.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dataGridViewCellStyle19.WrapMode = DataGridViewTriState.False;
+            dgvDetalleIngreso.DefaultCellStyle = dataGridViewCellStyle19;
+            dgvDetalleIngreso.Dock = DockStyle.Top;
+            dgvDetalleIngreso.Location = new Point(8, 1165);
+            dgvDetalleIngreso.Margin = new Padding(0, 0, 0, 8);
+            dgvDetalleIngreso.Name = "dgvDetalleIngreso";
+            dgvDetalleIngreso.ForeColor = Color.Black;
+            dgvDetalleIngreso.DefaultCellStyle.ForeColor = Color.Black;
+            dgvDetalleIngreso.RowsDefaultCellStyle.ForeColor = Color.Black;
+            dgvDetalleIngreso.AlternatingRowsDefaultCellStyle.ForeColor = Color.Black;
+            dgvDetalleIngreso.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvDetalleIngreso.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dgvDetalleIngreso.DefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvDetalleIngreso.DefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dgvDetalleIngreso.AlternatingRowsDefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvDetalleIngreso.AlternatingRowsDefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dgvDetalleIngreso.RowHeadersWidth = 51;
+            dataGridViewCellStyle20.ForeColor = Color.Black;
+            dgvDetalleIngreso.RowsDefaultCellStyle = dataGridViewCellStyle20;
+            dgvDetalleIngreso.Size = new Size(1483, 175);
+            dgvDetalleIngreso.TabIndex = 14;
+            dgvDetalleIngreso.CellContentClick += dgvDetalleIngreso_CellContentClick;
+            dgvDetalleIngreso.CellEndEdit += dgvDetalleIngreso_CellEndEdit;
+            // colproducto colproductodatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colProducto.DataPropertyName = "NombreProducto";
             colProducto.HeaderText = "producto";
+            colProducto.MaxInputLength = 30;
             colProducto.MinimumWidth = 6;
             colProducto.Name = "colProducto";
-            // 
-            // idVariante
-            // 
+            // idvariante idvariantedatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             idVariante.DataPropertyName = "IdVariante";
             idVariante.HeaderText = "colId";
+            idVariante.MaxInputLength = 8;
             idVariante.MinimumWidth = 6;
             idVariante.Name = "idVariante";
             idVariante.Visible = false;
-            // 
-            // colVarianteIngreso
-            // 
+            // colvarianteingreso colvarianteingresoheadertext: titulo de la columna; no es el nombre de la propiedad enlazada
             colVarianteIngreso.HeaderText = "Ingreso";
+            colVarianteIngreso.MaxInputLength = 12;
             colVarianteIngreso.MinimumWidth = 6;
             colVarianteIngreso.Name = "colVarianteIngreso";
-            // 
-            // colCantidad
-            // 
+            // colcantidad colcantidadheadertext: titulo de la columna; no es el nombre de la propiedad enlazada
             colCantidad.HeaderText = "Cantidad";
+            colCantidad.MaxInputLength = 8;
             colCantidad.MinimumWidth = 6;
             colCantidad.Name = "colCantidad";
-            // 
-            // colCosto
-            // 
+            // colcosto colcostoheadertext: titulo de la columna; no es el nombre de la propiedad enlazada
             colCosto.HeaderText = "Costo unitario";
+            colCosto.MaxInputLength = 12;
             colCosto.MinimumWidth = 6;
             colCosto.Name = "colCosto";
-            // 
-            // colTotal
-            // 
-            dataGridViewCellStyle4.Format = "C2";
-            dataGridViewCellStyle4.NullValue = null;
-            colTotal.DefaultCellStyle = dataGridViewCellStyle4;
+            // coltotal datagridviewcellstyle18format: formato de presentacion, por ejemplo moneda o fecha; no modifica el valor original
+            dataGridViewCellStyle18.Format = "C2";
+            dataGridViewCellStyle18.NullValue = null;
+            colTotal.DefaultCellStyle = dataGridViewCellStyle18;
             colTotal.HeaderText = "Total";
+            colTotal.MaxInputLength = 12;
             colTotal.MinimumWidth = 6;
             colTotal.Name = "colTotal";
             colTotal.ReadOnly = true;
-            // 
-            // label19
-            // 
-            label19.AutoSize = true;
+            // muestra una accion nativa para retirar una fila del ingreso sin modificar la base de datos
+            colEliminarIngreso.Name = "colEliminarIngreso";
+            colEliminarIngreso.HeaderText = "Eliminar";
+            colEliminarIngreso.Text = "Eliminar";
+            colEliminarIngreso.UseColumnTextForButtonValue = true;
+            colEliminarIngreso.ReadOnly = true;
+            colEliminarIngreso.MinimumWidth = 75;
+            colEliminarIngreso.FillWeight = 55;
+            colEliminarIngreso.DefaultCellStyle.ForeColor = Color.Black;
+            colEliminarIngreso.DefaultCellStyle.SelectionForeColor = Color.Black;
+            colEliminarIngreso.DefaultCellStyle.BackColor = Color.Gainsboro;
+            colEliminarIngreso.DefaultCellStyle.SelectionBackColor = Color.Gainsboro;
+            // label19 label19dock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            label19.Dock = DockStyle.Top;
             label19.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
             label19.ForeColor = Color.FromArgb(145, 170, 210);
-            label19.Location = new Point(337, 130);
+            label19.Location = new Point(0, 0);
             label19.Name = "label19";
-            label19.Size = new Size(122, 13);
+            label19.Size = new Size(320, 23);
             label19.TabIndex = 33;
             label19.Text = "Proveedor (seleccione o escriba)";
-            // 
-            // label18
-            // 
-            label18.AutoSize = true;
+            // label18 label18dock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            label18.Dock = DockStyle.Top;
             label18.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
             label18.ForeColor = Color.FromArgb(145, 170, 210);
-            label18.Location = new Point(337, 178);
+            label18.Location = new Point(0, 0);
             label18.Name = "label18";
-            label18.Size = new Size(95, 13);
+            label18.Size = new Size(230, 23);
             label18.TabIndex = 32;
             label18.Text = "Fecha de ingreso";
-            // 
-            // dtpFechaIngresoStock
-            // 
+            // dtpfechaingresostock dtpfechaingresostockanchor: bordes que mantienen su distancia cuando cambia el tamano del contenedor
+            dtpFechaIngresoStock.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             dtpFechaIngresoStock.Format = DateTimePickerFormat.Short;
-            dtpFechaIngresoStock.Location = new Point(337, 194);
+            dtpFechaIngresoStock.Location = new Point(0, 26);
+            dtpFechaIngresoStock.MaxDate = new DateTime(2100, 12, 31, 0, 0, 0, 0);
+            dtpFechaIngresoStock.MinDate = new DateTime(2025, 1, 1, 0, 0, 0, 0);
             dtpFechaIngresoStock.Name = "dtpFechaIngresoStock";
-            dtpFechaIngresoStock.Size = new Size(231, 23);
+            dtpFechaIngresoStock.Size = new Size(230, 23);
             dtpFechaIngresoStock.TabIndex = 30;
-            // 
-            // comboBoxSeleccionaProveedor
-            // 
-            comboBoxSeleccionaProveedor.DropDownStyle = ComboBoxStyle.DropDown;
-            comboBoxSeleccionaProveedor.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            comboBoxSeleccionaProveedor.AutoCompleteSource = AutoCompleteSource.ListItems;
-            comboBoxSeleccionaProveedor.MaxLength = 100;
+            // comboboxseleccionaproveedor comboboxseleccionaproveedoranchor: bordes que mantienen su distancia cuando cambia el tamano del contenedor
+            comboBoxSeleccionaProveedor.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             comboBoxSeleccionaProveedor.FormattingEnabled = true;
-            comboBoxSeleccionaProveedor.Location = new Point(337, 146);
+            comboBoxSeleccionaProveedor.Location = new Point(0, 26);
+            comboBoxSeleccionaProveedor.MaxLength = 150;
             comboBoxSeleccionaProveedor.Name = "comboBoxSeleccionaProveedor";
-            comboBoxSeleccionaProveedor.Size = new Size(231, 23);
+            comboBoxSeleccionaProveedor.Size = new Size(320, 23);
             comboBoxSeleccionaProveedor.TabIndex = 28;
             comboBoxSeleccionaProveedor.Tag = "";
-            // 
-            // 
-            // 
-            // 
-            // 
-            // panel2
-            // 
-            panel2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            panel2.AutoScroll = true;
-            panel2.AutoSize = true;
-            panel2.BackColor = Color.FromArgb(21, 30, 41);
-            panel2.Controls.Add(label15);
-            panel2.Controls.Add(textBoxModelo);
-            panel2.Controls.Add(panel4);
-            panel2.Controls.Add(label29);
-            panel2.Controls.Add(label28);
-            panel2.Controls.Add(textBoxMarca);
-            panel2.Controls.Add(btnCancelar);
-            panel2.Controls.Add(btnGuardarProducto);
-            panel2.Controls.Add(dgvVariantes);
-            panel2.Controls.Add(label13);
-            panel2.Controls.Add(textBoxDescripcion);
-            panel2.Controls.Add(nudPrecio);
-            panel2.Controls.Add(label11);
-            panel2.Controls.Add(label10);
-            panel2.Controls.Add(textBoxCategoria);
-            panel2.Controls.Add(textBoxColor);
-            panel2.Controls.Add(label8);
-            panel2.Controls.Add(textBoxNombreProducto);
-            panel2.Controls.Add(label3);
-            panel2.Controls.Add(comboBoxCondicion2);
-            panel2.Controls.Add(label4);
-            panel2.Controls.Add(label5);
-            panel2.Controls.Add(btnAgregarVariante);
-            panel2.ForeColor = Color.White;
-            panel2.Location = new Point(6, 448);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(1268, 641);
-            panel2.TabIndex = 8;
-            panel2.Paint += panel2_Paint;
-            // 
-            // label15
-            // 
-            label15.AutoSize = true;
+            // label15 label15dock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            label15.Dock = DockStyle.Top;
             label15.ForeColor = Color.FromArgb(145, 170, 210);
-            label15.Location = new Point(255, 99);
+            label15.Location = new Point(0, 0);
             label15.Name = "label15";
-            label15.Size = new Size(48, 15);
+            label15.Size = new Size(220, 23);
             label15.TabIndex = 52;
             label15.Text = "Modelo";
-            // 
-            // textBoxModelo
-            // 
-            textBoxModelo.Font = new Font("Segoe UI", 10F);
-            textBoxModelo.Location = new Point(255, 119);
-            textBoxModelo.Name = "textBoxModelo";
-            textBoxModelo.PlaceholderText = "Ingrese modelo";
-            textBoxModelo.Size = new Size(228, 25);
-            textBoxModelo.TabIndex = 51;
-            // 
+            // txtmodeloproducto txtmodeloproductoanchor: bordes que mantienen su distancia cuando cambia el tamano del contenedor
+            txtModeloProducto.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtModeloProducto.CharacterCasing = CharacterCasing.Upper;
+            txtModeloProducto.Font = new Font("Segoe UI", 10F);
+            txtModeloProducto.Location = new Point(0, 26);
+            txtModeloProducto.MaxLength = 20;
+            txtModeloProducto.Name = "txtModeloProducto";
+            txtModeloProducto.PlaceholderText = "Ingrese modelo";
+            txtModeloProducto.Size = new Size(220, 25);
+            txtModeloProducto.TabIndex = 51;
             // panel4
-            // 
-            panel4.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             panel4.AutoSize = true;
             panel4.BackColor = Color.MidnightBlue;
             panel4.Controls.Add(label9);
-            panel4.Location = new Point(0, 3);
+            panel4.Dock = DockStyle.Top;
+            panel4.Location = new Point(8, 381);
+            panel4.Margin = new Padding(0, 0, 0, 8);
             panel4.Name = "panel4";
-            panel4.Size = new Size(1282, 65);
-            panel4.TabIndex = 50;
-            // 
+            panel4.Size = new Size(1483, 42);
+            panel4.TabIndex = 4;
             // label9
-            // 
             label9.AutoSize = true;
             label9.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label9.ForeColor = Color.White;
@@ -818,30 +797,26 @@ namespace Prana.Presentacion
             label9.Size = new Size(202, 32);
             label9.TabIndex = 0;
             label9.Text = "Nuevo producto";
-            // 
-            // label29
-            // 
-            label29.AutoSize = true;
+            // label29 label29dock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            label29.Dock = DockStyle.Top;
             label29.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             label29.ForeColor = Color.LightSkyBlue;
-            label29.Location = new Point(13, 228);
+            label29.Location = new Point(8, 623);
+            label29.Margin = new Padding(0, 0, 0, 8);
             label29.Name = "label29";
-            label29.Size = new Size(184, 20);
-            label29.TabIndex = 39;
+            label29.Size = new Size(1483, 28);
+            label29.TabIndex = 7;
             label29.Text = "2. Variantes del producto";
-            // 
-            // textBoxMarca
-            // 
-            textBoxMarca.Font = new Font("Segoe UI", 10F);
-            textBoxMarca.Location = new Point(668, 119);
-            textBoxMarca.Name = "textBoxMarca";
-            textBoxMarca.DropDownStyle = ComboBoxStyle.DropDown;
-            textBoxMarca.Size = new Size(151, 25);
-            textBoxMarca.TabIndex = 37;
-            textBoxMarca.TextChanged += textBoxMarca_TextChanged;
-            // 
-            // btnCancelar
-            // 
+            // txtmarcaproducto txtmarcaproductoanchor: bordes que mantienen su distancia cuando cambia el tamano del contenedor
+            txtMarcaProducto.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtMarcaProducto.Font = new Font("Segoe UI", 10F);
+            txtMarcaProducto.Location = new Point(0, 26);
+            txtMarcaProducto.MaxLength = 100;
+            txtMarcaProducto.Name = "txtMarcaProducto";
+            txtMarcaProducto.Size = new Size(170, 25);
+            txtMarcaProducto.TabIndex = 37;
+            txtMarcaProducto.TextChanged += txtMarcaProducto_TextChanged;
+            // btncancelar btncancelarbackcolor: color del fondo del control o de la celda
             btnCancelar.BackColor = Color.SteelBlue;
             btnCancelar.FlatAppearance.BorderSize = 0;
             btnCancelar.FlatStyle = FlatStyle.Flat;
@@ -849,16 +824,15 @@ namespace Prana.Presentacion
             btnCancelar.IconChar = FontAwesome.Sharp.IconChar.None;
             btnCancelar.IconColor = Color.Black;
             btnCancelar.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnCancelar.Location = new Point(141, 507);
+            btnCancelar.Location = new Point(147, 12);
+            btnCancelar.Margin = new Padding(4, 4, 12, 4);
             btnCancelar.Name = "btnCancelar";
             btnCancelar.Size = new Size(124, 25);
             btnCancelar.TabIndex = 36;
             btnCancelar.Text = "Cancelar";
             btnCancelar.UseVisualStyleBackColor = false;
             btnCancelar.Click += btnCancelar_Click;
-            // 
-            // btnGuardarProducto
-            // 
+            // btnguardarproducto btnguardarproductobackcolor: color del fondo del control o de la celda
             btnGuardarProducto.BackColor = Color.DarkGreen;
             btnGuardarProducto.FlatAppearance.BorderSize = 0;
             btnGuardarProducto.FlatStyle = FlatStyle.Flat;
@@ -866,231 +840,220 @@ namespace Prana.Presentacion
             btnGuardarProducto.IconChar = FontAwesome.Sharp.IconChar.None;
             btnGuardarProducto.IconColor = Color.Black;
             btnGuardarProducto.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnGuardarProducto.Location = new Point(6, 507);
+            btnGuardarProducto.Location = new Point(12, 12);
+            btnGuardarProducto.Margin = new Padding(4, 4, 12, 4);
             btnGuardarProducto.Name = "btnGuardarProducto";
             btnGuardarProducto.Size = new Size(119, 25);
             btnGuardarProducto.TabIndex = 33;
             btnGuardarProducto.Text = "Guardar Producto";
             btnGuardarProducto.UseVisualStyleBackColor = false;
             btnGuardarProducto.Click += btnGuardarProducto_Click;
-            // 
-            // dgvVariantes
-            // 
+            // dgvvariantes
             dgvVariantes.AllowUserToAddRows = false;
             dgvVariantes.AllowUserToDeleteRows = false;
-            dgvVariantes.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             dgvVariantes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvVariantes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvVariantes.Columns.AddRange(new DataGridViewColumn[] { CondicionProducto, colColor, Colmodelo2, Precio, colStockFisico, ColComprometido, ColDisponible, NombreProducto });
-            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = SystemColors.Window;
-            dataGridViewCellStyle7.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle7.ForeColor = Color.White;
-            dataGridViewCellStyle7.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.False;
-            dgvVariantes.DefaultCellStyle = dataGridViewCellStyle7;
-            dgvVariantes.Location = new Point(6, 330);
+            dataGridViewCellStyle21.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle21.BackColor = SystemColors.Window;
+            dataGridViewCellStyle21.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle21.ForeColor = Color.White;
+            dataGridViewCellStyle21.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dataGridViewCellStyle21.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle21.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dataGridViewCellStyle21.WrapMode = DataGridViewTriState.False;
+            dgvVariantes.DefaultCellStyle = dataGridViewCellStyle21;
+            dgvVariantes.Dock = DockStyle.Top;
+            dgvVariantes.Location = new Point(8, 749);
+            dgvVariantes.Margin = new Padding(0, 0, 0, 8);
             dgvVariantes.MultiSelect = false;
             dgvVariantes.Name = "dgvVariantes";
+            dgvVariantes.ForeColor = Color.Black;
+            dgvVariantes.DefaultCellStyle.ForeColor = Color.Black;
+            dgvVariantes.RowsDefaultCellStyle.ForeColor = Color.Black;
+            dgvVariantes.AlternatingRowsDefaultCellStyle.ForeColor = Color.Black;
+            dgvVariantes.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvVariantes.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dgvVariantes.DefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvVariantes.DefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dgvVariantes.AlternatingRowsDefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvVariantes.AlternatingRowsDefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
             dgvVariantes.RowHeadersWidth = 51;
             dgvVariantes.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvVariantes.Size = new Size(1150, 150);
-            dgvVariantes.TabIndex = 32;
+            dgvVariantes.Size = new Size(1483, 175);
+            dgvVariantes.TabIndex = 9;
             dgvVariantes.CellContentClick += dgvVariantes_CellContentClick;
-            // 
-            // CondicionProducto
-            // 
+            // condicionproducto condicionproductodatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             CondicionProducto.DataPropertyName = "CondicionProducto";
             CondicionProducto.HeaderText = "Condicion";
+            CondicionProducto.MaxInputLength = 8;
             CondicionProducto.MinimumWidth = 6;
             CondicionProducto.Name = "CondicionProducto";
             CondicionProducto.ReadOnly = true;
-            // 
-            // colColor
-            // 
+            // colcolor colcolordatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colColor.DataPropertyName = "Color";
             colColor.HeaderText = "Color";
+            colColor.MaxInputLength = 20;
             colColor.MinimumWidth = 6;
             colColor.Name = "colColor";
             colColor.ReadOnly = true;
-            // 
-            // Colmodelo2
-            // 
+            // colmodelo2 colmodelo2headertext: titulo de la columna; no es el nombre de la propiedad enlazada
             Colmodelo2.HeaderText = "Modelo";
+            Colmodelo2.MaxInputLength = 20;
             Colmodelo2.MinimumWidth = 6;
             Colmodelo2.Name = "Colmodelo2";
             Colmodelo2.ReadOnly = true;
-            // 
-            // Precio
-            // 
+            // precio preciodatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             Precio.DataPropertyName = "Precio";
             Precio.HeaderText = "Precio";
+            Precio.MaxInputLength = 12;
             Precio.MinimumWidth = 6;
             Precio.Name = "Precio";
             Precio.ReadOnly = true;
-            // 
-            // colStockFisico
-            // 
+            // colstockfisico colstockfisicoheadertext: titulo de la columna; no es el nombre de la propiedad enlazada
             colStockFisico.HeaderText = "Stock Fisico";
+            colStockFisico.MaxInputLength = 12;
             colStockFisico.MinimumWidth = 6;
             colStockFisico.Name = "colStockFisico";
             colStockFisico.ReadOnly = true;
-            // 
-            // ColComprometido
-            // 
+            // colcomprometido colcomprometidoheadertext: titulo de la columna; no es el nombre de la propiedad enlazada
             ColComprometido.HeaderText = "Comprometido";
+            ColComprometido.MaxInputLength = 12;
             ColComprometido.MinimumWidth = 6;
             ColComprometido.Name = "ColComprometido";
             ColComprometido.ReadOnly = true;
-            // 
-            // ColDisponible
-            // 
+            // coldisponible coldisponibleheadertext: titulo de la columna; no es el nombre de la propiedad enlazada
             ColDisponible.HeaderText = "Disponible";
+            ColDisponible.MaxInputLength = 12;
             ColDisponible.MinimumWidth = 6;
             ColDisponible.Name = "ColDisponible";
             ColDisponible.ReadOnly = true;
-            // 
-            // NombreProducto
-            // 
+            // nombreproducto nombreproductodatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             NombreProducto.DataPropertyName = "NombreProducto";
             NombreProducto.HeaderText = "Nombre";
+            NombreProducto.MaxInputLength = 30;
             NombreProducto.MinimumWidth = 6;
             NombreProducto.Name = "NombreProducto";
-            // 
-            // label13
-            // 
-            label13.AutoSize = true;
+            // label13 label13dock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            label13.Dock = DockStyle.Top;
             label13.ForeColor = Color.FromArgb(145, 170, 210);
-            label13.Location = new Point(9, 153);
+            label13.Location = new Point(0, 0);
             label13.Name = "label13";
-            label13.Size = new Size(154, 15);
+            label13.Size = new Size(650, 23);
             label13.TabIndex = 30;
             label13.Text = "Descripción / características";
-            // 
-            // textBoxDescripcion
-            // 
-            textBoxDescripcion.Font = new Font("Segoe UI", 10F);
-            textBoxDescripcion.Location = new Point(12, 171);
-            textBoxDescripcion.Name = "textBoxDescripcion";
-            textBoxDescripcion.PlaceholderText = "Caracteristicas generales del producto";
-            textBoxDescripcion.Size = new Size(932, 25);
-            textBoxDescripcion.TabIndex = 29;
-            textBoxDescripcion.TextChanged += textBoxDescripcion_TextChanged;
-            // 
-            // nudPrecio
-            // 
+            // txtdescripcionproducto txtdescripcionproductoanchor: bordes que mantienen su distancia cuando cambia el tamano del contenedor
+            txtDescripcionProducto.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtDescripcionProducto.CharacterCasing = CharacterCasing.Upper;
+            txtDescripcionProducto.Font = new Font("Segoe UI", 10F);
+            txtDescripcionProducto.Location = new Point(0, 26);
+            txtDescripcionProducto.MaxLength = 200;
+            txtDescripcionProducto.Name = "txtDescripcionProducto";
+            txtDescripcionProducto.PlaceholderText = "Caracteristicas generales del producto";
+            txtDescripcionProducto.Size = new Size(650, 25);
+            txtDescripcionProducto.TabIndex = 29;
+            txtDescripcionProducto.TextChanged += txtDescripcionProducto_TextChanged;
+            // nudprecio nudprecioanchor: bordes que mantienen su distancia cuando cambia el tamano del contenedor
+            nudPrecio.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             nudPrecio.DecimalPlaces = 2;
-            nudPrecio.Location = new Point(438, 287);
-            nudPrecio.Maximum = new decimal(new int[] { 100000000, 0, 0, 0 });
+            nudPrecio.Location = new Point(0, 26);
+            nudPrecio.Maximum = new decimal(new int[] { 1410065407, 2, 0, 131072 });
+            nudPrecio.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             nudPrecio.Name = "nudPrecio";
             nudPrecio.Size = new Size(150, 23);
             nudPrecio.TabIndex = 28;
             nudPrecio.ThousandsSeparator = true;
+            nudPrecio.Value = new decimal(new int[] { 1, 0, 0, 0 });
             nudPrecio.ValueChanged += nudPrecio_ValueChanged;
-            // 
-            // label11
-            // 
-            label11.AutoSize = true;
+            // label11 label11dock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            label11.Dock = DockStyle.Top;
             label11.ForeColor = Color.FromArgb(145, 170, 210);
-            label11.Location = new Point(438, 269);
+            label11.Location = new Point(0, 0);
             label11.Name = "label11";
-            label11.Size = new Size(45, 15);
+            label11.Size = new Size(150, 23);
             label11.TabIndex = 25;
             label11.Text = "Precio*";
-            // 
-            // label10
-            // 
-            label10.AutoSize = true;
+            // label10 label10dock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            label10.Dock = DockStyle.Top;
             label10.ForeColor = Color.FromArgb(145, 170, 210);
-            label10.Location = new Point(267, 268);
+            label10.Location = new Point(0, 0);
             label10.Name = "label10";
-            label10.Size = new Size(41, 15);
+            label10.Size = new Size(160, 23);
             label10.TabIndex = 23;
             label10.Text = "Color*";
-            // 
-            // textBoxCategoria
-            // 
-            textBoxCategoria.Font = new Font("Segoe UI", 10F);
-            textBoxCategoria.Location = new Point(497, 119);
-            textBoxCategoria.Name = "textBoxCategoria";
-            textBoxCategoria.DropDownStyle = ComboBoxStyle.DropDown;
-            textBoxCategoria.Size = new Size(163, 25);
-            textBoxCategoria.TabIndex = 22;
-            textBoxCategoria.TextChanged += textBoxCategoria_TextChanged;
-            // 
-            // textBoxColor
-            // 
-            textBoxColor.Font = new Font("Segoe UI", 10F);
-            textBoxColor.Location = new Point(267, 286);
-            textBoxColor.Name = "textBoxColor";
-            textBoxColor.Size = new Size(164, 25);
-            textBoxColor.TabIndex = 21;
-            textBoxColor.TextChanged += textBoxColor_TextChanged;
-            // 
-            // label8
-            // 
-            label8.AutoSize = true;
+            // txtcategoriaproducto txtcategoriaproductoanchor: bordes que mantienen su distancia cuando cambia el tamano del contenedor
+            txtCategoriaProducto.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtCategoriaProducto.Font = new Font("Segoe UI", 10F);
+            txtCategoriaProducto.Location = new Point(0, 26);
+            txtCategoriaProducto.MaxLength = 100;
+            txtCategoriaProducto.Name = "txtCategoriaProducto";
+            txtCategoriaProducto.Size = new Size(170, 25);
+            txtCategoriaProducto.TabIndex = 22;
+            txtCategoriaProducto.TextChanged += txtCategoriaProducto_TextChanged;
+            // txtcolorvariante txtcolorvarianteanchor: bordes que mantienen su distancia cuando cambia el tamano del contenedor
+            txtColorVariante.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtColorVariante.Font = new Font("Segoe UI", 10F);
+            txtColorVariante.Location = new Point(0, 26);
+            txtColorVariante.MaxLength = 20;
+            txtColorVariante.Name = "txtColorVariante";
+            txtColorVariante.Size = new Size(160, 25);
+            txtColorVariante.TabIndex = 21;
+            txtColorVariante.TextChanged += txtColorVariante_TextChanged;
+            // label8 label8dock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            label8.Dock = DockStyle.Top;
             label8.ForeColor = Color.FromArgb(145, 170, 210);
-            label8.Location = new Point(13, 99);
+            label8.Location = new Point(0, 0);
             label8.Name = "label8";
-            label8.Size = new Size(103, 15);
+            label8.Size = new Size(220, 23);
             label8.TabIndex = 20;
             label8.Text = "Nombre producto";
-            // 
-            // textBoxNombreProducto
-            // 
-            textBoxNombreProducto.Font = new Font("Segoe UI", 10F);
-            textBoxNombreProducto.Location = new Point(18, 119);
-            textBoxNombreProducto.Name = "textBoxNombreProducto";
-            textBoxNombreProducto.PlaceholderText = "Ingrese codigo producto";
-            textBoxNombreProducto.Size = new Size(228, 25);
-            textBoxNombreProducto.TabIndex = 19;
-            textBoxNombreProducto.TextChanged += textBoxNombreProducto_TextChanged;
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
+            // txtnombreproducto txtnombreproductoanchor: bordes que mantienen su distancia cuando cambia el tamano del contenedor
+            txtNombreProducto.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtNombreProducto.CharacterCasing = CharacterCasing.Upper;
+            txtNombreProducto.Font = new Font("Segoe UI", 10F);
+            txtNombreProducto.Location = new Point(0, 26);
+            txtNombreProducto.MaxLength = 150;
+            txtNombreProducto.Name = "txtNombreProducto";
+            txtNombreProducto.PlaceholderText = "Ingrese codigo producto";
+            txtNombreProducto.Size = new Size(220, 25);
+            txtNombreProducto.TabIndex = 19;
+            txtNombreProducto.TextChanged += txtNombreProducto_TextChanged;
+            // label3 label3dock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            label3.Dock = DockStyle.Top;
             label3.ForeColor = Color.FromArgb(145, 170, 210);
-            label3.Location = new Point(13, 268);
+            label3.Location = new Point(0, 0);
             label3.Name = "label3";
-            label3.Size = new Size(67, 15);
+            label3.Size = new Size(190, 23);
             label3.TabIndex = 18;
             label3.Text = "Condicion*";
-            // 
-            // comboBoxCondicion2
-            // 
-            comboBoxCondicion2.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBoxCondicion2.FormattingEnabled = true;
-            comboBoxCondicion2.Items.AddRange(new object[] { "Primera", "Outlet" });
-            comboBoxCondicion2.Location = new Point(15, 286);
-            comboBoxCondicion2.Name = "comboBoxCondicion2";
-            comboBoxCondicion2.Size = new Size(231, 23);
-            comboBoxCondicion2.TabIndex = 17;
-            comboBoxCondicion2.SelectedIndexChanged += comboBox2_SelectedIndexChanged;
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
+            // cbocondicionvariante cbocondicionvarianteanchor: bordes que mantienen su distancia cuando cambia el tamano del contenedor
+            cboCondicionVariante.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            cboCondicionVariante.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboCondicionVariante.FormattingEnabled = true;
+            cboCondicionVariante.Items.AddRange(new object[] { "PRIMERA", "OUTLET" });
+            cboCondicionVariante.Location = new Point(0, 26);
+            cboCondicionVariante.MaxLength = 20;
+            cboCondicionVariante.Name = "cboCondicionVariante";
+            cboCondicionVariante.Size = new Size(190, 23);
+            cboCondicionVariante.TabIndex = 17;
+            cboCondicionVariante.SelectedIndexChanged += comboBox2_SelectedIndexChanged;
+            // label4 label4dock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            label4.Dock = DockStyle.Top;
             label4.ForeColor = Color.FromArgb(145, 170, 210);
-            label4.Location = new Point(668, 101);
+            label4.Location = new Point(0, 0);
             label4.Name = "label4";
-            label4.Size = new Size(45, 15);
+            label4.Size = new Size(170, 23);
             label4.TabIndex = 16;
             label4.Text = "Marca*";
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
+            // label5 label5dock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            label5.Dock = DockStyle.Top;
             label5.ForeColor = Color.FromArgb(145, 170, 210);
-            label5.Location = new Point(497, 99);
+            label5.Location = new Point(0, 0);
             label5.Name = "label5";
-            label5.Size = new Size(63, 15);
+            label5.Size = new Size(170, 23);
             label5.TabIndex = 15;
             label5.Text = "Categoria*";
-            // 
-            // btnAgregarVariante
-            // 
+            // btnagregarvariante btnagregarvariantebackcolor: color del fondo del control o de la celda
             btnAgregarVariante.BackColor = Color.DarkGreen;
             btnAgregarVariante.FlatAppearance.BorderSize = 0;
             btnAgregarVariante.FlatStyle = FlatStyle.Flat;
@@ -1098,57 +1061,350 @@ namespace Prana.Presentacion
             btnAgregarVariante.IconChar = FontAwesome.Sharp.IconChar.None;
             btnAgregarVariante.IconColor = Color.Black;
             btnAgregarVariante.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnAgregarVariante.Location = new Point(825, 287);
+            btnAgregarVariante.Location = new Point(560, 12);
+            btnAgregarVariante.Margin = new Padding(4, 4, 12, 4);
             btnAgregarVariante.Name = "btnAgregarVariante";
             btnAgregarVariante.Size = new Size(119, 25);
             btnAgregarVariante.TabIndex = 2;
             btnAgregarVariante.Text = "Agregar variante";
             btnAgregarVariante.UseVisualStyleBackColor = false;
             btnAgregarVariante.Click += btnAgregarVariante_Click;
-            // 
-            // frmStock
-            // 
+            // flpfiltros
+            flpFiltros.AutoSize = true;
+            flpFiltros.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            flpFiltros.Controls.Add(pnlCampo9);
+            flpFiltros.Controls.Add(pnlCampo10);
+            flpFiltros.Controls.Add(pnlCampo11);
+            flpFiltros.Controls.Add(pnlCampo12);
+            flpFiltros.Controls.Add(btnBuscarProducto);
+            flpFiltros.Controls.Add(BtnLimpiarFiltros);
+            flpFiltros.Dock = DockStyle.Top;
+            flpFiltros.Location = new Point(8, 108);
+            flpFiltros.Margin = new Padding(0, 0, 0, 8);
+            flpFiltros.Name = "flpFiltros";
+            flpFiltros.Padding = new Padding(8);
+            flpFiltros.Size = new Size(1483, 82);
+            flpFiltros.TabIndex = 2;
+            // pnlcampo9 inserta el control en su contenedor; esto determina su jerarquia visual y posicion relativa
+            pnlCampo9.Controls.Add(txtBuscarProducto);
+            pnlCampo9.Controls.Add(lblcodigo);
+            pnlCampo9.Location = new Point(12, 12);
+            pnlCampo9.Margin = new Padding(4, 4, 12, 4);
+            pnlCampo9.Name = "pnlCampo9";
+            pnlCampo9.Size = new Size(260, 58);
+            pnlCampo9.TabIndex = 0;
+            // pnlcampo10 inserta el control en su contenedor; esto determina su jerarquia visual y posicion relativa
+            pnlCampo10.Controls.Add(comboBoxCateogria);
+            pnlCampo10.Controls.Add(label6);
+            pnlCampo10.Location = new Point(288, 12);
+            pnlCampo10.Margin = new Padding(4, 4, 12, 4);
+            pnlCampo10.Name = "pnlCampo10";
+            pnlCampo10.Size = new Size(190, 58);
+            pnlCampo10.TabIndex = 1;
+            // pnlcampo11 inserta el control en su contenedor; esto determina su jerarquia visual y posicion relativa
+            pnlCampo11.Controls.Add(cboMarca);
+            pnlCampo11.Controls.Add(label7);
+            pnlCampo11.Location = new Point(494, 12);
+            pnlCampo11.Margin = new Padding(4, 4, 12, 4);
+            pnlCampo11.Name = "pnlCampo11";
+            pnlCampo11.Size = new Size(190, 58);
+            pnlCampo11.TabIndex = 2;
+            // pnlcampo12 inserta el control en su contenedor; esto determina su jerarquia visual y posicion relativa
+            pnlCampo12.Controls.Add(cboFiltroCondicion);
+            pnlCampo12.Controls.Add(label2);
+            pnlCampo12.Location = new Point(700, 12);
+            pnlCampo12.Margin = new Padding(4, 4, 12, 4);
+            pnlCampo12.Name = "pnlCampo12";
+            pnlCampo12.Size = new Size(190, 58);
+            pnlCampo12.TabIndex = 3;
+            // flpgenerales
+            flpGenerales.AutoSize = true;
+            flpGenerales.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            flpGenerales.Controls.Add(pnlCampo13);
+            flpGenerales.Controls.Add(pnlCampo14);
+            flpGenerales.Controls.Add(pnlCampo15);
+            flpGenerales.Controls.Add(pnlCampo16);
+            flpGenerales.Controls.Add(pnlCampo17);
+            flpGenerales.Dock = DockStyle.Top;
+            flpGenerales.Location = new Point(8, 467);
+            flpGenerales.Margin = new Padding(0, 0, 0, 8);
+            flpGenerales.Name = "flpGenerales";
+            flpGenerales.Padding = new Padding(8);
+            flpGenerales.Size = new Size(1483, 148);
+            flpGenerales.TabIndex = 6;
+            // pnlcampo13 inserta el control en su contenedor; esto determina su jerarquia visual y posicion relativa
+            pnlCampo13.Controls.Add(txtNombreProducto);
+            pnlCampo13.Controls.Add(label8);
+            pnlCampo13.Location = new Point(12, 12);
+            pnlCampo13.Margin = new Padding(4, 4, 12, 4);
+            pnlCampo13.Name = "pnlCampo13";
+            pnlCampo13.Size = new Size(220, 58);
+            pnlCampo13.TabIndex = 0;
+            // pnlcampo14 inserta el control en su contenedor; esto determina su jerarquia visual y posicion relativa
+            pnlCampo14.Controls.Add(txtModeloProducto);
+            pnlCampo14.Controls.Add(label15);
+            pnlCampo14.Location = new Point(248, 12);
+            pnlCampo14.Margin = new Padding(4, 4, 12, 4);
+            pnlCampo14.Name = "pnlCampo14";
+            pnlCampo14.Size = new Size(220, 58);
+            pnlCampo14.TabIndex = 1;
+            // pnlcampo15 inserta el control en su contenedor; esto determina su jerarquia visual y posicion relativa
+            pnlCampo15.Controls.Add(txtCategoriaProducto);
+            pnlCampo15.Controls.Add(label5);
+            pnlCampo15.Location = new Point(484, 12);
+            pnlCampo15.Margin = new Padding(4, 4, 12, 4);
+            pnlCampo15.Name = "pnlCampo15";
+            pnlCampo15.Size = new Size(170, 58);
+            pnlCampo15.TabIndex = 2;
+            // pnlcampo16 inserta el control en su contenedor; esto determina su jerarquia visual y posicion relativa
+            pnlCampo16.Controls.Add(txtMarcaProducto);
+            pnlCampo16.Controls.Add(label4);
+            pnlCampo16.Location = new Point(670, 12);
+            pnlCampo16.Margin = new Padding(4, 4, 12, 4);
+            pnlCampo16.Name = "pnlCampo16";
+            pnlCampo16.Size = new Size(170, 58);
+            pnlCampo16.TabIndex = 3;
+            // pnlcampo17 inserta el control en su contenedor; esto determina su jerarquia visual y posicion relativa
+            pnlCampo17.Controls.Add(txtDescripcionProducto);
+            pnlCampo17.Controls.Add(label13);
+            pnlCampo17.Location = new Point(12, 78);
+            pnlCampo17.Margin = new Padding(4, 4, 12, 4);
+            pnlCampo17.Name = "pnlCampo17";
+            pnlCampo17.Size = new Size(650, 58);
+            pnlCampo17.TabIndex = 4;
+            // flpvariantes
+            flpVariantes.AutoSize = true;
+            flpVariantes.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            flpVariantes.Controls.Add(pnlCampo18);
+            flpVariantes.Controls.Add(pnlCampo19);
+            flpVariantes.Controls.Add(pnlCampo20);
+            flpVariantes.Controls.Add(btnAgregarVariante);
+            flpVariantes.Dock = DockStyle.Top;
+            flpVariantes.Location = new Point(8, 659);
+            flpVariantes.Margin = new Padding(0, 0, 0, 8);
+            flpVariantes.Name = "flpVariantes";
+            flpVariantes.Padding = new Padding(8);
+            flpVariantes.Size = new Size(1483, 82);
+            flpVariantes.TabIndex = 8;
+            // pnlcampo18 inserta el control en su contenedor; esto determina su jerarquia visual y posicion relativa
+            pnlCampo18.Controls.Add(cboCondicionVariante);
+            pnlCampo18.Controls.Add(label3);
+            pnlCampo18.Location = new Point(12, 12);
+            pnlCampo18.Margin = new Padding(4, 4, 12, 4);
+            pnlCampo18.Name = "pnlCampo18";
+            pnlCampo18.Size = new Size(190, 58);
+            pnlCampo18.TabIndex = 0;
+            // pnlcampo19 inserta el control en su contenedor; esto determina su jerarquia visual y posicion relativa
+            pnlCampo19.Controls.Add(txtColorVariante);
+            pnlCampo19.Controls.Add(label10);
+            pnlCampo19.Location = new Point(218, 12);
+            pnlCampo19.Margin = new Padding(4, 4, 12, 4);
+            pnlCampo19.Name = "pnlCampo19";
+            pnlCampo19.Size = new Size(160, 58);
+            pnlCampo19.TabIndex = 1;
+            // pnlcampo20 inserta el control en su contenedor; esto determina su jerarquia visual y posicion relativa
+            pnlCampo20.Controls.Add(nudPrecio);
+            pnlCampo20.Controls.Add(label11);
+            pnlCampo20.Location = new Point(394, 12);
+            pnlCampo20.Margin = new Padding(4, 4, 12, 4);
+            pnlCampo20.Name = "pnlCampo20";
+            pnlCampo20.Size = new Size(150, 58);
+            pnlCampo20.TabIndex = 2;
+            // flpacciones
+            flpAcciones.AutoSize = true;
+            flpAcciones.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            flpAcciones.Controls.Add(btnGuardarProducto);
+            flpAcciones.Controls.Add(btnOpcionesStock);
+            flpAcciones.Controls.Add(btnCancelar);
+            flpAcciones.Dock = DockStyle.Top;
+            flpAcciones.Location = new Point(8, 932);
+            flpAcciones.Margin = new Padding(0, 0, 0, 8);
+            flpAcciones.Name = "flpAcciones";
+            flpAcciones.Padding = new Padding(8);
+            flpAcciones.Size = new Size(1483, 49);
+            flpAcciones.TabIndex = 10;
+            // flpproveedor
+            flpProveedor.AutoSize = true;
+            flpProveedor.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            flpProveedor.Controls.Add(iconButton1);
+            flpProveedor.Controls.Add(pnlCampo21);
+            flpProveedor.Controls.Add(pnlCampo22);
+            flpProveedor.Controls.Add(pnlCampo23);
+            flpProveedor.Dock = DockStyle.Top;
+            flpProveedor.Location = new Point(8, 1075);
+            flpProveedor.Margin = new Padding(0, 0, 0, 8);
+            flpProveedor.Name = "flpProveedor";
+            flpProveedor.Padding = new Padding(8);
+            flpProveedor.Size = new Size(1483, 82);
+            flpProveedor.TabIndex = 13;
+            // pnlcampo21 inserta el control en su contenedor; esto determina su jerarquia visual y posicion relativa
+            pnlCampo21.Controls.Add(comboBoxSeleccionaProveedor);
+            pnlCampo21.Controls.Add(label19);
+            pnlCampo21.Location = new Point(313, 12);
+            pnlCampo21.Margin = new Padding(4, 4, 12, 4);
+            pnlCampo21.Name = "pnlCampo21";
+            pnlCampo21.Size = new Size(320, 58);
+            pnlCampo21.TabIndex = 56;
+            // pnlcampo22 inserta el control en su contenedor; esto determina su jerarquia visual y posicion relativa
+            pnlCampo22.Controls.Add(dtpFechaIngresoStock);
+            pnlCampo22.Controls.Add(label18);
+            pnlCampo22.Location = new Point(649, 12);
+            pnlCampo22.Margin = new Padding(4, 4, 12, 4);
+            pnlCampo22.Name = "pnlCampo22";
+            pnlCampo22.Size = new Size(230, 58);
+            pnlCampo22.TabIndex = 57;
+            // pnlcampo23 inserta el control en su contenedor; esto determina su jerarquia visual y posicion relativa
+            pnlCampo23.Controls.Add(label12);
+            pnlCampo23.Controls.Add(txtDocumentoProveedor);
+            pnlCampo23.Location = new Point(895, 12);
+            pnlCampo23.Margin = new Padding(4, 4, 12, 4);
+            pnlCampo23.Name = "pnlCampo23";
+            pnlCampo23.Size = new Size(260, 58);
+            pnlCampo23.TabIndex = 58;
+            // flptotales
+            flpTotales.AutoSize = true;
+            flpTotales.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            flpTotales.Controls.Add(label25);
+            flpTotales.Controls.Add(LblTotalIngresoDinero);
+            flpTotales.Controls.Add(label26);
+            flpTotales.Controls.Add(labelCantidadIngresada);
+            flpTotales.Controls.Add(ButtonRegistrarIngreso);
+            flpTotales.Dock = DockStyle.Top;
+            flpTotales.Location = new Point(8, 1348);
+            flpTotales.Margin = new Padding(0, 0, 0, 8);
+            flpTotales.Name = "flpTotales";
+            flpTotales.Padding = new Padding(8);
+            flpTotales.Size = new Size(1483, 66);
+            flpTotales.TabIndex = 15;
+            // pnlpagina
+            pnlPagina.AutoScroll = true;
+            pnlPagina.BackColor = Color.FromArgb(13, 19, 27);
+            pnlPagina.Controls.Add(tlpSecciones);
+            pnlPagina.Dock = DockStyle.Fill;
+            pnlPagina.ForeColor = Color.White;
+            pnlPagina.Location = new Point(0, 23);
+            pnlPagina.Name = "pnlPagina";
+            pnlPagina.Size = new Size(1516, 738);
+            pnlPagina.TabIndex = 10;
+            // tlpsecciones
+            tlpSecciones.AutoSize = true;
+            tlpSecciones.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tlpSecciones.ColumnCount = 1;
+            tlpSecciones.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tlpSecciones.Controls.Add(pnlEncabezadostock, 0, 0);
+            tlpSecciones.Controls.Add(panel3, 0, 1);
+            tlpSecciones.Controls.Add(flpFiltros, 0, 2);
+            tlpSecciones.Controls.Add(dgvBusquedaProductos, 0, 3);
+            tlpSecciones.Controls.Add(panel4, 0, 4);
+            tlpSecciones.Controls.Add(label28, 0, 5);
+            tlpSecciones.Controls.Add(flpGenerales, 0, 6);
+            tlpSecciones.Controls.Add(label29, 0, 7);
+            tlpSecciones.Controls.Add(flpVariantes, 0, 8);
+            tlpSecciones.Controls.Add(dgvVariantes, 0, 9);
+            tlpSecciones.Controls.Add(flpAcciones, 0, 10);
+            tlpSecciones.Controls.Add(panel5, 0, 11);
+            tlpSecciones.Controls.Add(label31, 0, 12);
+            tlpSecciones.Controls.Add(flpProveedor, 0, 13);
+            tlpSecciones.Controls.Add(dgvDetalleIngreso, 0, 14);
+            tlpSecciones.Controls.Add(flpTotales, 0, 15);
+            tlpSecciones.Dock = DockStyle.Top;
+            tlpSecciones.Location = new Point(0, 0);
+            tlpSecciones.MinimumSize = new Size(760, 0);
+            tlpSecciones.Name = "tlpSecciones";
+            tlpSecciones.Padding = new Padding(8);
+            tlpSecciones.RowCount = 16;
+            tlpSecciones.RowStyles.Add(new RowStyle());
+            tlpSecciones.RowStyles.Add(new RowStyle());
+            tlpSecciones.RowStyles.Add(new RowStyle());
+            tlpSecciones.RowStyles.Add(new RowStyle());
+            tlpSecciones.RowStyles.Add(new RowStyle());
+            tlpSecciones.RowStyles.Add(new RowStyle());
+            tlpSecciones.RowStyles.Add(new RowStyle());
+            tlpSecciones.RowStyles.Add(new RowStyle());
+            tlpSecciones.RowStyles.Add(new RowStyle());
+            tlpSecciones.RowStyles.Add(new RowStyle());
+            tlpSecciones.RowStyles.Add(new RowStyle());
+            tlpSecciones.RowStyles.Add(new RowStyle());
+            tlpSecciones.RowStyles.Add(new RowStyle());
+            tlpSecciones.RowStyles.Add(new RowStyle());
+            tlpSecciones.RowStyles.Add(new RowStyle());
+            tlpSecciones.RowStyles.Add(new RowStyle());
+            tlpSecciones.Size = new Size(1499, 1430);
+            tlpSecciones.TabIndex = 0;
+            // label12 label12dock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            label12.Dock = DockStyle.Top;
+            label12.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
+            label12.ForeColor = Color.FromArgb(145, 170, 210);
+            label12.Location = new Point(0, 0);
+            label12.Name = "label12";
+            label12.Size = new Size(260, 23);
+            label12.TabIndex = 57;
+            label12.Text = "Numero del documento";
+            // frmstock
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            AutoScroll = true;
+            BackColor = Color.FromArgb(13, 19, 27);
             ClientSize = new Size(1516, 761);
-            Controls.Add(panel1);
+            Controls.Add(pnlPagina);
+            Controls.Add(lblRemitoProveedor);
+            ForeColor = Color.White;
             Name = "frmStock";
             Text = "frmStock";
+            Load += frmStock_Load;
             pnlEncabezadostock.ResumeLayout(false);
             pnlEncabezadostock.PerformLayout();
-            pnlbuscarproducto.ResumeLayout(false);
-            pnlbuscarproducto.PerformLayout();
             panel3.ResumeLayout(false);
             panel3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridViewBusquedaProducto).EndInit();
+            // llama a ((systemcomponentmodelisupportinitialize)dgvbusquedaproductos)endinit para realizar este paso del flujo
+            ((System.ComponentModel.ISupportInitialize)dgvBusquedaProductos).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             panel5.ResumeLayout(false);
             panel5.PerformLayout();
-            PnlNuevoStock.ResumeLayout(false);
-            PnlNuevoStock.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridViewDetalleIngreso).EndInit();
-            panel2.ResumeLayout(false);
-            panel2.PerformLayout();
+            // llama a ((systemcomponentmodelisupportinitialize)dgvdetalleingreso)endinit para realizar este paso del flujo
+            ((System.ComponentModel.ISupportInitialize)dgvDetalleIngreso).EndInit();
             panel4.ResumeLayout(false);
             panel4.PerformLayout();
+            // llama a ((systemcomponentmodelisupportinitialize)dgvvariantes)endinit para realizar este paso del flujo
             ((System.ComponentModel.ISupportInitialize)dgvVariantes).EndInit();
+            // llama a ((systemcomponentmodelisupportinitialize)nudprecio)endinit para realizar este paso del flujo
             ((System.ComponentModel.ISupportInitialize)nudPrecio).EndInit();
-            lblRemitoProveedor.Name = "lblRemitoProveedor";
-            lblRemitoProveedor.Text = "Remito del proveedor";
-            lblRemitoProveedor.Location = new Point(600, 900);
-            lblRemitoProveedor.Size = new Size(260, 23);
-            lblRemitoProveedor.ForeColor = Color.White;
-            Controls.Add(lblRemitoProveedor);
-
-            Load += frmStock_Load;
+            flpFiltros.ResumeLayout(false);
+            pnlCampo9.ResumeLayout(false);
+            pnlCampo9.PerformLayout();
+            pnlCampo10.ResumeLayout(false);
+            pnlCampo11.ResumeLayout(false);
+            pnlCampo12.ResumeLayout(false);
+            flpGenerales.ResumeLayout(false);
+            pnlCampo13.ResumeLayout(false);
+            pnlCampo13.PerformLayout();
+            pnlCampo14.ResumeLayout(false);
+            pnlCampo14.PerformLayout();
+            pnlCampo15.ResumeLayout(false);
+            pnlCampo16.ResumeLayout(false);
+            pnlCampo17.ResumeLayout(false);
+            pnlCampo17.PerformLayout();
+            flpVariantes.ResumeLayout(false);
+            pnlCampo18.ResumeLayout(false);
+            pnlCampo19.ResumeLayout(false);
+            pnlCampo19.PerformLayout();
+            pnlCampo20.ResumeLayout(false);
+            flpAcciones.ResumeLayout(false);
+            flpProveedor.ResumeLayout(false);
+            pnlCampo21.ResumeLayout(false);
+            pnlCampo22.ResumeLayout(false);
+            pnlCampo23.ResumeLayout(false);
+            pnlCampo23.PerformLayout();
+            flpTotales.ResumeLayout(false);
+            flpTotales.PerformLayout();
+            pnlPagina.ResumeLayout(false);
+            pnlPagina.PerformLayout();
+            tlpSecciones.ResumeLayout(false);
+            tlpSecciones.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
-
         private Label label1;
         private Panel pnlEncabezadostock;
         private Label lblstock;
@@ -1158,49 +1414,49 @@ namespace Prana.Presentacion
         private FontAwesome.Sharp.IconButton btnBuscarProducto;
         private TextBox txtBuscarProducto;
         private Panel panel1;
-        private ComboBox comboBoxCondicion;
+        private ComboBox cboFiltroCondicion;
         private Label label7;
         private Label label6;
         private ComboBox cboMarca;
         private Label label2;
         private Panel panel2;
         private Label label3;
-        private ComboBox comboBoxCondicion2;
+        private ComboBox cboCondicionVariante;
         private Label label4;
         private Label label5;
         private FontAwesome.Sharp.IconButton btnAgregarVariante;
         private Label label8;
-        private TextBox textBoxNombreProducto;
+        private TextBox txtNombreProducto;
         private Label label11;
         private Label label10;
-        private ComboBox textBoxCategoria;
-        private TextBox textBoxColor;
+        private ComboBox txtCategoriaProducto;
+        private ComboBox txtColorVariante;
         private NumericUpDown nudPrecio;
         private Label label13;
-        private TextBox textBoxDescripcion;
+        private TextBox txtDescripcionProducto;
         private DataGridView dgvVariantes;
         private FontAwesome.Sharp.IconButton btnCancelar;
         private FontAwesome.Sharp.IconButton btnGuardarProducto;
         private FontAwesome.Sharp.IconButton BtnLimpiarFiltros;
         private ComboBox comboBoxCateogria;
-        private ComboBox textBoxMarca;
+        private ComboBox txtMarcaProducto;
         private Panel PnlNuevoStock;
         private ComboBox comboBoxSeleccionaProveedor;
         private Label label19;
         private Label label18;
         private DateTimePicker dtpFechaIngresoStock;
         private DateTimePicker dateTimePicker1;
-        private TextBox textBoxRtoProveedor;
+        private TextBox txtDocumentoProveedor;
         private ComboBox comboBox1;
         private FontAwesome.Sharp.IconButton iconButton3;
         private FontAwesome.Sharp.IconButton iconButton2;
-        private DataGridView dataGridViewDetalleIngreso;
+        private DataGridView dgvDetalleIngreso;
         private FontAwesome.Sharp.IconButton ButtonRegistrarIngreso;
         private Label labelCantidadIngresada;
         private Label label26;
         private Label label25;
         private Label LblTotalIngresoDinero;
-        private DataGridView dataGridViewBusquedaProducto;
+        private DataGridView dgvBusquedaProductos;
         private Label label29;
         private Label label28;
         private Panel panel3;
@@ -1211,7 +1467,7 @@ namespace Prana.Presentacion
         private Label label9;
         private Label label31;
         private Label label15;
-        private TextBox textBoxModelo;
+        private TextBox txtModeloProducto;
         private FontAwesome.Sharp.IconButton iconButton1;
         private DataGridViewTextBoxColumn CondicionProducto;
         private DataGridViewTextBoxColumn colColor;
@@ -1225,8 +1481,11 @@ namespace Prana.Presentacion
         private DataGridViewTextBoxColumn idVariante;
         private DataGridViewTextBoxColumn colVarianteIngreso;
         private DataGridViewTextBoxColumn colCantidad;
+        private Button btnOpcionesStock;
+        private DataGridViewButtonColumn colEliminarIngreso;
         private DataGridViewTextBoxColumn colCosto;
         private DataGridViewTextBoxColumn colTotal;
+        private Label lblRemitoProveedor;
         private DataGridViewTextBoxColumn colIdVariante;
         private DataGridViewTextBoxColumn colModelo;
         private DataGridViewTextBoxColumn colNombre2;
@@ -1239,7 +1498,29 @@ namespace Prana.Presentacion
         private DataGridViewTextBoxColumn colComprometidoBusqueda;
         private DataGridViewButtonColumn colModificar;
         private DataGridViewButtonColumn ColEliminar;
-        private Label lblRemitoProveedor;
-
+        private FlowLayoutPanel flpFiltros;
+        private Panel pnlCampo9;
+        private Panel pnlCampo10;
+        private Panel pnlCampo11;
+        private Panel pnlCampo12;
+        private FlowLayoutPanel flpGenerales;
+        private Panel pnlCampo13;
+        private Panel pnlCampo14;
+        private Panel pnlCampo15;
+        private Panel pnlCampo16;
+        private Panel pnlCampo17;
+        private FlowLayoutPanel flpVariantes;
+        private Panel pnlCampo18;
+        private Panel pnlCampo19;
+        private Panel pnlCampo20;
+        private FlowLayoutPanel flpAcciones;
+        private FlowLayoutPanel flpProveedor;
+        private Panel pnlCampo21;
+        private Panel pnlCampo22;
+        private Panel pnlCampo23;
+        private FlowLayoutPanel flpTotales;
+        private Panel pnlPagina;
+        private TableLayoutPanel tlpSecciones;
+        private Label label12;
     }
 }

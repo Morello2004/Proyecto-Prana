@@ -1,0 +1,14 @@
+﻿{
+    "fecha":  "2026-11-11",
+    "archivosCS":  112,
+    "variablesRenombradas":  137,
+    "bloquesConLlaves":  310,
+    "controlesRenombrados":  21,
+    "metodosDeLecturaExtraidos":  4,
+    "compilacion":  "0 errores",
+    "comparacionLiterales":  "112 archivos verificados",
+    "pruebasPresentacion":  "Aprobadas",
+    "pruebasRecargos":  "Aprobadas",
+    "pruebasDisenador":  "Aprobadas",
+    "migracionesEjecutadas":  false
+}

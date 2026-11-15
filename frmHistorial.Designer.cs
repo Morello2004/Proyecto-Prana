@@ -1,45 +1,31 @@
 ﻿namespace Prana.Presentacion
 {
+    // parte visual de frmhistorial crea controles y define su distribucion, colores y eventos; visual studio puede regenerar este archivo al editar el disenador
     partial class frmHistorial
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
+        // /// required designer variable
         private System.ComponentModel.IContainer components = null;
-
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        // /// clean up any resources being used true if managed resources should be disposed; otherwise, false libera los recursos del formulario; disposing indica si tambien deben liberarse los componentes administrados
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
             {
                 components.Dispose();
             }
+
             base.Dispose(disposing);
         }
 
         #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
+        // /// required method for designer support - do not modify the contents of this method with the code editor construye la pantalla: instancia controles, asigna propiedades, agrega cada control a su contenedor y conecta los eventos no registra operaciones comerciales
         private void InitializeComponent()
         {
             lbltxtUsuario = new Label();
-
             txtUsuario = new TextBox();
-
             lbltxtAccion = new Label();
-
             txtAccion = new TextBox();
-
             lbltxtRemito = new Label();
-
             txtRemito = new TextBox();
-
             pnlEncabezado = new Panel();
             lblTitulo = new Label();
             pnlListado = new Panel();
@@ -53,11 +39,10 @@
             btnUltimas = new Button();
             dgvActividades = new DataGridView();
             pnlFiltros.SuspendLayout();
+            // llama a ((systemcomponentmodelisupportinitialize)dgvactividades)begininit para realizar este paso del flujo
             ((System.ComponentModel.ISupportInitialize)dgvActividades).BeginInit();
             SuspendLayout();
-            // 
-            // pnlFiltros
-            // 
+            // pnlfiltros inserta el control en su contenedor; esto determina su jerarquia visual y posicion relativa
             pnlFiltros.Controls.Add(lblDesde);
             pnlFiltros.Controls.Add(dtpDesde);
             pnlFiltros.Controls.Add(lblHasta);
@@ -69,45 +54,35 @@
             pnlFiltros.Name = "pnlFiltros";
             pnlFiltros.Size = new Size(800, 42);
             pnlFiltros.TabIndex = 0;
-            // 
-            // lblDesde
-            // 
+            // lbldesde
             lblDesde.AutoSize = true;
             lblDesde.Location = new Point(8, 13);
             lblDesde.Name = "lblDesde";
             lblDesde.Size = new Size(36, 15);
             lblDesde.TabIndex = 1;
             lblDesde.Text = "Desde";
-            // 
-            // dtpDesde
-            // 
+            // dtpdesde dtpdesdeformat: formato de presentacion, por ejemplo moneda o fecha; no modifica el valor original
             dtpDesde.Format = DateTimePickerFormat.Short;
             dtpDesde.Location = new Point(50, 8);
             dtpDesde.Name = "dtpDesde";
             dtpDesde.Size = new Size(100, 23);
             dtpDesde.TabIndex = 2;
             dtpDesde.Value = DateTime.Today.AddMonths(-1);
-            // 
-            // lblHasta
-            // 
+            // lblhasta
             lblHasta.AutoSize = true;
             lblHasta.Location = new Point(160, 13);
             lblHasta.Name = "lblHasta";
             lblHasta.Size = new Size(36, 15);
             lblHasta.TabIndex = 3;
             lblHasta.Text = "Hasta";
-            // 
-            // dtpHasta
-            // 
+            // dtphasta dtphastaformat: formato de presentacion, por ejemplo moneda o fecha; no modifica el valor original
             dtpHasta.Format = DateTimePickerFormat.Short;
             dtpHasta.Location = new Point(202, 8);
             dtpHasta.Name = "dtpHasta";
             dtpHasta.Size = new Size(100, 23);
             dtpHasta.TabIndex = 4;
             dtpHasta.Value = DateTime.Today;
-            // 
-            // btnFiltrar
-            // 
+            // btnfiltrar btnfiltrarlocation: posicion horizontal y vertical respecto del contenedor
             btnFiltrar.Location = new Point(312, 7);
             btnFiltrar.Name = "btnFiltrar";
             btnFiltrar.Size = new Size(70, 27);
@@ -115,9 +90,7 @@
             btnFiltrar.Text = "Filtrar";
             btnFiltrar.UseVisualStyleBackColor = true;
             btnFiltrar.Click += btnFiltrar_Click;
-            // 
-            // btnUltimas
-            // 
+            // btnultimas btnultimaslocation: posicion horizontal y vertical respecto del contenedor
             btnUltimas.Location = new Point(390, 7);
             btnUltimas.Name = "btnUltimas";
             btnUltimas.Size = new Size(90, 27);
@@ -125,9 +98,7 @@
             btnUltimas.Text = "Últimas 10";
             btnUltimas.UseVisualStyleBackColor = true;
             btnUltimas.Click += btnUltimas_Click;
-            // 
-            // dgvActividades
-            // 
+            // dgvactividades
             dgvActividades.AllowUserToAddRows = false;
             dgvActividades.AutoGenerateColumns = true;
             dgvActividades.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
@@ -136,14 +107,22 @@
             dgvActividades.Location = new Point(0, 42);
             dgvActividades.MultiSelect = false;
             dgvActividades.Name = "dgvActividades";
+            dgvActividades.ForeColor = Color.Black;
+            dgvActividades.DefaultCellStyle.ForeColor = Color.Black;
+            dgvActividades.RowsDefaultCellStyle.ForeColor = Color.Black;
+            dgvActividades.AlternatingRowsDefaultCellStyle.ForeColor = Color.Black;
+            dgvActividades.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvActividades.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dgvActividades.DefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvActividades.DefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dgvActividades.AlternatingRowsDefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvActividades.AlternatingRowsDefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
             dgvActividades.ReadOnly = true;
             dgvActividades.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvActividades.Size = new Size(800, 408);
             dgvActividades.TabIndex = 8;
             dgvActividades.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-            // 
-            // frmHistorial
-            // 
+            // frmhistorial backcolor: color del fondo del control o de la celda
             BackColor = Color.FromArgb(13, 19, 27);
             ForeColor = Color.White;
             AutoScroll = true;
@@ -210,7 +189,6 @@
             dgvActividades.DefaultCellStyle.SelectionBackColor = Color.FromArgb(35, 100, 166);
             dgvActividades.DefaultCellStyle.SelectionForeColor = Color.White;
             dgvActividades.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(236, 242, 249);
-
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
@@ -221,6 +199,7 @@
             Text = "frmHistorial";
             pnlFiltros.ResumeLayout(false);
             pnlFiltros.PerformLayout();
+            // llama a ((systemcomponentmodelisupportinitialize)dgvactividades)endinit para realizar este paso del flujo
             ((System.ComponentModel.ISupportInitialize)dgvActividades).EndInit();
             txtRemito.Name = "txtRemito";
             txtRemito.PlaceholderText = "Nro. de remito";
@@ -235,7 +214,6 @@
             lbltxtRemito.Size = new Size(170, 23);
             lbltxtRemito.ForeColor = Color.White;
             pnlFiltros.Controls.Add(lbltxtRemito);
-
             txtAccion.Name = "txtAccion";
             txtAccion.PlaceholderText = "Ej.: DESCUENTO";
             txtAccion.MaxLength = 100;
@@ -249,7 +227,6 @@
             lbltxtAccion.Size = new Size(210, 23);
             lbltxtAccion.ForeColor = Color.White;
             pnlFiltros.Controls.Add(lbltxtAccion);
-
             txtUsuario.Name = "txtUsuario";
             txtUsuario.PlaceholderText = "Nombre de usuario";
             txtUsuario.MaxLength = 100;
@@ -263,13 +240,11 @@
             lbltxtUsuario.Size = new Size(210, 23);
             lbltxtUsuario.ForeColor = Color.White;
             pnlFiltros.Controls.Add(lbltxtUsuario);
-
             Load += frmHistorial_Load;
             ResumeLayout(false);
         }
 
         #endregion
-
         private Panel pnlEncabezado, pnlListado;
         private Label lblTitulo, lblListado;
         private Panel pnlFiltros;
@@ -281,16 +256,10 @@
         private Button btnUltimas;
         private DataGridView dgvActividades;
         private TextBox txtRemito;
-
         private Label lbltxtRemito;
-
         private TextBox txtAccion;
-
         private Label lbltxtAccion;
-
         private TextBox txtUsuario;
-
         private Label lbltxtUsuario;
-
     }
 }

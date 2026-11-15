@@ -5,47 +5,48 @@ using System.Windows.Forms;
 
 namespace Prana.Presentacion
 {
+    // agrupa los datos y operaciones de login
     public partial class login : Form
     {
-        // Inicializa la pantalla de autenticacion.
+        // inicializa la pantalla de autenticacion
         public login()
         {
             InitializeComponent();
         }
 
-        // Conserva el evento vacio conectado al disenador
+        // conserva el evento vacio conectado al disenador atiende la pulsacion de picturebox1 y ejecuta la accion asociada el evento no significa que la operacion ya se haya guardado
         private void pictureBox1_Click(object sender, EventArgs e)
         {
         }
 
-        // Conserva el evento vacio conectado al disenador
+        // conserva el evento vacio conectado al disenador atiende la pulsacion de label2 y ejecuta la accion asociada el evento no significa que la operacion ya se haya guardado
         private void label2_Click(object sender, EventArgs e)
         {
         }
 
-        // Conserva el evento vacio conectado al disenador
+        // conserva el evento vacio conectado al disenador
         private void login_Load(object sender, EventArgs e)
         {
         }
 
-        // Conserva el evento vacio conectado al disenador
+        // conserva el evento vacio conectado al disenador atiende la pulsacion de label3 y ejecuta la accion asociada el evento no significa que la operacion ya se haya guardado
         private void label3_Click(object sender, EventArgs e)
         {
         }
 
-        // Cierra el formulario de autenticacion.
+        // cierra el formulario de autenticacion atiende la pulsacion de iconbutton2 y ejecuta la accion asociada el evento no significa que la operacion ya se haya guardado
         private void iconButton2_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        // Autentica al usuario y presenta los intentos disponibles o el bloqueo.
+        // autentica al usuario y presenta los intentos disponibles o el bloqueo atiende la pulsacion de iconbutton1 y ejecuta la accion asociada el evento no significa que la operacion ya se haya guardado
         private void iconButton1_Click(object sender, EventArgs e)
         {
             try
             {
                 CN_Usuario negocioUsuario = new CN_Usuario();
-                var resultado = negocioUsuario.IniciarSesion(txtusuario.Text, txtclave.Text);
+                ResultadoInicioSesion resultado = negocioUsuario.IniciarSesion(txtusuario.Text, txtclave.Text);
                 if (!resultado.Autenticado)
                 {
                     MessageBox.Show(resultado.Mensaje, "Inicio de sesion", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -60,13 +61,14 @@ namespace Prana.Presentacion
                 this.Hide();
                 form.FormClosing += frm_closing;
             }
-            catch (Exception ex)
+            // atiende el error de esta operacion antes de informar o propagar el problema
+            catch (Exception error)
             {
-                MessageBox.Show("Ocurrio un error al iniciar sesion: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Ocurrio un error al iniciar sesion: " + error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        // Cierra la sesion y vuelve a mostrar el formulario de autenticacion.
+        // cierra la sesion y vuelve a mostrar el formulario de autenticacion atiende el evento closing del control o formulario indicado por el nombre del metodo
         private void frm_closing(object? sender, FormClosingEventArgs e)
         {
             SesionActual.CerrarSesion();
@@ -74,8 +76,7 @@ namespace Prana.Presentacion
             txtusuario.Clear();
             this.Show();
         }
-
-        // Conserva el evento vacio conectado al disenador
+        // manejador sin instrucciones no realiza ninguna accion adicional
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
         }

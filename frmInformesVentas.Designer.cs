@@ -1,17 +1,22 @@
-namespace Prana.Presentacion;
-
+﻿namespace Prana.Presentacion;
+// parte visual de frminformesventas crea controles y define su distribucion, colores y eventos; visual studio puede regenerar este archivo al editar el disenador
 partial class frmInformesVentas
 {
     private System.ComponentModel.IContainer? components = null;
+    // libera los recursos del formulario; disposing indica si tambien deben liberarse los componentes administrados
     protected override void Dispose(bool disposing)
     {
-        if (disposing) components?.Dispose();
+        if (disposing)
+        {
+            components?.Dispose();
+        }
+
         base.Dispose(disposing);
     }
 
+    // construye la pantalla: instancia controles, asigna propiedades, agrega cada control a su contenedor y conecta los eventos no registra operaciones comerciales
     private void InitializeComponent()
     {
-        components = new System.ComponentModel.Container();
         titulo = new Label();
         lbldesde = new Label();
         desde = new DateTimePicker();
@@ -30,202 +35,221 @@ partial class frmInformesVentas
         lblubicacion = new Label();
         ubicacion = new ComboBox();
         lblmontoMinimo = new Label();
-        montoMinimo = new TextBox();
         lblmontoMaximo = new Label();
-        montoMaximo = new TextBox();
         buscar = new Button();
-        exportar = new Button();
-        pruebaAdmin = new Button();
-        eliminarPrueba = new Button();
-        estadoPrueba = new Label();
         grilla = new DataGridView();
+        nudMinimo = new NumericUpDown();
+        nudMaximo = new NumericUpDown();
+        // llama a ((systemcomponentmodelisupportinitialize)grilla)begininit para realizar este paso del flujo
+        ((System.ComponentModel.ISupportInitialize)grilla).BeginInit();
+        // llama a ((systemcomponentmodelisupportinitialize)nudminimo)begininit para realizar este paso del flujo
+        ((System.ComponentModel.ISupportInitialize)nudMinimo).BeginInit();
+        // llama a ((systemcomponentmodelisupportinitialize)nudmaximo)begininit para realizar este paso del flujo
+        ((System.ComponentModel.ISupportInitialize)nudMaximo).BeginInit();
         SuspendLayout();
-        titulo.Name = "titulo";
-        titulo.Location = new Point(16, 16);
-        titulo.Size = new Size(700, 42);
-        titulo.Text = "Informe de ventas";
-        titulo.ForeColor = Color.White;
+        // titulo titulofont: tipografia, tamano y estilo con los que se muestra el contenido
         titulo.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
-        Controls.Add(titulo);
-        lbldesde.Name = "lbldesde";
-        lbldesde.Location = new Point(16, 72);
-        lbldesde.Size = new Size(180, 23);
-        lbldesde.Text = "Desde";
+        titulo.ForeColor = Color.White;
+        titulo.Location = new Point(16, 16);
+        titulo.Name = "titulo";
+        titulo.Size = new Size(700, 42);
+        titulo.TabIndex = 0;
+        titulo.Text = "Informe de ventas";
+        // lbldesde lbldesdeforecolor: color del texto cuando la celda o el control no esta seleccionado
         lbldesde.ForeColor = Color.White;
-        Controls.Add(lbldesde);
-        desde.Name = "desde";
-        desde.Location = new Point(16, 96);
-        desde.Size = new Size(178, 25);
+        lbldesde.Location = new Point(16, 72);
+        lbldesde.Name = "lbldesde";
+        lbldesde.Size = new Size(180, 23);
+        lbldesde.TabIndex = 1;
+        lbldesde.Text = "Desde";
+        // desde desdeformat: formato de presentacion, por ejemplo moneda o fecha; no modifica el valor original
         desde.Format = DateTimePickerFormat.Short;
-        Controls.Add(desde);
-        lblhasta.Name = "lblhasta";
-        lblhasta.Location = new Point(206, 72);
-        lblhasta.Size = new Size(180, 23);
-        lblhasta.Text = "Hasta";
+        desde.Location = new Point(16, 96);
+        desde.Name = "desde";
+        desde.Size = new Size(178, 23);
+        desde.TabIndex = 2;
+        // lblhasta lblhastaforecolor: color del texto cuando la celda o el control no esta seleccionado
         lblhasta.ForeColor = Color.White;
-        Controls.Add(lblhasta);
-        hasta.Name = "hasta";
-        hasta.Location = new Point(206, 96);
-        hasta.Size = new Size(178, 25);
+        lblhasta.Location = new Point(206, 72);
+        lblhasta.Name = "lblhasta";
+        lblhasta.Size = new Size(180, 23);
+        lblhasta.TabIndex = 3;
+        lblhasta.Text = "Hasta";
+        // hasta hastaformat: formato de presentacion, por ejemplo moneda o fecha; no modifica el valor original
         hasta.Format = DateTimePickerFormat.Short;
-        Controls.Add(hasta);
-        lblproducto.Name = "lblproducto";
-        lblproducto.Location = new Point(396, 72);
-        lblproducto.Size = new Size(180, 23);
-        lblproducto.Text = "Producto";
+        hasta.Location = new Point(206, 96);
+        hasta.Name = "hasta";
+        hasta.Size = new Size(178, 23);
+        hasta.TabIndex = 4;
+        // lblproducto lblproductoforecolor: color del texto cuando la celda o el control no esta seleccionado
         lblproducto.ForeColor = Color.White;
-        Controls.Add(lblproducto);
-        producto.Name = "producto";
+        lblproducto.Location = new Point(396, 72);
+        lblproducto.Name = "lblproducto";
+        lblproducto.Size = new Size(180, 23);
+        lblproducto.TabIndex = 5;
+        lblproducto.Text = "Producto";
+        // producto productolocation: posicion horizontal y vertical respecto del contenedor
         producto.Location = new Point(396, 96);
-        producto.Size = new Size(178, 25);
-        producto.DropDownStyle = ComboBoxStyle.DropDown;
-        producto.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-        producto.AutoCompleteSource = AutoCompleteSource.ListItems;
-        Controls.Add(producto);
-        lblcategoria.Name = "lblcategoria";
-        lblcategoria.Location = new Point(586, 72);
-        lblcategoria.Size = new Size(180, 23);
-        lblcategoria.Text = "Categoría";
+        producto.Name = "producto";
+        producto.Size = new Size(178, 23);
+        producto.TabIndex = 6;
+        // lblcategoria lblcategoriaforecolor: color del texto cuando la celda o el control no esta seleccionado
         lblcategoria.ForeColor = Color.White;
-        Controls.Add(lblcategoria);
-        categoria.Name = "categoria";
+        lblcategoria.Location = new Point(586, 72);
+        lblcategoria.Name = "lblcategoria";
+        lblcategoria.Size = new Size(180, 23);
+        lblcategoria.TabIndex = 7;
+        lblcategoria.Text = "Categoría";
+        // categoria categorialocation: posicion horizontal y vertical respecto del contenedor
         categoria.Location = new Point(586, 96);
-        categoria.Size = new Size(178, 25);
-        categoria.DropDownStyle = ComboBoxStyle.DropDown;
-        categoria.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-        categoria.AutoCompleteSource = AutoCompleteSource.ListItems;
-        Controls.Add(categoria);
-        lblmarca.Name = "lblmarca";
-        lblmarca.Location = new Point(776, 72);
-        lblmarca.Size = new Size(180, 23);
-        lblmarca.Text = "Marca";
+        categoria.Name = "categoria";
+        categoria.Size = new Size(178, 23);
+        categoria.TabIndex = 8;
+        // lblmarca lblmarcaforecolor: color del texto cuando la celda o el control no esta seleccionado
         lblmarca.ForeColor = Color.White;
-        Controls.Add(lblmarca);
-        marca.Name = "marca";
+        lblmarca.Location = new Point(776, 72);
+        lblmarca.Name = "lblmarca";
+        lblmarca.Size = new Size(180, 23);
+        lblmarca.TabIndex = 9;
+        lblmarca.Text = "Marca";
+        // marca marcalocation: posicion horizontal y vertical respecto del contenedor
         marca.Location = new Point(776, 96);
-        marca.Size = new Size(178, 25);
-        marca.DropDownStyle = ComboBoxStyle.DropDown;
-        marca.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-        marca.AutoCompleteSource = AutoCompleteSource.ListItems;
-        Controls.Add(marca);
-        lblcliente.Name = "lblcliente";
-        lblcliente.Location = new Point(16, 137);
-        lblcliente.Size = new Size(180, 23);
-        lblcliente.Text = "Cliente";
+        marca.Name = "marca";
+        marca.Size = new Size(178, 23);
+        marca.TabIndex = 10;
+        // lblcliente lblclienteforecolor: color del texto cuando la celda o el control no esta seleccionado
         lblcliente.ForeColor = Color.White;
-        Controls.Add(lblcliente);
-        cliente.Name = "cliente";
+        lblcliente.Location = new Point(16, 137);
+        lblcliente.Name = "lblcliente";
+        lblcliente.Size = new Size(180, 23);
+        lblcliente.TabIndex = 11;
+        lblcliente.Text = "Cliente";
+        // cliente clientelocation: posicion horizontal y vertical respecto del contenedor
         cliente.Location = new Point(16, 161);
-        cliente.Size = new Size(178, 25);
-        cliente.DropDownStyle = ComboBoxStyle.DropDown;
-        cliente.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-        cliente.AutoCompleteSource = AutoCompleteSource.ListItems;
-        Controls.Add(cliente);
-        lblenvio.Name = "lblenvio";
-        lblenvio.Location = new Point(206, 137);
-        lblenvio.Size = new Size(180, 23);
-        lblenvio.Text = "Envío";
+        cliente.Name = "cliente";
+        cliente.Size = new Size(178, 23);
+        cliente.TabIndex = 12;
+        // lblenvio lblenvioforecolor: color del texto cuando la celda o el control no esta seleccionado
         lblenvio.ForeColor = Color.White;
-        Controls.Add(lblenvio);
-        envio.Name = "envio";
+        lblenvio.Location = new Point(206, 137);
+        lblenvio.Name = "lblenvio";
+        lblenvio.Size = new Size(180, 23);
+        lblenvio.TabIndex = 13;
+        lblenvio.Text = "Envío";
+        // envio enviolocation: posicion horizontal y vertical respecto del contenedor
         envio.Location = new Point(206, 161);
-        envio.Size = new Size(178, 25);
-        envio.DropDownStyle = ComboBoxStyle.DropDown;
-        envio.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-        envio.AutoCompleteSource = AutoCompleteSource.ListItems;
-        Controls.Add(envio);
-        lblubicacion.Name = "lblubicacion";
-        lblubicacion.Location = new Point(396, 137);
-        lblubicacion.Size = new Size(180, 23);
-        lblubicacion.Text = "Ubicación";
+        envio.Name = "envio";
+        envio.Size = new Size(178, 23);
+        envio.TabIndex = 14;
+        envio.SelectedIndexChanged += envio_SelectedIndexChanged;
+        // lblubicacion lblubicacionforecolor: color del texto cuando la celda o el control no esta seleccionado
         lblubicacion.ForeColor = Color.White;
-        Controls.Add(lblubicacion);
-        ubicacion.Name = "ubicacion";
+        lblubicacion.Location = new Point(396, 137);
+        lblubicacion.Name = "lblubicacion";
+        lblubicacion.Size = new Size(180, 23);
+        lblubicacion.TabIndex = 15;
+        lblubicacion.Text = "Localidad";
+        // ubicacion ubicacionlocation: posicion horizontal y vertical respecto del contenedor
         ubicacion.Location = new Point(396, 161);
-        ubicacion.Size = new Size(178, 25);
-        ubicacion.DropDownStyle = ComboBoxStyle.DropDown;
-        ubicacion.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-        ubicacion.AutoCompleteSource = AutoCompleteSource.ListItems;
-        Controls.Add(ubicacion);
-        lblmontoMinimo.Name = "lblmontoMinimo";
-        lblmontoMinimo.Location = new Point(586, 137);
-        lblmontoMinimo.Size = new Size(180, 23);
-        lblmontoMinimo.Text = "Monto mínimo";
+        ubicacion.Name = "ubicacion";
+        ubicacion.Size = new Size(178, 23);
+        ubicacion.TabIndex = 16;
+        // lblmontominimo lblmontominimoforecolor: color del texto cuando la celda o el control no esta seleccionado
         lblmontoMinimo.ForeColor = Color.White;
-        Controls.Add(lblmontoMinimo);
-        montoMinimo.Name = "montoMinimo";
-        montoMinimo.Location = new Point(586, 161);
-        montoMinimo.Size = new Size(178, 25);
-        Controls.Add(montoMinimo);
-        lblmontoMaximo.Name = "lblmontoMaximo";
-        lblmontoMaximo.Location = new Point(776, 137);
-        lblmontoMaximo.Size = new Size(180, 23);
-        lblmontoMaximo.Text = "Monto máximo";
+        lblmontoMinimo.Location = new Point(586, 137);
+        lblmontoMinimo.Name = "lblmontoMinimo";
+        lblmontoMinimo.Size = new Size(180, 23);
+        lblmontoMinimo.TabIndex = 17;
+        lblmontoMinimo.Text = "Monto mínimo";
+        // lblmontomaximo lblmontomaximoforecolor: color del texto cuando la celda o el control no esta seleccionado
         lblmontoMaximo.ForeColor = Color.White;
-        Controls.Add(lblmontoMaximo);
-        montoMaximo.Name = "montoMaximo";
-        montoMaximo.Location = new Point(776, 161);
-        montoMaximo.Size = new Size(178, 25);
-        Controls.Add(montoMaximo);
-        buscar.Name = "buscar";
-        buscar.Location = new Point(16, 205);
-        buscar.Size = new Size(130, 36);
-        buscar.Text = "Consultar";
+        lblmontoMaximo.Location = new Point(776, 137);
+        lblmontoMaximo.Name = "lblmontoMaximo";
+        lblmontoMaximo.Size = new Size(180, 23);
+        lblmontoMaximo.TabIndex = 19;
+        lblmontoMaximo.Text = "Monto máximo";
+        // buscar buscarbackcolor: color del fondo del control o de la celda
         buscar.BackColor = Color.SteelBlue;
-        buscar.ForeColor = Color.White;
         buscar.FlatStyle = FlatStyle.Flat;
+        buscar.ForeColor = Color.White;
+        buscar.Location = new Point(16, 205);
+        buscar.Name = "buscar";
+        buscar.Size = new Size(130, 36);
+        buscar.TabIndex = 21;
+        buscar.Text = "Consultar";
+        buscar.UseVisualStyleBackColor = false;
         buscar.Click += buscar_Click;
-        Controls.Add(buscar);
-        exportar.Name = "exportar";
-        exportar.Location = new Point(160, 205);
-        exportar.Size = new Size(150, 36);
-        exportar.Text = "Exportar CSV";
-        exportar.BackColor = Color.SteelBlue;
-        exportar.ForeColor = Color.White;
-        exportar.FlatStyle = FlatStyle.Flat;
-        exportar.Enabled = false;
-        exportar.Click += exportar_Click;
-        Controls.Add(exportar);
-        // Boton exclusivo para el administrador que carga datos sinteticos.
-        pruebaAdmin.Name = "pruebaAdmin";
-        pruebaAdmin.Location = new Point(324, 205);
-        pruebaAdmin.Size = new Size(150, 36);
-        pruebaAdmin.Text = "Prueba admin";
-        pruebaAdmin.BackColor = Color.DarkOrange;
-        pruebaAdmin.ForeColor = Color.White;
-        pruebaAdmin.FlatStyle = FlatStyle.Flat;
-        pruebaAdmin.Click += pruebaAdmin_Click;
-        Controls.Add(pruebaAdmin);
-        // Boton exclusivo para retirar el lote de prueba activo.
-        eliminarPrueba.Name = "eliminarPrueba";
-        eliminarPrueba.Location = new Point(484, 205);
-        eliminarPrueba.Size = new Size(180, 36);
-        eliminarPrueba.Text = "Eliminar datos de prueba";
-        eliminarPrueba.BackColor = Color.Firebrick;
-        eliminarPrueba.ForeColor = Color.White;
-        eliminarPrueba.FlatStyle = FlatStyle.Flat;
-        eliminarPrueba.Enabled = false;
-        eliminarPrueba.Click += eliminarPrueba_Click;
-        Controls.Add(eliminarPrueba);
-        estadoPrueba.Name = "estadoPrueba";
-        estadoPrueba.Location = new Point(16, 244);
-        estadoPrueba.Size = new Size(900, 20);
-        estadoPrueba.ForeColor = Color.LightGray;
-        Controls.Add(estadoPrueba);
-        grilla.Name = "grilla";
+        // grilla grillalocation: posicion horizontal y vertical respecto del contenedor
         grilla.Location = new Point(16, 275);
+        grilla.Name = "grilla";
+        grilla.ForeColor = Color.Black;
+        grilla.DefaultCellStyle.ForeColor = Color.Black;
+        grilla.RowsDefaultCellStyle.ForeColor = Color.Black;
+        grilla.AlternatingRowsDefaultCellStyle.ForeColor = Color.Black;
+        grilla.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.Black;
+        grilla.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
+        grilla.DefaultCellStyle.SelectionForeColor = Color.Black;
+        grilla.DefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
+        grilla.AlternatingRowsDefaultCellStyle.SelectionForeColor = Color.Black;
+        grilla.AlternatingRowsDefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
         grilla.Size = new Size(968, 400);
-        Controls.Add(grilla);
+        grilla.TabIndex = 23;
+        // nudminimo
+        nudMinimo.DecimalPlaces = 2;
+        nudMinimo.Location = new Point(586, 161);
+        nudMinimo.Maximum = new decimal(new int[] { 100000000, 0, 0, 0 });
+        nudMinimo.Name = "nudMinimo";
+        nudMinimo.Size = new Size(178, 23);
+        nudMinimo.TabIndex = 18;
+        nudMinimo.ThousandsSeparator = true;
+        // nudmaximo
+        nudMaximo.DecimalPlaces = 2;
+        nudMaximo.Location = new Point(776, 161);
+        nudMaximo.Maximum = new decimal(new int[] { 100000000, 0, 0, 0 });
+        nudMaximo.Name = "nudMaximo";
+        nudMaximo.Size = new Size(178, 23);
+        nudMaximo.TabIndex = 20;
+        nudMaximo.ThousandsSeparator = true;
+        // frminformesventas
+        AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         AutoScroll = true;
         BackColor = Color.FromArgb(13, 19, 27);
-        ForeColor = Color.White;
         ClientSize = new Size(1000, 700);
-        Text = "Informe de ventas";
+        Controls.Add(titulo);
+        Controls.Add(lbldesde);
+        Controls.Add(desde);
+        Controls.Add(lblhasta);
+        Controls.Add(hasta);
+        Controls.Add(lblproducto);
+        Controls.Add(producto);
+        Controls.Add(lblcategoria);
+        Controls.Add(categoria);
+        Controls.Add(lblmarca);
+        Controls.Add(marca);
+        Controls.Add(lblcliente);
+        Controls.Add(cliente);
+        Controls.Add(lblenvio);
+        Controls.Add(envio);
+        Controls.Add(lblubicacion);
+        Controls.Add(ubicacion);
+        Controls.Add(lblmontoMinimo);
+        Controls.Add(nudMinimo);
+        Controls.Add(lblmontoMaximo);
+        Controls.Add(nudMaximo);
+        Controls.Add(buscar);
+        Controls.Add(grilla);
+        ForeColor = Color.White;
         Name = "frmInformesVentas";
+        Text = "Informe de ventas";
         Load += frmInformesVentas_Load;
+        // llama a ((systemcomponentmodelisupportinitialize)grilla)endinit para realizar este paso del flujo
+        ((System.ComponentModel.ISupportInitialize)grilla).EndInit();
+        // llama a ((systemcomponentmodelisupportinitialize)nudminimo)endinit para realizar este paso del flujo
+        ((System.ComponentModel.ISupportInitialize)nudMinimo).EndInit();
+        // llama a ((systemcomponentmodelisupportinitialize)nudmaximo)endinit para realizar este paso del flujo
+        ((System.ComponentModel.ISupportInitialize)nudMaximo).EndInit();
         ResumeLayout(false);
-        PerformLayout();
     }
 
     private Label titulo;
@@ -246,13 +270,9 @@ partial class frmInformesVentas
     private Label lblubicacion;
     private ComboBox ubicacion;
     private Label lblmontoMinimo;
-    private TextBox montoMinimo;
+    private NumericUpDown nudMinimo;
     private Label lblmontoMaximo;
-    private TextBox montoMaximo;
+    private NumericUpDown nudMaximo;
     private Button buscar;
-    private Button exportar;
-    private Button pruebaAdmin;
-    private Button eliminarPrueba;
-    private Label estadoPrueba;
     private DataGridView grilla;
 }

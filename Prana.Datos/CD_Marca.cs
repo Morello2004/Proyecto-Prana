@@ -6,55 +6,44 @@ using System.Text;
 
 namespace Prana.Datos
 {
+    // agrupa los datos y operaciones de cd marca
     public class CD_Marca
     {
+        // consulta obtener marcas y transforma cada fila recibida en los objetos que devuelve
         public List<Marca> obtenerMarcas()
         {
-            // Crea la lista donde se guardarán las marcas
+            // crea la lista donde se guardaran las marcas
             List<Marca> marcas = new List<Marca>();
-
-            // Consulta todas las marcas registradas
+            // consulta todas las marcas registradas
             string consulta = @"
                 SELECT
                     id_marca,
                     nombre_marca
                 FROM Marca
                 ORDER BY nombre_marca";
-
-            // Crea la conexión con SQL Server
-            using SqlConnection conexion =
-                new SqlConnection(Conexion.ObtenerCadena());
-
-            // Prepara la consulta para ejecutarla
-            using SqlCommand comando =
-                new SqlCommand(consulta, conexion);
-
-            // Abre la conexión
+            // crea la conexion con sql server
+            using SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena());
+            // prepara la consulta y su conexion los valores variables se envian mediante parametros
+            using SqlCommand comando = new SqlCommand(consulta, conexion);
+            // abre la conexion abre el recurso antes de usarlo; una conexion debe estar abierta para enviar consultas
             conexion.Open();
-
-            // Ejecuta la consulta y obtiene los resultados
+            // ejecuta la consulta y obtiene los resultados
             using SqlDataReader lector = comando.ExecuteReader();
-
-            // Recorre cada marca devuelta por SQL
+            // recorre cada marca devuelta por sql avanza el lector de sql una fila por vez hasta agotar el resultado
             while (lector.Read())
             {
-                // Crea una marca con los datos de la fila actual
+                // crea una marca con los datos de la fila actual
                 Marca marcaEncontrada = new Marca
                 {
-                    IdMarca = lector.GetInt32(
-                        lector.GetOrdinal("id_marca")
-                    ),
+                    IdMarca = lector.GetInt32(lector.GetOrdinal("id_marca")),
+                    NombreMarca = lector.GetString(lector.GetOrdinal("nombre_marca"))
 
-                    NombreMarca = lector.GetString(
-                        lector.GetOrdinal("nombre_marca")
-                    )
                 };
-
-                // Agrega la marca a la lista
+                // agrega la marca a la lista
                 marcas.Add(marcaEncontrada);
             }
 
-            // Devuelve todas las marcas
+            // devuelve todas las marcas
             return marcas;
         }
     }

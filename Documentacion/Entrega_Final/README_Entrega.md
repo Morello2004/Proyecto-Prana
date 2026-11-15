@@ -1,4 +1,4 @@
-# Entrega final - Sistema de Gestión Comercial Prana Electrónica
+﻿# Entrega final - Sistema de Gestión Comercial Prana Electrónica
 
 **Autor:** Valentín Morello  
 **Institución:** ISFT 189  
@@ -24,7 +24,7 @@ Los archivos DOCX son editables y los PDF conservan la presentación para entreg
 ## Ejecutar el sistema
 
 1. Utilizar Windows de 64 bits compatible con la publicación .NET 10 para Windows.
-2. Instalar SQL Server LocalDB por separado. El instalador de Prana no incluye ese motor.
+2. Utilizar el instalador 1.0.3 generado con el script actual, que incorpora LocalDB y lo instala si no se detecta. Los paquetes anteriores pueden requerir instalarlo por separado.
 3. Ejecutar el instalador y abrir el acceso directo con la cuenta habitual de Windows. La publicación es autocontenida e incluye el runtime .NET.
 4. Esperar la preparación de la base local. La aplicación utiliza `(localdb)\MSSQLLocalDB` y el catálogo `PranaElectronica` con autenticación integrada. Los archivos se crean en `%LOCALAPPDATA%/PranaElectronica/Data`.
 5. Ingresar con el usuario inicial **admin** y la credencial inicial provista por el responsable de instalación. No se publican contraseñas ni hashes en esta entrega.
@@ -131,3 +131,15 @@ Para completar la conservación íntegra del anexo histórico, debo incorporar `
 - `Evidencias/pruebas_ampliadas.txt`
 - `Evidencias/pruebas_originales.txt`
 - `Evidencias/pruebas_presentacion.txt`
+
+## Anexo actualizado de instalación (11/11/2026)
+
+[06_Instalacion_y_Distribucion_Prana.docx](06_Instalacion_y_Distribucion_Prana.docx) — [Fuente editable](06_Instalacion_y_Distribucion_Prana.md). Documenta la configuración actual de publicación, Inno Setup, LocalDB, primer inicio, actualización y desinstalación; incluye las verificaciones pendientes para la entrega. Para estos temas prevalece sobre las descripciones históricas anteriores de este índice.
+
+## Base de datos y scripts (11/11/2026)
+
+[07_Base_de_Datos_y_Scripts_Prana.docx](07_Base_de_Datos_y_Scripts_Prana.docx) — [Fuente editable](07_Base_de_Datos_y_Scripts_Prana.md). Preparación al inicio, scripts y orden de ejecución, datos iniciales, tablas y relaciones, migraciones, importes, recargos, caja y verificaciones para la entrega.
+
+## Manual de capacitación para empleados (12/11/2026)
+
+[Word editable](08_Manual_de_Capacitacion_Empleados_Prana.docx) — [PDF](08_Manual_de_Capacitacion_Empleados_Prana.pdf). Edición de 49 capítulos, 32 figuras y 76 páginas en PDF, con tabla comparativa de roles, capturas actuales, instrucciones por pantalla, cierre automático de caja, prácticas, resolución de problemas y recomendaciones. Es la referencia actual para empleados y reemplaza las instrucciones anteriores del manual de usuario para los procesos modificados. No incluye explicaciones de arquitectura ni de programación.

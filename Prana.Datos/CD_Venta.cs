@@ -4,10 +4,10 @@ using System.Data;
 
 namespace Prana.Datos
 {
+    // agrupa los datos y operaciones de cd venta
     public class CD_Venta
     {
-        // Suma los pagos antes de unir detalles para no multiplicar los importes.
-        // Total incluye recargos: se descuenta monto_final, también con recargos.
+        // suma los pagos antes de unir detalles para no multiplicar los importes total incluye recargos: se descuenta monto_final, tambien con recargos
         internal const string SaldosSql = @"
             SELECT v.id_venta, v.id_cliente, v.fecha_venta, v.total,
                    ev.nombre_estado_venta,
@@ -20,16 +20,24 @@ namespace Prana.Datos
             INNER JOIN Estado_Venta ev ON ev.id_estado_venta = v.id_estado_venta
             LEFT JOIN (SELECT id_venta, SUM(monto_final) AS pagado FROM Pago GROUP BY id_venta) p
                 ON p.id_venta = v.id_venta";
-
+        // resuelve top10 ventas con los datos recibidos y entrega el resultado al codigo que lo llama
         public static List<venta> Top10Ventas() => Buscar(null, null, true);
-
-        // Los filtros se aplican en SQL antes del límite de últimas ventas.
+        // los filtros se aplican en sql antes del limite de ultimas ventas
         public static List<venta> Buscar(string? busqueda, int? idCliente = null, bool ultimasDiez = false)
         {
             using SqlConnection conexion = new(Conexion.ObtenerCadena());
             using SqlCommand comando = conexion.CreateCommand();
-            // Consolida cantidades por variante para reconocer entregas parciales sin duplicar productos.
-            string consulta = "SELECT " + (ultimasDiez ? "TOP (10) " : "") + @"
+            string limiteResultados;
+            if (ultimasDiez)
+            {
+                limiteResultados = "TOP (10) ";
+            }
+            else
+            {
+                limiteResultados = "";
+            }
+            // consolida cantidades por variante para reconocer entregas parciales sin duplicar productos
+            string consulta = "SELECT " + (limiteResultados) + @"
                 v.*, c.nombre_cliente, c.apellido_cliente, c.dni, entrega.estado_entrega,
                 COALESCE((SELECT STRING_AGG(CAST(CONCAT(d.cantidad, N' × ', pr.nombre_producto,
                     N' (', vp.color, N', ', vp.condicion_producto, N')') AS nvarchar(max)), N'; ')
@@ -64,11 +72,13 @@ namespace Prana.Datos
                     WHEN cantidades.preparados>0 THEN N'Preparación parcial'
                     ELSE N'Pendiente' END estado_entrega) entrega
                 WHERE 1 = 1";
+            // comprueba si se recibio el valor opcional antes de utilizarlo
             if (idCliente.HasValue)
             {
                 consulta += " AND v.id_cliente = @cliente AND v.saldo > 0";
                 comando.Parameters.Add("@cliente", SqlDbType.Int).Value = idCliente.Value;
             }
+
             string[] palabras = (busqueda ?? "").Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < palabras.Length; i++)
             {
@@ -76,6 +86,7 @@ namespace Prana.Datos
                 consulta += $" AND CONCAT(v.id_venta, ' ', c.nombre_cliente, ' ', c.apellido_cliente, ' ', c.dni, ' ', v.nombre_estado_venta, ' ', entrega.estado_entrega) COLLATE Latin1_General_CI_AI LIKE {parametro} ESCAPE '~'";
                 comando.Parameters.Add(parametro, SqlDbType.NVarChar, -1).Value = "%" + EscaparBusqueda(palabras[i]) + "%";
             }
+
             comando.CommandText = consulta + " ORDER BY v.fecha_venta DESC, v.id_venta DESC";
             conexion.Open();
             using SqlDataReader lector = comando.ExecuteReader();
@@ -84,22 +95,32 @@ namespace Prana.Datos
             {
                 ventas.Add(new venta
                 {
-                    IdVenta = (int)lector["id_venta"], Fecha = (DateTime)lector["fecha_venta"],
-                    Total = (decimal)lector["total"], Estado = (string)lector["nombre_estado_venta"],
-                    Pagado = (decimal)lector["pagado"], SaldoPendiente = (decimal)lector["saldo"],
+                    IdVenta = (int)lector["id_venta"],
+                    Fecha = (DateTime)lector["fecha_venta"],
+                    Total = (decimal)lector["total"],
+                    Estado = (string)lector["nombre_estado_venta"],
+                    Pagado = (decimal)lector["pagado"],
+                    SaldoPendiente = (decimal)lector["saldo"],
                     Productos = (string)lector["productos"],
                     EstadoEntrega = (string)lector["estado_entrega"],
-                    Cliente = new Cliente { IdCliente = (int)lector["id_cliente"],
-                        Nombre = (string)lector["nombre_cliente"], Apellido = (string)lector["apellido_cliente"],
-                        DNI = (string)lector["dni"] }
+                    Cliente = new Cliente
+                    {
+                        IdCliente = (int)lector["id_cliente"],
+                        Nombre = (string)lector["nombre_cliente"],
+                        Apellido = (string)lector["apellido_cliente"],
+                        DNI = (string)lector["dni"]
+
+                    }
+
                 });
             }
+
             return ventas;
         }
 
-        // Trata los comodines escritos por el usuario como texto literal.
+        // trata los comodines escritos por el usuario como texto literal
         internal static string EscaparBusqueda(string texto) => texto.Replace("~", "~~").Replace("%", "~%").Replace("_", "~_").Replace("[", "~[");
-
+        // consulta obtener resumen y transforma cada fila recibida en los objetos que devuelve
         public static ResumenVentas ObtenerResumen(DateTime dia)
         {
             using SqlConnection conexion = new(Conexion.ObtenerCadena());
@@ -115,8 +136,14 @@ namespace Prana.Datos
             conexion.Open();
             using SqlDataReader lector = comando.ExecuteReader();
             lector.Read();
-            return new ResumenVentas { TotalHoy = (decimal)lector["total_hoy"], CantidadHoy = (int)lector["cantidad_hoy"],
-                SaldoPendiente = (decimal)lector["saldo"], VentasPendientes = (int)lector["pendientes"] };
+            return new ResumenVentas
+            {
+                TotalHoy = (decimal)lector["total_hoy"],
+                CantidadHoy = (int)lector["cantidad_hoy"],
+                SaldoPendiente = (decimal)lector["saldo"],
+                VentasPendientes = (int)lector["pendientes"]
+
+            };
         }
     }
 }

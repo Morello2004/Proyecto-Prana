@@ -1,0 +1,11 @@
+﻿{
+    "fecha":  "2026-11-12",
+    "archivos_csharp":  111,
+    "scripts":  16,
+    "comentarios_csharp":  2878,
+    "comentarios_scripts":  298,
+    "formato":  "una explicacion por linea en minusculas sin acentos ni puntos",
+    "verificacion":  "tokens csharp y scripts comparados sin cambios de instrucciones",
+    "compilacion":  "cero errores",
+    "base_de_datos":  "sin ejecutar scripts ni modificar datos"
+}

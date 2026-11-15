@@ -1,0 +1,1760 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Diccionario de datos - Prana Electrónica</title><style>body{font-family:Calibri,Arial,sans-serif;font-size:11pt;color:#222;margin:2cm}h1{color:#17365d;font-size:22pt}h2{color:#1f4e79;font-size:16pt;border-bottom:1px solid #9eacbd;padding-bottom:4px}h3{color:#365f91;font-size:13pt;margin-top:18px}p{margin:6px 0}table{border-collapse:collapse;width:100%;margin:8px 0 16px}th,td{border:1px solid #8c9aaa;padding:4px 6px;text-align:left;vertical-align:top}th{background:#d9eaf7;font-weight:bold}code{font-family:Consolas,monospace;font-size:10pt}ul{margin-top:4px}</style></head><body>
+<h1>Diccionario de datos — Prana Electr&#243;nica</h1>
+<p><strong>Base de datos:</strong> <code>PranaElectronica</code></p>
+<p><strong>Esquema:</strong> <code>dbo</code></p>
+<p><strong>Motor:</strong> SQL Server / LocalDB</p>
+<p><strong>Fuente:</strong> estructura consultada en la base de datos y scripts del proyecto.</p>
+<p>Este documento describe las tablas y columnas informadas. Las descripciones funcionales se basan en los nombres y el uso conocido del sistema; cuando el prop&#243;sito exacto no se desprende del esquema, se indica de forma general. Los n&#250;meros de la columna &#171;N.&#186;&#187; son los ordinales de SQL Server: si hay saltos, no significa necesariamente que falten campos; pueden quedar huecos por cambios anteriores del esquema.</p>
+<h2>Convenciones</h2>
+<ul>
+<li><strong>PK:</strong> clave primaria.</li>
+<li><strong>FK → tabla.columna:</strong> clave for&#225;nea y destino.</li>
+<li><strong>Nulo:</strong> <code>S&#237;</code> indica que la columna acepta <code>NULL</code>.</li>
+<li><strong>IDENTITY:</strong> valor generado autom&#225;ticamente por SQL Server.</li>
+<li>Los valores predeterminados se muestran en la columna <strong>Predeterminado</strong>. <code>—</code> significa que no se inform&#243; uno.</li>
+<li>Los importes se expresan como valores decimales; la moneda o unidad depende del contexto de la operaci&#243;n.</li>
+</ul>
+<h2>Tablas del sistema comercial</h2>
+<h3><code>Categoria</code></h3>
+<p>Clasifica los productos.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id_categoria</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador de la categor&#237;a.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>nombre_categoria</code></td>
+<td><code>nvarchar(100)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Nombre de la categor&#237;a.</td>
+</tr>
+</tbody></table>
+<h3><code>Cliente</code></h3>
+<p>Informaci&#243;n de clientes y datos asociados para ventas y entregas.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id_cliente</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador del cliente.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>nombre_cliente</code></td>
+<td><code>nvarchar(100)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Nombre.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>apellido_cliente</code></td>
+<td><code>nvarchar(100)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Apellido.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>dni</code></td>
+<td><code>nvarchar(11)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>N&#250;mero de documento. El tipo de documento se registra por separado.</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>telefono</code></td>
+<td><code>nvarchar(20)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Tel&#233;fono de contacto.</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>direccion</code></td>
+<td><code>nvarchar(200)</code></td>
+<td>S&#237;</td>
+<td>—</td>
+<td>—</td>
+<td>Direcci&#243;n del cliente.</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>fecha_registro</code></td>
+<td><code>datetime2(7)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Fecha y hora de registro.</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>saldo_a_favor</code></td>
+<td><code>decimal(10,2)</code></td>
+<td>S&#237;</td>
+<td>—</td>
+<td><code>(0)</code></td>
+<td>Saldo a favor disponible.</td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>id_localidad</code></td>
+<td><code>int</code></td>
+<td>S&#237;</td>
+<td>FK → <code>Localidad.id_localidad</code></td>
+<td>—</td>
+<td>Localidad del cliente.</td>
+</tr>
+<tr>
+<td>11</td>
+<td><code>codigo_postal</code></td>
+<td><code>nvarchar(12)</code></td>
+<td>S&#237;</td>
+<td>—</td>
+<td>—</td>
+<td>C&#243;digo postal asociado al cliente.</td>
+</tr>
+<tr>
+<td>12</td>
+<td><code>tipo_documento</code></td>
+<td><code>nvarchar(4)</code></td>
+<td>No</td>
+<td>—</td>
+<td><code>(N&#39;DNI&#39;)</code></td>
+<td>Tipo de documento; el esquema admite <code>DNI</code> o <code>CUIT</code>.</td>
+</tr>
+<tr>
+<td>13</td>
+<td><code>activo</code></td>
+<td><code>bit</code></td>
+<td>No</td>
+<td>—</td>
+<td><code>((1))</code></td>
+<td>Indicador de actividad.</td>
+</tr>
+<tr>
+<td>14</td>
+<td><code>eliminado</code></td>
+<td><code>bit</code></td>
+<td>No</td>
+<td>—</td>
+<td><code>((0))</code></td>
+<td>Indicador de baja l&#243;gica.</td>
+</tr>
+</tbody></table>
+<h3><code>Detalle_Ingreso</code></h3>
+<p>Renglones de productos/variantes incluidos en un ingreso de stock.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id_detalle_ingreso</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador del rengl&#243;n.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>id_ingreso</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>FK → <code>Ingreso_Stock.id_ingreso</code></td>
+<td>—</td>
+<td>Ingreso al que pertenece.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>id_variante</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>FK → <code>Variante_Producto.id_variante</code></td>
+<td>—</td>
+<td>Variante ingresada.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>cantidad</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Unidades ingresadas.</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>costo_unitario</code></td>
+<td><code>decimal(10,2)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Costo por unidad en ese ingreso.</td>
+</tr>
+</tbody></table>
+<h3><code>Detalle_Remito</code></h3>
+<p>Renglones de art&#237;culos incluidos en un remito.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id_detalle_remito</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador del rengl&#243;n.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>id_remito</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>FK → <code>Remito.id_remito</code></td>
+<td>—</td>
+<td>Remito al que pertenece.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>id_variante</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>FK → <code>Variante_Producto.id_variante</code></td>
+<td>—</td>
+<td>Variante asociada.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>cantidad</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Cantidad consignada.</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>descripcion</code></td>
+<td><code>nvarchar(300)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Descripci&#243;n del art&#237;culo en el remito.</td>
+</tr>
+</tbody></table>
+<h3><code>Detalle_Venta</code></h3>
+<p>Renglones de productos vendidos.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id_detalle_venta</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador del rengl&#243;n.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>id_venta</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>FK → <code>Venta.id_venta</code></td>
+<td>—</td>
+<td>Venta a la que pertenece.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>id_variante</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>FK → <code>Variante_Producto.id_variante</code></td>
+<td>—</td>
+<td>Variante vendida.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>cantidad</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Unidades vendidas.</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>precio_unitario</code></td>
+<td><code>decimal(10,2)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Precio aplicado por unidad.</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>subtotal</code></td>
+<td><code>decimal(10,2)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Importe del rengl&#243;n.</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>id_estado_variante_producto</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>FK → <code>Estado_Variante_Producto.id_estado_variante_producto</code></td>
+<td>—</td>
+<td>Estado de la variante asociado al rengl&#243;n.</td>
+</tr>
+</tbody></table>
+<h3><code>Envio</code></h3>
+<p>Datos del env&#237;o asociado a un remito.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id_envio</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador del env&#237;o.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>id_remito</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>FK → <code>Remito.id_remito</code></td>
+<td>—</td>
+<td>Remito asociado.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>direccion</code></td>
+<td><code>nvarchar(200)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Direcci&#243;n de entrega.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>horario_sugerido</code></td>
+<td><code>nvarchar(50)</code></td>
+<td>S&#237;</td>
+<td>—</td>
+<td>—</td>
+<td>Horario sugerido para la entrega.</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>tipo_envio</code></td>
+<td><code>nvarchar(30)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Modalidad del env&#237;o, por ejemplo entrega a domicilio o retiro en local.</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>costo</code></td>
+<td><code>decimal(10,2)</code></td>
+<td>No</td>
+<td>—</td>
+<td><code>((0))</code></td>
+<td>Costo del env&#237;o.</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>id_estado_envio</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>FK → <code>Estado_Envio.id_estado_envio</code></td>
+<td>—</td>
+<td>Estado actual del env&#237;o.</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>fecha_entrega</code></td>
+<td><code>datetime2(7)</code></td>
+<td>S&#237;</td>
+<td>—</td>
+<td>—</td>
+<td>Fecha y hora de entrega, si corresponde.</td>
+</tr>
+</tbody></table>
+<h3><code>Estado_Envio</code></h3>
+<p>Cat&#225;logo de estados de env&#237;o.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id_estado_envio</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador del estado.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>nombre</code></td>
+<td><code>nvarchar(30)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Nombre del estado.</td>
+</tr>
+</tbody></table>
+<h3><code>Estado_Variante_Producto</code></h3>
+<p>Cat&#225;logo de estados utilizados en el detalle de venta de una variante.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id_estado_variante_producto</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador del estado.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>nombre_estado_variante_producto</code></td>
+<td><code>nvarchar(100)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Nombre del estado.</td>
+</tr>
+</tbody></table>
+<h3><code>Estado_Venta</code></h3>
+<p>Cat&#225;logo de estados de venta.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id_estado_venta</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador del estado.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>nombre_estado_venta</code></td>
+<td><code>nvarchar(100)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Nombre del estado.</td>
+</tr>
+</tbody></table>
+<h3><code>Ingreso_Stock</code></h3>
+<p>Encabezado de un ingreso de mercader&#237;a de proveedor.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id_ingreso</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador del ingreso.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>id_proveedor</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>FK → <code>Proveedor.id_proveedor</code></td>
+<td>—</td>
+<td>Proveedor del ingreso.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>remito_proveedor</code></td>
+<td><code>nvarchar(50)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>N&#250;mero o referencia del remito del proveedor.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>fecha_ingreso</code></td>
+<td><code>datetime2(7)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Fecha y hora de ingreso.</td>
+</tr>
+</tbody></table>
+<h3><code>Localidad</code></h3>
+<p>Cat&#225;logo de localidades.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id_localidad</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador de la localidad.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>nombre_localidad</code></td>
+<td><code>nvarchar(100)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Nombre de la localidad.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>codigo_postal</code></td>
+<td><code>nvarchar(12)</code></td>
+<td>S&#237;</td>
+<td>—</td>
+<td>—</td>
+<td>C&#243;digo postal de la localidad.</td>
+</tr>
+</tbody></table>
+<h3><code>Marca</code></h3>
+<p>Cat&#225;logo de marcas de productos.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id_marca</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador de la marca.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>nombre_marca</code></td>
+<td><code>nvarchar(100)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Nombre de la marca.</td>
+</tr>
+</tbody></table>
+<h3><code>Medio_Pago</code></h3>
+<p>Cat&#225;logo de medios de pago y recargos por cantidad de cuotas.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id_medio_pago</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador del medio de pago.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>nombre_medio_pago</code></td>
+<td><code>nvarchar(32)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Nombre del medio.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>recargo_medio_pago</code></td>
+<td><code>decimal(5,2)</code></td>
+<td>S&#237;</td>
+<td>—</td>
+<td><code>(0)</code></td>
+<td>Recargo general configurado para el medio.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>recargo_2</code></td>
+<td><code>decimal(5,2)</code></td>
+<td>No</td>
+<td>—</td>
+<td><code>((0))</code></td>
+<td>Recargo para 2 cuotas.</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>recargo_3</code></td>
+<td><code>decimal(5,2)</code></td>
+<td>No</td>
+<td>—</td>
+<td><code>((0))</code></td>
+<td>Recargo para 3 cuotas.</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>recargo_6</code></td>
+<td><code>decimal(5,2)</code></td>
+<td>No</td>
+<td>—</td>
+<td><code>((0))</code></td>
+<td>Recargo para 6 cuotas.</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>recargo_9</code></td>
+<td><code>decimal(5,2)</code></td>
+<td>No</td>
+<td>—</td>
+<td><code>((0))</code></td>
+<td>Recargo para 9 cuotas.</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>recargo_12</code></td>
+<td><code>decimal(5,2)</code></td>
+<td>No</td>
+<td>—</td>
+<td><code>((0))</code></td>
+<td>Recargo para 12 cuotas.</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>activo</code></td>
+<td><code>bit</code></td>
+<td>No</td>
+<td>—</td>
+<td><code>((1))</code></td>
+<td>Indica si el medio de pago est&#225; habilitado.</td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>tipo_caja</code></td>
+<td><code>nvarchar(20)</code></td>
+<td>No</td>
+<td>—</td>
+<td><code>(N&#39;Otros&#39;)</code></td>
+<td>Clasificaci&#243;n del medio usada en los movimientos de caja.</td>
+</tr>
+</tbody></table>
+<h3><code>Modalidad_Entrega</code></h3>
+<p>Cat&#225;logo de modalidades de entrega asociadas a las ventas.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id_modalidad_entrega</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador de la modalidad.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>nombre_modalidad_entrega</code></td>
+<td><code>nvarchar(100)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Nombre de la modalidad.</td>
+</tr>
+</tbody></table>
+<h3><code>Pago</code></h3>
+<p>Pagos registrados para una venta.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id_pago</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador del pago.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>id_venta</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>FK → <code>Venta.id_venta</code></td>
+<td>—</td>
+<td>Venta a la que se imputa el pago.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>id_usuario</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>FK → <code>Usuario.id_usuario</code></td>
+<td>—</td>
+<td>Usuario que registra el pago.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>id_medio_pago</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>FK → <code>Medio_Pago.id_medio_pago</code></td>
+<td>—</td>
+<td>Medio utilizado.</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>cuotas</code></td>
+<td><code>int</code></td>
+<td>S&#237;</td>
+<td>—</td>
+<td>—</td>
+<td>Cantidad de cuotas, si aplica.</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>monto</code></td>
+<td><code>decimal(10,2)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Importe base del pago.</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>monto_final</code></td>
+<td><code>decimal(10,2)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Importe final del pago, considerando recargos si corresponden.</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>fecha_pago</code></td>
+<td><code>datetime2(7)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Fecha y hora del pago.</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>tipo_caja</code></td>
+<td><code>nvarchar(20)</code></td>
+<td>S&#237;</td>
+<td>—</td>
+<td>—</td>
+<td>Clasificaci&#243;n del pago para caja.</td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>cuenta_destino</code></td>
+<td><code>nvarchar(100)</code></td>
+<td>No</td>
+<td>—</td>
+<td><code>(N&#39;&#39;)</code></td>
+<td>Cuenta de destino, cuando corresponde.</td>
+</tr>
+</tbody></table>
+<h3><code>Producto</code></h3>
+<p>Datos generales de los productos comercializados.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id_producto</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador del producto.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>nombre_producto</code></td>
+<td><code>nvarchar(150)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Nombre del producto.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>id_marca</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>FK → <code>Marca.id_marca</code></td>
+<td>—</td>
+<td>Marca del producto.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>descripcion</code></td>
+<td><code>nvarchar(500)</code></td>
+<td>S&#237;</td>
+<td>—</td>
+<td>—</td>
+<td>Descripci&#243;n adicional.</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>id_categoria</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>FK → <code>Categoria.id_categoria</code></td>
+<td>—</td>
+<td>Categor&#237;a del producto.</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>modelo</code></td>
+<td><code>varchar(15)</code></td>
+<td>S&#237;</td>
+<td>—</td>
+<td>—</td>
+<td>Modelo o referencia del producto.</td>
+</tr>
+</tbody></table>
+<h3><code>Proveedor</code></h3>
+<p>Datos de proveedores.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id_proveedor</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador del proveedor.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>nombre_proveedor</code></td>
+<td><code>nvarchar(150)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Nombre o raz&#243;n social.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>telefono</code></td>
+<td><code>nvarchar(20)</code></td>
+<td>S&#237;</td>
+<td>—</td>
+<td>—</td>
+<td>Tel&#233;fono de contacto.</td>
+</tr>
+</tbody></table>
+<h3><code>Recibo</code></h3>
+<p>Registro de recibos emitidos para pagos.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id_recibo</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador del recibo.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>id_pago</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>FK → <code>Pago.id_pago</code></td>
+<td>—</td>
+<td>Pago documentado.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>fecha_emision</code></td>
+<td><code>datetime2(7)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Fecha y hora de emisi&#243;n.</td>
+</tr>
+</tbody></table>
+<h3><code>Remito</code></h3>
+<p>Registro de remitos asociados a ventas.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id_remito</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador del remito.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>id_venta</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>FK → <code>Venta.id_venta</code></td>
+<td>—</td>
+<td>Venta documentada.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>fecha_emision</code></td>
+<td><code>datetime2(7)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Fecha y hora de emisi&#243;n.</td>
+</tr>
+</tbody></table>
+<h3><code>Rol</code></h3>
+<p>Cat&#225;logo de roles de usuario.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id_rol_usuario</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador del rol.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>nombre_rol_usuario</code></td>
+<td><code>nvarchar(20)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Nombre del rol.</td>
+</tr>
+</tbody></table>
+<h3><code>Usuario</code></h3>
+<p>Cuentas de acceso, rol y datos para el control de intentos fallidos.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id_usuario</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador del usuario.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>nombre_usuario</code></td>
+<td><code>nvarchar(100)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Nombre de inicio de sesi&#243;n.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>hash_contrasena</code></td>
+<td><code>nvarchar(255)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Hash de la contrase&#241;a; no es la contrase&#241;a en texto plano.</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>id_rol_usuario</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>FK → <code>Rol.id_rol_usuario</code></td>
+<td>—</td>
+<td>Rol asignado.</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>activo</code></td>
+<td><code>bit</code></td>
+<td>No</td>
+<td>—</td>
+<td><code>((1))</code></td>
+<td>Indica si la cuenta est&#225; habilitada.</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>intentos_login_fallidos</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>—</td>
+<td><code>((0))</code></td>
+<td>Cantidad de intentos fallidos registrados.</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>bloqueado_hasta</code></td>
+<td><code>datetime2(7)</code></td>
+<td>S&#237;</td>
+<td>—</td>
+<td>—</td>
+<td>Fecha y hora hasta la que la cuenta est&#225; bloqueada, si aplica.</td>
+</tr>
+</tbody></table>
+<h3><code>Variante_Producto</code></h3>
+<p>Variantes comerciales de un producto, con condici&#243;n, precio y stock.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id_variante</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador de la variante.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>color</code></td>
+<td><code>nvarchar(50)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Color de la variante.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>condicion_producto</code></td>
+<td><code>nvarchar(10)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Condici&#243;n comercial del producto; la aplicaci&#243;n reconoce, entre otras, <code>PRIMERA</code> y <code>OUTLET</code>.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>precio</code></td>
+<td><code>decimal(10,2)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Precio de venta de la variante.</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>stock_disponible</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Unidades disponibles.</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>id_producto</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>FK → <code>Producto.id_producto</code></td>
+<td>—</td>
+<td>Producto al que pertenece.</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>activo</code></td>
+<td><code>bit</code></td>
+<td>No</td>
+<td>—</td>
+<td><code>((1))</code></td>
+<td>Indica si la variante est&#225; habilitada.</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>costo</code></td>
+<td><code>decimal(10,2)</code></td>
+<td>No</td>
+<td>—</td>
+<td><code>((0))</code></td>
+<td>Costo de la variante.</td>
+</tr>
+</tbody></table>
+<h3><code>Venta</code></h3>
+<p>Encabezado de ventas, incluyendo cliente, usuario, estado e importes.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id_venta</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador de la venta.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>id_cliente</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>FK → <code>Cliente.id_cliente</code></td>
+<td>—</td>
+<td>Cliente de la venta.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>id_usuario</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>FK → <code>Usuario.id_usuario</code></td>
+<td>—</td>
+<td>Usuario que registra la venta.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>fecha_venta</code></td>
+<td><code>datetime2(7)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Fecha y hora de la venta.</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>id_estado_venta</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>FK → <code>Estado_Venta.id_estado_venta</code></td>
+<td>—</td>
+<td>Estado de la venta.</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>total</code></td>
+<td><code>decimal(10,2)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Importe total registrado.</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>id_modalidad_entrega</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>FK → <code>Modalidad_Entrega.id_modalidad_entrega</code></td>
+<td>—</td>
+<td>Modalidad de entrega seleccionada.</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>descuento</code></td>
+<td><code>decimal(10,2)</code></td>
+<td>S&#237;</td>
+<td>—</td>
+<td><code>((0))</code></td>
+<td>Descuento aplicado.</td>
+</tr>
+</tbody></table>
+<h3><code>Venta_Entrega</code></h3>
+<p>Datos complementarios de log&#237;stica y condici&#243;n de pago de una venta.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id_venta</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK y FK → <code>Venta.id_venta</code></td>
+<td>—</td>
+<td>Venta asociada; tambi&#233;n identifica el registro de entrega.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>domicilio</code></td>
+<td><code>nvarchar(200)</code></td>
+<td>S&#237;</td>
+<td>—</td>
+<td>—</td>
+<td>Domicilio informado para la entrega.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>fecha_estimada</code></td>
+<td><code>datetime2(7)</code></td>
+<td>S&#237;</td>
+<td>—</td>
+<td>—</td>
+<td>Fecha estimada de entrega.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>horario_sugerido</code></td>
+<td><code>nvarchar(50)</code></td>
+<td>S&#237;</td>
+<td>—</td>
+<td>—</td>
+<td>Horario sugerido.</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>observaciones</code></td>
+<td><code>nvarchar(500)</code></td>
+<td>S&#237;</td>
+<td>—</td>
+<td>—</td>
+<td>Observaciones log&#237;sticas.</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>tipo_logistica</code></td>
+<td><code>nvarchar(50)</code></td>
+<td>S&#237;</td>
+<td>—</td>
+<td>—</td>
+<td>Informaci&#243;n del tipo o detalle log&#237;stico.</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>costo_envio</code></td>
+<td><code>decimal(10,2)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Costo de env&#237;o asociado a la venta.</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>observacion_pago</code></td>
+<td><code>nvarchar(500)</code></td>
+<td>S&#237;</td>
+<td>—</td>
+<td>—</td>
+<td>Observaci&#243;n relacionada con el pago.</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>condicion_pago</code></td>
+<td><code>nvarchar(30)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Condici&#243;n de pago acordada.</td>
+</tr>
+</tbody></table>
+<h2>Tablas de caja y auditor&#237;a</h2>
+<h3><code>Caja_Cierre</code></h3>
+<p>Cierre de caja por fecha; <code>datos</code> almacena informaci&#243;n estructurada en JSON.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador del cierre.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>fecha</code></td>
+<td><code>date</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>D&#237;a al que corresponde el cierre. La columna tiene restricci&#243;n de unicidad en el script.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>id_usuario</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>FK → <code>Usuario.id_usuario</code></td>
+<td>—</td>
+<td>Usuario que realiza el cierre.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>fecha_cierre</code></td>
+<td><code>datetime2(7)</code></td>
+<td>No</td>
+<td>—</td>
+<td><code>(sysdatetime())</code></td>
+<td>Fecha y hora de registro del cierre.</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>datos</code></td>
+<td><code>nvarchar(MAX)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Resumen/detalle del cierre serializado como JSON; el script valida que el contenido sea JSON.</td>
+</tr>
+</tbody></table>
+<h3><code>Caja_Movimiento</code></h3>
+<p>Movimientos de caja, incluidos gastos e ingresos no derivados directamente de pagos.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador del movimiento.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>fecha</code></td>
+<td><code>datetime2(7)</code></td>
+<td>No</td>
+<td>—</td>
+<td><code>(sysdatetime())</code></td>
+<td>Fecha y hora del movimiento.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>concepto</code></td>
+<td><code>nvarchar(200)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Motivo o concepto del movimiento.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>tipo</code></td>
+<td><code>nvarchar(20)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Tipo de movimiento; el script admite <code>Gasto</code>, <code>Ingreso extra</code> o <code>Caf&#233;</code>.</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>medio</code></td>
+<td><code>nvarchar(20)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Medio o forma utilizada para el movimiento.</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>moneda</code></td>
+<td><code>char(3)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>C&#243;digo de moneda; el script admite <code>ARS</code> o <code>USD</code>.</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>importe</code></td>
+<td><code>decimal(18,2)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Importe del movimiento; el script exige un valor mayor que cero.</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>cuenta</code></td>
+<td><code>nvarchar(100)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Cuenta asociada al movimiento.</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>id_usuario</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>FK → <code>Usuario.id_usuario</code></td>
+<td>—</td>
+<td>Usuario que registra el movimiento.</td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>anulado</code></td>
+<td><code>bit</code></td>
+<td>No</td>
+<td>—</td>
+<td><code>((0))</code></td>
+<td>Indica si el movimiento fue anulado.</td>
+</tr>
+<tr>
+<td>11</td>
+<td><code>motivo_anulacion</code></td>
+<td><code>nvarchar(200)</code></td>
+<td>S&#237;</td>
+<td>—</td>
+<td>—</td>
+<td>Motivo de anulaci&#243;n, si corresponde.</td>
+</tr>
+</tbody></table>
+<h3><code>LogActividad</code></h3>
+<p>Registro de acciones realizadas por usuarios sobre entidades del sistema.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>id_log</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador del registro de auditor&#237;a.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>id_usuario</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>FK → <code>Usuario.id_usuario</code></td>
+<td>—</td>
+<td>Usuario que realiz&#243; la acci&#243;n.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>accion</code></td>
+<td><code>nvarchar(100)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>C&#243;digo o nombre de la acci&#243;n.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>entidad</code></td>
+<td><code>nvarchar(100)</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Tipo/nombre de entidad afectada.</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>id_entidad</code></td>
+<td><code>int</code></td>
+<td>S&#237;</td>
+<td>—</td>
+<td>—</td>
+<td>Identificador del registro afectado.</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>detalle</code></td>
+<td><code>nvarchar(1000)</code></td>
+<td>S&#237;</td>
+<td>—</td>
+<td>—</td>
+<td>Informaci&#243;n adicional de la acci&#243;n.</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>fecha</code></td>
+<td><code>datetime2(7)</code></td>
+<td>No</td>
+<td>—</td>
+<td><code>(sysdatetime())</code></td>
+<td>Fecha y hora de registro.</td>
+</tr>
+</tbody></table>
+<h2>Objeto t&#233;cnico de SQL Server</h2>
+<h3><code>sysdiagrams</code></h3>
+<p>Tabla auxiliar que SQL Server puede crear para almacenar diagramas de base de datos. No representa una entidad funcional del sistema comercial.</p>
+<table><thead><tr>
+<th>N.&#186;</th>
+<th>Columna</th>
+<th>Tipo</th>
+<th>Nulo</th>
+<th>Clave</th>
+<th>Predeterminado</th>
+<th>Descripci&#243;n</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><code>name</code></td>
+<td><code>sysname</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Nombre del diagrama.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>principal_id</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>—</td>
+<td>—</td>
+<td>Identificador del principal propietario.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>diagram_id</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>PK, IDENTITY</td>
+<td>—</td>
+<td>Identificador del diagrama.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>version</code></td>
+<td><code>int</code></td>
+<td>S&#237;</td>
+<td>—</td>
+<td>—</td>
+<td>Versi&#243;n del diagrama.</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>definition</code></td>
+<td><code>varbinary(MAX)</code></td>
+<td>S&#237;</td>
+<td>—</td>
+<td>—</td>
+<td>Definici&#243;n binaria del diagrama.</td>
+</tr>
+</tbody></table>
+<h2>Relaciones principales</h2>
+<ul>
+<li><code>Producto</code> → <code>Marca</code> y <code>Categoria</code>.</li>
+<li><code>Variante_Producto</code> → <code>Producto</code>.</li>
+<li><code>Detalle_Ingreso</code> → <code>Ingreso_Stock</code> y <code>Variante_Producto</code>; <code>Ingreso_Stock</code> → <code>Proveedor</code>.</li>
+<li><code>Detalle_Venta</code> → <code>Venta</code>, <code>Variante_Producto</code> y <code>Estado_Variante_Producto</code>.</li>
+<li><code>Venta</code> → <code>Cliente</code>, <code>Usuario</code>, <code>Estado_Venta</code> y <code>Modalidad_Entrega</code>.</li>
+<li><code>Pago</code> → <code>Venta</code>, <code>Usuario</code> y <code>Medio_Pago</code>; <code>Recibo</code> → <code>Pago</code>.</li>
+<li><code>Remito</code> → <code>Venta</code>; <code>Detalle_Remito</code> → <code>Remito</code> y <code>Variante_Producto</code>; <code>Envio</code> → <code>Remito</code> y <code>Estado_Envio</code>.</li>
+<li><code>Venta_Entrega</code> → <code>Venta</code> (relaci&#243;n uno a uno por su clave primaria compartida).</li>
+<li><code>Usuario</code> → <code>Rol</code>.</li>
+<li><code>Cliente</code> → <code>Localidad</code> (relaci&#243;n opcional, porque <code>id_localidad</code> acepta nulos).</li>
+<li><code>Caja_Cierre</code>, <code>Caja_Movimiento</code> y <code>LogActividad</code> → <code>Usuario</code>.</li>
+</ul>
+<h2>Observaciones sobre el alcance</h2>
+<p>1. El diccionario refleja las columnas y tipos copiados desde la consulta de metadatos. Los scripts de actualizaci&#243;n pueden haber agregado o modificado columnas entre versiones; para documentar otra instalaci&#243;n, volver a ejecutar la consulta sobre esa base.</p>
+<p>2. Se describen como <code>sysdiagrams</code> los metadatos de diagramas, no como datos de negocio.</p>
+<p>3. La consulta recibida no incluye todas las restricciones (por ejemplo, &#237;ndices &#250;nicos y algunas restricciones <code>CHECK</code>). Se mencionan &#250;nicamente las reglas conocidas a partir del esquema y scripts disponibles; este documento no sustituye un inventario completo de restricciones.</p>
+</body></html>

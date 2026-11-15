@@ -10,4 +10,5 @@ Verificación realizada en una base separada con datos ficticios: instalación n
 
 El login registra los intentos fallidos por usuario. Al tercer error bloquea la cuenta durante 15 minutos; un administrador autenticado puede restablecer los intentos desde Gestión de usuarios. Si no hay otro administrador disponible, el bloqueo se libera automáticamente al vencer el plazo.
 
-La actualización crea `LoteDatosPrueba` y `RegistroDatosPrueba` para identificar y retirar los datos sintéticos creados desde el botón «Prueba admin» del informe de ventas. La acción agrega 100 clientes, productos, variantes, ventas, pagos, entregas, remitos, envíos y cierres con fechas históricas. El botón «Eliminar datos de prueba» solo elimina filas registradas en el lote; si una fila de prueba ya tiene dependencias ajenas al lote, la operación se cancela sin borrarlas.
+La baja de usuarios es lógica: Gestión de usuarios cambia `Usuario.activo` a falso, conserva sus ventas y registros, e impide nuevos inicios de sesión. La acción queda registrada en `LogActividad`. La pantalla muestra las cuentas inactivas, pero no ofrece reactivarlas.
+

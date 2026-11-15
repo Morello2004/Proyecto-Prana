@@ -1,0 +1,786 @@
+﻿[
+    {
+        "archivo":  "DocumentosPrana.cs",
+        "reemplazados":  14,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Interfaz.Designer.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Program.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmAlertas.Designer.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmAlertas.cs",
+        "reemplazados":  1,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmComprobantes.Designer.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmComprobantes.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmDeudaCliente.Designer.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmDeudaCliente.cs",
+        "reemplazados":  1,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmEntregas.Designer.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmEntregas.cs",
+        "reemplazados":  3,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmHistorial.Designer.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmHistorial.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmMotivoAnulacion.Designer.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmMotivoAnulacion.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmResumenMensualCaja.Designer.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmSeleccionarProducto.Designer.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmSeleccionarProducto.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmUsuarios.Designer.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "login.Designer.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmUsuarios.cs",
+        "reemplazados":  1,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmMediosPagos.Designer.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmMediosPagos.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmPagos.Designer.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmPagos.cs",
+        "reemplazados":  5,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmInformesVentas.cs",
+        "reemplazados":  2,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmStock.cs",
+        "reemplazados":  2,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmInformesVentas.Designer.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmStock.Designer.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmClientes.Designer.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmClientes.cs",
+        "reemplazados":  4,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmNuevaVenta.Designer.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmNuevaVenta.cs",
+        "reemplazados":  2,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmCaja.cs",
+        "reemplazados":  3,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmCaja.Designer.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmResumenMensualCaja.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Interfaz.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "login.cs",
+        "reemplazados":  1,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmPanelPrincipal.Designer.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "frmPanelPrincipal.cs",
+        "reemplazados":  3,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Datos\\CD_Caja.cs",
+        "reemplazados":  28,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Datos\\CD_Categoria.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Datos\\CD_Comprobante.cs",
+        "reemplazados":  9,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Datos\\CD_Entrega.cs",
+        "reemplazados":  31,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Datos\\CD_Localidad.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Datos\\CD_LogActividad.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Datos\\CD_Marca.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Datos\\CD_MedioPago.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Datos\\CD_Pago.cs",
+        "reemplazados":  9,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Datos\\CD_Proveedor.cs",
+        "reemplazados":  2,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Datos\\CD_RegistroVenta.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Datos\\CD_Usuario.cs",
+        "reemplazados":  12,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Datos\\CD_Venta.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Datos\\GestionVentaSql.cs",
+        "reemplazados":  5,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Datos\\InicializadorBaseDatos.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Datos\\conexion.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Datos\\CD_InformeVentas.cs",
+        "reemplazados":  3,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Datos\\CD_Cliente.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Datos\\CD_Producto.cs",
+        "reemplazados":  1,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\AlertaPagoPendiente.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\AlertasStockPendiente.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\Categoria.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\ComprobanteVenta.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\FiltroInformeVentas.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\InformeVenta.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\Localidad.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\LogActividad.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\Marca.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\MedioPago.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\Proveedor.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\ResultadoInicioSesion.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\ResumenMensualCaja.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\ResumenVentas.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\VarianteProducto.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\producto.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\usuario.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\venta.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\CierreCaja.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\ConteoBillete.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\EntregaRegistrada.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\MovimientoCaja.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\Pago.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\ProductoPorEntregar.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\TiposCaja.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\TotalMensualCaja.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\Cliente.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.Entidades\\DetalleNuevaVenta.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.negocio\\CN_Caja.cs",
+        "reemplazados":  4,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.negocio\\CN_Categoria.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.negocio\\CN_Comprobante.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.negocio\\CN_Entrega.cs",
+        "reemplazados":  2,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.negocio\\CN_LogActividad.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.negocio\\CN_Marca.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.negocio\\CN_MedioPago.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.negocio\\CN_Pago.cs",
+        "reemplazados":  1,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.negocio\\CN_Venta.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.negocio\\SesionActual.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.negocio\\CN_Proveedor.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.negocio\\NormalizarTexto.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.negocio\\CN_InformeVentas.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.negocio\\CN_Usuario.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.negocio\\Permisos.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.negocio\\CN_Cliente.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.negocio\\CN_RegistroVenta.cs",
+        "reemplazados":  1,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Prana.negocio\\CN_Producto.cs",
+        "reemplazados":  1,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Properties\\Resources.Designer.cs",
+        "reemplazados":  0,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Pruebas\\CajaComprobantes\\Program.cs",
+        "reemplazados":  30,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Pruebas\\CajaComprobantes\\PruebasPresentacion.cs",
+        "reemplazados":  14,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Pruebas\\Disenador\\Program.cs",
+        "reemplazados":  10,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Pruebas\\ResumenMensual\\Program.cs",
+        "reemplazados":  11,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Pruebas\\ValidacionesVenta\\Program.cs",
+        "reemplazados":  19,
+        "pendientes":  [
+
+                       ]
+    },
+    {
+        "archivo":  "Pruebas\\Manual\\Program.cs",
+        "reemplazados":  16,
+        "pendientes":  [
+                           "tipo no representable: var controls = All(f).Where(control =\u003e control.Visible \u0026\u0026 control.Width \u003e 0 \u0026\u0026 control.Height \u003e 0).Select(c =\u003e\r"
+                       ]
+    }
+]

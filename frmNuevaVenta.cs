@@ -40,6 +40,7 @@ namespace Prana.Presentacion
         private int ventaRegistrada;
         // conserva monto pago editado entre las operaciones de esta clase
         private bool montoPagoEditado;
+        private decimal porcentajeRecargoAnterior;
         // conserva actualizando monto sugerido entre las operaciones de esta clase
         private bool actualizandoMontoSugerido;
         // inicializa el disenador y conecta los controles con la logica de venta
@@ -790,6 +791,7 @@ namespace Prana.Presentacion
         private void cboMedioPago_SelectedIndexChanged(object? sender, EventArgs e)
         {
             ActualizarCuotas();
+            porcentajeRecargoAnterior = PorcentajeRecargoSeleccionado();
             if (!montoPagoEditado)
             {
                 ActualizarMontoSugerido();
@@ -801,6 +803,20 @@ namespace Prana.Presentacion
         // actualiza los controles relacionados cuando cambia la seleccion puede dispararse tambien al cargar los datos
         private void cboCantCuotas_SelectedIndexChanged(object? sender, EventArgs e)
         {
+            decimal porcentaje = PorcentajeRecargoSeleccionado();
+            if (montoPagoEditado)
+            {
+                var (basePago, _) = registroVentas.DesglosarCobro(nudMontoPago.Value, porcentajeRecargoAnterior);
+                actualizandoMontoSugerido = true;
+                try
+                {
+                    nudMontoPago.Value = Math.Clamp(basePago + registroVentas.CalcularRecargo(basePago, porcentaje),
+                        nudMontoPago.Minimum, nudMontoPago.Maximum);
+                }
+                finally { actualizandoMontoSugerido = false; }
+            }
+            else { ActualizarMontoSugerido(); }
+            porcentajeRecargoAnterior = porcentaje;
             MostrarPagos();
         }
 

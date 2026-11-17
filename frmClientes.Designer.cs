@@ -320,7 +320,7 @@ namespace Prana.Presentacion
             dgv_listadoClientes.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
             dgv_listadoClientes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgv_listadoClientes.EditingControlShowing += dgv_listadoClientes_EditingControlShowing;
-            dgv_listadoClientes.Columns.AddRange(new DataGridViewColumn[] { colNombre, colApellido, colTipoDocumento, colDNI, ColTelefono, colDireccion, colLocalidad, colAccion, colFechaRegistro, colSaldoFavor, colDeudaPendiente, colEstadoCuenta, colVerDeuda });
+            dgv_listadoClientes.Columns.AddRange(new DataGridViewColumn[] { colNombre, colApellido, colTipoDocumento, colDNI, ColTelefono, colDireccion, colLocalidad, colAccion, colFechaRegistro, colDeudaPendiente, colEstadoCuenta, colVerDeuda });
             dataGridViewCellStyle10.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle10.BackColor = Color.White;
             dataGridViewCellStyle10.Font = new Font("Segoe UI", 9F);

@@ -446,6 +446,11 @@ namespace Prana.Presentacion
             colDiseno38.FillWeight = 50;
             colDiseno38.DefaultCellStyle.Format = "";
             colDiseno38.DefaultCellStyle.FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("es-AR");
+            dgvEntregas.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "IdEnvio", DataPropertyName = "IdEnvio",
+                HeaderText = "N.º de envío", FillWeight = 60, MinimumWidth = 85
+            });
             dgvEntregas.Columns.Add(colDiseno38);
             colDiseno38.Name = "IdVenta";
             colDiseno39 = new DataGridViewTextBoxColumn();

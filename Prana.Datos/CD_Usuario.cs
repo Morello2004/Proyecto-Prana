@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
@@ -207,6 +207,28 @@ SELECT intentos, bloqueo FROM @estado;";
         }
 
         // da de baja una cuenta sin borrar sus datos y registra la accion
+        public void ActivarUsuario(int idUsuario, int idAdministrador)
+        {
+            using SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena());
+            conexion.Open();
+            using SqlTransaction transaccion = conexion.BeginTransaction();
+            try
+            {
+                using SqlCommand activar = new SqlCommand(@"UPDATE Usuario SET activo = 1
+                    WHERE id_usuario = @Usuario AND activo = 0;", conexion, transaccion);
+                activar.Parameters.Add("@Usuario", SqlDbType.Int).Value = idUsuario;
+                if (activar.ExecuteNonQuery() != 1)
+                    throw new InvalidOperationException("El usuario no existe o ya esta activo.");
+                using SqlCommand historial = new SqlCommand(@"INSERT INTO Log_Actividad(id_usuario, accion, entidad, id_entidad, detalle)
+                    VALUES(@Administrador, N'ACTIVAR_USUARIO', N'Usuario', @Usuario, N'Cuenta reactivada');", conexion, transaccion);
+                historial.Parameters.Add("@Administrador", SqlDbType.Int).Value = idAdministrador;
+                historial.Parameters.Add("@Usuario", SqlDbType.Int).Value = idUsuario;
+                historial.ExecuteNonQuery();
+                transaccion.Commit();
+            }
+            catch { transaccion.Rollback(); throw; }
+        }
+
         public void DarDeBajaUsuario(int idUsuario, int idAdministrador)
         {
             // prepara la conexion configurada y la libera al terminar este alcance

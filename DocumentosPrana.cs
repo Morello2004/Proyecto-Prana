@@ -84,7 +84,7 @@ public static class DocumentosPrana
         {
             tipo = "GARANTÍA";
         }
-        StringBuilder html = new StringBuilder($"<header><div class='empresa'><strong class='marca'>PRANA Electrónica</strong><br><i>Electrodomésticos de primera y outlet</i><br>CUIT: 20-23132979-0<br>San Martín 687<br>Luján, Buenos Aires, 6700<br>+54 9 11 2671-0298</div><div class='derecha'><h1>{tipo}</h1><strong>N.º {venta.IdVenta}</strong><br>FECHA: {venta.Fecha:dd/MM/yyyy}<br>Venta N.º {venta.IdVenta}</div></header>");
+        StringBuilder html = new StringBuilder($"<header><div class='empresa'><strong class='marca'>PRANA Electrónica</strong><br><i>Electrodomésticos de primera y outlet</i><br>CUIT: 20-23132979-0<br>San Martín 687<br>Luján, Buenos Aires, 6700<br>+54 9 11 2671-0298</div><div class='derecha'><h1>{tipo}</h1><strong>Venta N.º {venta.IdVenta}</strong><br>FECHA: {venta.Fecha:dd/MM/yyyy}</div></header>");
         html.Append($"<section class='cliente'><strong>NOMBRE:</strong> {H(venta.NombreCompletoCliente)}<br><strong>{H(venta.Cliente.TipoDocumento)}:</strong> {H(venta.Cliente.DNI)}<br><strong>TELÉFONO:</strong> {H(venta.Cliente.Telefono)}{DatoOpcional("DIRECCIÓN", venta.Cliente.Direccion)}<br><strong>CIUDAD:</strong> {H(venta.Cliente.NombreLocalidad)}</section>");
         string encabezadoProductos;
         if (remito)

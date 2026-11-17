@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Prana.Datos;
 using Prana.Entidades;
 using System.Collections.Generic;
@@ -170,6 +170,13 @@ namespace Prana.negocio
         }
 
         // autoriza al administrador actual y solicita la baja logica de la cuenta
+        public void ActivarUsuario(int idUsuario)
+        {
+            Permisos.Exigir(Permisos.GestionarUsuarios);
+            if (idUsuario <= 0) throw new ArgumentException("Seleccione un usuario valido.");
+            datosUsuario.ActivarUsuario(idUsuario, SesionActual.Usuario!.idUsuario);
+        }
+
         public void DarDeBajaUsuario(int idUsuario)
         {
             Permisos.Exigir(Permisos.GestionarUsuarios);

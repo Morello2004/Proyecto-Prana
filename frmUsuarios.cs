@@ -1,4 +1,4 @@
-﻿using Prana.negocio;
+using Prana.negocio;
 using Prana.Entidades;
 using System;
 using System.Drawing;
@@ -13,10 +13,20 @@ namespace Prana.Presentacion
         private readonly CN_Usuario cnUsuario = new CN_Usuario();
         // conserva id seleccionado entre las operaciones de esta clase
         private int idSeleccionado;
+        private readonly ComboBox filtroEstado = new()
+        {
+            DropDownStyle = ComboBoxStyle.DropDownList,
+            Location = new Point(20, 95), Size = new Size(220, 23),
+            AccessibleName = "Filtrar usuarios por estado"
+        };
         // inicializa los controles de administracion
         public frmUsuarios()
         {
             InitializeComponent();
+            filtroEstado.Items.AddRange(new object[] { "Activos", "Inactivos", "Todos" });
+            filtroEstado.SelectedIndex = 0;
+            pnlFormulario.Controls.Add(filtroEstado);
+            filtroEstado.SelectedIndexChanged += frmUsuarios_Load;
             cmbRol.SelectedIndex = 1;
             txtNombreUsuario.MaxLength = 20;
             AutoScrollMinSize = new Size(560, 590);
@@ -39,8 +49,8 @@ namespace Prana.Presentacion
         // carga usuarios y prepara la opcion de crear una cuenta
         private void Cargar()
         {
-            // muestra solo cuentas activas y conserva las bajas en la base de datos
-            List<usuario> lista = cnUsuario.ListarUsuarios().Where(usuarioActual => usuarioActual.activo).ToList();
+            // permite consultar cuentas activas e inactivas
+            List<usuario> lista = cnUsuario.ListarUsuarios().Where(u => filtroEstado.SelectedIndex == 2 || u.activo == (filtroEstado.SelectedIndex == 0)).ToList();
             lista.Insert(0, new usuario { nombreUsuario = "Crear un usuario nuevo" });
             selector.DataSource = lista;
             selector.SelectedIndex = 0;
@@ -113,7 +123,9 @@ namespace Prana.Presentacion
                     lblEstadoCuenta.Text = "Estado: dado de baja";
                 }
             }
-            btnDarDeBaja.Enabled = idSeleccionado != 0 && u.activo;
+            btnDarDeBaja.Enabled = idSeleccionado != 0;
+            btnDarDeBaja.Text = u.activo ? "Dar de baja usuario" : "Activar usuario";
+            btnDarDeBaja.BackColor = u.activo ? Color.Firebrick : Color.SeaGreen;
             // comprueba si se recibio el valor opcional antes de utilizarlo
             if (u.EstaBloqueado && u.BloqueadoHasta.HasValue)
             {
@@ -194,6 +206,20 @@ namespace Prana.Presentacion
                 return;
             }
 
+            if (selector.SelectedItem is usuario cuenta && !cuenta.activo)
+            {
+                try
+                {
+                    cnUsuario.ActivarUsuario(idSeleccionado);
+                    MessageBox.Show(this, "El usuario fue activado correctamente.", "Usuarios", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Cargar();
+                }
+                catch (Exception error)
+                {
+                    MessageBox.Show(this, "No se pudo activar la cuenta: " + error.Message, "Usuarios", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                return;
+            }
             if (MessageBox.Show(this, "El usuario perdera el acceso al sistema. Sus ventas y registros historicos se conservaran. Continuar?", "Dar de baja usuario", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
             {
                 return;

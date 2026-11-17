@@ -72,14 +72,13 @@ namespace Prana.Datos
                 // relaciona cada variante con la venta y conserva la cantidad y el precio aplicado en esta operacion
                 foreach (DetalleNuevaVenta item in venta.Detalles)
                 {
-                    using SqlCommand detalle = new("INSERT INTO Detalle_Venta (id_venta,id_variante,cantidad,precio_unitario,subtotal,entregado) VALUES (@venta,@variante,@cantidad,@precio,@subtotal,@entregado)", conexion, transaccion);
+                    using SqlCommand detalle = new("INSERT INTO Detalle_Venta (id_venta,id_variante,cantidad,precio_unitario,subtotal) VALUES (@venta,@variante,@cantidad,@precio,@subtotal)", conexion, transaccion);
                     // relaciona este producto con el identificador de la venta recien creada
                     detalle.Parameters.AddWithValue("@venta", idVenta);
                     detalle.Parameters.AddWithValue("@variante", item.IdVariante);
                     detalle.Parameters.AddWithValue("@cantidad", item.Cantidad);
                     detalle.Parameters.AddWithValue("@precio", item.PrecioUnitario);
                     detalle.Parameters.AddWithValue("@subtotal", item.Cantidad * item.PrecioUnitario);
-                    detalle.Parameters.AddWithValue("@entregado", retiroInmediato);
                     // ejecuta la escritura sin solicitar un valor de resultado
                     detalle.ExecuteNonQuery();
                 }

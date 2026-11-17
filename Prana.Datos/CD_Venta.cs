@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Prana.Entidades;
 using System.Data;
 
@@ -57,7 +57,7 @@ namespace Prana.Datos
                         SELECT SUM(dr.cantidad) preparados,
                             SUM(CASE WHEN e.entregado=1 THEN dr.cantidad ELSE 0 END) entregados
                         FROM Remito rem JOIN Detalle_Remito dr ON dr.id_remito=rem.id_remito
-                        JOIN Envio e ON e.id_remito=rem.id_remito
+                        JOIN (SELECT id_remito, MAX(CONVERT(int, entregado)) entregado FROM Envio GROUP BY id_remito) e ON e.id_remito=rem.id_remito
                         WHERE rem.id_venta=v.id_venta AND dr.id_variante=d.id_variante
                     ) r
                 ) cantidades

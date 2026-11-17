@@ -154,8 +154,6 @@ CREATE TABLE [dbo].[Detalle_Venta](
 	[precio_unitario] [decimal](10, 2) NOT NULL,
 -- define subtotal como numero decimal, obligatorio
 	[subtotal] [decimal](10, 2) NOT NULL,
--- indica si todas las unidades de este renglón se entregaron
-	[entregado] [bit] NOT NULL CONSTRAINT [DF_DetalleVenta_Entregado] DEFAULT ((0)),
 
 PRIMARY KEY CLUSTERED
 (
@@ -2186,7 +2184,6 @@ GO
 -- Requiere el esquema funcional previo; admite los nombres anteriores y los actuales.
 IF OBJECT_ID(N'dbo.Log_Actividad',N'U') IS NOT NULL
     AND OBJECT_ID(N'dbo.Venta_Datos_Entrega',N'U') IS NOT NULL
-    AND COL_LENGTH(N'dbo.Detalle_Venta',N'entregado') IS NOT NULL
     AND NOT EXISTS (
         SELECT 1
         FROM (VALUES
@@ -2204,8 +2201,7 @@ IF OBJECT_ID(N'dbo.Log_Actividad',N'U') IS NOT NULL
             (N'Venta_Datos_Entrega',N'observaciones_entrega'),(N'Caja_Movimiento',N'tipo_movimiento'),
             (N'Caja_Movimiento',N'medio_movimiento'),(N'Venta',N'fecha_hora_venta'),
             (N'Remito',N'fecha_hora_emision'),
-            (N'Envio',N'fecha_hora_entrega'),(N'Usuario',N'fecha_hora_fin_bloqueo'),
-            (N'Detalle_Venta',N'entregado')
+            (N'Envio',N'fecha_hora_entrega'),(N'Usuario',N'fecha_hora_fin_bloqueo')
         ) esperadas(tabla,columna)
         WHERE COL_LENGTH(N'dbo.'+QUOTENAME(esperadas.tabla),esperadas.columna) IS NULL
     )

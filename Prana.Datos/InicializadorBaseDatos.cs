@@ -145,7 +145,6 @@ namespace Prana.Datos
             using SqlCommand comando = new SqlCommand(@"
                         SELECT CASE WHEN OBJECT_ID(N'dbo.Log_Actividad',N'U') IS NOT NULL
                             AND OBJECT_ID(N'dbo.Venta_Datos_Entrega',N'U') IS NOT NULL
-                            AND COL_LENGTH(N'dbo.Detalle_Venta',N'entregado') IS NOT NULL
                             AND COL_LENGTH(N'dbo.Cliente',N'numero_documento') IS NOT NULL
                             AND COL_LENGTH(N'dbo.Venta',N'fecha_hora_venta') IS NOT NULL
                             AND COL_LENGTH(N'dbo.Envio',N'entregado') IS NOT NULL

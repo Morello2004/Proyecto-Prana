@@ -244,11 +244,23 @@ namespace Prana.Datos
                                 SELECT 1
                                 FROM Venta v
                                 INNER JOIN Estado_Venta ev ON ev.id_estado_venta = v.id_estado_venta
-                                INNER JOIN Detalle_Venta dv ON dv.id_venta = v.id_venta
+                                INNER JOIN (
+                                    SELECT id_venta, id_variante, SUM(cantidad) cantidad
+                                    FROM Detalle_Venta GROUP BY id_venta, id_variante
+                                ) dv ON dv.id_venta = v.id_venta
                                 WHERE v.id_cliente = @cliente
                                     AND ev.nombre_estado_venta NOT LIKE N'Anulad%'
                                     AND ev.nombre_estado_venta NOT LIKE N'Cancelad%'
-                                    AND dv.entregado = 0
+                                    AND dv.cantidad > (
+                                        SELECT COALESCE(SUM(dr.cantidad), 0)
+                                        FROM Remito r
+                                        INNER JOIN Detalle_Remito dr ON dr.id_remito = r.id_remito
+                                        WHERE r.id_venta = dv.id_venta AND dr.id_variante = dv.id_variante
+                                          AND EXISTS (
+                                              SELECT 1 FROM Envio e
+                                              WHERE e.id_remito = r.id_remito AND e.entregado = 1
+                                          )
+                                    )
                             ) THEN 1 ELSE 0 END AS tiene_pedidos_pendientes;", conexion, transaccion);
                     validarBaja.Parameters.Add("@cliente", SqlDbType.Int).Value = idCliente;
                     using SqlDataReader estadoBaja = validarBaja.ExecuteReader();

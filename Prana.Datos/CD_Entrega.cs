@@ -265,13 +265,6 @@ namespace Prana.Datos
                     throw new InvalidOperationException("La entrega ya fue confirmada o no está pendiente.");
                 }
 
-                // Marca como entregados los renglones cuyas unidades vendidas ya se entregaron por completo.
-                using SqlCommand detalles = Comando(conexion, transaccion, @"UPDATE d SET entregado=1 FROM Detalle_Venta d
-                    WHERE d.id_venta=@venta AND (SELECT SUM(dv.cantidad) FROM Detalle_Venta dv WHERE dv.id_venta=d.id_venta AND dv.id_variante=d.id_variante)
-                    <=(SELECT COALESCE(SUM(dr.cantidad),0) FROM Detalle_Remito dr JOIN Remito r ON r.id_remito=dr.id_remito
-                    JOIN Envio e ON e.id_remito=r.id_remito WHERE r.id_venta=d.id_venta AND dr.id_variante=d.id_variante
-                    AND e.entregado=1)", ("@venta", venta));
-                detalles.ExecuteNonQuery();
                 RegistrarActividad(conexion, transaccion, usuario, "CONFIRMAR_ENTREGA", venta, $"Entrega {envio} confirmada");
                 // confirma todos los cambios de esta transaccion como una unidad
                 transaccion.Commit();
@@ -340,11 +333,6 @@ namespace Prana.Datos
           VALUES
             (@remito, 1, SYSDATETIME(), N'Retiro en local', NULL)", ("@remito", idRemito));
             envio.ExecuteNonQuery();
-            // marca los productos de esta venta como entregados
-            using SqlCommand actualizarDetalles = Comando(conexion, transaccion, @"UPDATE Detalle_Venta
-          SET entregado = 1
-          WHERE id_venta = @venta", ("@venta", idVenta));
-            actualizarDetalles.ExecuteNonQuery();
             // deja constancia del retiro en el historial
             RegistrarActividad(conexion, transaccion, venta.IdUsuario, "CONFIRMAR_ENTREGA", idVenta, $"Retiro inmediato en local; remito interno {idRemito}");
         }

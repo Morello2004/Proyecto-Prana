@@ -1,7 +1,7 @@
 ﻿; constante del compilador myappname: centraliza un valor reutilizado por las secciones siguientes
 #define MyAppName "Prana Electronica"
 ; constante del compilador myappversion: centraliza un valor reutilizado por las secciones siguientes
-#define MyAppVersion "1.0.4"
+#define MyAppVersion "1.0.7"
 ; constante del compilador myappexename: centraliza un valor reutilizado por las secciones siguientes
 #define MyAppExeName "Prana.Presentacion.exe"
 ; constante del compilador publishdir: centraliza un valor reutilizado por las secciones siguientes

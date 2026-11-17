@@ -215,8 +215,20 @@ namespace Prana.Datos
             comando.Parameters.AddWithValue("@stockFisico", stockFisico);
             // abre la conexion abre el recurso antes de usarlo; una conexion debe estar abierta para enviar consultas
             conexion.Open();
-            // ejecuta las dos actualizaciones
-            return comando.ExecuteNonQuery() > 0;
+            // El artículo y su variante se actualizan juntos; un error revierte ambos cambios.
+            using SqlTransaction transaccion = conexion.BeginTransaction();
+            comando.Transaction = transaccion;
+            try
+            {
+                int filas = comando.ExecuteNonQuery();
+                transaccion.Commit();
+                return filas > 0;
+            }
+            catch
+            {
+                if (transaccion.Connection != null) transaccion.Rollback();
+                throw;
+            }
         }
 
         // obtiene el producto completo al que pertenece una variante
@@ -407,6 +419,7 @@ namespace Prana.Datos
                                             OR UPPER(LTRIM(RTRIM(v.condicion_producto))) = UPPER(@condicionProducto)
                                         )
 
+                                        AND (@modelo = '' OR UPPER(p.modelo) LIKE UPPER(@modelo))
                                         AND v.activo = 1;";
             // prepara la conexion configurada y la libera al terminar este alcance
             using SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena());

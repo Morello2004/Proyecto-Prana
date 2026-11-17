@@ -6,9 +6,9 @@ Proyecto académico de Prácticas Profesionalizantes de la Tecnicatura Superior 
 
 ## Instalación
 
-El instalador actual es **PranaElectronica-Setup-1.0.4.exe**, para Windows de 64 bits. Incluye .NET y el instalador de SQL Server LocalDB. Se distribuye como archivo adjunto de una [Release](https://github.com/Morello2004/Proyecto-Prana/releases), separado del código fuente.
+El instalador actual es **PranaElectronica-Setup-1.0.7.exe**, para Windows de 64 bits. Incluye .NET y el instalador de SQL Server LocalDB. Se distribuye como archivo adjunto de una [Release](https://github.com/Morello2004/Proyecto-Prana/releases), separado del código fuente.
 
-Al iniciar, la aplicación crea la base local si no existe. Las bases existentes deben tener el esquema compatible: no se ejecutan migraciones automáticas.
+Al iniciar, la aplicación crea la base local si no existe. Las instalaciones anteriores se actualizan automáticamente, con un respaldo previo en `%LOCALAPPDATA%\PranaElectronica\Backups`. La actualización se ejecuta en una transacción; si encuentra datos incompatibles, revierte los cambios e informa la ruta del respaldo.
 
 ## Compilar desde el código
 

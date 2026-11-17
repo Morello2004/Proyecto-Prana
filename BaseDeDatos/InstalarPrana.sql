@@ -2124,6 +2124,8 @@ BEGIN CATCH
 END CATCH;
 
 
+-- ===== Localidades.sql =====
+
 -- crea la tabla que administra las localidades del sistema
 IF OBJECT_ID(N'dbo.Localidad',N'U') IS NULL
 BEGIN

@@ -1,4 +1,4 @@
-// guía del archivo: crea la estructura completa solo cuando la base está vacía; no migra bases existentes. La creación del archivo de base ocurre antes de la transacción del esquema; el bloqueo serializa instalaciones simultáneas y la transacción revierte el armado si falla un script.
+// guía del archivo: crea la estructura completa cuando la base está vacía y actualiza las instalaciones anteriores con respaldo. La creación del archivo de base ocurre antes de la transacción del esquema; el bloqueo serializa instalaciones simultáneas y la transacción revierte el armado si falla un script.
 using Microsoft.Data.SqlClient;
 using System;
 using System.IO;
@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace Prana.Datos
 {
-    // crea la base inicial y prepara el esquema solo en una base vacía
+    // crea la base inicial y actualiza el esquema de las bases anteriores
     public static class InicializadorBaseDatos
     {
         // nombre de la base utilizada por la aplicacion
@@ -89,9 +89,10 @@ namespace Prana.Datos
             comando.ExecuteNonQuery();
         }
 
-        // Recibe una conexión abierta; crea el esquema completo solo si no hay tablas y rechaza esquemas existentes que no sean los vigentes.
+        // Recibe una conexión abierta; crea el esquema vacío o valida el resultado de la actualización de una base existente.
         internal static void PrepararEsquema(SqlConnection conexion)
         {
+            ActualizadorBaseDatos.ActualizarSiNecesario(conexion);
             using SqlTransaction transaccion = conexion.BeginTransaction();
             // protege el acceso a los datos para atender los errores de la operacion
             try
@@ -116,27 +117,9 @@ namespace Prana.Datos
                 }
                 else
                 {
-                    // exige la tabla de localidades y su clave foranea antes de aceptar el esquema existente
-                    using SqlCommand esquemaActual = new SqlCommand(@"
-                        SELECT CASE WHEN OBJECT_ID(N'dbo.Log_Actividad',N'U') IS NOT NULL
-                            AND OBJECT_ID(N'dbo.Venta_Datos_Entrega',N'U') IS NOT NULL
-                            AND COL_LENGTH(N'dbo.Detalle_Venta',N'entregado') IS NOT NULL
-                            AND COL_LENGTH(N'dbo.Cliente',N'numero_documento') IS NOT NULL
-                            AND COL_LENGTH(N'dbo.Venta',N'fecha_hora_venta') IS NOT NULL
-                            AND COL_LENGTH(N'dbo.Envio',N'entregado') IS NOT NULL
-                            AND COL_LENGTH(N'dbo.Cliente',N'id_localidad') IS NOT NULL
-                            AND OBJECT_ID(N'dbo.Localidad',N'U') IS NOT NULL
-                            AND COL_LENGTH(N'dbo.Localidad',N'id_localidad') IS NOT NULL
-                            AND COL_LENGTH(N'dbo.Localidad',N'nombre_localidad') IS NOT NULL
-                            AND COL_LENGTH(N'dbo.Localidad',N'activo_localidad') IS NOT NULL
-                            AND COL_LENGTH(N'dbo.Pago',N'importe_cobrado') IS NOT NULL
-                            AND COL_LENGTH(N'dbo.Medio_Pago',N'porcentaje_recargo_base') IS NOT NULL
-                            AND COL_LENGTH(N'dbo.Caja',N'id_caja') IS NOT NULL
-                            AND COL_LENGTH(N'dbo.Caja_Movimiento',N'tipo_movimiento') IS NOT NULL
-                        THEN 1 ELSE 0 END", conexion, transaccion);
-                    if (Convert.ToInt32(esquemaActual.ExecuteScalar()) != 1)
+                    if (!EsquemaVigente(conexion, transaccion))
                     {
-                        throw new InvalidOperationException("La base ya contiene tablas pero no tiene el esquema vigente. Prana no ejecuta migraciones automáticamente; actualice la base manualmente o restaure una copia compatible.");
+                        throw new InvalidOperationException("La base no tiene una estructura compatible con esta versión de Prana. Se conservaron los datos.");
                     }
                 }
                 // confirma todos los cambios de esta transaccion como una unidad
@@ -157,8 +140,56 @@ namespace Prana.Datos
             }
         }
 
+        internal static bool EsquemaVigente(SqlConnection conexion, SqlTransaction? transaccion)
+        {
+            using SqlCommand comando = new SqlCommand(@"
+                        SELECT CASE WHEN OBJECT_ID(N'dbo.Log_Actividad',N'U') IS NOT NULL
+                            AND OBJECT_ID(N'dbo.Venta_Datos_Entrega',N'U') IS NOT NULL
+                            AND COL_LENGTH(N'dbo.Detalle_Venta',N'entregado') IS NOT NULL
+                            AND COL_LENGTH(N'dbo.Cliente',N'numero_documento') IS NOT NULL
+                            AND COL_LENGTH(N'dbo.Venta',N'fecha_hora_venta') IS NOT NULL
+                            AND COL_LENGTH(N'dbo.Envio',N'entregado') IS NOT NULL
+                            AND COL_LENGTH(N'dbo.Cliente',N'id_localidad') IS NOT NULL
+                            AND OBJECT_ID(N'dbo.Localidad',N'U') IS NOT NULL
+                            AND COL_LENGTH(N'dbo.Localidad',N'id_localidad') IS NOT NULL
+                            AND COL_LENGTH(N'dbo.Localidad',N'nombre_localidad') IS NOT NULL
+                            AND COL_LENGTH(N'dbo.Localidad',N'activo_localidad') IS NOT NULL
+                            AND COL_LENGTH(N'dbo.Pago',N'importe_cobrado') IS NOT NULL
+                            AND COL_LENGTH(N'dbo.Medio_Pago',N'porcentaje_recargo_base') IS NOT NULL
+                            AND COL_LENGTH(N'dbo.Caja',N'id_caja') IS NOT NULL
+                            AND COL_LENGTH(N'dbo.Caja_Movimiento',N'tipo_movimiento') IS NOT NULL
+                            AND NOT EXISTS (
+                                SELECT 1 FROM (VALUES
+                                    (N'Cliente',N'fecha_hora_registro'),
+                                    (N'Log_Actividad',N'fecha_hora_actividad'),
+                                    (N'Pago',N'importe_base'),(N'Pago',N'cantidad_cuotas'),
+                                    (N'Pago',N'clasificacion_cobro'),(N'Pago',N'fecha_hora_pago'),(N'Pago',N'id_caja'),
+                                    (N'Medio_Pago',N'clasificacion_cobro'),
+                                    (N'Medio_Pago',N'porcentaje_recargo_2_cuotas'),(N'Medio_Pago',N'porcentaje_recargo_3_cuotas'),
+                                    (N'Medio_Pago',N'porcentaje_recargo_6_cuotas'),(N'Medio_Pago',N'porcentaje_recargo_9_cuotas'),
+                                    (N'Medio_Pago',N'porcentaje_recargo_12_cuotas'),
+                                    (N'Variante_Producto',N'precio_venta_unitario'),(N'Variante_Producto',N'costo_unitario'),
+                                    (N'Ingreso_Stock',N'numero_remito_proveedor'),(N'Ingreso_Stock',N'fecha_hora_ingreso'),
+                                    (N'Venta_Datos_Entrega',N'fecha_estimada_entrega'),(N'Venta_Datos_Entrega',N'direccion_sugerida'),
+                                    (N'Venta_Datos_Entrega',N'localidad_sugerida'),(N'Venta_Datos_Entrega',N'observaciones_entrega'),
+                                    (N'Caja',N'fecha_operativa'),(N'Caja',N'fecha_hora_apertura'),
+                                    (N'Caja',N'fecha_hora_fin_turno'),(N'Caja',N'fecha_hora_registro_cierre'),
+                                    (N'Caja',N'id_usuario_cierre'),(N'Caja',N'id_usuario_apertura'),
+                                    (N'Caja_Movimiento',N'id_movimiento_caja'),(N'Caja_Movimiento',N'fecha_hora_movimiento'),
+                                    (N'Caja_Movimiento',N'medio_movimiento'),(N'Caja_Movimiento',N'id_caja'),
+                                    (N'Remito',N'fecha_hora_emision'),(N'Envio',N'fecha_hora_entrega'),
+                                    (N'Usuario',N'fecha_hora_fin_bloqueo')
+                                ) esperadas(tabla,columna)
+                                WHERE COL_LENGTH(N'dbo.'+QUOTENAME(esperadas.tabla),esperadas.columna) IS NULL)
+                            AND EXISTS (SELECT 1 FROM sys.foreign_key_columns
+                                WHERE parent_object_id=OBJECT_ID(N'dbo.Cliente')
+                                  AND parent_column_id=COLUMNPROPERTY(OBJECT_ID(N'dbo.Cliente'),N'id_localidad',N'ColumnId')
+                                  AND referenced_object_id=OBJECT_ID(N'dbo.Localidad'))
+                        THEN 1 ELSE 0 END", conexion, transaccion);
+            return Convert.ToInt32(comando.ExecuteScalar()) == 1;
+        }
         // resuelve leer script con los datos recibidos y entrega el resultado al codigo que lo llama
-        private static string LeerScript(string nombre)
+        internal static string LeerScript(string nombre)
         {
             string[] rutas = new[]
             {
@@ -182,8 +213,10 @@ namespace Prana.Datos
         }
 
         // go separa lotes de sql server y se procesa en c#, dentro de la misma transaccion divide el archivo por go y ejecuta cada lote dentro de la transaccion recibida; go no se envia como instruccion sql
-        private static void EjecutarScript(SqlConnection conexion, SqlTransaction transaccion, string scriptCompleto)
+        internal static void EjecutarScript(SqlConnection conexion, SqlTransaction transaccion, string scriptCompleto)
         {
+            // Las secciones históricas declaran variables propias y requieren lotes separados.
+            scriptCompleto = Regex.Replace(scriptCompleto, @"^(-- ===== .+ =====)\r?$", "GO\n$1", RegexOptions.Multiline);
             string[] bloques = Regex.Split(scriptCompleto, @"^\s*GO\s*;?\s*$", RegexOptions.Multiline | RegexOptions.IgnoreCase);
             // procesa cada bloque de bloques sin cambiar el orden de la coleccion
             foreach (string bloque in bloques)

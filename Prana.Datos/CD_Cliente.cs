@@ -134,7 +134,10 @@ namespace Prana.Datos
             List<Cliente> clientesEncontrados = new List<Cliente>();
             // resuelve el nombre visible de la localidad desde su clave foranea
             // los numeros son los filtros del formulario de clientes; 4 significa todos menos los eliminados
-            string consulta = @"SELECT c.id_cliente
+            string consulta = @"SELECT c.id_cliente, c.nombre_cliente, c.apellido_cliente,
+                    c.numero_documento, c.tipo_documento, c.telefono, c.fecha_hora_registro,
+                    c.direccion, c.saldo_a_favor, c.activo, c.eliminado,
+                    COALESCE(d.saldo, 0) AS deuda_pendiente, l.nombre_localidad AS localidad
                 FROM Cliente c
                 LEFT JOIN dbo.Localidad l ON l.id_localidad=c.id_localidad
                 LEFT JOIN (SELECT id_cliente, SUM(saldo) AS saldo FROM (" + CD_Venta.SaldosSql + @") saldos GROUP BY id_cliente) d ON d.id_cliente = c.id_cliente

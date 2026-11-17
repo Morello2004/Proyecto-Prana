@@ -1,4 +1,4 @@
-﻿using Prana.Datos;
+using Prana.Datos;
 using Prana.Entidades;
 
 namespace Prana.negocio;
@@ -14,16 +14,16 @@ public class CN_Caja
         {
             throw new InvalidOperationException("Inicie sesión para abrir una caja.");
         }
-        ValidarDatosIniciales(caja);
+        ValidarObservaciones(caja);
         return datos.Abrir(caja, SesionActual.Usuario.idUsuario);
     }
 
     // mantiene la misma validacion para la apertura y las correcciones posteriores
-    private static void ValidarDatosIniciales(CierreCaja caja)
+    private static void ValidarObservaciones(CierreCaja caja)
     {
-        if (caja.SaldoInicial < 0 || caja.SaldoInicialUsd < 0 || caja.Observaciones.Length > 1000)
+        if (caja.Observaciones.Length > 1000)
         {
-            throw new ArgumentException("Revise los saldos iniciales y las observaciones de hasta 1000 caracteres.");
+            throw new ArgumentException("Las observaciones admiten hasta 1000 caracteres.");
         }
     }
 
@@ -35,7 +35,7 @@ public class CN_Caja
     // conserva los datos del turno abierto sin modificar otras cajas de la misma fecha
     public void GuardarCajaAbierta(CierreCaja caja)
     {
-        ValidarDatosIniciales(caja);
+        ValidarObservaciones(caja);
         datos.GuardarCajaAbierta(caja);
     }
 
@@ -57,7 +57,7 @@ public class CN_Caja
         return CrearResumenMensual(mes, datos.ConsultarPeriodo(mes, mes.AddMonths(1)));
     }
 
-    // calcula totales del mes sin sumar los saldos iniciales de cada dia calcula crear resumen mensual a partir de los valores recibidos; revisar las operaciones siguientes para distinguir base, recargo y total
+    // Calcula ingresos, gastos y resultado por moneda desde los movimientos del mes.
     public static ResumenMensualCaja CrearResumenMensual(DateTime fecha, IEnumerable<MovimientoCaja> movimientos)
     {
         DateTime mes = new DateTime(fecha.Year, fecha.Month, 1);
@@ -71,7 +71,6 @@ public class CN_Caja
             {
                 Concepto = concepto,
                 Moneda = moneda,
-                Cantidad = items.Count,
                 Ingresos = ingresos,
                 Gastos = gastos,
                 Resultado = ingresos - gastos
@@ -167,11 +166,6 @@ public class CN_Caja
             throw new ArgumentException("La fecha y hora de apertura no pueden estar en el futuro.");
         }
 
-        if (cierre.SaldoInicial < 0 || cierre.SaldoInicialUsd < 0 || cierre.Billetes.Any(b => b.Cantidad < 0 || b.Denominacion <= 0 || !new[] { "ARS", "USD" }.Contains(b.Moneda)))
-        {
-            // interrumpe el flujo con una excepcion; el nivel que la atiende decide como informar o revertir la operacion
-            throw new ArgumentException("El saldo inicial y el conteo de billetes no pueden ser negativos.");
-        }
 
         cierre.Observaciones = NormalizarTexto.Mayusculas(cierre.Observaciones);
         if (cierre.Observaciones.Length > 1000)

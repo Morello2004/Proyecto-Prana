@@ -1,4 +1,4 @@
-﻿namespace Prana.Presentacion;
+namespace Prana.Presentacion;
 // parte visual de frmresumenmensualcaja crea controles y define su distribucion, colores y eventos; visual studio puede regenerar este archivo al editar el disenador
 partial class frmResumenMensualCaja
 {
@@ -268,15 +268,6 @@ partial class frmResumenMensualCaja
         colDiseno66.DefaultCellStyle.FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("es-AR");
         totales.Columns.Add(colDiseno66);
         colDiseno66.Name = "Moneda";
-        colDiseno67 = new DataGridViewTextBoxColumn();
-        colDiseno67.Name = "colDiseno67";
-        colDiseno67.DataPropertyName = "Cantidad";
-        colDiseno67.HeaderText = "Movimientos";
-        colDiseno67.FillWeight = 80;
-        colDiseno67.DefaultCellStyle.Format = "";
-        colDiseno67.DefaultCellStyle.FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("es-AR");
-        totales.Columns.Add(colDiseno67);
-        colDiseno67.Name = "Cantidad";
         colDiseno68 = new DataGridViewTextBoxColumn();
         colDiseno68.Name = "colDiseno68";
         colDiseno68.DataPropertyName = "Ingresos";
@@ -346,15 +337,6 @@ partial class frmResumenMensualCaja
         colDiseno72.DefaultCellStyle.FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("es-AR");
         porDia.Columns.Add(colDiseno72);
         colDiseno72.Name = "Moneda";
-        colDiseno73 = new DataGridViewTextBoxColumn();
-        colDiseno73.Name = "colDiseno73";
-        colDiseno73.DataPropertyName = "Cantidad";
-        colDiseno73.HeaderText = "Movimientos";
-        colDiseno73.FillWeight = 80;
-        colDiseno73.DefaultCellStyle.Format = "";
-        colDiseno73.DefaultCellStyle.FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("es-AR");
-        porDia.Columns.Add(colDiseno73);
-        colDiseno73.Name = "Cantidad";
         colDiseno74 = new DataGridViewTextBoxColumn();
         colDiseno74.Name = "colDiseno74";
         colDiseno74.DataPropertyName = "Ingresos";
@@ -424,15 +406,6 @@ partial class frmResumenMensualCaja
         colDiseno78.DefaultCellStyle.FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("es-AR");
         porMedio.Columns.Add(colDiseno78);
         colDiseno78.Name = "Moneda";
-        colDiseno79 = new DataGridViewTextBoxColumn();
-        colDiseno79.Name = "colDiseno79";
-        colDiseno79.DataPropertyName = "Cantidad";
-        colDiseno79.HeaderText = "Movimientos";
-        colDiseno79.FillWeight = 80;
-        colDiseno79.DefaultCellStyle.Format = "";
-        colDiseno79.DefaultCellStyle.FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("es-AR");
-        porMedio.Columns.Add(colDiseno79);
-        colDiseno79.Name = "Cantidad";
         colDiseno80 = new DataGridViewTextBoxColumn();
         colDiseno80.Name = "colDiseno80";
         colDiseno80.DataPropertyName = "Ingresos";
@@ -502,15 +475,6 @@ partial class frmResumenMensualCaja
         colDiseno84.DefaultCellStyle.FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("es-AR");
         porTipo.Columns.Add(colDiseno84);
         colDiseno84.Name = "Moneda";
-        colDiseno85 = new DataGridViewTextBoxColumn();
-        colDiseno85.Name = "colDiseno85";
-        colDiseno85.DataPropertyName = "Cantidad";
-        colDiseno85.HeaderText = "Movimientos";
-        colDiseno85.FillWeight = 80;
-        colDiseno85.DefaultCellStyle.Format = "";
-        colDiseno85.DefaultCellStyle.FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("es-AR");
-        porTipo.Columns.Add(colDiseno85);
-        colDiseno85.Name = "Cantidad";
         colDiseno86 = new DataGridViewTextBoxColumn();
         colDiseno86.Name = "colDiseno86";
         colDiseno86.DataPropertyName = "Ingresos";
@@ -637,7 +601,7 @@ partial class frmResumenMensualCaja
         colDiseno97 = new DataGridViewTextBoxColumn();
         colDiseno97.Name = "colDiseno97";
         colDiseno97.DataPropertyName = "Usuario";
-        colDiseno97.HeaderText = "Usuario (ID)";
+        colDiseno97.HeaderText = "Usuario";
         colDiseno97.FillWeight = 70;
         colDiseno97.DefaultCellStyle.Format = "";
         colDiseno97.DefaultCellStyle.FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("es-AR");
@@ -662,25 +626,21 @@ partial class frmResumenMensualCaja
     private DataGridView detalle;
     private DataGridViewTextBoxColumn colDiseno65;
     private DataGridViewTextBoxColumn colDiseno66;
-    private DataGridViewTextBoxColumn colDiseno67;
     private DataGridViewTextBoxColumn colDiseno68;
     private DataGridViewTextBoxColumn colDiseno69;
     private DataGridViewTextBoxColumn colDiseno70;
     private DataGridViewTextBoxColumn colDiseno71;
     private DataGridViewTextBoxColumn colDiseno72;
-    private DataGridViewTextBoxColumn colDiseno73;
     private DataGridViewTextBoxColumn colDiseno74;
     private DataGridViewTextBoxColumn colDiseno75;
     private DataGridViewTextBoxColumn colDiseno76;
     private DataGridViewTextBoxColumn colDiseno77;
     private DataGridViewTextBoxColumn colDiseno78;
-    private DataGridViewTextBoxColumn colDiseno79;
     private DataGridViewTextBoxColumn colDiseno80;
     private DataGridViewTextBoxColumn colDiseno81;
     private DataGridViewTextBoxColumn colDiseno82;
     private DataGridViewTextBoxColumn colDiseno83;
     private DataGridViewTextBoxColumn colDiseno84;
-    private DataGridViewTextBoxColumn colDiseno85;
     private DataGridViewTextBoxColumn colDiseno86;
     private DataGridViewTextBoxColumn colDiseno87;
     private DataGridViewTextBoxColumn colDiseno88;

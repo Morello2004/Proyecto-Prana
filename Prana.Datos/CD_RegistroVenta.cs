@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Prana.Entidades;
 using System;
 using System.Data;
@@ -45,17 +45,6 @@ namespace Prana.Datos
                 }
                 // elige pendiente sin pagos pagada con pago total o parcial en los demas casos
                 int estadoVenta = ObtenerOCrearIdPorNombre(conexion, transaccion, "Estado_Venta", "id_estado_venta", "nombre_estado_venta", nombreEstadoVenta);
-                string nombreEstadoDetalle;
-                if (retiroInmediato)
-                {
-                    nombreEstadoDetalle = "Entregado";
-                }
-                else
-                {
-                    nombreEstadoDetalle = "Pendiente";
-                }
-                // marca los productos entregados solo cuando el cliente los retira en este momento
-                int estadoDetalle = ObtenerOCrearIdPorNombre(conexion, transaccion, "Estado_Variante_Producto", "id_estado_variante_producto", "nombre_estado_variante_producto", nombreEstadoDetalle);
                 // bloquea la tabla hasta confirmar o revertir para que dos ventas no reciban el mismo numero
                 using SqlCommand siguienteNumero = new("SELECT COALESCE(MAX(id_venta), 2499) + 1 FROM dbo.Venta WITH (TABLOCKX, HOLDLOCK)", conexion, transaccion);
                 int idVenta = Convert.ToInt32(siguienteNumero.ExecuteScalar());
@@ -64,7 +53,7 @@ namespace Prana.Datos
                 insercionExplicitaActivada = true;
                 using SqlCommand activarInsercion = new("SET IDENTITY_INSERT dbo.Venta ON", conexion, transaccion);
                 activarInsercion.ExecuteNonQuery();
-                using SqlCommand encabezado = new("INSERT INTO dbo.Venta (id_venta,id_cliente,id_usuario,fecha_venta,id_estado_venta,total,id_modalidad_entrega,descuento) VALUES (@venta,@cliente,@usuario,SYSDATETIME(),@estado,@total,@modalidad,@descuento)", conexion, transaccion);
+                using SqlCommand encabezado = new("INSERT INTO dbo.Venta (id_venta,id_cliente,id_usuario,fecha_hora_venta,id_estado_venta,total,id_modalidad_entrega,descuento,observacion_pago,condicion_pago) VALUES (@venta,@cliente,@usuario,SYSDATETIME(),@estado,@total,@modalidad,@descuento,@pago,@condicion)", conexion, transaccion);
                 // asigna valores a los parametros sin concatenarlos dentro de la consulta
                 encabezado.Parameters.AddWithValue("@cliente", venta.IdCliente);
                 encabezado.Parameters.AddWithValue("@venta", idVenta);
@@ -73,6 +62,8 @@ namespace Prana.Datos
                 encabezado.Parameters.AddWithValue("@total", venta.Total);
                 encabezado.Parameters.AddWithValue("@modalidad", modalidad);
                 encabezado.Parameters.AddWithValue("@descuento", venta.Descuento);
+                encabezado.Parameters.Add("@pago", System.Data.SqlDbType.NVarChar, 500).Value = venta.ObservacionPago;
+                encabezado.Parameters.Add("@condicion", System.Data.SqlDbType.NVarChar, 30).Value = venta.CondicionPago;
                 encabezado.ExecuteNonQuery();
                 // desactiva la insercion explicita antes de guardar detalles pagos y entrega
                 using SqlCommand desactivarInsercion = new("SET IDENTITY_INSERT dbo.Venta OFF", conexion, transaccion);
@@ -81,14 +72,14 @@ namespace Prana.Datos
                 // relaciona cada variante con la venta y conserva la cantidad y el precio aplicado en esta operacion
                 foreach (DetalleNuevaVenta item in venta.Detalles)
                 {
-                    using SqlCommand detalle = new("INSERT INTO Detalle_Venta (id_venta,id_variante,cantidad,precio_unitario,subtotal,id_estado_variante_producto) VALUES (@venta,@variante,@cantidad,@precio,@subtotal,@estado)", conexion, transaccion);
+                    using SqlCommand detalle = new("INSERT INTO Detalle_Venta (id_venta,id_variante,cantidad,precio_unitario,subtotal,entregado) VALUES (@venta,@variante,@cantidad,@precio,@subtotal,@entregado)", conexion, transaccion);
                     // relaciona este producto con el identificador de la venta recien creada
                     detalle.Parameters.AddWithValue("@venta", idVenta);
                     detalle.Parameters.AddWithValue("@variante", item.IdVariante);
                     detalle.Parameters.AddWithValue("@cantidad", item.Cantidad);
                     detalle.Parameters.AddWithValue("@precio", item.PrecioUnitario);
                     detalle.Parameters.AddWithValue("@subtotal", item.Cantidad * item.PrecioUnitario);
-                    detalle.Parameters.AddWithValue("@estado", estadoDetalle);
+                    detalle.Parameters.AddWithValue("@entregado", retiroInmediato);
                     // ejecuta la escritura sin solicitar un valor de resultado
                     detalle.ExecuteNonQuery();
                 }
@@ -98,7 +89,7 @@ namespace Prana.Datos
                 {
                     // el select toma el tipo de caja del medio de pago y lo incluye en el registro
                     // todos los medios del pago inicial quedan asociados a la misma apertura protegida por la transaccion
-                    using SqlCommand pago = new("INSERT INTO Pago (id_venta,id_usuario,id_medio_pago,cuotas,monto,monto_final,fecha_pago,tipo_caja,cuenta_destino,id_caja) SELECT @venta,@usuario,@medio,@cuotas,@monto,@final,@fecha,tipo_caja,@cuenta,@caja FROM Medio_Pago WHERE id_medio_pago=@medio", conexion, transaccion);
+                    using SqlCommand pago = new("INSERT INTO Pago (id_venta,id_usuario,id_medio_pago,cantidad_cuotas,importe_base,importe_cobrado,fecha_hora_pago,clasificacion_cobro,cuenta_destino,id_caja) SELECT @venta,@usuario,@medio,@cuotas,@monto,@final,@fecha,clasificacion_cobro,@cuenta,@caja FROM Medio_Pago WHERE id_medio_pago=@medio", conexion, transaccion);
                     pago.Parameters.AddWithValue("@caja", idCaja);
                     pago.Parameters.AddWithValue("@cuenta", item.CuentaDestino);
                     pago.Parameters.AddWithValue("@venta", idVenta);
@@ -113,26 +104,24 @@ namespace Prana.Datos
 
                 // guarda los datos necesarios para preparar el remito mas adelante
                 using (SqlCommand entrega = new(@"
-IF OBJECT_ID(N'dbo.Venta_Entrega', N'U') IS NULL
-    CREATE TABLE dbo.Venta_Entrega (
+IF OBJECT_ID(N'dbo.Venta_Datos_Entrega', N'U') IS NULL
+    CREATE TABLE dbo.Venta_Datos_Entrega (
         id_venta int NOT NULL PRIMARY KEY REFERENCES dbo.Venta(id_venta),
-        domicilio nvarchar(200) NULL, fecha_estimada datetime2 NULL,
-        horario_sugerido nvarchar(50) NULL, observaciones nvarchar(500) NULL,
-        tipo_logistica nvarchar(50) NULL, costo_envio decimal(10,2) NOT NULL,
-        observacion_pago nvarchar(500) NULL, condicion_pago nvarchar(30) NOT NULL);
-INSERT INTO dbo.Venta_Entrega (id_venta,domicilio,fecha_estimada,horario_sugerido,observaciones,tipo_logistica,costo_envio,observacion_pago,condicion_pago)
-VALUES (@venta,@domicilio,@fecha,@horario,@observaciones,@logistica,@costo,@pago,@condicion)", conexion, transaccion))
+        direccion_sugerida nvarchar(200) NULL, localidad_sugerida nvarchar(25) NULL, fecha_estimada_entrega datetime2 NULL,
+        horario_sugerido nvarchar(50) NULL, observaciones_entrega nvarchar(500) NULL,
+        tipo_logistica nvarchar(50) NULL, costo_envio decimal(10,2) NOT NULL);
+INSERT INTO dbo.Venta_Datos_Entrega (id_venta,direccion_sugerida,localidad_sugerida,fecha_estimada_entrega,horario_sugerido,observaciones_entrega,tipo_logistica,costo_envio)
+VALUES (@venta,@domicilio,@localidad,@fecha,@horario,@observaciones,@logistica,@costo)", conexion, transaccion))
                 {
                     entrega.Parameters.AddWithValue("@venta", idVenta);
                     // dbnull representa un valor nulo de sql cuando no se recibe un domicilio
+                    entrega.Parameters.Add("@localidad", System.Data.SqlDbType.NVarChar, 25).Value = (object)venta.LocalidadEntrega ?? DBNull.Value;
                     entrega.Parameters.AddWithValue("@domicilio", (object)venta.DomicilioEntrega ?? DBNull.Value);
                     entrega.Parameters.AddWithValue("@fecha", (object?)venta.FechaEntrega ?? DBNull.Value);
-                    entrega.Parameters.AddWithValue("@horario", venta.HorarioSugerido);
+                    entrega.Parameters.Add("@horario", System.Data.SqlDbType.NVarChar, 50).Value = venta.HorarioSugerido;
                     entrega.Parameters.AddWithValue("@observaciones", venta.ObservacionesEntrega);
                     entrega.Parameters.AddWithValue("@logistica", venta.TipoLogistica);
                     entrega.Parameters.AddWithValue("@costo", venta.CostoEnvio);
-                    entrega.Parameters.AddWithValue("@pago", venta.ObservacionPago);
-                    entrega.Parameters.AddWithValue("@condicion", venta.CondicionPago);
                     entrega.ExecuteNonQuery();
                 }
 
@@ -144,15 +133,15 @@ VALUES (@venta,@domicilio,@fecha,@horario,@observaciones,@logistica,@costo,@pago
 
                 // registra la venta y agrega otra actividad solo si hubo descuento
                 using (SqlCommand historial = new(@"
-INSERT LogActividad(id_usuario,accion,entidad,id_entidad,detalle,fecha)
+INSERT Log_Actividad(id_usuario,accion,entidad,id_entidad,detalle,fecha_hora_actividad)
 SELECT v.id_usuario,N'REGISTRAR_VENTA',N'Venta',v.id_venta,
     CONCAT(N'Venta / RTO ',v.id_venta,N' | Cliente: ',c.nombre_cliente,N' ',c.apellido_cliente,
-        N' | Total ARS: ',FORMAT(v.total,'N2','es-AR'),N' | Descuento ARS: ',FORMAT(v.descuento,'N2','es-AR')),v.fecha_venta
+        N' | Total ARS: ',FORMAT(v.total,'N2','es-AR'),N' | Descuento ARS: ',FORMAT(v.descuento,'N2','es-AR')),v.fecha_hora_venta
 FROM Venta v JOIN Cliente c ON c.id_cliente=v.id_cliente WHERE v.id_venta=@venta;
-INSERT LogActividad(id_usuario,accion,entidad,id_entidad,detalle,fecha)
+INSERT Log_Actividad(id_usuario,accion,entidad,id_entidad,detalle,fecha_hora_actividad)
 SELECT id_usuario,N'APLICAR_DESCUENTO',N'Venta',id_venta,
     CONCAT(N'Venta / RTO ',id_venta,N' | Descuento ARS: ',FORMAT(descuento,'N2','es-AR'),
-        N' | Total final ARS: ',FORMAT(total,'N2','es-AR')),fecha_venta
+        N' | Total final ARS: ',FORMAT(total,'N2','es-AR')),fecha_hora_venta
 FROM Venta WHERE id_venta=@venta AND descuento>0;", conexion, transaccion))
                 {
                     historial.Parameters.AddWithValue("@venta", idVenta);

@@ -1,4 +1,4 @@
-﻿namespace Prana.Presentacion
+namespace Prana.Presentacion
 {
     // parte visual de frmpagos crea controles y define su distribucion, colores y eventos; visual studio puede regenerar este archivo al editar el disenador
     partial class frmPagos
@@ -18,12 +18,14 @@
         // construye la pantalla: instancia controles, asigna propiedades, agrega cada control a su contenedor y conecta los eventos no registra operaciones comerciales
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle10 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle11 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle12 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle13 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle14 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle15 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle16 = new DataGridViewCellStyle();
             lblCuentaDestino = new Label();
             txtCuentaDestino = new TextBox();
             pnlTitulo = new Panel();
@@ -34,10 +36,10 @@
             btnGarantia = new Button();
             chkPendientes = new CheckBox();
             contenido = new TableLayoutPanel();
+            pnlCobro = new Panel();
             pnlVentas = new Panel();
             dgvVentas = new DataGridView();
             lblVentas = new Label();
-            pnlCobro = new Panel();
             lblSeleccion = new Label();
             lblImporte = new Label();
             nudImporte = new NumericUpDown();
@@ -61,12 +63,9 @@
             pnlTitulo.SuspendLayout();
             contenido.SuspendLayout();
             pnlVentas.SuspendLayout();
-            // llama a ((systemcomponentmodelisupportinitialize)dgvventas)begininit para realizar este paso del flujo
             ((System.ComponentModel.ISupportInitialize)dgvVentas).BeginInit();
-            // llama a ((systemcomponentmodelisupportinitialize)nudimporte)begininit para realizar este paso del flujo
             ((System.ComponentModel.ISupportInitialize)nudImporte).BeginInit();
             pnlPagos.SuspendLayout();
-            // llama a ((systemcomponentmodelisupportinitialize)dgvpagos)begininit para realizar este paso del flujo
             ((System.ComponentModel.ISupportInitialize)dgvPagos).BeginInit();
             flpFiltros.SuspendLayout();
             flpCobro.SuspendLayout();
@@ -76,22 +75,28 @@
             pnlPagina.SuspendLayout();
             tlpSecciones.SuspendLayout();
             SuspendLayout();
-            // lblcuentadestino lblcuentadestinodock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            //
+            // lblCuentaDestino
+            //
             lblCuentaDestino.Dock = DockStyle.Top;
             lblCuentaDestino.ForeColor = Color.White;
             lblCuentaDestino.Location = new Point(0, 0);
             lblCuentaDestino.Name = "lblCuentaDestino";
             lblCuentaDestino.Size = new Size(1200, 23);
             lblCuentaDestino.TabIndex = 1;
-            lblCuentaDestino.Text = "Cuenta destino / referencia";
-            // txtcuentadestino txtcuentadestinoanchor: bordes que mantienen su distancia cuando cambia el tamano del contenedor
+            lblCuentaDestino.Click += lblCuentaDestino_Click;
+            //
+            // txtCuentaDestino
+            //
             txtCuentaDestino.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             txtCuentaDestino.Location = new Point(0, 26);
             txtCuentaDestino.MaxLength = 100;
             txtCuentaDestino.Name = "txtCuentaDestino";
             txtCuentaDestino.Size = new Size(220, 23);
             txtCuentaDestino.TabIndex = 0;
-            // pnltitulo pnltitulobackcolor: color del fondo del control o de la celda
+            //
+            // pnlTitulo
+            //
             pnlTitulo.BackColor = Color.FromArgb(21, 30, 41);
             pnlTitulo.Controls.Add(lblTitulo);
             pnlTitulo.Dock = DockStyle.Top;
@@ -100,7 +105,9 @@
             pnlTitulo.Name = "pnlTitulo";
             pnlTitulo.Size = new Size(1200, 76);
             pnlTitulo.TabIndex = 0;
-            // lbltitulo
+            //
+            // lblTitulo
+            //
             lblTitulo.AutoSize = true;
             lblTitulo.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
             lblTitulo.Location = new Point(20, 20);
@@ -108,7 +115,9 @@
             lblTitulo.Size = new Size(82, 32);
             lblTitulo.TabIndex = 0;
             lblTitulo.Text = "Pagos";
-            // pnlfiltros pnlfiltrosbackcolor: color del fondo del control o de la celda
+            //
+            // pnlFiltros
+            //
             pnlFiltros.BackColor = Color.FromArgb(21, 30, 41);
             pnlFiltros.Dock = DockStyle.Top;
             pnlFiltros.Location = new Point(0, 99);
@@ -116,7 +125,9 @@
             pnlFiltros.Size = new Size(1200, 70);
             pnlFiltros.TabIndex = 1;
             pnlFiltros.Visible = false;
-            // txtbuscar txtbuscarfont: tipografia, tamano y estilo con los que se muestra el contenido
+            //
+            // txtBuscar
+            //
             txtBuscar.Font = new Font("Segoe UI", 10F);
             txtBuscar.Location = new Point(12, 12);
             txtBuscar.Margin = new Padding(4, 4, 12, 4);
@@ -126,7 +137,9 @@
             txtBuscar.Size = new Size(420, 25);
             txtBuscar.TabIndex = 0;
             txtBuscar.KeyDown += txtBuscar_KeyDown;
-            // btnbuscar btnbuscarbackcolor: color del fondo del control o de la celda
+            //
+            // btnBuscar
+            //
             btnBuscar.BackColor = Color.DodgerBlue;
             btnBuscar.FlatAppearance.BorderSize = 0;
             btnBuscar.FlatStyle = FlatStyle.Flat;
@@ -139,17 +152,24 @@
             btnBuscar.Text = "Buscar / Actualizar";
             btnBuscar.UseVisualStyleBackColor = false;
             btnBuscar.Click += btnBuscar_Click;
-            // btngarantia btngarantianame: nombre con el que el formulario identifica este control en el codigo
-            btnGarantia.Name = "btnGarantia";
-            btnGarantia.Text = "Emitir garantía actualizada";
-            btnGarantia.Size = new Size(200, 34);
-            btnGarantia.Margin = new Padding(4, 4, 12, 4);
+            //
+            // btnGarantia
+            //
             btnGarantia.BackColor = Color.DodgerBlue;
-            btnGarantia.ForeColor = Color.White;
-            btnGarantia.FlatStyle = FlatStyle.Flat;
             btnGarantia.Enabled = false;
+            btnGarantia.FlatStyle = FlatStyle.Flat;
+            btnGarantia.ForeColor = Color.White;
+            btnGarantia.Location = new Point(774, 12);
+            btnGarantia.Margin = new Padding(4, 4, 12, 4);
+            btnGarantia.Name = "btnGarantia";
+            btnGarantia.Size = new Size(200, 34);
+            btnGarantia.TabIndex = 3;
+            btnGarantia.Text = "Emitir garantía actualizada";
+            btnGarantia.UseVisualStyleBackColor = false;
             btnGarantia.Click += btnGarantia_Click;
-            // chkpendientes
+            //
+            // chkPendientes
+            //
             chkPendientes.AutoSize = true;
             chkPendientes.Checked = true;
             chkPendientes.CheckState = CheckState.Checked;
@@ -159,7 +179,9 @@
             chkPendientes.Size = new Size(159, 19);
             chkPendientes.TabIndex = 2;
             chkPendientes.Text = "Solo con saldo pendiente";
+            //
             // contenido
+            //
             contenido.ColumnCount = 1;
             contenido.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             contenido.Controls.Add(pnlCobro, 0, 1);
@@ -174,7 +196,18 @@
             contenido.Size = new Size(1200, 651);
             contenido.TabIndex = 0;
             contenido.Visible = false;
-            // pnlventas inserta el control en su contenedor; esto determina su jerarquia visual y posicion relativa
+            //
+            // pnlCobro
+            //
+            pnlCobro.BackColor = Color.FromArgb(21, 30, 41);
+            pnlCobro.Dock = DockStyle.Fill;
+            pnlCobro.Location = new Point(19, 268);
+            pnlCobro.Name = "pnlCobro";
+            pnlCobro.Size = new Size(1162, 159);
+            pnlCobro.TabIndex = 3;
+            //
+            // pnlVentas
+            //
             pnlVentas.Controls.Add(dgvVentas);
             pnlVentas.Controls.Add(lblVentas);
             pnlVentas.Dock = DockStyle.Top;
@@ -183,57 +216,54 @@
             pnlVentas.Name = "pnlVentas";
             pnlVentas.Size = new Size(1167, 230);
             pnlVentas.TabIndex = 2;
-            // dgvventas
+            //
+            // dgvVentas
+            //
             dgvVentas.AllowUserToAddRows = false;
             dgvVentas.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle1.BackColor = Color.FromArgb(236, 242, 249);
-            dgvVentas.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle9.BackColor = Color.FromArgb(236, 242, 249);
+            dataGridViewCellStyle9.ForeColor = Color.Black;
+            dataGridViewCellStyle9.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dataGridViewCellStyle9.SelectionForeColor = Color.Black;
+            dgvVentas.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle9;
             dgvVentas.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvVentas.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dgvVentas.BackgroundColor = Color.FromArgb(13, 19, 27);
             dgvVentas.BorderStyle = BorderStyle.None;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = Color.FromArgb(37, 52, 70);
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle2.ForeColor = Color.White;
-            dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(190, 220, 250);
-            dataGridViewCellStyle2.SelectionForeColor = Color.Black;
-            dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(190, 220, 250);
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            dgvVentas.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle10.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle10.BackColor = Color.FromArgb(37, 52, 70);
+            dataGridViewCellStyle10.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle10.ForeColor = Color.White;
+            dataGridViewCellStyle10.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dataGridViewCellStyle10.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle10.WrapMode = DataGridViewTriState.True;
+            dgvVentas.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
             dgvVentas.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = Color.White;
-            dataGridViewCellStyle3.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle3.ForeColor = Color.FromArgb(21, 30, 41);
-            dataGridViewCellStyle3.Padding = new Padding(4);
-            dataGridViewCellStyle3.SelectionBackColor = Color.FromArgb(190, 220, 250);
-            dataGridViewCellStyle3.SelectionForeColor = Color.Black;
-            dataGridViewCellStyle3.SelectionBackColor = Color.FromArgb(190, 220, 250);
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
-            dgvVentas.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle11.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.BackColor = Color.White;
+            dataGridViewCellStyle11.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle11.ForeColor = Color.Black;
+            dataGridViewCellStyle11.Padding = new Padding(4);
+            dataGridViewCellStyle11.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dataGridViewCellStyle11.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle11.WrapMode = DataGridViewTriState.True;
+            dgvVentas.DefaultCellStyle = dataGridViewCellStyle11;
             dgvVentas.Dock = DockStyle.Fill;
             dgvVentas.EnableHeadersVisualStyles = false;
             dgvVentas.Location = new Point(0, 34);
             dgvVentas.MultiSelect = false;
             dgvVentas.Name = "dgvVentas";
-            dgvVentas.ForeColor = Color.Black;
-            dgvVentas.DefaultCellStyle.ForeColor = Color.Black;
-            dgvVentas.RowsDefaultCellStyle.ForeColor = Color.Black;
-            dgvVentas.AlternatingRowsDefaultCellStyle.ForeColor = Color.Black;
-            dgvVentas.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.Black;
-            dgvVentas.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
-            dgvVentas.DefaultCellStyle.SelectionForeColor = Color.Black;
-            dgvVentas.DefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
-            dgvVentas.AlternatingRowsDefaultCellStyle.SelectionForeColor = Color.Black;
-            dgvVentas.AlternatingRowsDefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
             dgvVentas.ReadOnly = true;
             dgvVentas.RowHeadersVisible = false;
+            dataGridViewCellStyle12.ForeColor = Color.Black;
+            dgvVentas.RowsDefaultCellStyle = dataGridViewCellStyle12;
             dgvVentas.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvVentas.Size = new Size(1167, 196);
             dgvVentas.TabIndex = 0;
             dgvVentas.SelectionChanged += dgvVentas_SelectionChanged;
-            // lblventas lblventasdock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            //
+            // lblVentas
+            //
             lblVentas.Dock = DockStyle.Top;
             lblVentas.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             lblVentas.Location = new Point(0, 0);
@@ -241,14 +271,9 @@
             lblVentas.Size = new Size(1167, 34);
             lblVentas.TabIndex = 1;
             lblVentas.Text = "Ventas";
-            // pnlcobro pnlcobrobackcolor: color del fondo del control o de la celda
-            pnlCobro.BackColor = Color.FromArgb(21, 30, 41);
-            pnlCobro.Dock = DockStyle.Fill;
-            pnlCobro.Location = new Point(19, 268);
-            pnlCobro.Name = "pnlCobro";
-            pnlCobro.Size = new Size(1162, 159);
-            pnlCobro.TabIndex = 3;
-            // lblseleccion lblselecciondock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            //
+            // lblSeleccion
+            //
             lblSeleccion.Dock = DockStyle.Top;
             lblSeleccion.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             lblSeleccion.Location = new Point(8, 312);
@@ -257,7 +282,9 @@
             lblSeleccion.Size = new Size(1167, 32);
             lblSeleccion.TabIndex = 3;
             lblSeleccion.Text = "Seleccione una venta";
-            // lblimporte lblimportedock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            //
+            // lblImporte
+            //
             lblImporte.Dock = DockStyle.Top;
             lblImporte.ForeColor = Color.FromArgb(145, 170, 210);
             lblImporte.Location = new Point(0, 0);
@@ -265,7 +292,9 @@
             lblImporte.Size = new Size(215, 23);
             lblImporte.TabIndex = 4;
             lblImporte.Text = "Importe a cancelar (sin recargo)";
-            // nudimporte nudimporteanchor: bordes que mantienen su distancia cuando cambia el tamano del contenedor
+            //
+            // nudImporte
+            //
             nudImporte.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             nudImporte.DecimalPlaces = 2;
             nudImporte.Location = new Point(0, 26);
@@ -275,7 +304,9 @@
             nudImporte.TabIndex = 0;
             nudImporte.ThousandsSeparator = true;
             nudImporte.ValueChanged += nudImporte_ValueChanged;
-            // lblmedio lblmediodock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            //
+            // lblMedio
+            //
             lblMedio.Dock = DockStyle.Top;
             lblMedio.ForeColor = Color.FromArgb(145, 170, 210);
             lblMedio.Location = new Point(0, 0);
@@ -283,7 +314,9 @@
             lblMedio.Size = new Size(220, 23);
             lblMedio.TabIndex = 5;
             lblMedio.Text = "Medio de pago";
-            // cbomedio cbomedioanchor: bordes que mantienen su distancia cuando cambia el tamano del contenedor
+            //
+            // cboMedio
+            //
             cboMedio.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             cboMedio.DropDownStyle = ComboBoxStyle.DropDownList;
             cboMedio.Location = new Point(0, 26);
@@ -291,7 +324,9 @@
             cboMedio.Size = new Size(182, 23);
             cboMedio.TabIndex = 1;
             cboMedio.SelectedIndexChanged += cboMedio_SelectedIndexChanged;
-            // lblcuotas lblcuotasdock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            //
+            // lblCuotas
+            //
             lblCuotas.Dock = DockStyle.Top;
             lblCuotas.ForeColor = Color.FromArgb(145, 170, 210);
             lblCuotas.Location = new Point(0, 0);
@@ -299,7 +334,9 @@
             lblCuotas.Size = new Size(90, 23);
             lblCuotas.TabIndex = 6;
             lblCuotas.Text = "Cuotas";
-            // cbocuotas cbocuotasanchor: bordes que mantienen su distancia cuando cambia el tamano del contenedor
+            //
+            // cboCuotas
+            //
             cboCuotas.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             cboCuotas.DropDownStyle = ComboBoxStyle.DropDownList;
             cboCuotas.Items.AddRange(new object[] { 1, 2, 3, 6, 9, 12 });
@@ -308,17 +345,21 @@
             cboCuotas.Size = new Size(52, 23);
             cboCuotas.TabIndex = 2;
             cboCuotas.SelectedIndexChanged += cboCuotas_SelectedIndexChanged;
-            // lblcobro lblcobrodock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            //
+            // lblCobro
+            //
+            lblCobro.AutoSize = true;
             lblCobro.Dock = DockStyle.Top;
             lblCobro.ForeColor = Color.FromArgb(255, 195, 95);
             lblCobro.Location = new Point(8, 442);
             lblCobro.Margin = new Padding(0, 0, 0, 8);
-            lblCobro.Name = "lblCobro";
-            lblCobro.AutoSize = true;
             lblCobro.MinimumSize = new Size(0, 70);
+            lblCobro.Name = "lblCobro";
             lblCobro.Size = new Size(1167, 70);
             lblCobro.TabIndex = 5;
-            // btnregistrar btnregistrarbackcolor: color del fondo del control o de la celda
+            //
+            // btnRegistrar
+            //
             btnRegistrar.BackColor = Color.DodgerBlue;
             btnRegistrar.Enabled = false;
             btnRegistrar.FlatAppearance.BorderSize = 0;
@@ -332,65 +373,64 @@
             btnRegistrar.Text = "Registrar pago";
             btnRegistrar.UseVisualStyleBackColor = false;
             btnRegistrar.Click += Registrar;
-            // pnlpagos inserta el control en su contenedor; esto determina su jerarquia visual y posicion relativa
+            //
+            // pnlPagos
+            //
             pnlPagos.Controls.Add(dgvPagos);
             pnlPagos.Controls.Add(lblPagos);
             pnlPagos.Dock = DockStyle.Top;
-            pnlPagos.Location = new Point(8, 492);
+            pnlPagos.Location = new Point(8, 520);
             pnlPagos.Margin = new Padding(0, 0, 0, 8);
             pnlPagos.Name = "pnlPagos";
             pnlPagos.Size = new Size(1167, 220);
             pnlPagos.TabIndex = 6;
-            // dgvpagos
+            //
+            // dgvPagos
+            //
             dgvPagos.AllowUserToAddRows = false;
             dgvPagos.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle4.BackColor = Color.FromArgb(236, 242, 249);
-            dgvPagos.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle13.BackColor = Color.FromArgb(236, 242, 249);
+            dataGridViewCellStyle13.ForeColor = Color.Black;
+            dataGridViewCellStyle13.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dataGridViewCellStyle13.SelectionForeColor = Color.Black;
+            dgvPagos.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle13;
             dgvPagos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvPagos.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dgvPagos.BackgroundColor = Color.FromArgb(13, 19, 27);
             dgvPagos.BorderStyle = BorderStyle.None;
-            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = Color.FromArgb(37, 52, 70);
-            dataGridViewCellStyle5.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle5.ForeColor = Color.White;
-            dataGridViewCellStyle5.SelectionBackColor = Color.FromArgb(190, 220, 250);
-            dataGridViewCellStyle5.SelectionForeColor = Color.Black;
-            dataGridViewCellStyle5.SelectionBackColor = Color.FromArgb(190, 220, 250);
-            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.True;
-            dgvPagos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle14.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle14.BackColor = Color.FromArgb(37, 52, 70);
+            dataGridViewCellStyle14.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle14.ForeColor = Color.White;
+            dataGridViewCellStyle14.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dataGridViewCellStyle14.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle14.WrapMode = DataGridViewTriState.True;
+            dgvPagos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle14;
             dgvPagos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = Color.White;
-            dataGridViewCellStyle6.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle6.ForeColor = Color.FromArgb(21, 30, 41);
-            dataGridViewCellStyle6.Padding = new Padding(4);
-            dataGridViewCellStyle6.SelectionBackColor = Color.FromArgb(190, 220, 250);
-            dataGridViewCellStyle6.SelectionForeColor = Color.Black;
-            dataGridViewCellStyle6.SelectionBackColor = Color.FromArgb(190, 220, 250);
-            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.True;
-            dgvPagos.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle15.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle15.BackColor = Color.White;
+            dataGridViewCellStyle15.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle15.ForeColor = Color.Black;
+            dataGridViewCellStyle15.Padding = new Padding(4);
+            dataGridViewCellStyle15.SelectionBackColor = Color.FromArgb(190, 220, 250);
+            dataGridViewCellStyle15.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle15.WrapMode = DataGridViewTriState.True;
+            dgvPagos.DefaultCellStyle = dataGridViewCellStyle15;
             dgvPagos.Dock = DockStyle.Fill;
             dgvPagos.EnableHeadersVisualStyles = false;
             dgvPagos.Location = new Point(0, 34);
             dgvPagos.MultiSelect = false;
             dgvPagos.Name = "dgvPagos";
-            dgvPagos.ForeColor = Color.Black;
-            dgvPagos.DefaultCellStyle.ForeColor = Color.Black;
-            dgvPagos.RowsDefaultCellStyle.ForeColor = Color.Black;
-            dgvPagos.AlternatingRowsDefaultCellStyle.ForeColor = Color.Black;
-            dgvPagos.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.Black;
-            dgvPagos.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
-            dgvPagos.DefaultCellStyle.SelectionForeColor = Color.Black;
-            dgvPagos.DefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
-            dgvPagos.AlternatingRowsDefaultCellStyle.SelectionForeColor = Color.Black;
-            dgvPagos.AlternatingRowsDefaultCellStyle.SelectionBackColor = Color.FromArgb(190, 220, 250);
             dgvPagos.ReadOnly = true;
             dgvPagos.RowHeadersVisible = false;
+            dataGridViewCellStyle16.ForeColor = Color.Black;
+            dgvPagos.RowsDefaultCellStyle = dataGridViewCellStyle16;
             dgvPagos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvPagos.Size = new Size(1167, 186);
             dgvPagos.TabIndex = 0;
-            // lblpagos lblpagosdock: borde o zona del contenedor a la que se ajusta automaticamente el control
+            //
+            // lblPagos
+            //
             lblPagos.Dock = DockStyle.Top;
             lblPagos.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             lblPagos.Location = new Point(0, 0);
@@ -398,7 +438,9 @@
             lblPagos.Size = new Size(1167, 34);
             lblPagos.TabIndex = 1;
             lblPagos.Text = "Pagos registrados";
-            // flpfiltros
+            //
+            // flpFiltros
+            //
             flpFiltros.AutoSize = true;
             flpFiltros.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             flpFiltros.Controls.Add(txtBuscar);
@@ -412,7 +454,9 @@
             flpFiltros.Padding = new Padding(8);
             flpFiltros.Size = new Size(1167, 58);
             flpFiltros.TabIndex = 1;
-            // flpcobro
+            //
+            // flpCobro
+            //
             flpCobro.AutoSize = true;
             flpCobro.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             flpCobro.Controls.Add(pnlCampo27);
@@ -427,7 +471,9 @@
             flpCobro.Padding = new Padding(8);
             flpCobro.Size = new Size(1167, 82);
             flpCobro.TabIndex = 4;
-            // pnlcampo27 inserta el control en su contenedor; esto determina su jerarquia visual y posicion relativa
+            //
+            // pnlCampo27
+            //
             pnlCampo27.Controls.Add(nudImporte);
             pnlCampo27.Controls.Add(lblImporte);
             pnlCampo27.Location = new Point(12, 12);
@@ -435,7 +481,9 @@
             pnlCampo27.Name = "pnlCampo27";
             pnlCampo27.Size = new Size(215, 58);
             pnlCampo27.TabIndex = 0;
-            // pnlcampo28 inserta el control en su contenedor; esto determina su jerarquia visual y posicion relativa
+            //
+            // pnlCampo28
+            //
             pnlCampo28.Controls.Add(cboMedio);
             pnlCampo28.Controls.Add(lblMedio);
             pnlCampo28.Location = new Point(243, 12);
@@ -443,7 +491,9 @@
             pnlCampo28.Name = "pnlCampo28";
             pnlCampo28.Size = new Size(220, 58);
             pnlCampo28.TabIndex = 1;
-            // pnlcampo29 inserta el control en su contenedor; esto determina su jerarquia visual y posicion relativa
+            //
+            // pnlCampo29
+            //
             pnlCampo29.Controls.Add(cboCuotas);
             pnlCampo29.Controls.Add(lblCuotas);
             pnlCampo29.Location = new Point(479, 12);
@@ -451,13 +501,17 @@
             pnlCampo29.Name = "pnlCampo29";
             pnlCampo29.Size = new Size(90, 58);
             pnlCampo29.TabIndex = 2;
-            // pnlcampo30 pnlcampo30location: posicion horizontal y vertical respecto del contenedor
+            //
+            // pnlCampo30
+            //
             pnlCampo30.Location = new Point(585, 12);
             pnlCampo30.Margin = new Padding(4, 4, 12, 4);
             pnlCampo30.Name = "pnlCampo30";
             pnlCampo30.Size = new Size(220, 58);
             pnlCampo30.TabIndex = 3;
-            // pnlpagina
+            //
+            // pnlPagina
+            //
             pnlPagina.AutoScroll = true;
             pnlPagina.BackColor = Color.FromArgb(13, 19, 27);
             pnlPagina.Controls.Add(tlpSecciones);
@@ -467,7 +521,9 @@
             pnlPagina.Name = "pnlPagina";
             pnlPagina.Size = new Size(1200, 651);
             pnlPagina.TabIndex = 2;
-            // tlpsecciones
+            //
+            // tlpSecciones
+            //
             tlpSecciones.AutoSize = true;
             tlpSecciones.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tlpSecciones.ColumnCount = 1;
@@ -491,9 +547,11 @@
             tlpSecciones.RowStyles.Add(new RowStyle());
             tlpSecciones.RowStyles.Add(new RowStyle());
             tlpSecciones.RowStyles.Add(new RowStyle());
-            tlpSecciones.Size = new Size(1183, 728);
+            tlpSecciones.Size = new Size(1183, 756);
             tlpSecciones.TabIndex = 0;
-            // frmpagos
+            //
+            // frmPagos
+            //
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoScroll = true;
@@ -513,12 +571,9 @@
             pnlTitulo.PerformLayout();
             contenido.ResumeLayout(false);
             pnlVentas.ResumeLayout(false);
-            // llama a ((systemcomponentmodelisupportinitialize)dgvventas)endinit para realizar este paso del flujo
             ((System.ComponentModel.ISupportInitialize)dgvVentas).EndInit();
-            // llama a ((systemcomponentmodelisupportinitialize)nudimporte)endinit para realizar este paso del flujo
             ((System.ComponentModel.ISupportInitialize)nudImporte).EndInit();
             pnlPagos.ResumeLayout(false);
-            // llama a ((systemcomponentmodelisupportinitialize)dgvpagos)endinit para realizar este paso del flujo
             ((System.ComponentModel.ISupportInitialize)dgvPagos).EndInit();
             flpFiltros.ResumeLayout(false);
             flpFiltros.PerformLayout();

@@ -1,4 +1,4 @@
-﻿using Prana.Entidades;
+using Prana.Entidades;
 using Prana.negocio;
 
 namespace Prana.Presentacion;
@@ -17,10 +17,8 @@ public partial class frmCaja : Form
     public frmCaja()
     {
         InitializeComponent();
-        inicio.Value = DateTime.Now;
         anular.Enabled = SesionActual.Usuario != null && Permisos.TienePermiso(Permisos.AnularMovimientosCaja);
         // el inicio es la hora real de apertura no un horario editable para mover cobros entre turnos
-        inicio.Enabled = false;
         observaciones.TextChanged += DatosCierreCambiados;
     }
 
@@ -32,20 +30,6 @@ public partial class frmCaja : Form
             e.Value = $"RTO {numero}";
             e.FormattingApplied = true;
         }
-    }
-
-    // resuelve saldo value changed con los datos recibidos y entrega el resultado al codigo que lo llama
-    private void saldo_ValueChanged(object? sender, EventArgs e)
-    {
-        ActualizarResumen();
-        DatosCierreCambiados(sender, e);
-    }
-
-    // resuelve saldo usd value changed con los datos recibidos y entrega el resultado al codigo que lo llama
-    private void saldoUsd_ValueChanged(object? sender, EventArgs e)
-    {
-        ActualizarResumen();
-        DatosCierreCambiados(sender, e);
     }
 
     // guarda cambios solo despues de abrir la caja los datos de una apertura nueva se confirman con su boton
@@ -61,8 +45,6 @@ public partial class frmCaja : Form
     // resuelve guardar datos abiertos con los datos recibidos y entrega el resultado al codigo que lo llama
     private void GuardarDatosAbiertos()
     {
-        actual.SaldoInicial = saldo.Value;
-        actual.SaldoInicialUsd = saldoUsd.Value;
         actual.Observaciones = observaciones.Text.Trim();
         negocio.GuardarCajaAbierta(actual);
     }
@@ -193,9 +175,6 @@ public partial class frmCaja : Form
     // presenta un turno o prepara los campos de una nueva apertura sin guardarla automaticamente
     private void MostrarCaja()
     {
-        saldo.Value = actual.SaldoInicial;
-        saldoUsd.Value = actual.SaldoInicialUsd;
-        inicio.Value = actual.Inicio;
         observaciones.Text = actual.Observaciones;
         movimientos.DataSource = actual.Movimientos;
         if (movimientos.Columns.Contains(nameof(MovimientoCaja.IdCaja)))
@@ -207,7 +186,7 @@ public partial class frmCaja : Form
         bool puedeAbrir = hoy && !cajasDelDia.Any(caja => !caja.Cerrada);
         registrar.Enabled = cerrar.Enabled = abierta;
         imprimir.Enabled = actual.Cerrada && actual.Numero > 0;
-        saldo.Enabled = saldoUsd.Enabled = observaciones.Enabled = abierta || (puedeAbrir && actual.IdCaja == 0);
+        observaciones.Enabled = abierta || (puedeAbrir && actual.IdCaja == 0);
         abrir.Enabled = puedeAbrir;
         abrir.Text = "Abrir caja";
         if (actual.IdCaja > 0)
@@ -217,7 +196,7 @@ public partial class frmCaja : Form
         anular.Enabled = abierta && SesionActual.Usuario != null && Permisos.TienePermiso(Permisos.AnularMovimientosCaja);
         if (actual.Cerrada)
         {
-            estado.Text = $"Caja N.º {actual.IdCaja} cerrada el {actual.Fin:dd/MM/yyyy HH:mm}. Usuario: {actual.Usuario}.";
+            estado.Text = $"Cierre N.º {actual.Numero} del {actual.Fin:dd/MM/yyyy HH:mm}. Usuario: {actual.Usuario}.";
             if (puedeAbrir)
             {
                 estado.Text += " Puede preparar otra apertura con Nueva caja.";
@@ -232,7 +211,7 @@ public partial class frmCaja : Form
             estado.Text = "No hay cajas registradas para esta fecha.";
             if (hoy)
             {
-                estado.Text = "Complete los saldos iniciales y presione Abrir caja antes de registrar operaciones.";
+                estado.Text = "Presione Abrir caja antes de registrar operaciones.";
             }
         }
     }
@@ -262,12 +241,12 @@ public partial class frmCaja : Form
                 }
                 finally { cargando = false; }
                 ActualizarResumen();
-                saldo.Focus();
+                observaciones.Focus();
                 return;
             }
             CierreCaja nueva = negocio.Abrir(new CierreCaja
             {
-                SaldoInicial = saldo.Value, SaldoInicialUsd = saldoUsd.Value, Observaciones = observaciones.Text.Trim()
+                Observaciones = observaciones.Text.Trim()
             });
             Cargar();
             MessageBox.Show(this, $"Caja N.º {nueva.IdCaja} abierta correctamente.", "Caja");
@@ -282,13 +261,12 @@ public partial class frmCaja : Form
             return;
         }
 
-        if (!actual.Cerrada)
-        {
-            actual.SaldoInicial = saldo.Value;
-            actual.SaldoInicialUsd = saldoUsd.Value;
-        }
 
-        resumen.Text = $"Cobros e ingresos ARS: {actual.Ingresos("ARS"):N2}    Gastos ARS: {actual.Gastos("ARS"):N2}    Balance ARS: {actual.BalanceArs:N2}\n" + $"Ingresos por café ARS (incluidos en los ingresos): {actual.CafeArs:N2}\n" + $"Ingresos USD: {actual.Ingresos("USD"):N2}    Gastos USD: {actual.Gastos("USD"):N2}    Balance USD: {actual.SaldoInicialUsd + actual.Ingresos("USD") - actual.Gastos("USD"):N2}\n" + string.Join("    ", TiposCaja.Todos.Select(m => $"{m} ARS: {actual.Ingresos("ARS", m):N2}")) + "\n" + "Los ingresos se suman desde los pagos registrados. Cada cobro identifica su remito. USD separado de ARS.";
+
+        resumen.Text = $"Cobros e ingresos ARS: {actual.Ingresos("ARS"):N2}    Gastos ARS: {actual.Gastos("ARS"):N2}    Balance ARS: {actual.BalanceArs:N2}\n" +
+            $"Ingresos por café ARS (incluidos en los ingresos): {actual.CafeArs:N2}\n" +
+            $"Ingresos USD: {actual.Ingresos("USD"):N2}    Gastos USD: {actual.Gastos("USD"):N2}    Balance USD: {actual.Ingresos("USD") - actual.Gastos("USD"):N2}\n" +
+            string.Join("    ", TiposCaja.Todos.Select(m => $"{m} ARS: {actual.Ingresos("ARS", m):N2}"));
     }
 
     // resuelve cerrar con los datos recibidos y entrega el resultado al codigo que lo llama

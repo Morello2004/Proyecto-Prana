@@ -22,7 +22,7 @@ namespace Prana.Datos
                                      id_rol_usuario,
                                      activo,
                                      intentos_login_fallidos,
-                                     bloqueado_hasta,
+                                     fecha_hora_fin_bloqueo,
                                      SYSDATETIME() AS hora_servidor
                                  FROM Usuario
                                  WHERE nombre_usuario = @NombreUsuario;";
@@ -42,16 +42,16 @@ namespace Prana.Datos
                 return null;
             }
             DateTime? valorBloqueadoHasta;
-            if (lector.IsDBNull(lector.GetOrdinal("bloqueado_hasta")))
+            if (lector.IsDBNull(lector.GetOrdinal("fecha_hora_fin_bloqueo")))
             {
                 valorBloqueadoHasta = null;
             }
             else
             {
-                valorBloqueadoHasta = lector.GetDateTime(lector.GetOrdinal("bloqueado_hasta"));
+                valorBloqueadoHasta = lector.GetDateTime(lector.GetOrdinal("fecha_hora_fin_bloqueo"));
             }
 
-            // crea un objeto usuario con los valores encontrados
+            // crea un objeto usuario
             usuario usuario = new usuario
             {
                 idUsuario = lector.GetInt32(lector.GetOrdinal("id_usuario")),
@@ -74,8 +74,8 @@ namespace Prana.Datos
             // prepara la conexion configurada y la libera al terminar este alcance
             using SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena());
             // prepara la consulta y su conexion los valores variables se envian mediante parametros
-            using SqlCommand comando = new SqlCommand(@"SELECT id_usuario, nombre_usuario, id_rol_usuario, activo, intentos_login_fallidos, bloqueado_hasta,
-                CAST(CASE WHEN bloqueado_hasta > SYSDATETIME() THEN 1 ELSE 0 END AS bit)
+            using SqlCommand comando = new SqlCommand(@"SELECT id_usuario, nombre_usuario, id_rol_usuario, activo, intentos_login_fallidos, fecha_hora_fin_bloqueo,
+                CAST(CASE WHEN fecha_hora_fin_bloqueo > SYSDATETIME() THEN 1 ELSE 0 END AS bit)
                 FROM Usuario ORDER BY nombre_usuario", conexion);
             conexion.Open();
             using SqlDataReader lector = comando.ExecuteReader();
@@ -114,19 +114,19 @@ DECLARE @ahora datetime2(7) = SYSDATETIME();
 DECLARE @estado TABLE (intentos int, bloqueo datetime2(7));
 UPDATE dbo.Usuario
 SET intentos_login_fallidos = CASE
-        WHEN bloqueado_hasta > @ahora THEN intentos_login_fallidos
-        WHEN bloqueado_hasta IS NOT NULL THEN 1
+        WHEN fecha_hora_fin_bloqueo > @ahora THEN intentos_login_fallidos
+        WHEN fecha_hora_fin_bloqueo IS NOT NULL THEN 1
         WHEN intentos_login_fallidos < 3 THEN intentos_login_fallidos + 1
         ELSE 3
     END,
-    bloqueado_hasta = CASE
-        WHEN bloqueado_hasta > @ahora THEN bloqueado_hasta
-        WHEN (CASE WHEN bloqueado_hasta IS NOT NULL THEN 1
+    fecha_hora_fin_bloqueo = CASE
+        WHEN fecha_hora_fin_bloqueo > @ahora THEN fecha_hora_fin_bloqueo
+        WHEN (CASE WHEN fecha_hora_fin_bloqueo IS NOT NULL THEN 1
                    WHEN intentos_login_fallidos < 3 THEN intentos_login_fallidos + 1
                    ELSE 3 END) >= 3 THEN DATEADD(MINUTE, 15, @ahora)
         ELSE NULL
     END
-OUTPUT INSERTED.intentos_login_fallidos, INSERTED.bloqueado_hasta INTO @estado
+OUTPUT INSERTED.intentos_login_fallidos, INSERTED.fecha_hora_fin_bloqueo INTO @estado
 WHERE id_usuario = @IdUsuario AND activo = 1;
 SELECT intentos, bloqueo FROM @estado;";
             // prepara la conexion configurada y la libera al terminar este alcance
@@ -160,7 +160,7 @@ SELECT intentos, bloqueo FROM @estado;";
             // prepara la conexion configurada y la libera al terminar este alcance
             using SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena());
             // prepara la consulta y su conexion los valores variables se envian mediante parametros
-            using SqlCommand comando = new SqlCommand(@"UPDATE Usuario SET intentos_login_fallidos = 0, bloqueado_hasta = NULL
+            using SqlCommand comando = new SqlCommand(@"UPDATE Usuario SET intentos_login_fallidos = 0, fecha_hora_fin_bloqueo = NULL
                 WHERE id_usuario = @IdUsuario AND activo = 1;", conexion);
             comando.Parameters.Add("@IdUsuario", SqlDbType.Int).Value = idUsuario;
             conexion.Open();
@@ -176,7 +176,7 @@ SELECT intentos, bloqueo FROM @estado;";
             using SqlCommand comando = new SqlCommand(@"UPDATE Usuario SET nombre_usuario=@Nombre,
                 hash_contrasena=COALESCE(@Hash,hash_contrasena),
                 intentos_login_fallidos=CASE WHEN @Hash IS NULL THEN intentos_login_fallidos ELSE 0 END,
-                bloqueado_hasta=CASE WHEN @Hash IS NULL THEN bloqueado_hasta ELSE NULL END,
+                fecha_hora_fin_bloqueo=CASE WHEN @Hash IS NULL THEN fecha_hora_fin_bloqueo ELSE NULL END,
                 id_rol_usuario=@Rol WHERE id_usuario=@Id", conexion);
             comando.Parameters.Add("@Nombre", SqlDbType.NVarChar, 100).Value = nombre;
             comando.Parameters.Add("@Hash", SqlDbType.NVarChar, 255).Value = (object?)hash ?? DBNull.Value;
@@ -218,7 +218,7 @@ SELECT intentos, bloqueo FROM @estado;";
             {
                 // prepara la consulta y su conexion los valores variables se envian mediante parametros
                 using SqlCommand baja = new SqlCommand(@"UPDATE Usuario
-                    SET activo = 0, intentos_login_fallidos = 0, bloqueado_hasta = NULL
+                    SET activo = 0, intentos_login_fallidos = 0, fecha_hora_fin_bloqueo = NULL
                     WHERE id_usuario = @Usuario AND activo = 1;", conexion, transaccion);
                 baja.Parameters.Add("@Usuario", SqlDbType.Int).Value = idUsuario;
                 if (baja.ExecuteNonQuery() != 1)
@@ -228,7 +228,7 @@ SELECT intentos, bloqueo FROM @estado;";
                 }
 
                 // prepara la consulta y su conexion los valores variables se envian mediante parametros
-                using SqlCommand historial = new SqlCommand(@"INSERT INTO LogActividad(id_usuario, accion, entidad, id_entidad, detalle)
+                using SqlCommand historial = new SqlCommand(@"INSERT INTO Log_Actividad(id_usuario, accion, entidad, id_entidad, detalle)
                     VALUES(@Administrador, N'DAR_DE_BAJA_USUARIO', N'Usuario', @Usuario, N'Cuenta desactivada logicamente');", conexion, transaccion);
                 historial.Parameters.Add("@Administrador", SqlDbType.Int).Value = idAdministrador;
                 historial.Parameters.Add("@Usuario", SqlDbType.Int).Value = idUsuario;
@@ -307,7 +307,7 @@ SELECT intentos, bloqueo FROM @estado;";
             try
             {
                 // prepara la consulta y su conexion los valores variables se envian mediante parametros
-                using SqlCommand desbloqueo = new SqlCommand(@"UPDATE Usuario SET intentos_login_fallidos = 0, bloqueado_hasta = NULL
+                using SqlCommand desbloqueo = new SqlCommand(@"UPDATE Usuario SET intentos_login_fallidos = 0, fecha_hora_fin_bloqueo = NULL
                     WHERE id_usuario = @IdUsuario AND activo = 1;", conexion, transaccion);
                 desbloqueo.Parameters.Add("@IdUsuario", SqlDbType.Int).Value = idUsuario;
                 if (desbloqueo.ExecuteNonQuery() != 1)
@@ -317,7 +317,7 @@ SELECT intentos, bloqueo FROM @estado;";
                 }
 
                 // prepara la consulta y su conexion los valores variables se envian mediante parametros
-                using SqlCommand historial = new SqlCommand(@"INSERT INTO LogActividad(id_usuario, accion, entidad, id_entidad, detalle)
+                using SqlCommand historial = new SqlCommand(@"INSERT INTO Log_Actividad(id_usuario, accion, entidad, id_entidad, detalle)
                     VALUES(@Administrador, N'DESBLOQUEAR_USUARIO', N'Usuario', @Usuario, N'El administrador restablecio el acceso');", conexion, transaccion);
                 historial.Parameters.Add("@Administrador", SqlDbType.Int).Value = idAdministrador;
                 historial.Parameters.Add("@Usuario", SqlDbType.Int).Value = idUsuario;

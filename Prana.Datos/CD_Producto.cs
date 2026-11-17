@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Prana.Entidades;
 using System;
 using System.Collections.Generic;
@@ -44,14 +44,6 @@ namespace Prana.Datos
                 INNER JOIN Detalle_Remito dr ON dr.id_remito = r.id_remito
                 WHERE r.id_venta = vendidos.id_venta
                     AND dr.id_variante = vendidos.id_variante
-                    AND NOT EXISTS
-                    (
-                        SELECT 1
-                        FROM Envio e
-                        INNER JOIN Estado_Envio ee ON ee.id_estado_envio = e.id_estado_envio
-                        WHERE e.id_remito = r.id_remito
-                            AND ee.nombre LIKE N'Cancelad%'
-                    )
             ) preparados
             WHERE estado.nombre_estado_venta NOT LIKE N'Anulad%'
                 AND estado.nombre_estado_venta NOT LIKE N'Cancelad%'
@@ -78,7 +70,7 @@ namespace Prana.Datos
         {
             // consultas para insertar ingreso y sus detalles y actualizar variantes
             string consultaInsertIngreso = @"
-                INSERT INTO Ingreso_Stock (id_proveedor, remito_proveedor, fecha_ingreso)
+                INSERT INTO Ingreso_Stock (id_proveedor, numero_remito_proveedor, fecha_hora_ingreso)
                 OUTPUT INSERTED.id_ingreso
                 VALUES (@idProveedor, @remitoProveedor, @fechaIngreso)";
             string consultaInsertDetalle = @"
@@ -87,7 +79,7 @@ namespace Prana.Datos
             string consultaActualizarVariante = @"
                 UPDATE Variante_Producto
                 SET stock_disponible = stock_disponible + @cantidad,
-                    costo = @costoUnitario
+                    costo_unitario = @costoUnitario
                 WHERE id_variante = @idVariante";
             // prepara la conexion configurada y la libera al terminar este alcance
             using SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena());
@@ -195,8 +187,8 @@ namespace Prana.Datos
         UPDATE Variante_Producto
         SET color = @color,
             condicion_producto = @condicion,
-            costo = @costo,
-            precio = @precio,
+            costo_unitario = @costo,
+            precio_venta_unitario = @precio,
             stock_disponible = @stockFisico
         WHERE id_variante = @idVariante;";
             // crea la conexion con sql server
@@ -242,8 +234,8 @@ namespace Prana.Datos
                                     v.id_variante AS IdVariante,
                                     v.color AS Color,
                                     v.condicion_producto AS CondicionProducto,
-                                    v.costo AS Costo,
-                                    v.precio AS Precio,
+                                    v.costo_unitario AS Costo,
+                                    v.precio_venta_unitario AS Precio,
                                     v.stock_disponible AS StockFisico,
                                     COALESCE(stock.stock_comprometido, 0) AS StockComprometido
                                 FROM Producto AS p
@@ -372,9 +364,9 @@ namespace Prana.Datos
                                         v.id_variante AS IdVariante,
                                         v.color AS Color,
                                         v.condicion_producto AS CondicionProducto,
-                                        v.costo AS Costo,
-                                        v.precio AS Precio,
-                                        
+                                        v.costo_unitario AS Costo,
+                                        v.precio_venta_unitario AS Precio,
+
                                         v.stock_disponible AS StockFisico,
 
                                         COALESCE(stock.stock_comprometido, 0)
@@ -563,7 +555,7 @@ namespace Prana.Datos
                 // consulta que crea una variante del producto
                 string consultaVariante = @"
                                              INSERT INTO Variante_Producto
-                                                 (id_producto, color, condicion_producto, precio, stock_disponible)
+                                                 (id_producto, color, condicion_producto, precio_venta_unitario, stock_disponible)
                                              VALUES
                                                  (@idProducto, @color, @condicionProducto, @precio, @stockDisponible)";
                 // crea y abre la conexion con sql server

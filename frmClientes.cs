@@ -1,4 +1,4 @@
-﻿using Prana.Entidades;
+using Prana.Entidades;
 using Prana.negocio;
 using System;
 using System.Collections.Generic;
@@ -21,22 +21,27 @@ namespace Prana.Presentacion
         public frmClientes()
         {
             InitializeComponent();
-            // muestra el formato requerido y limita tambien la edicion del telefono en el listado
-            txtTelefonoCliente.PlaceholderText = "Ej.: 2323516501";
-            ColTelefono.MaxInputLength = 10;
-            ColTelefono.ToolTipText = "Código de área y número: 10 dígitos juntos, sin 0, 15, 54 ni 549";
-            Localidad.Text = "Ciudad (opcional)";
-            colLocalidad.HeaderText = "Ciudad";
             // evita que se creen columnas adicionales automaticamente dgv_listadoclientesautogeneratecolumns: decide si el enlace de datos crea columnas automaticamente; desactivarlo conserva las columnas definidas
             dgv_listadoClientes.AutoGenerateColumns = false;
             cboBuscarCliente.MaxLength = 201;
             cboBuscarCliente.DropDownStyle = ComboBoxStyle.DropDown;
             cboBuscarCliente.AutoCompleteMode = AutoCompleteMode.None;
             cboBuscarCliente.AutoCompleteSource = AutoCompleteSource.None;
+            // habilita sugerencias y autocompletado para las localidades activas
+            cboLocalidadCliente.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            cboLocalidadCliente.AutoCompleteSource = AutoCompleteSource.ListItems;
+            // muestra la administracion solo a usuarios con permiso
+            btnAdministrarLocalidades.Visible = SesionActual.Usuario != null && Permisos.TienePermiso(Permisos.AdministrarLocalidades);
             // el saldo llega desde negocio y nunca se edita como dato del cliente
             colDeudaPendiente.DisplayIndex = 3;
             dgv_listadoClientes.Columns["colEstadoCuenta"]!.DisplayIndex = 4;
             dgv_listadoClientes.Columns["colVerDeuda"]!.DisplayIndex = 5;
+        }
+
+        private void dgv_listadoClientes_EditingControlShowing(object? sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            if (e.Control is TextBox texto)
+                texto.CharacterCasing = CharacterCasing.Upper;
         }
 
         // limita el ingreso segun el tipo sin recortar un documento ya escrito actualiza los controles relacionados cuando cambia la seleccion puede dispararse tambien al cargar los datos
@@ -95,9 +100,11 @@ namespace Prana.Presentacion
                 txtApellidoCliente.Clear();
                 txtDocumentoCliente.Clear();
                 txtTelefonoCliente.Clear();
+                txtAreaCliente.Clear();
                 txtDireccionCliente.Clear();
-                txtLocalidadCliente.Clear();
-                txtCodigoPostal.Clear();
+                cboLocalidadCliente.SelectedIndex = -1;
+                cboLocalidadCliente.Text = string.Empty;
+                CargarOpcionesLocalidad();
                 // actualiza el listado
                 CargarClientes();
             }
@@ -207,7 +214,7 @@ namespace Prana.Presentacion
                 {
                     negocioCliente.RestaurarCliente(cliente.IdCliente);
                 }
-                else 
+                else
                     if (!cliente.Activo)
                     {
                         negocioCliente.ActivarCliente(cliente.IdCliente);
@@ -289,8 +296,6 @@ namespace Prana.Presentacion
                 filaSeleccionada.Cells["colDireccion"].ReadOnly = false;
                 // filaseleccionadacells["collocalidad"]readonly: impide editar el contenido desde este control sin impedir su consulta
                 filaSeleccionada.Cells["colLocalidad"].ReadOnly = false;
-                // filaseleccionadacells["colcodigopostal"]readonly: impide editar el contenido desde este control sin impedir su consulta
-                filaSeleccionada.Cells["colCodigoPostal"].ReadOnly = false;
                 // cambia el texto del boton de esta fila filaseleccionadacells["colaccion"]value: valor actual del control numerico o de fecha
                 filaSeleccionada.Cells["colAccion"].Value = "Guardar cambios";
                 // coloca el cursor en el nombre
@@ -313,12 +318,8 @@ namespace Prana.Presentacion
                 clienteSeleccionado.DNI = filaSeleccionada.Cells["colDNI"].Value?.ToString()?.Trim() ?? string.Empty;
                 clienteSeleccionado.Telefono = filaSeleccionada.Cells["ColTelefono"].Value?.ToString()?.Trim() ?? string.Empty;
                 clienteSeleccionado.Direccion = filaSeleccionada.Cells["colDireccion"].Value?.ToString()?.Trim() ?? string.Empty;
-                clienteSeleccionado.CodigoPostal = filaSeleccionada.Cells["colCodigoPostal"].Value?.ToString()?.Trim() ?? string.Empty;
                 // guarda la localidad escrita en la fila
-                clienteSeleccionado.Localidad = new Localidad
-                {
-                    NombreLocalidad = filaSeleccionada.Cells["colLocalidad"].Value?.ToString()?.Trim() ?? string.Empty
-                };
+                clienteSeleccionado.NombreLocalidad = filaSeleccionada.Cells["colLocalidad"].Value?.ToString()?.Trim() ?? string.Empty;
                 // crea el objeto de la capa de negocio
                 CN_Cliente negocioCliente = new CN_Cliente();
                 // valida y guarda la modificacion
@@ -503,6 +504,7 @@ namespace Prana.Presentacion
         {
             try
             {
+                CargarOpcionesLocalidad();
                 CargarClientes();
             }
             // atiende el error de esta operacion antes de informar o propagar el problema
@@ -524,7 +526,47 @@ namespace Prana.Presentacion
             esperaBusqueda.Dispose();
         }
 
-        // lee los campos actuales y construye la solicitud; este metodo no guarda cambios ni modifica la seleccion
+        // carga las opciones activas y conserva el texto que estaba escribiendo el usuario
+        private void CargarOpcionesLocalidad(string? conservarTexto = null)
+        {
+            string texto = conservarTexto ?? cboLocalidadCliente.Text;
+            List<string> localidades = new CN_Localidad().Obtener();
+            cboLocalidadCliente.BeginUpdate();
+            try
+            {
+                cboLocalidadCliente.Items.Clear();
+                cboLocalidadCliente.Items.AddRange(localidades.Cast<object>().ToArray());
+                cboLocalidadCliente.SelectedIndex = -1;
+                cboLocalidadCliente.Text = texto;
+                cboLocalidadCliente.SelectionStart = cboLocalidadCliente.Text.Length;
+            }
+            finally
+            {
+                cboLocalidadCliente.EndUpdate();
+            }
+        }
+
+        // mantiene en mayusculas el texto elegido o escrito en la localidad
+        private void cboLocalidadCliente_TextChanged(object? sender, EventArgs e)
+        {
+            string texto = cboLocalidadCliente.Text;
+            string mayusculas = texto.ToUpper(CultureInfo.CurrentCulture);
+            if (texto == mayusculas) return;
+            int inicio = cboLocalidadCliente.SelectionStart;
+            cboLocalidadCliente.Text = mayusculas;
+            cboLocalidadCliente.SelectionStart = Math.Min(inicio, mayusculas.Length);
+        }
+
+        // abre la administracion y vuelve a cargar las opciones al cerrar la ventana
+        private void btnAdministrarLocalidades_Click(object? sender, EventArgs e)
+        {
+            string texto = cboLocalidadCliente.Text;
+            using frmAdministrarLocalidades formulario = new frmAdministrarLocalidades();
+            formulario.ShowDialog(this);
+            CargarOpcionesLocalidad(texto);
+        }
+
+        // construye el cliente con los valores actuales del formulario
         private Cliente ObtenerClienteDelFormulario()
         {
             return new Cliente
@@ -533,13 +575,10 @@ namespace Prana.Presentacion
                 Apellido = txtApellidoCliente.Text.Trim(),
                 DNI = txtDocumentoCliente.Text.Trim(),
                 TipoDocumento = cboTipoDocumento.Text,
-                Telefono = txtTelefonoCliente.Text.Trim(),
+                Telefono = CN_Cliente.UnirTelefono(txtAreaCliente.Text, txtTelefonoCliente.Text),
                 Direccion = txtDireccionCliente.Text.Trim(),
-                CodigoPostal = txtCodigoPostal.Text.Trim(),
-                Localidad = new Localidad
-                {
-                    NombreLocalidad = txtLocalidadCliente.Text.Trim()
-                },
+                // envia el nombre elegido o escrito para resolver su identificador al guardar
+                NombreLocalidad = cboLocalidadCliente.Text.Trim(),
                 FechaRegistro = DateTime.Now,
                 SaldoFavor = 0
 

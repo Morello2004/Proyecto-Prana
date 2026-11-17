@@ -1,4 +1,4 @@
-﻿// guia del archivo: esta pantalla combina consulta, alta del catalogo e ingreso de mercaderia producto agrupa nombre, modelo, marca, categoria y descripcion; cada variante aporta color, condicion y precio agregar variante prepara una fila; guardar producto confirma el articulo y sus variantes ingreso de stock es otro circuito: proveedor y documento identifican la recepcion, con cantidad y costo por unidad costo es lo que cuesta una unidad al comercio; precio es su valor de venta no intercambiar esos campos una modificacion de existencias no reemplaza una recepcion documentada ni corrige una venta historica
+// guia del archivo: esta pantalla combina consulta, alta del catalogo e ingreso de mercaderia producto agrupa nombre, modelo, marca, categoria y descripcion; cada variante aporta color, condicion y precio agregar variante prepara una fila; guardar producto confirma el articulo y sus variantes ingreso de stock es otro circuito: proveedor y documento identifican la recepcion, con cantidad y costo por unidad costo es lo que cuesta una unidad al comercio; precio es su valor de venta no intercambiar esos campos una modificacion de existencias no reemplaza una recepcion documentada ni corrige una venta historica
 using Prana.Datos;
 using Prana.Entidades;
 using Prana.negocio;
@@ -52,6 +52,17 @@ namespace Prana.Presentacion
             txtMarcaProducto.MaxLength = 100;
             txtDescripcionProducto.MaxLength = 500;
             txtColorVariante.MaxLength = 50;
+        }
+
+        private static void MayusculasSelector(ComboBox selector)
+        {
+            string texto = selector.Text.ToUpperInvariant();
+            if (texto == selector.Text) return;
+            int posicion = selector.SelectionStart;
+            int longitud = selector.SelectionLength;
+            selector.Text = texto;
+            selector.SelectionStart = posicion;
+            selector.SelectionLength = longitud;
         }
 
         // abre la administracion modal y refresca las listas conservando los textos que se estaban preparando
@@ -540,16 +551,19 @@ namespace Prana.Presentacion
         // responde al cambio del texto; revisa el estado de busqueda o de seleccion antes de continuar
         private void txtCategoriaProducto_TextChanged(object sender, EventArgs e)
         {
+            MayusculasSelector(txtCategoriaProducto);
         }
 
         // responde al cambio del texto; revisa el estado de busqueda o de seleccion antes de continuar
         private void txtMarcaProducto_TextChanged(object sender, EventArgs e)
         {
+            MayusculasSelector(txtMarcaProducto);
         }
 
         // responde al cambio del texto; revisa el estado de busqueda o de seleccion antes de continuar
         private void txtColorVariante_TextChanged(object sender, EventArgs e)
         {
+            MayusculasSelector(txtColorVariante);
         }
 
         // manejador sin instrucciones no realiza ninguna accion adicional
@@ -585,6 +599,9 @@ namespace Prana.Presentacion
         // interpreta la columna y fila pulsadas para ejecutar la accion de esa celda; los encabezados no son registros
         private void dgvVariantes_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0 || dgvVariantes.Columns[e.ColumnIndex].Name != "colQuitarVariante") return;
+            if (dgvVariantes.Rows[e.RowIndex].DataBoundItem is VarianteProducto variante)
+                variantesTemporales.Remove(variante);
         }
 
         // ejecuta la accion de btn buscar producto cuando el usuario pulsa el control

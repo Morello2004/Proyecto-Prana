@@ -1,4 +1,4 @@
-﻿namespace Prana.Presentacion
+namespace Prana.Presentacion
 {
     // parte visual de frmnuevaventa crea controles y define su distribucion, colores y eventos; visual studio puede regenerar este archivo al editar el disenador
     partial class frmNuevaVenta
@@ -32,6 +32,10 @@
             DataGridViewCellStyle dataGridViewCellStyle27 = new DataGridViewCellStyle();
             lblCobroPrevisto = new Label();
             usarDireccionRegistrada = new CheckBox();
+            txtLocalidadEntrega = new TextBox();
+            lblLocalidadEntrega = new Label();
+            txtHorarioSugerido = new TextBox();
+            lblHorarioSugerido = new Label();
             txtCuentaDestino = new TextBox();
             lblCuentaDestino = new Label();
             cboCliente = new ComboBox();
@@ -46,6 +50,7 @@
             pnlFormaEntrega = new Panel();
             lblUsarDireccionRegistrada = new Label();
             txtSegundoTelefono = new TextBox();
+            txtAreaSegundoTelefono = new TextBox();
             label3 = new Label();
             nudCostoEnvio = new NumericUpDown();
             lblCostoEnvio = new Label();
@@ -53,8 +58,6 @@
             rdoRetiroPosterior = new RadioButton();
             cboTipoLogistica = new ComboBox();
             lblTipoLogistica = new Label();
-            txtHorarioSugerido = new TextBox();
-            lblHorarioSugerido = new Label();
             txtObservacionesEntrega = new TextBox();
             lblObservacionesEntrega = new Label();
             dtpFechaEntrega = new DateTimePicker();
@@ -291,7 +294,42 @@
             // pnlformaentrega pnlformaentregabackcolor: color del fondo del control o de la celda
             pnlFormaEntrega.BackColor = Color.FromArgb(21, 30, 41);
             pnlFormaEntrega.Controls.Add(lblUsarDireccionRegistrada);
+            pnlFormaEntrega.Controls.Add(txtLocalidadEntrega);
+            pnlFormaEntrega.Controls.Add(lblLocalidadEntrega);
+            pnlFormaEntrega.Controls.Add(txtHorarioSugerido);
+            pnlFormaEntrega.Controls.Add(lblHorarioSugerido);
+            txtHorarioSugerido.CharacterCasing = CharacterCasing.Upper;
+            txtHorarioSugerido.MaxLength = 50;
+            txtHorarioSugerido.Location = new Point(399, 118);
+            txtHorarioSugerido.Size = new Size(136, 23);
+            txtHorarioSugerido.Name = "txtHorarioSugerido";
+            txtHorarioSugerido.PlaceholderText = "EJ: DE 14 A 18 HS";
+            txtHorarioSugerido.TabIndex = 9;
+            lblHorarioSugerido.AutoSize = true;
+            lblHorarioSugerido.ForeColor = Color.White;
+            lblHorarioSugerido.Location = new Point(399, 95);
+            lblHorarioSugerido.Name = "lblHorarioSugerido";
+            lblHorarioSugerido.Text = "Horario sugerido";
+            txtLocalidadEntrega.CharacterCasing = CharacterCasing.Upper;
+            txtLocalidadEntrega.MaxLength = 25;
+            txtLocalidadEntrega.Enabled = false;
+            txtLocalidadEntrega.Location = new Point(550, 118);
+            txtLocalidadEntrega.Size = new Size(180, 23);
+            txtLocalidadEntrega.Name = "txtLocalidadEntrega";
+            txtLocalidadEntrega.TabIndex = 20;
+            lblLocalidadEntrega.AutoSize = true;
+            lblLocalidadEntrega.ForeColor = Color.White;
+            lblLocalidadEntrega.Location = new Point(550, 95);
+            lblLocalidadEntrega.Text = "Localidad / ciudad";
+            lblLocalidadEntrega.Name = "lblLocalidadEntrega";
             pnlFormaEntrega.Controls.Add(txtSegundoTelefono);
+            pnlFormaEntrega.Controls.Add(txtAreaSegundoTelefono);
+            txtAreaSegundoTelefono.Location = new Point(390, 189);
+            txtAreaSegundoTelefono.Size = new Size(50, 23);
+            txtAreaSegundoTelefono.Name = "txtAreaSegundoTelefono";
+            txtAreaSegundoTelefono.MaxLength = 4;
+            txtAreaSegundoTelefono.PlaceholderText = "ÁREA";
+            txtAreaSegundoTelefono.TabIndex = 18;
             pnlFormaEntrega.Controls.Add(label3);
             pnlFormaEntrega.Controls.Add(nudCostoEnvio);
             pnlFormaEntrega.Controls.Add(lblCostoEnvio);
@@ -299,8 +337,6 @@
             pnlFormaEntrega.Controls.Add(rdoRetiroPosterior);
             pnlFormaEntrega.Controls.Add(cboTipoLogistica);
             pnlFormaEntrega.Controls.Add(lblTipoLogistica);
-            pnlFormaEntrega.Controls.Add(txtHorarioSugerido);
-            pnlFormaEntrega.Controls.Add(lblHorarioSugerido);
             pnlFormaEntrega.Controls.Add(txtObservacionesEntrega);
             pnlFormaEntrega.Controls.Add(lblObservacionesEntrega);
             pnlFormaEntrega.Controls.Add(dtpFechaEntrega);
@@ -326,11 +362,12 @@
             lblUsarDireccionRegistrada.TabIndex = 19;
             lblUsarDireccionRegistrada.Text = "Usar direccion registrada";
             // txtsegundotelefono txtsegundotelefonolocation: posicion horizontal y vertical respecto del contenedor
-            txtSegundoTelefono.Location = new Point(390, 189);
-            txtSegundoTelefono.MaxLength = 10;
+            txtSegundoTelefono.Location = new Point(446, 189);
+            txtSegundoTelefono.MaxLength = 8;
+            txtSegundoTelefono.PlaceholderText = "NÚMERO";
             txtSegundoTelefono.Name = "txtSegundoTelefono";
-            txtSegundoTelefono.Size = new Size(143, 23);
-            txtSegundoTelefono.TabIndex = 18;
+            txtSegundoTelefono.Size = new Size(110, 23);
+            txtSegundoTelefono.TabIndex = 19;
             // label3
             label3.AutoSize = true;
             label3.Location = new Point(280, 192);
@@ -396,22 +433,6 @@
             lblTipoLogistica.Size = new Size(93, 15);
             lblTipoLogistica.TabIndex = 10;
             lblTipoLogistica.Text = "Tipo de logística";
-            // txthorariosugerido
-            txtHorarioSugerido.CharacterCasing = CharacterCasing.Upper;
-            txtHorarioSugerido.Location = new Point(399, 118);
-            txtHorarioSugerido.MaxLength = 150;
-            txtHorarioSugerido.Name = "txtHorarioSugerido";
-            txtHorarioSugerido.PlaceholderText = "Ej: tarde, de 14 a 18 hs";
-            txtHorarioSugerido.Size = new Size(136, 23);
-            txtHorarioSugerido.TabIndex = 9;
-            // lblhorariosugerido
-            lblHorarioSugerido.AutoSize = true;
-            lblHorarioSugerido.ForeColor = Color.White;
-            lblHorarioSugerido.Location = new Point(399, 95);
-            lblHorarioSugerido.Name = "lblHorarioSugerido";
-            lblHorarioSugerido.Size = new Size(96, 15);
-            lblHorarioSugerido.TabIndex = 8;
-            lblHorarioSugerido.Text = "Horario sugerido";
             // txtobservacionesentrega txtobservacionesentregaanchor: bordes que mantienen su distancia cuando cambia el tamano del contenedor
             txtObservacionesEntrega.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             txtObservacionesEntrega.CharacterCasing = CharacterCasing.Upper;
@@ -449,6 +470,7 @@
             txtDomicilioEntrega.Location = new Point(20, 118);
             txtDomicilioEntrega.MaxLength = 200;
             txtDomicilioEntrega.Name = "txtDomicilioEntrega";
+            txtDomicilioEntrega.PlaceholderText = "CALLE 123 O CALLE S/N";
             txtDomicilioEntrega.Size = new Size(232, 23);
             txtDomicilioEntrega.TabIndex = 3;
             // lbldomicilioentrega
@@ -1246,8 +1268,6 @@
         private Label lblAclaracionDocumentos;
         private ComboBox cboTipoLogistica;
         private Label lblTipoLogistica;
-        private TextBox txtHorarioSugerido;
-        private Label lblHorarioSugerido;
         private RadioButton rdoEnvioDomicilio;
         private RadioButton rdoRetiroPosterior;
         private NumericUpDown nudCostoEnvio;
@@ -1266,11 +1286,16 @@
         private ComboBox cboCantCuotas;
         private Label lblCuotasPago;
         private Label lblCobroPrevisto;
+        private TextBox txtLocalidadEntrega;
+        private TextBox txtHorarioSugerido;
+        private Label lblHorarioSugerido;
+        private Label lblLocalidadEntrega;
         private CheckBox usarDireccionRegistrada;
         private TextBox txtCuentaDestino;
         private Label lblCuentaDestino;
         private Label label3;
         private TextBox txtSegundoTelefono;
+        private TextBox txtAreaSegundoTelefono;
         private Panel pnlPagina;
         private TableLayoutPanel tlpSecciones;
         private Label lblUsarDireccionRegistrada;

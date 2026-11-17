@@ -1,4 +1,4 @@
-﻿// guia del archivo: reconstruye el comprobante desde la venta, su cliente, articulos y cobros registrados el nombre impreso agrega el modelo al nombre del producto; el selector de nueva venta usa otra representacion pagado suma monto_final, incluido el recargo pagos conserva el desglose por fecha, medio e importe recibido consultar un comprobante no registra una venta ni un pago adicional
+// guía del archivo: reconstruye el comprobante desde la venta, su cliente, artículos y cobros registrados. El pagado suma el importe cobrado, incluido el recargo.
 using Microsoft.Data.SqlClient;
 using Prana.Entidades;
 using static Prana.Datos.GestionVentaSql;
@@ -23,15 +23,17 @@ public class CD_Comprobante
     // consulta leer venta y transforma cada fila recibida en los objetos que devuelve
     private static venta LeerVenta(SqlConnection cn, SqlTransaction tx, int idVenta)
     {
-        using SqlCommand comando = Comando(cn, tx, @"SELECT v.fecha_venta,c.nombre_cliente,c.dni,
+        // obtiene el nombre de localidad del cliente mediante su relacion por id
+        using SqlCommand comando = Comando(cn, tx, @"SELECT v.fecha_hora_venta,c.nombre_cliente,c.numero_documento,
             COALESCE(c.telefono,''),COALESCE(c.direccion,''),COALESCE(l.nombre_localidad,''),
-            COALESCE(ve.domicilio,''),m.nombre_modalidad_entrega,COALESCE(ve.observaciones,''),
+            COALESCE(ve.direccion_sugerida,''),m.nombre_modalidad_entrega,COALESCE(ve.observaciones_entrega,''),
             COALESCE(v.descuento,0),COALESCE(ve.costo_envio,0),v.total,
-            COALESCE((SELECT SUM(monto_final) FROM Pago WHERE id_venta=v.id_venta),0),
-            c.apellido_cliente, c.tipo_documento,v.id_cliente,v.id_usuario,COALESCE(c.id_localidad,0)
-            FROM Venta v JOIN Cliente c ON c.id_cliente=v.id_cliente LEFT JOIN Localidad l ON l.id_localidad=c.id_localidad
+            COALESCE((SELECT SUM(importe_cobrado) FROM Pago WHERE id_venta=v.id_venta),0),
+            c.apellido_cliente, c.tipo_documento,v.id_cliente,v.id_usuario
+            FROM Venta v JOIN Cliente c ON c.id_cliente=v.id_cliente
+            LEFT JOIN dbo.Localidad l ON l.id_localidad=c.id_localidad
             JOIN Modalidad_Entrega m ON m.id_modalidad_entrega=v.id_modalidad_entrega
-            LEFT JOIN Venta_Entrega ve ON ve.id_venta=v.id_venta WHERE v.id_venta=@venta", ("@venta", idVenta));
+            LEFT JOIN Venta_Datos_Entrega ve ON ve.id_venta=v.id_venta WHERE v.id_venta=@venta", ("@venta", idVenta));
         venta documento;
         // limita la vida del recurso al bloque; al salir se ejecuta su liberacion incluso ante una excepcion
         using (SqlDataReader lector = comando.ExecuteReader())
@@ -58,8 +60,7 @@ public class CD_Comprobante
                     TipoDocumento = lector.GetString(14),
                     Telefono = lector.GetString(3),
                     Direccion = lector.GetString(4),
-                    NombreLocalidad = lector.GetString(5),
-                    IdLocalidad = lector.GetInt32(17)
+                    NombreLocalidad = lector.GetString(5)
                 },
                 DomicilioEntrega = lector.GetString(6),
                 ModalidadEntrega = lector.GetString(7),
@@ -93,9 +94,9 @@ public class CD_Comprobante
             }
         }
 
-        comando.CommandText = @"SELECT p.fecha_pago,m.nombre_medio_pago,COALESCE(p.cuotas,1),p.monto,p.monto_final
+        comando.CommandText = @"SELECT p.fecha_hora_pago,m.nombre_medio_pago,COALESCE(p.cantidad_cuotas,1),p.importe_base,p.importe_cobrado
             FROM Pago p JOIN Medio_Pago m ON m.id_medio_pago=p.id_medio_pago
-            WHERE p.id_venta=@venta ORDER BY p.fecha_pago,p.id_pago";
+            WHERE p.id_venta=@venta ORDER BY p.fecha_hora_pago,p.id_pago";
         // limita la vida del recurso al bloque; al salir se ejecuta su liberacion incluso ante una excepcion
         using (SqlDataReader r = comando.ExecuteReader())
         {
@@ -121,12 +122,12 @@ public class CD_Comprobante
     // consulta completar entrega y transforma cada fila recibida en los objetos que devuelve
     private static void CompletarEntrega(SqlConnection cn, SqlTransaction tx, venta doc)
     {
-        using SqlCommand comando = Comando(cn, tx, @"SELECT ve.fecha_estimada,COALESCE(ve.horario_sugerido,''),
-            COALESCE(ve.tipo_logistica,''),COALESCE(ve.observacion_pago,''),COALESCE(ve.condicion_pago,''),
-            COALESCE(c.codigo_postal,'')
+        using SqlCommand comando = Comando(cn, tx, @"SELECT ve.fecha_estimada_entrega,
+            COALESCE(ve.tipo_logistica,''),COALESCE(v.observacion_pago,''),COALESCE(v.condicion_pago,''),
+            COALESCE(ve.localidad_sugerida,''),COALESCE(ve.horario_sugerido,'')
             FROM Venta v JOIN Cliente c ON c.id_cliente=v.id_cliente
-            LEFT JOIN Localidad l ON l.id_localidad=c.id_localidad
-            LEFT JOIN Venta_Entrega ve ON ve.id_venta=v.id_venta WHERE v.id_venta=@venta", ("@venta", doc.IdVenta));
+
+            LEFT JOIN Venta_Datos_Entrega ve ON ve.id_venta=v.id_venta WHERE v.id_venta=@venta", ("@venta", doc.IdVenta));
         using SqlDataReader lector = comando.ExecuteReader();
         if (lector.Read())
         {
@@ -138,11 +139,11 @@ public class CD_Comprobante
             {
                 doc.FechaEntrega = lector.GetDateTime(0);
             }
-            doc.HorarioSugerido = lector.GetString(1);
-            doc.TipoLogistica = lector.GetString(2);
-            doc.ObservacionPago = lector.GetString(3);
-            doc.CondicionPago = lector.GetString(4);
-            doc.Cliente.CodigoPostal = lector.GetString(5);
+            doc.TipoLogistica = lector.GetString(1);
+            doc.ObservacionPago = lector.GetString(2);
+            doc.CondicionPago = lector.GetString(3);
+            doc.LocalidadEntrega = lector.GetString(4);
+            doc.HorarioSugerido = lector.GetString(5);
         }
     }
 }

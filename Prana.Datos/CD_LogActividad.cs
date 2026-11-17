@@ -12,7 +12,7 @@ namespace Prana.Datos
         public void Registrar(int idUsuario, string accion, string entidad, int? idEntidad, string detalle)
         {
             // define la consulta para guardar el log
-            string consulta = "INSERT INTO dbo.LogActividad (id_usuario, accion, entidad, id_entidad, detalle) VALUES (@IdUsuario, @Accion, @Entidad, @IdEntidad, @Detalle);";
+            string consulta = "INSERT INTO dbo.Log_Actividad (id_usuario, accion, entidad, id_entidad, detalle) VALUES (@IdUsuario, @Accion, @Entidad, @IdEntidad, @Detalle);";
             // abre la conexion con la base de datos
             using SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena());
             // prepara la consulta y su conexion los valores variables se envian mediante parametros
@@ -58,7 +58,7 @@ namespace Prana.Datos
         public List<LogActividad> ObtenerFiltrado(DateTime desde, DateTime hasta, int limite, int? remito = null, string accion = "", string usuario = "")
         {
             // consulta las actividades junto con el nombre del usuario y el rango solicitado
-            string consulta = "SELECT TOP (@Limite) l.id_log, l.id_usuario, u.nombre_usuario, l.accion, l.entidad, l.id_entidad, l.detalle, l.fecha FROM dbo.LogActividad AS l INNER JOIN dbo.Usuario AS u ON u.id_usuario = l.id_usuario WHERE l.fecha >= @Desde AND l.fecha < @Hasta AND (@Remito IS NULL OR (l.entidad=N'Venta' AND l.id_entidad=@Remito)) AND (@Accion=N'' OR CHARINDEX(@Accion,l.accion)>0) AND (@Usuario=N'' OR CHARINDEX(@Usuario,u.nombre_usuario)>0) ORDER BY l.fecha DESC,l.id_log DESC;";
+            string consulta = "SELECT TOP (@Limite) l.id_log, l.id_usuario, u.nombre_usuario, l.accion, l.entidad, l.id_entidad, l.detalle, l.fecha_hora_actividad FROM dbo.Log_Actividad AS l INNER JOIN dbo.Usuario AS u ON u.id_usuario = l.id_usuario WHERE l.fecha_hora_actividad >= @Desde AND l.fecha_hora_actividad < @Hasta AND (@Remito IS NULL OR (l.entidad=N'Venta' AND l.id_entidad=@Remito)) AND (@Accion=N'' OR CHARINDEX(@Accion,l.accion)>0) AND (@Usuario=N'' OR CHARINDEX(@Usuario,u.nombre_usuario)>0) ORDER BY l.fecha_hora_actividad DESC,l.id_log DESC;";
             // crea la conexion con la base de datos
             using SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena());
             // prepara la consulta y su conexion los valores variables se envian mediante parametros
@@ -109,7 +109,7 @@ namespace Prana.Datos
                     Entidad = lector.GetString(lector.GetOrdinal("entidad")),
                     IdEntidad = valorIdEntidad,
                     Detalle = valorDetalle,
-                    Fecha = lector.GetDateTime(lector.GetOrdinal("fecha"))
+                    Fecha = lector.GetDateTime(lector.GetOrdinal("fecha_hora_actividad"))
 
                 });
             }

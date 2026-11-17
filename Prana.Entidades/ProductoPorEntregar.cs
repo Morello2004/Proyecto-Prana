@@ -31,5 +31,7 @@ public class ProductoPorEntregar
     // dato pendientes de tipo int se obtiene al consultar la propiedad mediante la expresion siguiente
     public int Pendientes => Vendidos - Preparados;
     // conserva direccion como string para intercambiar este dato entre las capas
-    public string Direccion { get; set; } = "";
+    public string DomicilioSugerido { get; set; } = "";
+    public string LocalidadSugerida { get; set; } = "";
+    public string Direccion => string.IsNullOrWhiteSpace(LocalidadSugerida) ? DomicilioSugerido : $"{DomicilioSugerido}, {LocalidadSugerida}";
 }

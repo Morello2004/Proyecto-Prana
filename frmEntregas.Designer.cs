@@ -1,4 +1,4 @@
-﻿namespace Prana.Presentacion
+namespace Prana.Presentacion
 {
     // parte visual de frmentregas crea controles y define su distribucion, colores y eventos; visual studio puede regenerar este archivo al editar el disenador
     partial class frmEntregas
@@ -34,8 +34,9 @@
             nudCantidad = new NumericUpDown();
             lblDireccion = new Label();
             txtDireccion = new TextBox();
-            lblHorario = new Label();
-            txtHorario = new TextBox();
+            txtLocalidad = new TextBox();
+            lblLocalidad = new Label();
+            pnlLocalidad = new Panel();
             btnPreparar = new Button();
             lblAyuda = new Label();
             pnlEntregas = new Panel();
@@ -95,7 +96,7 @@
             dgvPendientes.Dock = DockStyle.Fill;
             pnlPreparar.Dock = DockStyle.Fill;
             pnlPreparar.BackColor = Color.FromArgb(21, 30, 41);
-            pnlPreparar.Controls.AddRange(new Control[] { lblSeleccion, lblCantidad, nudCantidad, lblDireccion, txtDireccion, lblHorario, txtHorario, btnPreparar, lblAyuda });
+            pnlPreparar.Controls.AddRange(new Control[] { lblSeleccion, lblCantidad, nudCantidad, lblDireccion, txtDireccion, btnPreparar, lblAyuda });
             lblSeleccion.Location = new Point(12, 10);
             lblSeleccion.Size = new Size(850, 24);
             lblSeleccion.AutoEllipsis = true;
@@ -118,15 +119,10 @@
             txtDireccion.Location = new Point(110, 69);
             txtDireccion.Size = new Size(320, 27);
             txtDireccion.MaxLength = 200;
+            txtDireccion.CharacterCasing = CharacterCasing.Upper;
+            txtDireccion.PlaceholderText = "CALLE 123 O CALLE S/N";
+            txtDireccion.ReadOnly = true;
             txtDireccion.TabIndex = 1;
-            lblHorario.Text = "Horario sugerido";
-            lblHorario.AutoSize = true;
-            lblHorario.Location = new Point(445, 46);
-            lblHorario.ForeColor = Color.FromArgb(145, 170, 210);
-            txtHorario.Location = new Point(445, 69);
-            txtHorario.Size = new Size(145, 27);
-            txtHorario.MaxLength = 50;
-            txtHorario.TabIndex = 2;
             btnPreparar.Text = "Preparar entrega";
             btnPreparar.Location = new Point(610, 63);
             btnPreparar.Size = new Size(170, 35);
@@ -136,7 +132,7 @@
             btnPreparar.FlatAppearance.BorderSize = 0;
             btnPreparar.Enabled = false;
             btnPreparar.TabIndex = 3;
-            lblAyuda.Text = "Preparar reserva el stock. Confirmar registra que el cliente recibió los productos.";
+            lblAyuda.Text = "Cada preparación puede tener su propio destino. Confirmar registra que el cliente recibió los productos.";
             lblAyuda.Location = new Point(12, 115);
             lblAyuda.Size = new Size(820, 30);
             lblAyuda.ForeColor = Color.FromArgb(145, 170, 210);
@@ -238,22 +234,25 @@
             pnlCampo25.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             pnlCampo25.Margin = new Padding(4, 4, 12, 4);
             flpPreparar.Controls.Add(pnlCampo25);
-            pnlCampo26 = new Panel();
-            pnlCampo26.Name = "pnlCampo26";
-            pnlCampo26.Size = new Size(150, 58);
-            lblHorario.Dock = DockStyle.Top;
-            lblHorario.AutoSize = false;
-            lblHorario.Height = 23;
-            txtHorario.Dock = DockStyle.None;
-            txtHorario.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            txtHorario.Location = new Point(0, 26);
-            txtHorario.Width = 150;
-            pnlCampo26.Controls.Add(txtHorario);
-            pnlCampo26.Controls.Add(lblHorario);
-            pnlCampo26.Dock = DockStyle.None;
-            pnlCampo26.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-            pnlCampo26.Margin = new Padding(4, 4, 12, 4);
-            flpPreparar.Controls.Add(pnlCampo26);
+            pnlLocalidad.Name = "pnlLocalidad";
+            pnlLocalidad.Size = new Size(180, 58);
+            pnlLocalidad.Margin = new Padding(4, 4, 12, 4);
+            lblLocalidad.Name = "lblLocalidad";
+            lblLocalidad.Text = "Localidad / ciudad";
+            lblLocalidad.ForeColor = Color.FromArgb(145, 170, 210);
+            lblLocalidad.Dock = DockStyle.Top;
+            lblLocalidad.Height = 23;
+            txtLocalidad.Name = "txtLocalidad";
+            txtLocalidad.CharacterCasing = CharacterCasing.Upper;
+            txtLocalidad.MaxLength = 25;
+            txtLocalidad.Enabled = false;
+            txtLocalidad.Location = new Point(0, 26);
+            txtLocalidad.Size = new Size(180, 27);
+            txtLocalidad.TabIndex = 2;
+            pnlLocalidad.Controls.Add(txtLocalidad);
+            pnlLocalidad.Controls.Add(lblLocalidad);
+            flpPreparar.Controls.Add(pnlLocalidad);
+            btnPreparar.TabIndex = 3;
             btnPreparar.Dock = DockStyle.None;
             btnPreparar.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             btnPreparar.Margin = new Padding(4, 4, 12, 4);
@@ -506,8 +505,11 @@
         }
 
         private Panel pnlTitulo, pnlFiltros, pnlPendientes, pnlPreparar, pnlEntregas;
-        private Label lblTitulo, lblPendientes, lblSeleccion, lblCantidad, lblDireccion, lblHorario, lblAyuda, lblEntregas;
-        private TextBox txtBuscar, txtDireccion, txtHorario;
+        private Label lblTitulo, lblPendientes, lblSeleccion, lblCantidad, lblDireccion, lblAyuda, lblEntregas;
+        private TextBox txtBuscar, txtDireccion;
+        private TextBox txtLocalidad;
+        private Label lblLocalidad;
+        private Panel pnlLocalidad;
         private CheckBox chkPendientes;
         private Button btnBuscar, btnPreparar, btnConfirmar;
         private TableLayoutPanel contenido;
@@ -517,7 +519,6 @@
         private FlowLayoutPanel flpPreparar;
         private Panel pnlCampo24;
         private Panel pnlCampo25;
-        private Panel pnlCampo26;
         private Panel pnlPagina;
         private TableLayoutPanel tlpSecciones;
         private DataGridViewTextBoxColumn colDiseno31;

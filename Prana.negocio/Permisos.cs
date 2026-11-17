@@ -43,6 +43,7 @@ namespace Prana.negocio
         public const string AnularMovimientosCaja = "ANULAR_MOVIMIENTOS_CAJA";
         // solo el administrador puede corregir unificar o eliminar las opciones compartidas de stock
         public const string AdministrarOpcionesStock = "ADMINISTRAR_OPCIONES_STOCK";
+        public const string AdministrarLocalidades = "ADMINISTRAR_LOCALIDADES";
         // exige una sesion iniciada y el permiso necesario antes de continuar comprueba exigir; si no se cumple la regla interrumpe con un mensaje antes de continuar
         public static void Exigir(string permiso)
         {

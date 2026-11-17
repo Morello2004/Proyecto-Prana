@@ -87,7 +87,7 @@ public class CD_OpcionStock
                 comando.CommandText = $"UPDATE dbo.{tabla} SET {nombre}=@nombre WHERE {filtro}";
             }
             comando.ExecuteNonQuery();
-            using SqlCommand historial = new SqlCommand("INSERT dbo.LogActividad(id_usuario,accion,entidad,id_entidad,detalle) VALUES(@usuario,@accion,@entidad,@id,@detalle)", conexion, transaccion);
+            using SqlCommand historial = new SqlCommand("INSERT dbo.Log_Actividad(id_usuario,accion,entidad,id_entidad,detalle) VALUES(@usuario,@accion,@entidad,@id,@detalle)", conexion, transaccion);
             historial.Parameters.AddWithValue("@usuario", usuario);
             historial.Parameters.AddWithValue("@accion", accion);
             historial.Parameters.AddWithValue("@entidad", tipo.ToString());

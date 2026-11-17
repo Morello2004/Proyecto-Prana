@@ -1,4 +1,4 @@
-﻿using Prana.Entidades;
+using Prana.Entidades;
 using Prana.negocio;
 
 namespace Prana.Presentacion
@@ -54,15 +54,17 @@ namespace Prana.Presentacion
                 lblSeleccion.Text = $"Venta #{producto.IdVenta} · {producto.Cliente} · {producto.Producto}";
             }
             nudCantidad.Value = 1;
-            txtDireccion.Text = producto?.Direccion ?? "";
-            txtHorario.Clear();
+            txtDireccion.Text = producto?.DomicilioSugerido ?? "";
+            txtLocalidad.Text = producto?.LocalidadSugerida ?? "";
             bool retiro = producto?.Modalidad.StartsWith("Retiro", StringComparison.OrdinalIgnoreCase) == true;
             if (retiro)
             {
                 txtDireccion.Text = "Retiro en local";
+                txtLocalidad.Clear();
             }
 
-            txtDireccion.ReadOnly = retiro;
+            txtDireccion.ReadOnly = retiro || producto == null;
+            txtLocalidad.Enabled = !retiro && producto != null;
             btnPreparar.Enabled = producto != null && PuedeGestionar();
         }
 
@@ -82,7 +84,7 @@ namespace Prana.Presentacion
             {
                 btnPreparar.Enabled = false;
                 // negocio valida; datos guarda remito, envio, stock y actividad en una transaccion
-                negocio.Preparar(Producto, (int)nudCantidad.Value, txtDireccion.Text, txtHorario.Text);
+                negocio.Preparar(Producto, (int)nudCantidad.Value, txtDireccion.Text, txtLocalidad.Text);
                 Buscar();
                 MessageBox.Show(this, "Entrega preparada y stock reservado. Selecciónela abajo para confirmar cuando se entregue.", "Entregas");
             }

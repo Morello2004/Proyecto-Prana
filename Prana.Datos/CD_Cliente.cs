@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Prana.Entidades;
 using System;
 using System.Collections.Generic;
@@ -22,16 +22,9 @@ namespace Prana.Datos
             // protege el acceso a los datos para atender los errores de la operacion
             try
             {
-                // busca o crea la localidad solamente cuando se ingreso una ciudad
-                int? idLocalidad = null;
-                // distingue un dato vacio de un valor ingresado antes de continuar
-                if (!string.IsNullOrWhiteSpace(cliente.Localidad?.NombreLocalidad))
-                {
-                    CD_Localidad datosLocalidad = new CD_Localidad();
-                    idLocalidad = datosLocalidad.ObtenerOCrearLocalidad(cliente.Localidad.NombreLocalidad, conexion, transaccion);
-                }
-
-                string consulta = "INSERT INTO Cliente (nombre_cliente, apellido_cliente, dni, tipo_documento, telefono, fecha_registro, direccion, saldo_a_favor, id_localidad, codigo_postal) VALUES (@Nombre, @Apellido, @DNI, @TipoDocumento, @Telefono, @FechaRegistro, @Direccion, @SaldoFavor, @IdLocalidad, @CodigoPostal)";
+                // obtiene la clave de localidad dentro de la misma transaccion del cliente
+                int? idLocalidad = CD_Localidad.Asegurar(conexion, transaccion, cliente.NombreLocalidad);
+                string consulta = "INSERT INTO Cliente (nombre_cliente, apellido_cliente, numero_documento, tipo_documento, telefono, fecha_hora_registro, direccion, saldo_a_favor, id_localidad) VALUES (@Nombre, @Apellido, @DNI, @TipoDocumento, @Telefono, @FechaRegistro, @Direccion, @SaldoFavor, @IdLocalidad)";
                 // crea el comando que registrara el cliente
                 using SqlCommand comando = new SqlCommand(consulta, conexion, transaccion);
                 comando.Parameters.Add("@Nombre", SqlDbType.NVarChar, 100).Value = cliente.Nombre;
@@ -60,24 +53,8 @@ namespace Prana.Datos
                 }
                 // envia el saldo a favor del cliente
                 comando.Parameters.Add("@SaldoFavor", SqlDbType.Decimal).Value = cliente.SaldoFavor;
-                // distingue un dato vacio de un valor ingresado antes de continuar
-                if (string.IsNullOrWhiteSpace(cliente.CodigoPostal))
-                {
-                    comando.Parameters.Add("@CodigoPostal", SqlDbType.NVarChar, 12).Value = DBNull.Value;
-                }
-                else
-                {
-                    comando.Parameters.Add("@CodigoPostal", SqlDbType.NVarChar, 12).Value = cliente.CodigoPostal;
-                }
-                // envia el identificador de la localidad
-                if (idLocalidad.HasValue)
-                {
-                    comando.Parameters.Add("@IdLocalidad", SqlDbType.Int).Value = idLocalidad.Value;
-                }
-                else
-                {
-                    comando.Parameters.Add("@IdLocalidad", SqlDbType.Int).Value = DBNull.Value;
-                }
+                // guarda la clave foranea o null si el cliente no tiene localidad
+                comando.Parameters.Add("@IdLocalidad", SqlDbType.Int).Value = (object?)idLocalidad ?? DBNull.Value;
                 // ejecuta la consulta y guarda la cantidad de filas modificadas
                 int filasAfectadas = comando.ExecuteNonQuery();
                 // confirma todos los cambios realizados
@@ -106,27 +83,27 @@ namespace Prana.Datos
                 WITH Actividad AS
                 (
                     -- Una venta no anulada ni cancelada cuenta como actividad en la fecha de venta.
-                    SELECT v.id_cliente, v.fecha_venta AS fecha
+                    SELECT v.id_cliente, v.fecha_hora_venta AS fecha
                     FROM Venta v
                     INNER JOIN Estado_Venta ev ON ev.id_estado_venta = v.id_estado_venta
                     WHERE ev.nombre_estado_venta NOT LIKE N'Anulad%'
                         AND ev.nombre_estado_venta NOT LIKE N'Cancelad%'
                     UNION ALL
                     -- También cuenta un pago de una venta vigente, aunque sea parcial.
-                    SELECT v.id_cliente, p.fecha_pago
+                    SELECT v.id_cliente, p.fecha_hora_pago
                     FROM Pago p
                     INNER JOIN Venta v ON v.id_venta = p.id_venta
                     INNER JOIN Estado_Venta ev ON ev.id_estado_venta = v.id_estado_venta
                     WHERE ev.nombre_estado_venta NOT LIKE N'Anulad%'
                         AND ev.nombre_estado_venta NOT LIKE N'Cancelad%'
                     UNION ALL
-                    SELECT id_entidad, fecha FROM LogActividad
+                    SELECT id_entidad, fecha_hora_actividad FROM Log_Actividad
                     WHERE entidad = N'Cliente'
                         AND accion IN (N'ACTIVAR_CLIENTE', N'RESTAURAR_CLIENTE')
                         AND id_entidad IS NOT NULL
                     UNION ALL
                     -- Si todavía no hay ventas ni pagos, la fecha de alta sirve como actividad inicial.
-                    SELECT id_cliente, fecha_registro FROM Cliente
+                    SELECT id_cliente, fecha_hora_registro FROM Cliente
                 ), UltimaActividad AS
                 (
                     -- Conserva solo la fecha más reciente de todas las actividades anteriores.
@@ -155,13 +132,14 @@ namespace Prana.Datos
             }
 
             List<Cliente> clientesEncontrados = new List<Cliente>();
+            // resuelve el nombre visible de la localidad desde su clave foranea
             // los numeros son los filtros del formulario de clientes; 4 significa todos menos los eliminados
-            string consulta = @"SELECT c.id_cliente, c.nombre_cliente, c.apellido_cliente, c.dni, c.tipo_documento, c.telefono, c.fecha_registro, c.direccion, c.saldo_a_favor, c.id_localidad, l.nombre_localidad, l.codigo_postal AS localidad_codigo_postal, c.codigo_postal, c.activo, c.eliminado, COALESCE(d.saldo, 0) AS deuda_pendiente
+            string consulta = @"SELECT c.id_cliente
                 FROM Cliente c
-                LEFT JOIN Localidad l ON c.id_localidad = l.id_localidad
+                LEFT JOIN dbo.Localidad l ON l.id_localidad=c.id_localidad
                 LEFT JOIN (SELECT id_cliente, SUM(saldo) AS saldo FROM (" + CD_Venta.SaldosSql + @") saldos GROUP BY id_cliente) d ON d.id_cliente = c.id_cliente
                 -- LIKE recibe el patrón completo preparado en C# (por ejemplo, '40%' para prefijo).
-                WHERE (@busqueda IS NULL OR c.nombre_cliente LIKE @busqueda OR c.apellido_cliente LIKE @busqueda OR CONCAT(LTRIM(RTRIM(c.nombre_cliente)), ' ', LTRIM(RTRIM(c.apellido_cliente))) LIKE @busqueda OR c.dni LIKE @busqueda OR c.telefono LIKE @busqueda)
+                WHERE (@busqueda IS NULL OR c.nombre_cliente LIKE @busqueda OR c.apellido_cliente LIKE @busqueda OR CONCAT(LTRIM(RTRIM(c.nombre_cliente)), ' ', LTRIM(RTRIM(c.apellido_cliente))) LIKE @busqueda OR c.numero_documento LIKE @busqueda OR c.telefono LIKE @busqueda)
                     -- 0 activos; 1 inactivos; 2 eliminados; 3 todos; 4 activos e inactivos, nunca eliminados.
                     AND (@filtro = 3 OR (@filtro = 0 AND c.eliminado = 0 AND c.activo = 1) OR (@filtro = 1 AND c.eliminado = 0 AND c.activo = 0) OR (@filtro = 2 AND c.eliminado = 1) OR (@filtro = 4 AND c.eliminado = 0))
                 ORDER BY c.apellido_cliente, c.nombre_cliente";
@@ -199,49 +177,22 @@ namespace Prana.Datos
                     valorSaldoFavor = lector.GetDecimal(lector.GetOrdinal("saldo_a_favor"));
                 }
 
-                int valorIdLocalidad;
-                if (lector["id_localidad"] == DBNull.Value)
-                {
-                    valorIdLocalidad = 0;
-                }
-                else
-                {
-                    valorIdLocalidad = Convert.ToInt32(lector["id_localidad"]);
-                }
-
-                int valorIdLocalidad1;
-                if (lector["id_localidad"] == DBNull.Value)
-                {
-                    valorIdLocalidad1 = 0;
-                }
-                else
-                {
-                    valorIdLocalidad1 = Convert.ToInt32(lector["id_localidad"]);
-                }
                 // crea el cliente obtenido
                 Cliente cliente = new Cliente
                 {
                     IdCliente = lector.GetInt32(lector.GetOrdinal("id_cliente")),
                     Nombre = lector["nombre_cliente"]?.ToString() ?? string.Empty,
                     Apellido = lector["apellido_cliente"]?.ToString() ?? string.Empty,
-                    DNI = lector["dni"]?.ToString() ?? string.Empty,
+                    DNI = lector["numero_documento"]?.ToString() ?? string.Empty,
                     TipoDocumento = lector["tipo_documento"].ToString() ?? "DNI",
                     Telefono = lector["telefono"]?.ToString() ?? string.Empty,
-                    FechaRegistro = lector.GetDateTime(lector.GetOrdinal("fecha_registro")),
-                    CodigoPostal = lector["codigo_postal"]?.ToString() ?? string.Empty,
+                    FechaRegistro = lector.GetDateTime(lector.GetOrdinal("fecha_hora_registro")),
                     Direccion = lector["direccion"]?.ToString() ?? string.Empty,
                     SaldoFavor = valorSaldoFavor,
-                    IdLocalidad = valorIdLocalidad,
                     Activo = lector.GetBoolean(lector.GetOrdinal("activo")),
                     Eliminado = lector.GetBoolean(lector.GetOrdinal("eliminado")),
                     DeudaPendiente = lector.GetDecimal(lector.GetOrdinal("deuda_pendiente")),
-                    Localidad = new Localidad
-                    {
-                        IdLocalidad = valorIdLocalidad1,
-                        NombreLocalidad = lector["nombre_localidad"]?.ToString() ?? string.Empty,
-                        CodigoPostal = lector["localidad_codigo_postal"]?.ToString() ?? string.Empty
-
-                    }
+                    NombreLocalidad = lector["localidad"]?.ToString() ?? string.Empty
 
                 };
                 // agrega el cliente a los resultados
@@ -291,11 +242,10 @@ namespace Prana.Datos
                                 FROM Venta v
                                 INNER JOIN Estado_Venta ev ON ev.id_estado_venta = v.id_estado_venta
                                 INNER JOIN Detalle_Venta dv ON dv.id_venta = v.id_venta
-                                INNER JOIN Estado_Variante_Producto ep ON ep.id_estado_variante_producto = dv.id_estado_variante_producto
                                 WHERE v.id_cliente = @cliente
                                     AND ev.nombre_estado_venta NOT LIKE N'Anulad%'
                                     AND ev.nombre_estado_venta NOT LIKE N'Cancelad%'
-                                    AND ep.nombre_estado_variante_producto <> N'Entregado'
+                                    AND dv.entregado = 0
                             ) THEN 1 ELSE 0 END AS tiene_pedidos_pendientes;", conexion, transaccion);
                     validarBaja.Parameters.Add("@cliente", SqlDbType.Int).Value = idCliente;
                     using SqlDataReader estadoBaja = validarBaja.ExecuteReader();
@@ -347,7 +297,7 @@ namespace Prana.Datos
 
                 // prepara la consulta y su conexion los valores variables se envian mediante parametros
                 using SqlCommand historial = new SqlCommand(@"
-                    INSERT INTO LogActividad(id_usuario, accion, entidad, id_entidad, detalle)
+                    INSERT INTO Log_Actividad(id_usuario, accion, entidad, id_entidad, detalle)
                     VALUES(@usuario, @accion, N'Cliente', @cliente, @detalle);", conexion, transaccion);
                 historial.Parameters.Add("@usuario", SqlDbType.Int).Value = idUsuario;
                 historial.Parameters.Add("@accion", SqlDbType.NVarChar, 100).Value = accion;
@@ -384,16 +334,9 @@ namespace Prana.Datos
             // protege el acceso a los datos para atender los errores de la operacion
             try
             {
-                // busca o crea la localidad solamente cuando se ingreso una ciudad
-                int? idLocalidad = null;
-                // distingue un dato vacio de un valor ingresado antes de continuar
-                if (!string.IsNullOrWhiteSpace(cliente.Localidad?.NombreLocalidad))
-                {
-                    CD_Localidad datosLocalidad = new CD_Localidad();
-                    idLocalidad = datosLocalidad.ObtenerOCrearLocalidad(cliente.Localidad.NombreLocalidad, conexion, transaccion);
-                }
-
-                string consulta = "UPDATE Cliente SET nombre_cliente = @Nombre, apellido_cliente = @Apellido, dni = @DNI, tipo_documento = @TipoDocumento, telefono = @Telefono, direccion = @Direccion, id_localidad = @IdLocalidad, codigo_postal = @CodigoPostal WHERE id_cliente = @IdCliente AND eliminado = 0";
+                // obtiene la clave de localidad dentro de la misma transaccion del cliente
+                int? idLocalidad = CD_Localidad.Asegurar(conexion, transaccion, cliente.NombreLocalidad);
+                string consulta = "UPDATE Cliente SET nombre_cliente = @Nombre, apellido_cliente = @Apellido, numero_documento = @DNI, tipo_documento = @TipoDocumento, telefono = @Telefono, direccion = @Direccion, id_localidad = @IdLocalidad WHERE id_cliente = @IdCliente AND eliminado = 0";
                 // crea el comando que ejecutara la modificacion
                 using SqlCommand comando = new SqlCommand(consulta, conexion, transaccion);
                 // envia el identificador del cliente
@@ -423,24 +366,8 @@ namespace Prana.Datos
                 {
                     comando.Parameters.Add("@Direccion", SqlDbType.NVarChar, 200).Value = cliente.Direccion;
                 }
-                // distingue un dato vacio de un valor ingresado antes de continuar
-                if (string.IsNullOrWhiteSpace(cliente.CodigoPostal))
-                {
-                    comando.Parameters.Add("@CodigoPostal", SqlDbType.NVarChar, 12).Value = DBNull.Value;
-                }
-                else
-                {
-                    comando.Parameters.Add("@CodigoPostal", SqlDbType.NVarChar, 12).Value = cliente.CodigoPostal;
-                }
-                // envia el identificador de la localidad
-                if (idLocalidad.HasValue)
-                {
-                    comando.Parameters.Add("@IdLocalidad", SqlDbType.Int).Value = idLocalidad.Value;
-                }
-                else
-                {
-                    comando.Parameters.Add("@IdLocalidad", SqlDbType.Int).Value = DBNull.Value;
-                }
+                // guarda la clave foranea o null si el cliente no tiene localidad
+                comando.Parameters.Add("@IdLocalidad", SqlDbType.Int).Value = (object?)idLocalidad ?? DBNull.Value;
                 // ejecuta la consulta y obtiene las filas modificadas
                 int filasAfectadas = comando.ExecuteNonQuery();
                 // confirma todos los cambios realizados
@@ -458,11 +385,11 @@ namespace Prana.Datos
             }
         }
 
-        // comprueba si el dni pertenece a otro cliente
+        // comprueba si el numero de documento pertenece a otro cliente
         public bool ExisteClientePorDNI(string dni, int idClienteExcluir)
         {
-            // busca el dni ignorando el cliente indicado
-            string consulta = "SELECT COUNT(*) FROM Cliente WHERE dni = @DNI AND id_cliente <> @IdClienteExcluir";
+            // busca el numero de documento ignorando el cliente indicado
+            string consulta = "SELECT COUNT(*) FROM Cliente WHERE numero_documento = @DNI AND id_cliente <> @IdClienteExcluir";
             // crea la conexion
             using SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena());
             // crea el comando

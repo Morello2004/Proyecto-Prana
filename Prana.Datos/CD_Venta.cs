@@ -7,9 +7,9 @@ namespace Prana.Datos
     // agrupa los datos y operaciones de cd venta
     public class CD_Venta
     {
-        // suma los pagos antes de unir detalles para no multiplicar los importes total incluye recargos: se descuenta monto_final, tambien con recargos
+        // suma los pagos antes de unir detalles para no multiplicar los importes total incluye recargos: se descuenta el importe cobrado, tambien con recargos
         internal const string SaldosSql = @"
-            SELECT v.id_venta, v.id_cliente, v.fecha_venta, v.total,
+            SELECT v.id_venta, v.id_cliente, v.fecha_hora_venta, v.total,
                    ev.nombre_estado_venta,
                    COALESCE(p.pagado, 0) AS pagado,
                    CASE WHEN ev.nombre_estado_venta LIKE N'Anulad%'
@@ -18,7 +18,7 @@ namespace Prana.Datos
                         ELSE v.total - COALESCE(p.pagado, 0) END AS saldo
             FROM Venta v
             INNER JOIN Estado_Venta ev ON ev.id_estado_venta = v.id_estado_venta
-            LEFT JOIN (SELECT id_venta, SUM(monto_final) AS pagado FROM Pago GROUP BY id_venta) p
+            LEFT JOIN (SELECT id_venta, SUM(importe_cobrado) AS pagado FROM Pago GROUP BY id_venta) p
                 ON p.id_venta = v.id_venta";
         // resuelve top10 ventas con los datos recibidos y entrega el resultado al codigo que lo llama
         public static List<venta> Top10Ventas() => Buscar(null, null, true);
@@ -38,7 +38,7 @@ namespace Prana.Datos
             }
             // consolida cantidades por variante para reconocer entregas parciales sin duplicar productos
             string consulta = "SELECT " + (limiteResultados) + @"
-                v.*, c.nombre_cliente, c.apellido_cliente, c.dni, entrega.estado_entrega,
+                v.*, c.nombre_cliente, c.apellido_cliente, c.numero_documento, entrega.estado_entrega,
                 COALESCE((SELECT STRING_AGG(CAST(CONCAT(d.cantidad, N' × ', pr.nombre_producto,
                     N' (', vp.color, N', ', vp.condicion_producto, N')') AS nvarchar(max)), N'; ')
                     FROM Detalle_Venta d
@@ -55,13 +55,10 @@ namespace Prana.Datos
                         WHERE id_venta=v.id_venta GROUP BY id_variante) d
                     OUTER APPLY (
                         SELECT SUM(dr.cantidad) preparados,
-                            SUM(CASE WHEN confirmado.existe=1 THEN dr.cantidad ELSE 0 END) entregados
+                            SUM(CASE WHEN e.entregado=1 THEN dr.cantidad ELSE 0 END) entregados
                         FROM Remito rem JOIN Detalle_Remito dr ON dr.id_remito=rem.id_remito
-                        OUTER APPLY (SELECT TOP (1) 1 existe FROM Envio e JOIN Estado_Envio ee ON ee.id_estado_envio=e.id_estado_envio
-                            WHERE e.id_remito=rem.id_remito AND ee.nombre=N'Entregado') confirmado
+                        JOIN Envio e ON e.id_remito=rem.id_remito
                         WHERE rem.id_venta=v.id_venta AND dr.id_variante=d.id_variante
-                            AND NOT EXISTS (SELECT 1 FROM Envio e JOIN Estado_Envio ee ON ee.id_estado_envio=e.id_estado_envio
-                                WHERE e.id_remito=rem.id_remito AND ee.nombre LIKE N'Cancelad%')
                     ) r
                 ) cantidades
                 CROSS APPLY (SELECT CASE
@@ -83,11 +80,11 @@ namespace Prana.Datos
             for (int i = 0; i < palabras.Length; i++)
             {
                 string parametro = "@texto" + i;
-                consulta += $" AND CONCAT(v.id_venta, ' ', c.nombre_cliente, ' ', c.apellido_cliente, ' ', c.dni, ' ', v.nombre_estado_venta, ' ', entrega.estado_entrega) COLLATE Latin1_General_CI_AI LIKE {parametro} ESCAPE '~'";
+                consulta += $" AND CONCAT(v.id_venta, ' ', c.nombre_cliente, ' ', c.apellido_cliente, ' ', c.numero_documento, ' ', v.nombre_estado_venta, ' ', entrega.estado_entrega) COLLATE Latin1_General_CI_AI LIKE {parametro} ESCAPE '~'";
                 comando.Parameters.Add(parametro, SqlDbType.NVarChar, -1).Value = "%" + EscaparBusqueda(palabras[i]) + "%";
             }
 
-            comando.CommandText = consulta + " ORDER BY v.fecha_venta DESC, v.id_venta DESC";
+            comando.CommandText = consulta + " ORDER BY v.fecha_hora_venta DESC, v.id_venta DESC";
             conexion.Open();
             using SqlDataReader lector = comando.ExecuteReader();
             List<venta> ventas = new();
@@ -96,7 +93,7 @@ namespace Prana.Datos
                 ventas.Add(new venta
                 {
                     IdVenta = (int)lector["id_venta"],
-                    Fecha = (DateTime)lector["fecha_venta"],
+                    Fecha = (DateTime)lector["fecha_hora_venta"],
                     Total = (decimal)lector["total"],
                     Estado = (string)lector["nombre_estado_venta"],
                     Pagado = (decimal)lector["pagado"],
@@ -108,7 +105,7 @@ namespace Prana.Datos
                         IdCliente = (int)lector["id_cliente"],
                         Nombre = (string)lector["nombre_cliente"],
                         Apellido = (string)lector["apellido_cliente"],
-                        DNI = (string)lector["dni"]
+                        DNI = (string)lector["numero_documento"]
 
                     }
 
@@ -125,8 +122,8 @@ namespace Prana.Datos
         {
             using SqlConnection conexion = new(Conexion.ObtenerCadena());
             using SqlCommand comando = new(@"
-                SELECT COALESCE(SUM(CASE WHEN fecha_venta >= @desde AND fecha_venta < @hasta THEN total ELSE 0 END), 0) AS total_hoy,
-                    COUNT(CASE WHEN fecha_venta >= @desde AND fecha_venta < @hasta THEN 1 END) AS cantidad_hoy,
+                SELECT COALESCE(SUM(CASE WHEN fecha_hora_venta >= @desde AND fecha_hora_venta < @hasta THEN total ELSE 0 END), 0) AS total_hoy,
+                    COUNT(CASE WHEN fecha_hora_venta >= @desde AND fecha_hora_venta < @hasta THEN 1 END) AS cantidad_hoy,
                     COALESCE(SUM(saldo), 0) AS saldo,
                     COUNT(CASE WHEN saldo > 0 THEN 1 END) AS pendientes
                 FROM (" + SaldosSql + @") v

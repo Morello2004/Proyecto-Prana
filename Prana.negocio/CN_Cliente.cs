@@ -1,4 +1,4 @@
-﻿using Prana.Datos;
+using Prana.Datos;
 using Prana.Entidades;
 using System;
 using System.Collections.Generic;
@@ -10,13 +10,33 @@ namespace Prana.negocio
     // agrupa los datos y operaciones de cn cliente
     public class CN_Cliente
     {
-        // exige el formato nacional con codigo de area y numero juntos sin prefijos ni separadores
+        public const int MaximoNombreApellido = 100;
+
+        private static void ValidarLongitudNombreApellido(Cliente cliente)
+        {
+            if (cliente.Nombre.Length > MaximoNombreApellido)
+                throw new InvalidOperationException("El nombre admite hasta 100 caracteres; no se guardó ningún cambio.");
+            if (cliente.Apellido.Length > MaximoNombreApellido)
+                throw new InvalidOperationException("El apellido admite hasta 100 caracteres; no se guardó ningún cambio.");
+        }
+        // Solo comprueba dígitos y longitud; no interpreta prefijos ni operadores.
         public static void ValidarTelefono(string? telefono)
         {
-            if (telefono == null || !Regex.IsMatch(telefono, @"\A(?:11|[23][0-9])[0-9]{8}\z"))
+            if (telefono == null || !Regex.IsMatch(telefono, @"\A[0-9]{10}\z"))
             {
-                throw new InvalidOperationException("Ingrese el teléfono con código de área y número: 10 dígitos juntos, sin espacios, guiones, paréntesis ni prefijos 0, 15, 54 o 549. Ejemplo: 2323516501.");
+                throw new InvalidOperationException("El teléfono debe contener 10 dígitos entre área y número, sin letras ni separadores.");
             }
+        }
+        public static string UnirTelefono(string? area, string? numero, bool opcional = false)
+        {
+            area = (area ?? string.Empty).Trim();
+            numero = (numero ?? string.Empty).Trim();
+            if (opcional && area.Length == 0 && numero.Length == 0) return string.Empty;
+            if (!Regex.IsMatch(area, @"\A[0-9]{2,4}\z") || !Regex.IsMatch(numero, @"\A[0-9]{6,8}\z"))
+                throw new InvalidOperationException("Ingrese un área de 2 a 4 dígitos y un número de 6 a 8 dígitos; entre ambos deben sumar 10 dígitos.");
+            string telefono = area + numero;
+            ValidarTelefono(telefono);
+            return telefono;
         }
         // valida el documento segun el tipo elegido antes de consultar la base comprueba validar documento; si no se cumple la regla interrumpe con un mensaje antes de continuar
         private static void ValidarDocumento(Cliente cliente)
@@ -79,18 +99,6 @@ namespace Prana.negocio
             }
         }
 
-        // comprueba validar codigo postal; si no se cumple la regla interrumpe con un mensaje antes de continuar
-        private static void ValidarCodigoPostal(Cliente cliente)
-        {
-            cliente.CodigoPostal = (cliente.CodigoPostal ?? "").Trim().ToUpperInvariant();
-            // conserva el campo opcional y acepta solo los tres formatos acordados
-            if (cliente.CodigoPostal.Length > 0 && !Regex.IsMatch(cliente.CodigoPostal, @"\A(?:[0-9]{4}|[A-Z][0-9]{4}(?:[A-Z]{3})?)\z"))
-            {
-                // interrumpe el flujo con una excepcion; el nivel que la atiende decide como informar o revertir la operacion
-                throw new InvalidOperationException("Código postal inválido. Ejemplos: 6700, B6700 o B6700ABC.");
-            }
-        }
-
         // conserva datos cliente entre las operaciones de esta clase
         private readonly CD_Cliente datosCliente = new CD_Cliente();
         // valida los datos y solicita el registro del cliente valida los datos y registra un nuevo cliente
@@ -106,11 +114,9 @@ namespace Prana.negocio
             // aplica el mismo formato al crear y modificar un cliente
             cliente.Nombre = NormalizarTexto.Mayusculas(cliente.Nombre);
             cliente.Apellido = NormalizarTexto.Mayusculas(cliente.Apellido);
+            ValidarLongitudNombreApellido(cliente);
             cliente.Direccion = NormalizarTexto.Mayusculas(cliente.Direccion);
-            if (cliente.Localidad != null)
-            {
-                cliente.Localidad.NombreLocalidad = NormalizarTexto.Mayusculas(cliente.Localidad.NombreLocalidad);
-            }
+            cliente.NombreLocalidad = Direcciones.NormalizarLocalidad(cliente.NombreLocalidad);
 
             // comprueba que el nombre este completo
             if (string.IsNullOrWhiteSpace(cliente.Nombre))
@@ -144,7 +150,7 @@ namespace Prana.negocio
             ValidarTelefono(cliente.Telefono);
 
             cliente.Direccion = (cliente.Direccion ?? "").Trim();
-            ValidarCodigoPostal(cliente);
+            cliente.Direccion = Direcciones.ValidarCalleNumero(cliente.Direccion, false);
             // comprueba si el dni ya se encuentra registrado
             if (datosCliente.ExisteClientePorDNI(cliente.DNI, 0))
             {
@@ -199,11 +205,9 @@ namespace Prana.negocio
             // aplica el mismo formato al crear y modificar un cliente
             cliente.Nombre = NormalizarTexto.Mayusculas(cliente.Nombre);
             cliente.Apellido = NormalizarTexto.Mayusculas(cliente.Apellido);
+            ValidarLongitudNombreApellido(cliente);
             cliente.Direccion = NormalizarTexto.Mayusculas(cliente.Direccion);
-            if (cliente.Localidad != null)
-            {
-                cliente.Localidad.NombreLocalidad = NormalizarTexto.Mayusculas(cliente.Localidad.NombreLocalidad);
-            }
+            cliente.NombreLocalidad = Direcciones.NormalizarLocalidad(cliente.NombreLocalidad);
 
             // comprueba que el nombre este completo
             if (string.IsNullOrWhiteSpace(cliente.Nombre))
@@ -237,7 +241,7 @@ namespace Prana.negocio
             ValidarTelefono(cliente.Telefono);
 
             cliente.Direccion = (cliente.Direccion ?? "").Trim();
-            ValidarCodigoPostal(cliente);
+            cliente.Direccion = Direcciones.ValidarCalleNumero(cliente.Direccion, false);
             // comprueba que el dni no pertenezca a otro cliente
             if (datosCliente.ExisteClientePorDNI(cliente.DNI, cliente.IdCliente))
             {

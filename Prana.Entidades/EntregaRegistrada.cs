@@ -24,7 +24,9 @@ public class EntregaRegistrada
     // conserva productos como string para intercambiar este dato entre las capas
     public string Productos { get; set; } = "";
     // conserva direccion como string para intercambiar este dato entre las capas
-    public string Direccion { get; set; } = "";
+    public string Domicilio { get; set; } = "";
+    public string Localidad { get; set; } = "";
+    public string Direccion => string.IsNullOrWhiteSpace(Localidad) ? Domicilio : $"{Domicilio}, {Localidad}";
     // conserva estado como string para intercambiar este dato entre las capas
     public string Estado { get; set; } = "";
     // conserva fecha entrega como date time? para intercambiar este dato entre las capas

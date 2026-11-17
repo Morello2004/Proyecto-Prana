@@ -185,6 +185,7 @@ publish/
 # Note: Comment the next line if you want to checkin your web deploy settings,
 # but database connection strings (with potential passwords) will be unencrypted
 *.pubxml
+!Properties/PublishProfiles/FolderProfile.pubxml
 *.publishproj
 
 # Microsoft Azure Web App publish settings. Comment the next line if you want to
@@ -365,5 +366,10 @@ FodyWeavers.xsd
 # los instaladores se distribuyen por separado del codigo fuente
 /Instaladores/*.exe
 /Instalador/SqlLocalDB.msi
-# perfil temporal utilizado para generar documentos
-/outputs/manual-edge/
+# archivos auxiliares y temporales
+/outputs/
+/.github/
+/Documentacion/**/*.ps1
+/Documentacion/**/verificacion*.json
+/Documentacion/**/revision_*/
+/Documentacion/**/word-temporal-*/

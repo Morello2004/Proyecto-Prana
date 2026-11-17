@@ -1,4 +1,4 @@
-﻿// guia del archivo: el primer inicio crea la base si falta y prepara sus tablas antes de mostrar el acceso orden: crear esquema si no hay tablas, aplicar actualizarestructura y luego cajaycomprobantes la creacion fisica de la base sucede antes de la transaccion del esquema; son pasos distintos el bloqueo de aplicacion serializa dos preparaciones simultaneas; la transaccion revierte cambios si falla un lote no ejecutar pruebas de integracion contra el catalogo comercial para comprobar estas migraciones
+// guía del archivo: crea la estructura completa solo cuando la base está vacía; no migra bases existentes. La creación del archivo de base ocurre antes de la transacción del esquema; el bloqueo serializa instalaciones simultáneas y la transacción revierte el armado si falla un script.
 using Microsoft.Data.SqlClient;
 using System;
 using System.IO;
@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace Prana.Datos
 {
-    // crea la base inicial y aplica las actualizaciones de estructura en cada arranque
+    // crea la base inicial y prepara el esquema solo en una base vacía
     public static class InicializadorBaseDatos
     {
         // nombre de la base utilizada por la aplicacion
@@ -89,10 +89,9 @@ namespace Prana.Datos
             comando.ExecuteNonQuery();
         }
 
-        // no depende del nombre del administrador: renombrarlo no vuelve a crear la base recibe una conexion abierta para poder verificar el proceso en una base aislada ejecuta creacion y migraciones bajo una transaccion y un bloqueo comun para que dos inicios no actualicen simultaneamente
+        // Recibe una conexión abierta; crea el esquema completo solo si no hay tablas y rechaza esquemas existentes que no sean los vigentes.
         internal static void PrepararEsquema(SqlConnection conexion)
         {
-            string actualizaciones = LeerScript("ActualizarEstructuraPrana_LocalDB.sql");
             using SqlTransaction transaccion = conexion.BeginTransaction();
             // protege el acceso a los datos para atender los errores de la operacion
             try
@@ -113,21 +112,40 @@ namespace Prana.Datos
                 bool vacia = Convert.ToInt32(tablas.ExecuteScalar()) == 0;
                 if (vacia)
                 {
-                    EjecutarScript(conexion, transaccion, LeerScript("CrearEstructuraPrana_LocalDB.sql"));
+                    EjecutarScript(conexion, transaccion, LeerScript("InstalarPrana.sql"));
                 }
-
-                // el script comprueba las estructuras y aplica tambien eliminaciones de elementos antiguos; requiere respaldo previo
-                EjecutarScript(conexion, transaccion, actualizaciones);
-                EjecutarScript(conexion, transaccion, LeerScript("CajaYComprobantes.sql"));
-                // relaciona operaciones anteriores y habilita varias aperturas diarias dentro de la misma migracion
-                EjecutarScript(conexion, transaccion, LeerScript("CajasPorTurno.sql"));
+                else
+                {
+                    // exige la tabla de localidades y su clave foranea antes de aceptar el esquema existente
+                    using SqlCommand esquemaActual = new SqlCommand(@"
+                        SELECT CASE WHEN OBJECT_ID(N'dbo.Log_Actividad',N'U') IS NOT NULL
+                            AND OBJECT_ID(N'dbo.Venta_Datos_Entrega',N'U') IS NOT NULL
+                            AND COL_LENGTH(N'dbo.Detalle_Venta',N'entregado') IS NOT NULL
+                            AND COL_LENGTH(N'dbo.Cliente',N'numero_documento') IS NOT NULL
+                            AND COL_LENGTH(N'dbo.Venta',N'fecha_hora_venta') IS NOT NULL
+                            AND COL_LENGTH(N'dbo.Envio',N'entregado') IS NOT NULL
+                            AND COL_LENGTH(N'dbo.Cliente',N'id_localidad') IS NOT NULL
+                            AND OBJECT_ID(N'dbo.Localidad',N'U') IS NOT NULL
+                            AND COL_LENGTH(N'dbo.Localidad',N'id_localidad') IS NOT NULL
+                            AND COL_LENGTH(N'dbo.Localidad',N'nombre_localidad') IS NOT NULL
+                            AND COL_LENGTH(N'dbo.Localidad',N'activo_localidad') IS NOT NULL
+                            AND COL_LENGTH(N'dbo.Pago',N'importe_cobrado') IS NOT NULL
+                            AND COL_LENGTH(N'dbo.Medio_Pago',N'porcentaje_recargo_base') IS NOT NULL
+                            AND COL_LENGTH(N'dbo.Caja',N'id_caja') IS NOT NULL
+                            AND COL_LENGTH(N'dbo.Caja_Movimiento',N'tipo_movimiento') IS NOT NULL
+                        THEN 1 ELSE 0 END", conexion, transaccion);
+                    if (Convert.ToInt32(esquemaActual.ExecuteScalar()) != 1)
+                    {
+                        throw new InvalidOperationException("La base ya contiene tablas pero no tiene el esquema vigente. Prana no ejecuta migraciones automáticamente; actualice la base manualmente o restaure una copia compatible.");
+                    }
+                }
                 // confirma todos los cambios de esta transaccion como una unidad
                 transaccion.Commit();
             }
             // atiende el error de esta operacion antes de informar o propagar el problema
             catch
             {
-                // incluye tanto creacion como migraciones: un fallo no deja un esquema a medias
+                // revierte la instalación inicial o la validación si ocurre un error
                 if (transaccion.Connection != null)
                 {
                     // revierte los cambios no confirmados de esta transaccion

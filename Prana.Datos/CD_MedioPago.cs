@@ -11,7 +11,7 @@ namespace Prana.Datos
         // obtiene los cuatro medios de pago predefinidos activos
         public List<MedioPago> ObtenerTodos()
         {
-            string consulta = "SELECT id_medio_pago, nombre_medio_pago, ISNULL(recargo_medio_pago, 0), recargo_3, recargo_6, recargo_9, recargo_12, activo, tipo_caja, recargo_2 FROM dbo.Medio_Pago WHERE activo = 1 AND nombre_medio_pago COLLATE Latin1_General_100_BIN2 IN (N'Efectivo', N'Transferencia', N'Débito', N'Crédito') ORDER BY nombre_medio_pago;";
+            string consulta = "SELECT id_medio_pago, nombre_medio_pago, ISNULL(porcentaje_recargo_base, 0), porcentaje_recargo_3_cuotas, porcentaje_recargo_6_cuotas, porcentaje_recargo_9_cuotas, porcentaje_recargo_12_cuotas, activo, clasificacion_cobro, porcentaje_recargo_2_cuotas FROM dbo.Medio_Pago WHERE activo = 1 AND nombre_medio_pago COLLATE Latin1_General_100_BIN2 IN (N'Efectivo', N'Transferencia', N'Débito', N'Crédito') ORDER BY nombre_medio_pago;";
             // prepara la conexion configurada y la libera al terminar este alcance
             using SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena());
             // prepara la consulta y su conexion los valores variables se envian mediante parametros
@@ -44,15 +44,15 @@ namespace Prana.Datos
         public void Modificar(MedioPago medio)
         {
             string consulta = @"UPDATE dbo.Medio_Pago
-                SET recargo_medio_pago = @Recargo, recargo_2 = @Recargo2, recargo_3 = @Recargo3,
-                    recargo_6 = @Recargo6, recargo_9 = @Recargo9, recargo_12 = @Recargo12
+                SET porcentaje_recargo_base = @Recargo, porcentaje_recargo_2_cuotas = @Recargo2, porcentaje_recargo_3_cuotas = @Recargo3,
+                    porcentaje_recargo_6_cuotas = @Recargo6, porcentaje_recargo_9_cuotas = @Recargo9, porcentaje_recargo_12_cuotas = @Recargo12
                 WHERE id_medio_pago = @Id AND activo = 1
                     AND nombre_medio_pago COLLATE Latin1_General_100_BIN2 = @Nombre
-                    AND tipo_caja COLLATE Latin1_General_100_BIN2 = @TipoCaja
-                    AND ((nombre_medio_pago COLLATE Latin1_General_100_BIN2 = N'Efectivo' AND tipo_caja COLLATE Latin1_General_100_BIN2 = N'Efectivo')
-                      OR (nombre_medio_pago COLLATE Latin1_General_100_BIN2 = N'Transferencia' AND tipo_caja COLLATE Latin1_General_100_BIN2 = N'Transferencia')
-                      OR (nombre_medio_pago COLLATE Latin1_General_100_BIN2 = N'Débito' AND tipo_caja COLLATE Latin1_General_100_BIN2 = N'Débito')
-                      OR (nombre_medio_pago COLLATE Latin1_General_100_BIN2 = N'Crédito' AND tipo_caja COLLATE Latin1_General_100_BIN2 = N'Crédito'));";
+                    AND clasificacion_cobro COLLATE Latin1_General_100_BIN2 = @TipoCaja
+                    AND ((nombre_medio_pago COLLATE Latin1_General_100_BIN2 = N'Efectivo' AND clasificacion_cobro COLLATE Latin1_General_100_BIN2 = N'Efectivo')
+                      OR (nombre_medio_pago COLLATE Latin1_General_100_BIN2 = N'Transferencia' AND clasificacion_cobro COLLATE Latin1_General_100_BIN2 = N'Transferencia')
+                      OR (nombre_medio_pago COLLATE Latin1_General_100_BIN2 = N'Débito' AND clasificacion_cobro COLLATE Latin1_General_100_BIN2 = N'Débito')
+                      OR (nombre_medio_pago COLLATE Latin1_General_100_BIN2 = N'Crédito' AND clasificacion_cobro COLLATE Latin1_General_100_BIN2 = N'Crédito'));";
             // prepara la conexion configurada y la libera al terminar este alcance
             using SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena());
             // prepara la consulta y su conexion los valores variables se envian mediante parametros

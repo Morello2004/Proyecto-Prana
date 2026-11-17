@@ -1,4 +1,4 @@
-﻿namespace Prana.Entidades;
+namespace Prana.Entidades;
 // agrupa los datos y operaciones de total mensual caja
 public class TotalMensualCaja
 {
@@ -6,11 +6,6 @@ public class TotalMensualCaja
     public string Concepto { get; set; } = "";
     // conserva moneda como string para intercambiar este dato entre las capas
     public string Moneda { get; set; } = "";
-    // numero de unidades de esta fila se multiplica por el precio o costo unitario segun el detalle
-    public int Cantidad
-    {
-        get; set;
-    }
     // conserva ingresos como decimal para intercambiar este dato entre las capas
     public decimal Ingresos
     {

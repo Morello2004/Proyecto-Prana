@@ -17,7 +17,7 @@ namespace Prana.Datos
             using SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena());
             // prepara la consulta y su conexion los valores variables se envian mediante parametros
             using SqlCommand comando = new SqlCommand(@"SELECT p.*,m.nombre_medio_pago FROM Pago p JOIN Medio_Pago m ON m.id_medio_pago=p.id_medio_pago
-                WHERE p.id_venta=@venta ORDER BY p.fecha_pago DESC,p.id_pago DESC", conexion);
+                WHERE p.id_venta=@venta ORDER BY p.fecha_hora_pago DESC,p.id_pago DESC", conexion);
             comando.Parameters.Add("@venta", SqlDbType.Int).Value = venta;
             conexion.Open();
             using SqlDataReader lector = comando.ExecuteReader();
@@ -25,23 +25,23 @@ namespace Prana.Datos
             while (lector.Read())
             {
                 int cuotasRegistradas;
-                if (lector["cuotas"] == DBNull.Value)
+                if (lector["cantidad_cuotas"] == DBNull.Value)
                 {
                     cuotasRegistradas = 1;
                 }
                 else
                 {
-                    cuotasRegistradas = (int)lector["cuotas"];
+                    cuotasRegistradas = (int)lector["cantidad_cuotas"];
                 }
                 pagos.Add(new Pago
                 {
                     IdPago = (int)lector["id_pago"],
-                    Fecha = (DateTime)lector["fecha_pago"],
+                    Fecha = (DateTime)lector["fecha_hora_pago"],
                     Medio = (string)lector["nombre_medio_pago"],
                     Cuotas = cuotasRegistradas,
-                    ImporteBase = (decimal)lector["monto"],
-                    Cobrado = (decimal)lector["monto_final"],
-                    Recargo = (decimal)lector["monto_final"] - (decimal)lector["monto"]
+                    ImporteBase = (decimal)lector["importe_base"],
+                    Cobrado = (decimal)lector["importe_cobrado"],
+                    Recargo = (decimal)lector["importe_cobrado"] - (decimal)lector["importe_base"]
 
                 });
             }
@@ -71,8 +71,8 @@ namespace Prana.Datos
                     throw new InvalidOperationException("El importe supera el saldo actual. Actualice la venta.");
                 }
 
-                using SqlCommand medioCmd = Comando(conexion, transaccion, @"SELECT CASE @cuotas WHEN 2 THEN recargo_2 WHEN 3 THEN recargo_3 WHEN 6 THEN recargo_6 WHEN 9 THEN recargo_9
-                    WHEN 12 THEN recargo_12 ELSE recargo_medio_pago END FROM Medio_Pago WITH (HOLDLOCK)
+                using SqlCommand medioCmd = Comando(conexion, transaccion, @"SELECT CASE @cuotas WHEN 2 THEN porcentaje_recargo_2_cuotas WHEN 3 THEN porcentaje_recargo_3_cuotas WHEN 6 THEN porcentaje_recargo_6_cuotas WHEN 9 THEN porcentaje_recargo_9_cuotas
+                    WHEN 12 THEN porcentaje_recargo_12_cuotas ELSE porcentaje_recargo_base END FROM Medio_Pago WITH (HOLDLOCK)
                     WHERE id_medio_pago=@medio AND activo=1", ("@cuotas", pago.Cuotas), ("@medio", pago.IdMedioPago));
                 object? porcentaje = medioCmd.ExecuteScalar();
                 object porcentajeConfigurado;
@@ -99,10 +99,10 @@ namespace Prana.Datos
                     nombreEstadoVenta = "Parcial";
                 }
 
-                // agrega solo el nuevo recargo: total y monto_final permanecen comparables
+                // agrega solo el nuevo recargo: total e importe cobrado permanecen comparables
                 int estado = ObtenerOCrearIdPorNombre(conexion, transaccion, "Estado_Venta", "id_estado_venta", "nombre_estado_venta", nombreEstadoVenta);
-                using SqlCommand insertar = Comando(conexion, transaccion, @"INSERT INTO Pago(id_venta,id_usuario,id_medio_pago,cuotas,monto,monto_final,fecha_pago,tipo_caja,cuenta_destino,id_caja)
-                    SELECT @venta,@usuario,@medio,@cuotas,@base,@final,@fecha,tipo_caja,@cuenta,@caja FROM Medio_Pago WHERE id_medio_pago=@medio;
+                using SqlCommand insertar = Comando(conexion, transaccion, @"INSERT INTO Pago(id_venta,id_usuario,id_medio_pago,cantidad_cuotas,importe_base,importe_cobrado,fecha_hora_pago,clasificacion_cobro,cuenta_destino,id_caja)
+                    SELECT @venta,@usuario,@medio,@cuotas,@base,@final,@fecha,clasificacion_cobro,@cuenta,@caja FROM Medio_Pago WHERE id_medio_pago=@medio;
                     UPDATE Venta SET total=total+@recargo,id_estado_venta=@estado WHERE id_venta=@venta;", ("@caja", idCaja), ("@venta", pago.IdVenta), ("@usuario", usuario), ("@medio", pago.IdMedioPago), ("@cuotas", pago.Cuotas), ("@base", pago.ImporteBase), ("@final", pago.ImporteBase + pago.Recargo), ("@recargo", pago.Recargo), ("@estado", estado), ("@fecha", ahora), ("@cuenta", pago.CuentaDestino));
                 insertar.ExecuteNonQuery();
                 RegistrarActividad(conexion, transaccion, usuario, "REGISTRAR_PAGO", pago.IdVenta, $"Base: {pago.ImporteBase:N2}; recargo: {pago.Recargo:N2}");

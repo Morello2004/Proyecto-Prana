@@ -1,4 +1,4 @@
-﻿namespace Prana.Presentacion
+namespace Prana.Presentacion
 {
     // parte visual de frmstock crea controles y define su distribucion, colores y eventos; visual studio puede regenerar este archivo al editar el disenador
     partial class frmStock
@@ -95,6 +95,7 @@
             dgvVariantes = new DataGridView();
             CondicionProducto = new DataGridViewTextBoxColumn();
             colColor = new DataGridViewTextBoxColumn();
+            colQuitarVariante = new DataGridViewButtonColumn();
             Colmodelo2 = new DataGridViewTextBoxColumn();
             Precio = new DataGridViewTextBoxColumn();
             colStockFisico = new DataGridViewTextBoxColumn();
@@ -853,7 +854,7 @@
             dgvVariantes.AllowUserToDeleteRows = false;
             dgvVariantes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvVariantes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvVariantes.Columns.AddRange(new DataGridViewColumn[] { CondicionProducto, colColor, Colmodelo2, Precio, colStockFisico, ColComprometido, ColDisponible, NombreProducto });
+            dgvVariantes.Columns.AddRange(new DataGridViewColumn[] { CondicionProducto, colColor, Colmodelo2, Precio, colStockFisico, ColComprometido, ColDisponible, NombreProducto, colQuitarVariante });
             dataGridViewCellStyle21.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle21.BackColor = SystemColors.Window;
             dataGridViewCellStyle21.Font = new Font("Segoe UI", 9F);
@@ -883,6 +884,11 @@
             dgvVariantes.Size = new Size(1483, 175);
             dgvVariantes.TabIndex = 9;
             dgvVariantes.CellContentClick += dgvVariantes_CellContentClick;
+            colQuitarVariante.Name = "colQuitarVariante";
+            colQuitarVariante.HeaderText = "Quitar";
+            colQuitarVariante.Text = "Quitar";
+            colQuitarVariante.UseColumnTextForButtonValue = true;
+            colQuitarVariante.ReadOnly = true;
             // condicionproducto condicionproductodatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             CondicionProducto.DataPropertyName = "CondicionProducto";
             CondicionProducto.HeaderText = "Condicion";
@@ -1471,6 +1477,7 @@
         private FontAwesome.Sharp.IconButton iconButton1;
         private DataGridViewTextBoxColumn CondicionProducto;
         private DataGridViewTextBoxColumn colColor;
+        private DataGridViewButtonColumn colQuitarVariante;
         private DataGridViewTextBoxColumn Colmodelo2;
         private DataGridViewTextBoxColumn Precio;
         private DataGridViewTextBoxColumn colStockFisico;

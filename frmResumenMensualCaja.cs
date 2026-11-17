@@ -1,4 +1,4 @@
-﻿using Prana.Entidades;
+using Prana.Entidades;
 using Prana.negocio;
 
 namespace Prana.Presentacion;
@@ -45,7 +45,7 @@ public partial class frmResumenMensualCaja : Form
         porMedio.DataSource = resumen.PorMedio;
         porTipo.DataSource = resumen.PorTipo;
         detalle.DataSource = resumen.Movimientos;
-        estado.Text = $"{resumen.Mes:MMMM yyyy}: {resumen.Movimientos.Count} movimientos. Resultado = ingresos menos gastos. " + "Se incluyen cobros por fecha de pago y movimientos vigentes, también de días sin cerrar. ARS y USD se muestran separados. " + "Los saldos iniciales no son ingresos. Esta consulta no cierra la caja.";
+        estado.Text = $"{resumen.Mes:MMMM yyyy}: {resumen.Movimientos.Count} movimientos. Resultado = ingresos menos gastos. " + "Se incluyen cobros por fecha de pago y movimientos vigentes, también de días sin cerrar. ARS y USD se muestran separados. " + "Esta consulta no cierra la caja.";
     }
 
     // ajusta la presentacion de una celda sin convertir ese formato en una escritura a la base

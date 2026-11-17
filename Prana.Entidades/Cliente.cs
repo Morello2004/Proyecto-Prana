@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace Prana.Entidades
 {
@@ -27,17 +28,8 @@ namespace Prana.Entidades
         {
             get; set;
         }
-        // codigo postal como texto, para admitir tanto numeros como letras del cpa
-        public string CodigoPostal { get; set; } = string.Empty;
         // conserva direccion como string para intercambiar este dato entre las capas
         public string Direccion { get; set; } = string.Empty;
-        // conserva id localidad como int para intercambiar este dato entre las capas
-        public int IdLocalidad
-        {
-            get; set;
-        }
-        // conserva localidad como localidad para intercambiar este dato entre las capas
-        public Localidad Localidad { get; set; } = new Localidad();
         // conserva saldo favor como decimal para intercambiar este dato entre las capas
         public decimal SaldoFavor
         {
@@ -71,25 +63,7 @@ namespace Prana.Entidades
             }
         }
 
-        // devuelve el nombre de la localidad para mostrarlo en el grid permite mostrar y modificar el nombre de la localidad desde el grid
-        public string NombreLocalidad
-        {
-            // devuelve el nombre de la localidad
-            get
-            {
-                return Localidad?.NombreLocalidad ?? string.Empty;
-            }
-
-            // guarda el nombre ingresado dentro del objeto localidad
-            set
-            {
-                if (Localidad == null)
-                {
-                    Localidad = new Localidad();
-                }
-
-                Localidad.NombreLocalidad = value;
-            }
-        }
+        public string NombreLocalidad { get; set; } = string.Empty;
+        public string DireccionCompleta => string.Join(", ", new[] { Direccion, NombreLocalidad }.Where(x => !string.IsNullOrWhiteSpace(x)));
     }
 }

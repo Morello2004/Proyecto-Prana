@@ -9,7 +9,7 @@ public class frmOpcionesStock : Form
     private readonly CN_OpcionStock negocio = new CN_OpcionStock();
     private readonly ComboBox cboTipo = new ComboBox();
     private readonly DataGridView dgvOpciones = new DataGridView();
-    private readonly TextBox txtNombre = new TextBox();
+    private readonly TextBox txtNombre = new TextBox { CharacterCasing = CharacterCasing.Upper };
     private readonly ComboBox cboDestino = new ComboBox();
     private readonly Label lblEstado = new Label();
 

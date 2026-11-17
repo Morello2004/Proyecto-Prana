@@ -1,7 +1,7 @@
 ﻿; constante del compilador myappname: centraliza un valor reutilizado por las secciones siguientes
 #define MyAppName "Prana Electronica"
 ; constante del compilador myappversion: centraliza un valor reutilizado por las secciones siguientes
-#define MyAppVersion "1.0.3"
+#define MyAppVersion "1.0.4"
 ; constante del compilador myappexename: centraliza un valor reutilizado por las secciones siguientes
 #define MyAppExeName "Prana.Presentacion.exe"
 ; constante del compilador publishdir: centraliza un valor reutilizado por las secciones siguientes
@@ -32,7 +32,7 @@ PrivilegesRequired=admin
 ; carpeta de salida del compilador, relativa a este archivo iss
 OutputDir=..\Instaladores
 ; nombre del ejecutable de instalacion sin extension; actualizarlo al preparar una entrega
-OutputBaseFilename=PranaElectronica-Setup-1.0.3
+OutputBaseFilename=PranaElectronica-Setup-{#MyAppVersion}
 ; algoritmo empleado para comprimir los archivos incorporados
 Compression=lzma2
 ; comprime el conjunto de archivos para reducir el tamano del paquete
@@ -59,9 +59,8 @@ Name: "desktopicon"; Description: "Crear un acceso directo en el escritorio"; Gr
 [Files]
 ; incorpora el msi para extraccion temporal; no lo deja como archivo permanente del programa
 Source: "SqlLocalDB.msi"; Flags: dontcopy
-; empaqueta los archivos source y los copia en destdir al instalar las rutas de origen se resuelven al compilar
+; empaqueta la publicación, que incluye la única copia del SQL de instalación
 Source: "{#PublishDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "..\BaseDeDatos\*.sql"; DestDir: "{app}\BaseDeDatos"; Flags: ignoreversion
 
 ; seccion icons: agrupa las instrucciones de esta etapa del instalador
 [Icons]

@@ -1,4 +1,4 @@
-﻿using Prana.Entidades;
+using Prana.Entidades;
 using Prana.negocio;
 using System.Diagnostics;
 using System.Globalization;
@@ -85,7 +85,7 @@ public static class DocumentosPrana
             tipo = "GARANTÍA";
         }
         StringBuilder html = new StringBuilder($"<header><div class='empresa'><strong class='marca'>PRANA Electrónica</strong><br><i>Electrodomésticos de primera y outlet</i><br>CUIT: 20-23132979-0<br>San Martín 687<br>Luján, Buenos Aires, 6700<br>+54 9 11 2671-0298</div><div class='derecha'><h1>{tipo}</h1><strong>N.º {venta.IdVenta}</strong><br>FECHA: {venta.Fecha:dd/MM/yyyy}<br>Venta N.º {venta.IdVenta}</div></header>");
-        html.Append($"<section class='cliente'><strong>NOMBRE:</strong> {H(venta.NombreCompletoCliente)}<br><strong>{H(venta.Cliente.TipoDocumento)}:</strong> {H(venta.Cliente.DNI)}<br><strong>TELÉFONO:</strong> {H(venta.Cliente.Telefono)}{DatoOpcional("DIRECCIÓN", venta.Cliente.Direccion)}<br><strong>CIUDAD:</strong> {H(venta.Cliente.NombreLocalidad)}{DatoOpcional("CP", venta.Cliente.CodigoPostal)}</section>");
+        html.Append($"<section class='cliente'><strong>NOMBRE:</strong> {H(venta.NombreCompletoCliente)}<br><strong>{H(venta.Cliente.TipoDocumento)}:</strong> {H(venta.Cliente.DNI)}<br><strong>TELÉFONO:</strong> {H(venta.Cliente.Telefono)}{DatoOpcional("DIRECCIÓN", venta.Cliente.Direccion)}<br><strong>CIUDAD:</strong> {H(venta.Cliente.NombreLocalidad)}</section>");
         string encabezadoProductos;
         if (remito)
         {
@@ -179,7 +179,7 @@ public static class DocumentosPrana
             }
             else
             {
-                lugarEntrega = venta.DomicilioEntrega;
+                lugarEntrega = venta.DireccionEntregaCompleta;
             }
             html.Append($"<section class='cliente'><strong>Lugar de entrega:</strong> {H(lugarEntrega)}<br><strong>Modalidad:</strong> {H(venta.ModalidadEntrega)}<br>{H(venta.ObservacionesEntrega)}</section>");
         }
@@ -231,7 +231,7 @@ public static class DocumentosPrana
             """);
         html.Append($"<div class='bloque empresa'>{Logo()}<div><strong>Razón social:</strong> PRANA ELECTRÓNICA<br><strong>CUIT:</strong> 20-23132979-0<br><strong>Web:</strong> www.pranaelectronica.com<br><strong>Dirección:</strong> San Martín 687<br><strong>Localidad:</strong> Luján<br><strong>Teléfono:</strong> +54 9 11 2671 0298</div></div>");
         html.Append($"<div class='bloque identificacion'><h1>REMITO</h1><strong>N.º {venta.IdVenta}</strong><br><strong>Fecha:</strong> {venta.Fecha:dd/MM/yyyy}</div></header>");
-        html.Append($"<section class='bloque datos'><div><strong>Nombre:</strong> {H(venta.NombreCompletoCliente)}</div><div><strong>Teléfono:</strong> {H(telefonos)}</div><div><strong>{H(venta.Cliente.TipoDocumento)}:</strong> {H(venta.Cliente.DNI)}</div>{DatoOpcional("CP", venta.Cliente.CodigoPostal, true)}{DatoOpcional("Dirección", venta.Cliente.Direccion, true)}<div><strong>Ciudad:</strong> {H(venta.Cliente.NombreLocalidad)}</div><div class='amplio'><strong>Otros datos / pago:</strong> {H(venta.CondicionPago)}<br>{Texto(venta.ObservacionPago)}</div></section>");
+        html.Append($"<section class='bloque datos'><div><strong>Nombre:</strong> {H(venta.NombreCompletoCliente)}</div><div><strong>Teléfono:</strong> {H(telefonos)}</div><div><strong>{H(venta.Cliente.TipoDocumento)}:</strong> {H(venta.Cliente.DNI)}</div>{DatoOpcional("Dirección", venta.Cliente.Direccion, true)}<div><strong>Ciudad:</strong> {H(venta.Cliente.NombreLocalidad)}</div><div class='amplio'><strong>Otros datos / pago:</strong> {H(venta.CondicionPago)}<br>{Texto(venta.ObservacionPago)}</div></section>");
         html.Append("<section class='bloque'><table><thead><tr><th style='width:15%'>ARTÍCULO</th><th>DESCRIPCIÓN</th><th style='width:17%'>CANTIDAD</th></tr></thead><tbody>");
         // procesa cada detalle producto de ventadetalles sin cambiar el orden de la coleccion
         foreach (DetalleNuevaVenta detalleProducto in venta.Detalles)
@@ -253,7 +253,7 @@ public static class DocumentosPrana
         }
         else
         {
-            destino = venta.DomicilioEntrega;
+            destino = venta.DireccionEntregaCompleta;
         }
         html.Append($"<section class='bloque transporte'><strong>DATOS DE ENTREGA</strong><br><strong>Lugar de entrega:</strong> {Texto(destino)}<br><strong>Modalidad:</strong> {H(venta.ModalidadEntrega)} &nbsp; <strong>Logística:</strong> {H(venta.TipoLogistica)}<br><strong>Fecha estimada:</strong> {venta.FechaEntrega:dd/MM/yyyy} &nbsp; <strong>Horario:</strong> {Texto(venta.HorarioSugerido)}</section></article>");
         return Pagina($"REMITO {venta.IdVenta} - PRANA", html.ToString());
@@ -263,7 +263,6 @@ public static class DocumentosPrana
     public static string CierreHtml(CierreCaja cierre)
     {
         StringBuilder html = new StringBuilder($"<header><div>{Logo()}</div><div class='derecha'><h1>CIERRE DE CAJA DIARIO</h1><strong>Cierre N.º {cierre.Numero}</strong><br>Fecha: {cierre.Fecha:dd/MM/yyyy}<br>Inicio: {cierre.Inicio:HH:mm}<br>Cierre registrado: {cierre.Fin:dd/MM/yyyy HH:mm}<br>Usuario: {H(cierre.Usuario)}</div></header>");
-        html.Append($"<p>Saldo inicial ARS: <strong>{M(cierre.SaldoInicial)}</strong> &nbsp; Saldo inicial USD: <strong>{M(cierre.SaldoInicialUsd)}</strong></p>");
         html.Append("<h2>Cobros del día por venta / remito</h2><table><thead><tr><th style='width:16%'>Remito</th><th>Cliente / medio</th><th style='width:18%'>Tipo</th><th style='width:23%'>Cobrado ARS</th></tr></thead><tbody>");
         // procesa cada movimiento de cierremovimientoswhere(m => mventahas value) sin cambiar el orden de la coleccion
         foreach (MovimientoCaja movimiento in cierre.Movimientos.Where(m => m.Venta.HasValue))
@@ -286,8 +285,8 @@ public static class DocumentosPrana
         }
 
         html.Append($"<tr><th>De los ingresos, café ARS</th><td class='numero'>{M(cierre.CafeArs)}</td></tr>");
-        html.Append($"<tr><th>Total ingresos ARS</th><td class='numero'>{M(cierre.Ingresos("ARS"))}</td></tr><tr><th>Gastos / egresos ARS</th><td class='numero'>{M(cierre.Gastos("ARS"))}</td></tr><tr><th>Balance diario ARS (incluye saldo inicial)</th><td class='numero'>{M(cierre.BalanceArs)}</td></tr></table>");
-        html.Append($"<p class='nota'>USD: ingresos {M(cierre.Ingresos("USD"))}; gastos {M(cierre.Gastos("USD"))}; balance {M(cierre.SaldoInicialUsd + cierre.Ingresos("USD") - cierre.Gastos("USD"))}. Se informan separados, sin conversión a pesos.<br>Los ingresos se suman desde los cobros registrados, identificados por remito. El saldo pendiente de las ventas no se suma como ingreso.</p><p><strong>Observaciones:</strong> {H(cierre.Observaciones)}</p>");
+        html.Append($"<tr><th>Total ingresos ARS</th><td class='numero'>{M(cierre.Ingresos("ARS"))}</td></tr><tr><th>Gastos / egresos ARS</th><td class='numero'>{M(cierre.Gastos("ARS"))}</td></tr><tr><th>Balance diario ARS</th><td class='numero'>{M(cierre.BalanceArs)}</td></tr></table>");
+        html.Append($"<p class='nota'>USD: ingresos {M(cierre.Ingresos("USD"))}; gastos {M(cierre.Gastos("USD"))}; balance {M(cierre.Ingresos("USD") - cierre.Gastos("USD"))}. Se informan separados, sin conversión a pesos.<br>Los ingresos se suman desde los cobros registrados, identificados por remito. El saldo pendiente de las ventas no se suma como ingreso.</p><p><strong>Observaciones:</strong> {H(cierre.Observaciones)}</p>");
         return Pagina($"Cierre {cierre.Numero} - {cierre.Fecha:yyyy-MM-dd}", html.ToString());
     }
 

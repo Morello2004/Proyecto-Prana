@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Prana.Entidades;
 using System.Data;
 
@@ -10,17 +10,19 @@ namespace Prana.Datos
         // consulta obtener opciones y transforma cada fila recibida en los objetos que devuelve
         public Dictionary<string, List<string>> ObtenerOpciones()
         {
+            // combina localidades de clientes y sugerencias de entrega para los filtros
             const string consultaSql = @"
 SELECT DISTINCT pr.nombre_producto FROM Producto pr ORDER BY pr.nombre_producto;
 SELECT DISTINCT nombre_categoria FROM Categoria ORDER BY nombre_categoria;
 SELECT DISTINCT nombre_marca FROM Marca ORDER BY nombre_marca;
 SELECT DISTINCT CONCAT(nombre_cliente, N' ', apellido_cliente) FROM Cliente ORDER BY CONCAT(nombre_cliente, N' ', apellido_cliente);
 SELECT DISTINCT valor FROM (
-    SELECT tipo_logistica valor FROM Venta_Entrega WHERE NULLIF(tipo_logistica, N'') IS NOT NULL
+    SELECT tipo_logistica valor FROM Venta_Datos_Entrega WHERE NULLIF(tipo_logistica, N'') IS NOT NULL
     UNION
-    SELECT nombre FROM Estado_Envio
+    SELECT CASE WHEN entregado=1 THEN N'Entregado' ELSE N'Pendiente' END FROM Envio
 ) envios ORDER BY valor;
-SELECT DISTINCT nombre_localidad FROM Localidad ORDER BY nombre_localidad;";
+SELECT l.nombre_localidad AS localidad FROM Cliente c JOIN Localidad l ON l.id_localidad=c.id_localidad
+UNION SELECT localidad_sugerida FROM Venta_Datos_Entrega WHERE localidad_sugerida IS NOT NULL ORDER BY localidad;";
             using SqlConnection conexion = new(Conexion.ObtenerCadena());
             using SqlCommand comando = new(consultaSql, conexion);
             conexion.Open();
@@ -98,19 +100,18 @@ ORDER BY c.nombre_categoria, m.nombre_marca;";
         public List<InformeVenta> Buscar(FiltroInformeVentas filtro)
         {
             const string consultaSql = @"
-SELECT v.id_venta, v.fecha_venta,
+SELECT v.id_venta, v.fecha_hora_venta,
        CONCAT(c.nombre_cliente, N' ', c.apellido_cliente) AS cliente,
-       COALESCE(loc.nombre_localidad, N'') AS ubicacion,
+       COALESCE(ve.localidad_sugerida, N'') AS ubicacion,
        COALESCE(productos.texto, N'') AS productos,
        COALESCE(categorias.texto, N'') AS categorias,
        COALESCE(marcas.texto, N'') AS marcas,
-       v.total, COALESCE(pagado.monto, 0) AS pagado,
-       CASE WHEN v.total > COALESCE(pagado.monto, 0) THEN v.total - COALESCE(pagado.monto, 0) ELSE 0 END AS saldo,
-       COALESCE(envio.estado, COALESCE(ve.tipo_logistica, N'Sin envío')) AS envio
-FROM Venta v
-JOIN Cliente c ON c.id_cliente = v.id_cliente
-LEFT JOIN Localidad loc ON loc.id_localidad = c.id_localidad
-LEFT JOIN Venta_Entrega ve ON ve.id_venta = v.id_venta
+              v.total, COALESCE(pagado.monto, 0) AS pagado,
+              CASE WHEN v.total > COALESCE(pagado.monto, 0) THEN v.total - COALESCE(pagado.monto, 0) ELSE 0 END AS saldo,
+              COALESCE(envio.estado, COALESCE(ve.tipo_logistica, N'Sin envío')) AS envio
+       FROM Venta v
+       JOIN Cliente c ON c.id_cliente = v.id_cliente
+       LEFT JOIN Venta_Datos_Entrega ve ON ve.id_venta = v.id_venta
 OUTER APPLY (
     SELECT STRING_AGG(CAST(CONCAT(d.cantidad, N' x ', pr.nombre_producto, N' (', vp.color, N')') AS nvarchar(max)), N'; ') texto
     FROM Detalle_Venta d JOIN Variante_Producto vp ON vp.id_variante=d.id_variante
@@ -126,22 +127,22 @@ OUTER APPLY (
     FROM (SELECT DISTINCT pr.id_marca FROM Detalle_Venta d JOIN Variante_Producto vp ON vp.id_variante=d.id_variante JOIN Producto pr ON pr.id_producto=vp.id_producto WHERE d.id_venta=v.id_venta) x
     JOIN Marca m ON m.id_marca=x.id_marca
 ) marcas
-OUTER APPLY (SELECT SUM(monto_final) monto FROM Pago WHERE id_venta=v.id_venta) pagado
-OUTER APPLY (
-    SELECT TOP (1) ee.nombre estado
-    FROM Remito r JOIN Envio e ON e.id_remito=r.id_remito JOIN Estado_Envio ee ON ee.id_estado_envio=e.id_estado_envio
+OUTER APPLY (SELECT SUM(importe_cobrado) monto FROM Pago WHERE id_venta=v.id_venta) pagado
+ OUTER APPLY (
+     SELECT TOP (1) CASE WHEN e.entregado=1 THEN N'Entregado' ELSE N'Pendiente' END estado
+     FROM Remito r JOIN Envio e ON e.id_remito=r.id_remito
     WHERE r.id_venta=v.id_venta ORDER BY e.id_envio DESC
-) envio
-WHERE v.fecha_venta >= @Desde AND v.fecha_venta < @Hasta
+ ) envio
+WHERE v.fecha_hora_venta >= @Desde AND v.fecha_hora_venta < @Hasta
   AND (@Producto = N'' OR EXISTS (SELECT 1 FROM Detalle_Venta d JOIN Variante_Producto vp ON vp.id_variante=d.id_variante JOIN Producto pr ON pr.id_producto=vp.id_producto WHERE d.id_venta=v.id_venta AND pr.nombre_producto COLLATE Latin1_General_CI_AI LIKE @Producto))
   AND (@Categoria = N'' OR categorias.texto COLLATE Latin1_General_CI_AI LIKE @Categoria)
   AND (@Marca = N'' OR marcas.texto COLLATE Latin1_General_CI_AI LIKE @Marca)
-  AND (@Cliente = N'' OR CONCAT(c.nombre_cliente, N' ', c.apellido_cliente, N' ', c.dni) COLLATE Latin1_General_CI_AI LIKE @Cliente)
+  AND (@Cliente = N'' OR CONCAT(c.nombre_cliente, N' ', c.apellido_cliente, N' ', c.numero_documento) COLLATE Latin1_General_CI_AI LIKE @Cliente)
   AND (@Envio = N'' OR CONCAT(COALESCE(envio.estado, N''), N' ', COALESCE(ve.tipo_logistica, N'')) COLLATE Latin1_General_CI_AI LIKE @Envio)
-  AND (@Ubicacion = N'' OR CONCAT(COALESCE(loc.nombre_localidad, N''), N' ', COALESCE(ve.domicilio, N'')) COLLATE Latin1_General_CI_AI LIKE @Ubicacion)
+  AND (@Ubicacion = N'' OR CONCAT(COALESCE(ve.localidad_sugerida, N''), N' ', COALESCE(ve.direccion_sugerida, N'')) COLLATE Latin1_General_CI_AI LIKE @Ubicacion)
   AND (@MontoMinimo IS NULL OR v.total >= @MontoMinimo)
   AND (@MontoMaximo IS NULL OR v.total <= @MontoMaximo)
-ORDER BY v.fecha_venta DESC, v.id_venta DESC;";
+ORDER BY v.fecha_hora_venta DESC, v.id_venta DESC;";
             using SqlConnection conexion = new(Conexion.ObtenerCadena());
             using SqlCommand comando = new(consultaSql, conexion);
             comando.Parameters.Add("@Desde", SqlDbType.DateTime2).Value = filtro.Desde;
@@ -162,7 +163,7 @@ ORDER BY v.fecha_venta DESC, v.id_venta DESC;";
                 resultado.Add(new InformeVenta
                 {
                     IdVenta = (int)lector["id_venta"],
-                    Fecha = (DateTime)lector["fecha_venta"],
+                    Fecha = (DateTime)lector["fecha_hora_venta"],
                     Cliente = (string)lector["cliente"],
                     Ubicacion = (string)lector["ubicacion"],
                     Productos = (string)lector["productos"],
@@ -199,7 +200,7 @@ ORDER BY v.fecha_venta DESC, v.id_venta DESC;";
             const string consultaSql = @"
 WITH Pagos AS
 (
-    SELECT id_venta, MIN(fecha_pago) primer_pago, SUM(monto_final) monto
+    SELECT id_venta, MIN(fecha_hora_pago) primer_pago, SUM(importe_cobrado) monto
     FROM Pago
     GROUP BY id_venta
 ),

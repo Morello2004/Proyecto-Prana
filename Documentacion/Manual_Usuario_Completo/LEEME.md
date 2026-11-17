@@ -1,38 +1,37 @@
-﻿# Manual de capacitación y operación de Prana
+# Manual de usuario de Prana Electrónica
 
-Edición del **12 de noviembre de 2026**, destinada a vendedores y administradores del comercio.
+Edición del **17 de noviembre de 2026**, revisada contra los formularios y las validaciones de esta copia del proyecto.
 
-- [Manual editable en Word](Manual_de_Usuario_Completo_Prana.docx).
-- [Manual en PDF](Manual_de_Usuario_Completo_Prana.pdf): 41 páginas.
-- [Versión HTML autónoma](Manual_de_Usuario_Completo_Prana.html), con índice y todas las imágenes incorporadas.
+- [PDF para leer o imprimir](Manual_de_Usuario_Completo_Prana.pdf): 44 páginas.
+- [Word editable](Manual_de_Usuario_Completo_Prana.docx).
+- [HTML autónomo con índice enlazado](Manual_de_Usuario_Completo_Prana.html).
 
-El manual tiene **49 capítulos y 32 figuras**. Incluye instalación, acceso, navegación, tabla comparativa de roles, clientes, productos y variantes, ingresos, ventas, pagos y recargos, documentos, entregas, caja, cierre automático, resumen mensual, alertas, informes, historial, usuarios, problemas frecuentes y prácticas guiadas. Las acciones se explican dentro de su pantalla y se utilizan los nombres visibles de sus controles.
+Incluye **51 capítulos y 34 figuras**: instalación, acceso, permisos, clientes, productos y variantes, ingresos, ventas, pagos y recargos, documentos, entregas, caja por turnos, resumen mensual, alertas, informes, historial, usuarios, localidades y opciones compartidas de stock. Conserva ejemplos y prácticas guiadas.
 
-## Fuentes y generación
+Cambios principales de esta edición:
 
-`contenido.json` conserva los capítulos de base. `Preparar-Contenido-Manual.ps1` aplica las ampliaciones, las correcciones de `Aplicar-Correcciones-Empleados.ps1` y las referencias actuales de `Preparar-Imagenes-Manual.ps1`. `contenido_edicion.json` contiene el resultado final de los 49 capítulos. Word y PDF se generan desde ese mismo contenido.
+- Teléfono por área y número, con diez dígitos en total; segundo teléfono opcional con el mismo formato.
+- Domicilio con calle y número o S/N, localidad independiente y destino propio para cada preparación de entrega.
+- Administración de localidades y corrección, unificación y eliminación de opciones de stock, disponibles para el administrador.
+- Caja sin saldos iniciales ni conteo de billetes. Balance de ingresos menos gastos, separado por moneda; cobros de ventas por su base sin recargo.
+- Apertura explícita, varios turnos diarios y ejemplo de cierre actualizado a $28.000.
+- Capturas renovadas y referencias ajustadas a los controles actuales.
 
-Desde la raíz del repositorio:
+## Regeneración
+
+El Word es la fuente editable de esta edición. El generador convierte sus párrafos, tablas e imágenes a HTML autónomo y exporta el PDF mediante Microsoft Edge:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File Documentacion/Manual_Usuario_Completo/Generar-Edicion-Final.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File Documentacion/Manual_Usuario_Completo/Generar-Manual.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File Documentacion/Manual_Usuario_Completo/Verificar-Manual.ps1
 ```
 
-El parámetro `-SoloHtml` genera Word y HTML sin exportar el PDF. La exportación a PDF requiere Microsoft Edge. `Generar-Word.ps1` permite regenerar solamente Word.
+`-SoloHtml` omite la exportación del PDF. Los scripts requieren Windows PowerShell y Microsoft Edge para la exportación; la verificación del PDF utiliza Windows.Data.Pdf.
 
-Para renovar las capturas y ejemplos:
+Durante la elaboración se retiraron del repositorio las fuentes y herramientas anteriores. Esta edición conserva las capturas dentro del Word y del HTML; no depende de las carpetas retiradas. El generador nuevo permite mantener las tres versiones a partir del Word.
 
-```powershell
-dotnet run --project Pruebas/Manual/Capturas.csproj -- Documentacion/Manual_Usuario_Completo/imagenes
-dotnet run --project Pruebas/Manual/Capturas.csproj -- Documentacion/Manual_Usuario_Completo/imagenes --ejemplos
-powershell -NoProfile -ExecutionPolicy Bypass -File Documentacion/Manual_Usuario_Completo/Exportar-Browser.ps1 -Ejemplos
-```
+## Verificación
 
-La herramienta de capturas retira los eventos comerciales antes de mostrar los formularios: no ejecuta las consultas de carga ni registra operaciones en la base comercial. Los ejemplos utilizan datos ficticios. `imagenes_edicion` contiene los recortes con sus referencias numeradas y `figuras_edicion.json` relaciona cada figura con su capítulo.
+Se comprobaron las partes XML y las 34 imágenes del Word, las imágenes incorporadas y los 51 capítulos del HTML, y la apertura y renderizado del PDF de 44 páginas. Se revisaron visualmente páginas representativas. El resultado está en [verificacion_edicion_2026-11-17.json](verificacion_edicion_2026-11-17.json), con las páginas renderizadas en `revision_2026-11-17`.
 
-## Verificación de la edición
-
-Se verifican el contenido y las partes XML de Word, las imágenes incorporadas, los recortes y la correspondencia de las referencias con los controles. Se abrió y renderizó el PDF con el lector de Windows; se revisaron páginas representativas, incluida la tabla de permisos y las pantallas de navegación y ventas. Estas verificaciones documentales no equivalen a una prueba funcional completa con la base del comercio. El documento Word no se renderizó con Microsoft Word porque no está disponible en este entorno.
-
-Las correcciones acordadas quedan registradas en [Correcciones incorporadas](Correcciones_Pendientes_Manual.md). La copia para entrega se publica como `Documentacion/Entrega_Final/08_Manual_de_Capacitacion_Empleados_Prana.docx` y su PDF del mismo nombre.
-Actualización de cajas por turno: se renovaron las capturas y las instrucciones de apertura, selección y cierre. La edición PDF actual tiene 41 páginas. Cada cierre corresponde a su propia apertura y se puede abrir otra caja en la misma fecha.
+Las capturas se obtuvieron sin consultas ni operaciones sobre la base comercial, con los eventos comerciales retirados. Los comprobantes de ejemplo usan datos ficticios. Esta revisión documental no equivale a una prueba funcional completa del sistema; Word no se renderizó con Microsoft Word.

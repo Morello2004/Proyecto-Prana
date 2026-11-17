@@ -1,4 +1,4 @@
-﻿// guia del archivo: el formulario mantiene cliente, productos y pagos en preparacion elegir una opcion no la guarda en una venta: agregarproducto crea una fila temporal detallesventa conserva cantidades y precios; pagosventa conserva base y recargo de cada cobro totalbase corresponde a productos menos descuento mas envio; totalconrecargos agrega los recargos ya incorporados en este formulario importe cobrado representa dinero recibido con recargo incluido registrarventa envia la carga completa al servicio; solo tras obtener el identificador se considera guardada abrir o imprimir documentos es posterior al guardado: si falla, no se debe repetir la venta los handlers con sufijo de evento son llamados por los controles; no ejecutarlos por duplicado al conectarlos
+// guia del archivo: el formulario mantiene cliente, productos y pagos en preparacion elegir una opcion no la guarda en una venta: agregarproducto crea una fila temporal detallesventa conserva cantidades y precios; pagosventa conserva base y recargo de cada cobro totalbase corresponde a productos menos descuento mas envio; totalconrecargos agrega los recargos ya incorporados en este formulario importe cobrado representa dinero recibido con recargo incluido registrarventa envia la carga completa al servicio; solo tras obtener el identificador se considera guardada abrir o imprimir documentos es posterior al guardado: si falla, no se debe repetir la venta los handlers con sufijo de evento son llamados por los controles; no ejecutarlos por duplicado al conectarlos
 using Prana.Entidades;
 using Prana.Negocio;
 using Prana.negocio;
@@ -110,9 +110,10 @@ namespace Prana.Presentacion
             lblClienteSeleccionado.Text = opcion.ToString();
             dgvClienteSeleccionado.Rows.Clear();
             // anade una fila visible; el orden de los valores debe coincidir con el de las columnas
-            dgvClienteSeleccionado.Rows.Add($"{opcion.Cliente.TipoDocumento}: {opcion.Cliente.DNI}", opcion.Cliente.Nombre, opcion.Cliente.Apellido, opcion.Cliente.Telefono, opcion.Cliente.Direccion, opcion.Cliente.NombreLocalidad, opcion.Cliente.CodigoPostal);
+            dgvClienteSeleccionado.Rows.Add($"{opcion.Cliente.TipoDocumento}: {opcion.Cliente.DNI}", opcion.Cliente.Nombre, opcion.Cliente.Apellido, opcion.Cliente.Telefono, opcion.Cliente.Direccion, opcion.Cliente.NombreLocalidad);
             usarDireccionRegistrada.Checked = false;
             txtDomicilioEntrega.Clear();
+            txtLocalidadEntrega.Clear();
             ActualizarEntrega();
         }
 
@@ -436,11 +437,12 @@ namespace Prana.Presentacion
         private void ActualizarEntrega()
         {
             bool envio = rdoEnvioDomicilio.Checked;
-            usarDireccionRegistrada.Enabled = envio && !string.IsNullOrWhiteSpace(clienteElegido?.Direccion);
+            usarDireccionRegistrada.Enabled = envio && !string.IsNullOrWhiteSpace(clienteElegido?.Direccion) && !string.IsNullOrWhiteSpace(clienteElegido?.NombreLocalidad);
             ActualizarDireccionEntrega();
             if (rdoRetiroPosterior.Checked)
             {
                 txtDomicilioEntrega.Clear();
+                txtLocalidadEntrega.Clear();
             }
 
             cboTipoLogistica.Enabled = envio;
@@ -455,14 +457,17 @@ namespace Prana.Presentacion
             if (usarDireccionRegistrada.Checked)
             {
                 txtDomicilioEntrega.Text = clienteElegido?.Direccion ?? string.Empty;
+                txtLocalidadEntrega.Text = clienteElegido?.NombreLocalidad ?? string.Empty;
             }
-            else 
+            else
                 if (clienteElegido != null && txtDomicilioEntrega.Text == clienteElegido.Direccion)
                 {
                     txtDomicilioEntrega.Clear();
+                    txtLocalidadEntrega.Clear();
                 }
 
             txtDomicilioEntrega.Enabled = rdoEnvioDomicilio.Checked && !usarDireccionRegistrada.Checked;
+            txtLocalidadEntrega.Enabled = txtDomicilioEntrega.Enabled;
         }
 
         // prepara los grids las cuotas los medios y la presentacion inicial
@@ -480,7 +485,7 @@ namespace Prana.Presentacion
             btnRegistrarVenta.Text = "Registrar venta";
             lblAclaracionDocumentos.Text = "La garantía y el remito se generan con el mismo número de venta.";
             dgvClienteSeleccionado.Columns.Clear();
-            // procesa cada nombre de new[] { "documento", "nombre", "apellido", "telefono", "direccion", "localidad", "codigo postal" } sin cambiar el orden de la coleccion
+            // Muestra los datos de contacto sin código postal.
             foreach (string nombre in new[]
             {
                 "Documento",
@@ -488,8 +493,7 @@ namespace Prana.Presentacion
                 "Apellido",
                 "Teléfono",
                 "Dirección",
-                "Localidad",
-                "Código postal"
+                "Localidad"
             }
 
             )
@@ -551,7 +555,7 @@ namespace Prana.Presentacion
                 ventaRegistrada = id;
                 try
                 {
-                    DocumentosPrana.MostrarVenta(this, id, txtSegundoTelefono.Text.Trim());
+                    DocumentosPrana.MostrarVenta(this, id, CN_Cliente.UnirTelefono(txtAreaSegundoTelefono.Text, txtSegundoTelefono.Text, true));
                 }
                 // atiende el error de esta operacion antes de informar o propagar el problema
                 catch (Exception error)
@@ -692,6 +696,7 @@ namespace Prana.Presentacion
                 if (limpiarDireccion)
                 {
                     txtDomicilioEntrega.Clear();
+                    txtLocalidadEntrega.Clear();
                 }
 
                 ActualizarEntrega();
@@ -883,14 +888,15 @@ namespace Prana.Presentacion
                 ObservacionPago = txtObservacionPago.Text.Trim(),
                 ModalidadEntrega = modalidadEntregaSeleccionada,
                 DomicilioEntrega = txtDomicilioEntrega.Text.Trim(),
-                FechaEntrega = dtpFechaEntrega.Value,
+                LocalidadEntrega = txtLocalidadEntrega.Text.Trim(),
                 HorarioSugerido = txtHorarioSugerido.Text.Trim(),
+                FechaEntrega = dtpFechaEntrega.Value,
                 ObservacionesEntrega = txtObservacionesEntrega.Text.Trim(),
                 TipoLogistica = cboTipoLogistica.SelectedItem?.ToString() ?? string.Empty,
                 CostoEnvio = costoEnvioVenta,
                 Detalles = detallesVenta.ToList(),
                 Pagos = pagosVenta.ToList(),
-                SegundoTelefono = txtSegundoTelefono.Text.Trim()
+                SegundoTelefono = CN_Cliente.UnirTelefono(txtAreaSegundoTelefono.Text, txtSegundoTelefono.Text, true)
 
             };
         }

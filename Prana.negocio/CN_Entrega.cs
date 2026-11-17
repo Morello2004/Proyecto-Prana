@@ -1,4 +1,4 @@
-﻿using Prana.Datos;
+using Prana.Datos;
 using Prana.Entidades;
 using System;
 using System.Collections.Generic;
@@ -37,11 +37,9 @@ namespace Prana.negocio
         }
 
         // resuelve preparar con los datos recibidos y entrega el resultado al codigo que lo llama
-        public void Preparar(ProductoPorEntregar producto, int cantidad, string direccion, string horario)
+        public void Preparar(ProductoPorEntregar producto, int cantidad, string direccion, string localidad)
         {
             Permisos.Exigir(Permisos.GestionarEntregas);
-            direccion = NormalizarTexto.Mayusculas(direccion);
-            horario = NormalizarTexto.Mayusculas(horario);
             if (producto == null || producto.IdVenta <= 0 || cantidad <= 0 || cantidad > producto.Pendientes)
             {
                 // interrumpe el flujo con una excepcion; el nivel que la atiende decide como informar o revertir la operacion
@@ -51,16 +49,16 @@ namespace Prana.negocio
             if (producto.Modalidad.StartsWith("Retiro", StringComparison.OrdinalIgnoreCase))
             {
                 direccion = "Retiro en local";
+                localidad = string.Empty;
             }
-
-            // distingue un dato vacio de un valor ingresado antes de continuar
-            if (string.IsNullOrWhiteSpace(direccion) || direccion.Trim().Length > 200 || horario.Trim().Length > 50)
+            else
             {
-                // interrumpe el flujo con una excepcion; el nivel que la atiende decide como informar o revertir la operacion
-                throw new ArgumentException("Ingrese una dirección (hasta 200 caracteres) y un horario de hasta 50 caracteres.");
+                direccion = Direcciones.ValidarCalleNumero(direccion, true);
+                localidad = Direcciones.NormalizarLocalidad(localidad);
+                if (string.IsNullOrWhiteSpace(localidad))
+                    throw new ArgumentException("Ingrese la localidad de esta entrega.");
             }
-
-            datos.Preparar(producto.IdVenta, producto.IdVariante, cantidad, direccion.Trim(), horario.Trim(), SesionActual.Usuario!.idUsuario);
+            datos.Preparar(producto.IdVenta, producto.IdVariante, cantidad, direccion, localidad, SesionActual.Usuario!.idUsuario);
         }
 
         // resuelve confirmar con los datos recibidos y entrega el resultado al codigo que lo llama

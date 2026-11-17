@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -37,8 +37,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="BaseDeDatos\*.sql">
-      <Link>%(Filename)%(Extension)</Link>
+    <None Remove="BaseDeDatos\*.sql" />
+    <None Include="BaseDeDatos\InstalarPrana.sql">
+      <Link>InstalarPrana.sql</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -48,13 +49,8 @@
     <Compile Remove="Prana.Datos\**\*.cs" />
     <Compile Remove="Prana.Entidades\**\*.cs" />
     <Compile Remove="Prana.negocio\**\*.cs" />
-    <Compile Remove="Pruebas\**\*.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="BaseDeDatos\DiagnosticarTablasProducto.sql" />
-    <None Remove="BaseDeDatos\DiagnosticarTablasProducto.sql" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Update="frmResumenMensualCaja.cs"><SubType>Form</SubType></Compile>
     <Compile Update="frmResumenMensualCaja.Designer.cs"><DependentUpon>frmResumenMensualCaja.cs</DependentUpon></Compile>

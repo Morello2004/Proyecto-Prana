@@ -1,7 +1,6 @@
 using Microsoft.Data.SqlClient;
 using Prana.Entidades;
 using System.Data;
-using System.Text.Json;
 using static Prana.Datos.GestionVentaSql;
 
 namespace Prana.Datos;
@@ -9,6 +8,10 @@ namespace Prana.Datos;
 // administra aperturas por identificador para separar turnos de una misma fecha sin sumar recargos
 public class CD_Caja
 {
+    private const string CabeceraSql = @"SELECT c.id_caja,c.fecha_operativa,c.estado,c.fecha_hora_apertura,c.fecha_hora_fin_turno,c.observaciones,c.numero_cierre,
+        CASE WHEN c.estado=N'Cerrada' AND c.id_usuario_cierre IS NULL THEN N'CIERRE AUTOMÁTICO'
+             ELSE COALESCE(u.nombre_usuario,N'') END usuario
+        FROM Caja c LEFT JOIN Usuario u ON u.id_usuario=c.id_usuario_cierre";
     // serializa aperturas cierres y cobros para que ninguna operacion cambie de caja durante su guardado
     private static void BloquearCaja(SqlConnection conexion, SqlTransaction transaccion)
     {
@@ -34,7 +37,7 @@ public class CD_Caja
         {
             throw new InvalidOperationException("Cambió el día mientras se registraba la operación. Actualice y vuelva a intentar.");
         }
-        using SqlCommand comando = Comando(conexion, transaccion, "SELECT id,fecha FROM Caja WHERE estado=N'Abierta'");
+        using SqlCommand comando = Comando(conexion, transaccion, "SELECT id_caja,fecha_operativa FROM Caja WHERE estado=N'Abierta'");
         using SqlDataReader lector = comando.ExecuteReader();
         if (!lector.Read())
         {
@@ -52,14 +55,15 @@ public class CD_Caja
         return id;
     }
 
-    // el identificador y los horarios de sql prevalecen sobre los json de versiones anteriores
+    // La cabecera se lee de columnas; los detalles se consultan por su clave foránea.
     private static CierreCaja LeerCabecera(SqlDataReader lector)
     {
-        CierreCaja caja = JsonSerializer.Deserialize<CierreCaja>(lector.GetString(5))!;
-        caja.IdCaja = lector.GetInt32(0);
-        caja.Fecha = lector.GetDateTime(1);
-        caja.Cerrada = lector.GetString(2) == "Cerrada";
-        caja.Inicio = lector.GetDateTime(3);
+        CierreCaja caja = new()
+        {
+            IdCaja = lector.GetInt32(0), Fecha = lector.GetDateTime(1),
+            Cerrada = lector.GetString(2) == "Cerrada", Inicio = lector.GetDateTime(3),
+            Observaciones = lector.GetString(5), Usuario = lector.GetString(7)
+        };
         if (!lector.IsDBNull(4))
         {
             caja.Fin = lector.GetDateTime(4);
@@ -67,7 +71,7 @@ public class CD_Caja
         caja.Numero = 0;
         if (caja.Cerrada)
         {
-            caja.Numero = caja.IdCaja;
+            caja.Numero = lector.GetInt32(6);
         }
         return caja;
     }
@@ -76,7 +80,7 @@ public class CD_Caja
     public List<CierreCaja> Listar(DateTime fecha)
     {
         using SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena());
-        using SqlCommand comando = new SqlCommand("SELECT id,fecha,estado,inicio,fin,datos FROM Caja WHERE fecha=@fecha ORDER BY id DESC", conexion);
+        using SqlCommand comando = new SqlCommand(CabeceraSql + " WHERE c.fecha_operativa=@fecha ORDER BY c.id_caja DESC", conexion);
         comando.Parameters.Add("@fecha", SqlDbType.Date).Value = fecha.Date;
         conexion.Open();
         using SqlDataReader lector = comando.ExecuteReader();
@@ -88,7 +92,7 @@ public class CD_Caja
         return cajas;
     }
 
-    // cada apertura tiene su propio saldo inicial y no hereda el balance de otro turno
+    // Cada apertura registra sus propios movimientos.
     public CierreCaja Abrir(CierreCaja solicitud, int usuario)
     {
         using SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena());
@@ -103,15 +107,14 @@ public class CD_Caja
         DateTime ahora = Ahora(conexion, transaccion);
         CierreCaja caja = new CierreCaja
         {
-            Fecha = ahora.Date, Inicio = ahora, SaldoInicial = solicitud.SaldoInicial,
-            SaldoInicialUsd = solicitud.SaldoInicialUsd, Observaciones = solicitud.Observaciones
+            Fecha = ahora.Date, Inicio = ahora,
+            Observaciones = solicitud.Observaciones
         };
         using SqlCommand abrir = Comando(conexion, transaccion, @"
-            INSERT Caja(fecha,estado,inicio,id_usuario_apertura,datos)
-            OUTPUT INSERTED.id VALUES(@fecha,N'Abierta',@inicio,@usuario,@datos);",
-            ("@fecha", caja.Fecha), ("@inicio", caja.Inicio), ("@usuario", usuario), ("@datos", JsonSerializer.Serialize(caja)));
+            INSERT Caja(fecha_operativa,estado,fecha_hora_apertura,id_usuario_apertura,observaciones)
+            OUTPUT INSERTED.id_caja VALUES(@fecha,N'Abierta',@inicio,@usuario,@observaciones);",
+            ("@fecha", caja.Fecha), ("@inicio", caja.Inicio), ("@usuario", usuario), ("@observaciones", caja.Observaciones));
         caja.IdCaja = Convert.ToInt32(abrir.ExecuteScalar());
-        GuardarDatos(conexion, transaccion, caja);
         transaccion.Commit();
         return caja;
     }
@@ -127,17 +130,17 @@ public class CD_Caja
         conexion.Open();
         using SqlTransaction transaccion = conexion.BeginTransaction();
         ExigirCajaAbierta(conexion, transaccion, Ahora(conexion, transaccion), caja.IdCaja);
-        GuardarDatos(conexion, transaccion, caja);
+        GuardarObservaciones(conexion, transaccion, caja);
         transaccion.Commit();
     }
 
     // modifica solo los datos del turno abierto conservando su fila y la hora real de apertura
-    private static void GuardarDatos(SqlConnection conexion, SqlTransaction transaccion, CierreCaja caja)
+    private static void GuardarObservaciones(SqlConnection conexion, SqlTransaction transaccion, CierreCaja caja)
     {
         using SqlCommand comando = Comando(conexion, transaccion, @"
-            UPDATE Caja SET datos=@datos WHERE id=@id AND estado=N'Abierta';
+            UPDATE Caja SET observaciones=@observaciones WHERE id_caja=@id AND estado=N'Abierta';
             IF @@ROWCOUNT<>1 THROW 50007,N'La caja ya no está abierta. Actualice la pantalla.',1;",
-            ("@id", caja.IdCaja), ("@datos", JsonSerializer.Serialize(caja)));
+            ("@id", caja.IdCaja), ("@observaciones", caja.Observaciones));
         comando.ExecuteNonQuery();
     }
 
@@ -149,9 +152,9 @@ public class CD_Caja
         using SqlTransaction transaccion = conexion.BeginTransaction(IsolationLevel.Serializable);
         BloquearCaja(conexion, transaccion);
         CierreCaja? resultado = null;
-        using (SqlCommand comando = Comando(conexion, transaccion, @"
-            SELECT TOP (1) id,fecha,estado,inicio,fin,datos FROM Caja
-            WHERE fecha=@fecha AND (@id IS NULL OR id=@id) ORDER BY id DESC;", ("@fecha", fecha.Date), ("@id", idCaja)))
+        using (SqlCommand comando = Comando(conexion, transaccion,
+            CabeceraSql.Replace("SELECT c.id_caja", "SELECT TOP (1) c.id_caja") +
+            " WHERE c.fecha_operativa=@fecha AND (@id IS NULL OR c.id_caja=@id) ORDER BY c.id_caja DESC;", ("@fecha", fecha.Date), ("@id", idCaja)))
         using (SqlDataReader lector = comando.ExecuteReader())
         {
             if (lector.Read())
@@ -167,28 +170,9 @@ public class CD_Caja
             }
             resultado = new CierreCaja { Fecha = fecha.Date, Inicio = fecha.Date + DateTime.Now.TimeOfDay };
         }
-        else if (!resultado.Cerrada)
-        {
-            resultado.Movimientos = LeerMovimientos(conexion, transaccion, fecha.Date, fecha.Date.AddDays(1), resultado.IdCaja);
-        }
         else
         {
-            // corrige bases de cierres antiguos en memoria sin incluir pagos de otros turnos
-            using SqlCommand pagos = Comando(conexion, transaccion, "SELECT id_pago,monto FROM Pago WHERE id_caja=@id", ("@id", resultado.IdCaja));
-            using SqlDataReader lector = pagos.ExecuteReader();
-            Dictionary<int, decimal> bases = new Dictionary<int, decimal>();
-            while (lector.Read())
-            {
-                bases[lector.GetInt32(0)] = lector.GetDecimal(1);
-            }
-            foreach (MovimientoCaja movimiento in resultado.Movimientos)
-            {
-                movimiento.IdCaja = resultado.IdCaja;
-                if (movimiento.Venta.HasValue && bases.TryGetValue(movimiento.Id, out decimal importe))
-                {
-                    movimiento.Importe = importe;
-                }
-            }
+            resultado.Movimientos = LeerMovimientos(conexion, transaccion, fecha.Date, fecha.Date.AddDays(1), resultado.IdCaja);
         }
         transaccion.Commit();
         return resultado;
@@ -209,17 +193,17 @@ public class CD_Caja
     private static List<MovimientoCaja> LeerMovimientos(SqlConnection conexion, SqlTransaction transaccion, DateTime desde, DateTime hasta, int? idCaja)
     {
         using SqlCommand comando = Comando(conexion, transaccion, @"
-            SELECT p.id_pago id,p.id_venta venta,p.fecha_pago fecha,
+            SELECT p.id_pago id,p.id_venta venta,p.fecha_hora_pago fecha,
                 CONCAT(c.nombre_cliente,' ',c.apellido_cliente,' - ',m.nombre_medio_pago) concepto,
-                N'Cobro venta' tipo,COALESCE(p.tipo_caja,m.tipo_caja) medio,'ARS' moneda,p.monto importe,
-                p.cuenta_destino cuenta,CAST(p.id_usuario AS nvarchar(20)) usuario,p.id_caja
+                N'Cobro venta' tipo,COALESCE(p.clasificacion_cobro,m.clasificacion_cobro) medio,'ARS' moneda,p.importe_base importe,
+                p.cuenta_destino cuenta,COALESCE(u.nombre_usuario,N'USUARIO ELIMINADO') usuario,p.id_caja
             FROM Pago p JOIN Venta v ON v.id_venta=p.id_venta JOIN Cliente c ON c.id_cliente=v.id_cliente
-            JOIN Medio_Pago m ON m.id_medio_pago=p.id_medio_pago
-            WHERE p.fecha_pago>=@desde AND p.fecha_pago<@hasta AND (@caja IS NULL OR p.id_caja=@caja)
+            JOIN Medio_Pago m ON m.id_medio_pago=p.id_medio_pago LEFT JOIN Usuario u ON u.id_usuario=p.id_usuario
+            WHERE p.fecha_hora_pago>=@desde AND p.fecha_hora_pago<@hasta AND (@caja IS NULL OR p.id_caja=@caja)
             UNION ALL
-            SELECT id,NULL,fecha,concepto,tipo,medio,moneda,importe,cuenta,CAST(id_usuario AS nvarchar(20)),id_caja
-            FROM Caja_Movimiento WHERE fecha>=@desde AND fecha<@hasta AND anulado=0
-                AND (@caja IS NULL OR id_caja=@caja) ORDER BY fecha,id,venta;", ("@desde", desde), ("@hasta", hasta), ("@caja", idCaja));
+            SELECT cm.id_movimiento_caja,NULL,cm.fecha_hora_movimiento,concepto,cm.tipo_movimiento,cm.medio_movimiento,moneda,importe,cuenta,COALESCE(u.nombre_usuario,N'USUARIO ELIMINADO'),cm.id_caja
+            FROM Caja_Movimiento cm LEFT JOIN Usuario u ON u.id_usuario=cm.id_usuario WHERE cm.fecha_hora_movimiento>=@desde AND cm.fecha_hora_movimiento<@hasta AND anulado=0
+                AND (@caja IS NULL OR cm.id_caja=@caja) ORDER BY fecha,id,venta;", ("@desde", desde), ("@hasta", hasta), ("@caja", idCaja));
         using SqlDataReader lector = comando.ExecuteReader();
         List<MovimientoCaja> movimientos = new List<MovimientoCaja>();
         while (lector.Read())
@@ -253,7 +237,7 @@ public class CD_Caja
         }
         int caja = ExigirCajaAbierta(conexion, transaccion, ahora, esperada);
         using SqlCommand comando = Comando(conexion, transaccion, @"
-            INSERT Caja_Movimiento(fecha,concepto,tipo,medio,moneda,importe,cuenta,id_usuario,id_caja)
+            INSERT Caja_Movimiento(fecha_hora_movimiento,concepto,tipo_movimiento,medio_movimiento,moneda,importe,cuenta,id_usuario,id_caja)
             VALUES(@fecha,@concepto,@tipo,@medio,@moneda,@importe,@cuenta,@usuario,@caja);",
             ("@fecha", ahora), ("@concepto", movimiento.Concepto), ("@tipo", movimiento.Tipo), ("@medio", movimiento.Medio),
             ("@moneda", movimiento.Moneda), ("@importe", movimiento.Importe), ("@cuenta", movimiento.Cuenta), ("@usuario", usuario), ("@caja", caja));
@@ -268,7 +252,7 @@ public class CD_Caja
         conexion.Open();
         using SqlTransaction transaccion = conexion.BeginTransaction();
         BloquearCaja(conexion, transaccion);
-        using SqlCommand buscar = Comando(conexion, transaccion, "SELECT id_caja FROM Caja_Movimiento WHERE id=@id", ("@id", id));
+        using SqlCommand buscar = Comando(conexion, transaccion, "SELECT id_caja FROM Caja_Movimiento WHERE id_movimiento_caja=@id", ("@id", id));
         object? encontrada = buscar.ExecuteScalar();
         if (encontrada == null)
         {
@@ -276,9 +260,9 @@ public class CD_Caja
         }
         ExigirCajaAbierta(conexion, transaccion, Ahora(conexion, transaccion), Convert.ToInt32(encontrada));
         using SqlCommand comando = Comando(conexion, transaccion, @"
-            UPDATE Caja_Movimiento SET anulado=1,motivo_anulacion=@motivo WHERE id=@id AND anulado=0;
+            UPDATE Caja_Movimiento SET anulado=1,motivo_anulacion=@motivo WHERE id_movimiento_caja=@id AND anulado=0;
             IF @@ROWCOUNT<>1 THROW 50005,N'El movimiento ya fue anulado.',1;
-            INSERT LogActividad(id_usuario,accion,entidad,id_entidad,detalle)
+            INSERT Log_Actividad(id_usuario,accion,entidad,id_entidad,detalle)
             VALUES(@usuario,N'ANULAR_MOVIMIENTO',N'Caja',@id,@motivo);", ("@id", id), ("@motivo", motivo), ("@usuario", usuario));
         comando.ExecuteNonQuery();
         transaccion.Commit();
@@ -287,7 +271,7 @@ public class CD_Caja
     // comprueba el estado por identificador dentro del bloqueo compartido con los cobros
     private static CierreCaja ObtenerParaCerrar(SqlConnection conexion, SqlTransaction transaccion, int idCaja)
     {
-        using SqlCommand comando = Comando(conexion, transaccion, "SELECT id,fecha,estado,inicio,fin,datos FROM Caja WHERE id=@id", ("@id", idCaja));
+        using SqlCommand comando = Comando(conexion, transaccion, CabeceraSql + " WHERE c.id_caja=@id", ("@id", idCaja));
         using SqlDataReader lector = comando.ExecuteReader();
         if (!lector.Read())
         {
@@ -310,15 +294,13 @@ public class CD_Caja
         BloquearCaja(conexion, transaccion);
         CierreCaja vigente = ObtenerParaCerrar(conexion, transaccion, solicitud.IdCaja);
         List<MovimientoCaja> movimientos = LeerMovimientos(conexion, transaccion, vigente.Fecha, vigente.Fecha.AddDays(1), vigente.IdCaja);
-        if (JsonSerializer.Serialize(solicitud.Movimientos) != JsonSerializer.Serialize(movimientos))
+        static object Operacion(MovimientoCaja m) => (m.Id, m.Venta, m.Fecha, m.Concepto, m.Tipo, m.Medio, m.Moneda, m.Importe, m.Cuenta, m.Usuario, m.IdCaja);
+        if (!solicitud.Movimientos.Select(Operacion).SequenceEqual(movimientos.Select(Operacion)))
         {
             throw new InvalidOperationException("Se registraron movimientos nuevos. Actualice y revise los totales antes de cerrar.");
         }
         vigente.Movimientos = movimientos;
-        vigente.SaldoInicial = solicitud.SaldoInicial;
-        vigente.SaldoInicialUsd = solicitud.SaldoInicialUsd;
         vigente.Observaciones = solicitud.Observaciones;
-        vigente.Billetes = solicitud.Billetes;
         vigente.Fin = Ahora(conexion, transaccion);
         using SqlCommand operador = Comando(conexion, transaccion, "SELECT nombre_usuario FROM Usuario WHERE id_usuario=@usuario", ("@usuario", usuario));
         vigente.Usuario = Convert.ToString(operador.ExecuteScalar()) ?? usuario.ToString();
@@ -327,16 +309,20 @@ public class CD_Caja
         return vigente;
     }
 
-    // conserva la fila y el identificador de apertura al guardar el json definitivo
+    // Confirma el cierre sin copiar pagos ni movimientos ni totales calculados.
     private static void GuardarCierre(SqlConnection conexion, SqlTransaction transaccion, CierreCaja caja, int? usuario)
     {
         caja.Cerrada = true;
-        caja.Numero = caja.IdCaja;
+        using (SqlCommand numerar = Comando(conexion, transaccion,
+            "SELECT CASE WHEN COALESCE(MAX(numero_cierre),499)<499 THEN 500 ELSE COALESCE(MAX(numero_cierre),499)+1 END FROM Caja WITH (UPDLOCK,HOLDLOCK)"))
+        {
+            caja.Numero = Convert.ToInt32(numerar.ExecuteScalar());
+        }
         using SqlCommand comando = Comando(conexion, transaccion, @"
-            UPDATE Caja SET estado=N'Cerrada',fin=@fin,id_usuario=@usuario,fecha_cierre=SYSDATETIME(),datos=@datos
-            WHERE id=@id AND estado=N'Abierta';
+            UPDATE Caja SET estado=N'Cerrada',numero_cierre=@numero,fecha_hora_fin_turno=@fin,id_usuario_cierre=@usuario,fecha_hora_registro_cierre=SYSDATETIME(),observaciones=@observaciones
+            WHERE id_caja=@id AND estado=N'Abierta';
             IF @@ROWCOUNT<>1 THROW 50004,N'La caja ya está cerrada. Actualice la pantalla.',1;",
-            ("@id", caja.IdCaja), ("@fin", caja.Fin), ("@usuario", usuario), ("@datos", JsonSerializer.Serialize(caja)));
+            ("@numero", caja.Numero), ("@id", caja.IdCaja), ("@fin", caja.Fin), ("@usuario", usuario), ("@observaciones", caja.Observaciones));
         comando.ExecuteNonQuery();
     }
 
@@ -349,7 +335,7 @@ public class CD_Caja
         BloquearCaja(conexion, transaccion);
         DateTime hoy = Ahora(conexion, transaccion).Date;
         List<int> pendientes = new List<int>();
-        using (SqlCommand comando = Comando(conexion, transaccion, "SELECT id FROM Caja WHERE estado=N'Abierta' AND fecha<@hoy ORDER BY id", ("@hoy", hoy)))
+        using (SqlCommand comando = Comando(conexion, transaccion, "SELECT id_caja FROM Caja WHERE estado=N'Abierta' AND fecha_operativa<@hoy ORDER BY id_caja", ("@hoy", hoy)))
         using (SqlDataReader lector = comando.ExecuteReader())
         {
             while (lector.Read())

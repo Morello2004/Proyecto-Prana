@@ -1,4 +1,4 @@
-﻿namespace Prana.Presentacion
+namespace Prana.Presentacion
 {
     // parte visual de frmclientes crea controles y define su distribucion, colores y eventos; visual studio puede regenerar este archivo al editar el disenador
     partial class frmClientes
@@ -30,12 +30,9 @@
             colVerDeuda = new DataGridViewButtonColumn();
             colEstadoCuenta = new DataGridViewTextBoxColumn();
             colDeudaPendiente = new DataGridViewTextBoxColumn();
-            colCodigoPostal = new DataGridViewTextBoxColumn();
             pnlFiltroEstadoCliente = new Panel();
             cboFiltroEstadoCliente = new ComboBox();
             btnCambiarEstadoCliente = new Button();
-            lblCodigoPostal = new Label();
-            txtCodigoPostal = new TextBox();
             panel1 = new Panel();
             PnlBusquedaCliente = new Panel();
             btnBuscarClientes = new FontAwesome.Sharp.IconButton();
@@ -44,8 +41,9 @@
             label1 = new Label();
             panel2 = new Panel();
             btn_CrearCliente = new Button();
+            btnAdministrarLocalidades = new Button();
             Localidad = new Label();
-            txtLocalidadCliente = new TextBox();
+            cboLocalidadCliente = new ComboBox();
             label5 = new Label();
             txtDireccionCliente = new TextBox();
             dgv_listadoClientes = new DataGridView();
@@ -64,6 +62,8 @@
             txtDocumentoCliente = new TextBox();
             cboTipoDocumento = new ComboBox();
             txtTelefonoCliente = new TextBox();
+            txtAreaCliente = new TextBox();
+            lblNumeroCliente = new Label();
             label10 = new Label();
             label8 = new Label();
             txtApellidoCliente = new TextBox();
@@ -110,26 +110,6 @@
             colDeudaPendiente.Name = "colDeudaPendiente";
             colDeudaPendiente.ReadOnly = true;
             colDeudaPendiente.Width = 125;
-            // colcodigopostal colcodigopostaldatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
-            colCodigoPostal.DataPropertyName = "CodigoPostal";
-            colCodigoPostal.HeaderText = "Código postal";
-            colCodigoPostal.MaxInputLength = 8;
-            colCodigoPostal.Name = "colCodigoPostal";
-            // lblcodigopostal
-            lblCodigoPostal.AutoSize = true;
-            lblCodigoPostal.ForeColor = Color.White;
-            lblCodigoPostal.Location = new Point(410, 147);
-            lblCodigoPostal.Name = "lblCodigoPostal";
-            lblCodigoPostal.Size = new Size(138, 15);
-            lblCodigoPostal.TabIndex = 46;
-            lblCodigoPostal.Text = "Código postal (opcional)";
-            // txtcodigopostal
-            txtCodigoPostal.CharacterCasing = CharacterCasing.Upper;
-            txtCodigoPostal.Location = new Point(410, 165);
-            txtCodigoPostal.MaxLength = 8;
-            txtCodigoPostal.Name = "txtCodigoPostal";
-            txtCodigoPostal.Size = new Size(170, 23);
-            txtCodigoPostal.TabIndex = 45;
             // panel1 panel1anchor: bordes que mantienen su distancia cuando cambia el tamano del contenedor
             panel1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             panel1.AutoScroll = true;
@@ -199,14 +179,29 @@
             // panel2 panel2backcolor: color del fondo del control o de la celda
             panel2.BackColor = Color.FromArgb(21, 30, 41);
             panel2.Controls.Add(btn_CrearCliente);
+            panel2.Controls.Add(btnAdministrarLocalidades);
             panel2.Controls.Add(Localidad);
-            panel2.Controls.Add(txtLocalidadCliente);
+            panel2.Controls.Add(cboLocalidadCliente);
             panel2.Controls.Add(label5);
             panel2.Controls.Add(txtDireccionCliente);
             panel2.Controls.Add(btnCancelar);
             panel2.Controls.Add(txtDocumentoCliente);
             panel2.Controls.Add(cboTipoDocumento);
             panel2.Controls.Add(txtTelefonoCliente);
+            panel2.Controls.Add(txtAreaCliente);
+            panel2.Controls.Add(lblNumeroCliente);
+            txtAreaCliente.Location = new Point(2, 107);
+            txtAreaCliente.Size = new Size(55, 25);
+            txtAreaCliente.Font = new Font("Segoe UI", 10F);
+            txtAreaCliente.MaxLength = 4;
+            txtAreaCliente.PlaceholderText = "2323";
+            txtAreaCliente.Name = "txtAreaCliente";
+            txtAreaCliente.TabIndex = 32;
+            lblNumeroCliente.Location = new Point(65, 89);
+            lblNumeroCliente.AutoSize = true;
+            lblNumeroCliente.ForeColor = Color.FromArgb(145, 170, 210);
+            lblNumeroCliente.Text = "Número";
+            lblNumeroCliente.Name = "lblNumeroCliente";
             panel2.Controls.Add(label10);
             panel2.Controls.Add(label8);
             panel2.Controls.Add(txtApellidoCliente);
@@ -214,8 +209,6 @@
             panel2.Controls.Add(lblVC);
             panel2.Controls.Add(txtNombreCliente);
             panel2.Controls.Add(label2);
-            panel2.Controls.Add(txtCodigoPostal);
-            panel2.Controls.Add(lblCodigoPostal);
             panel2.Dock = DockStyle.Top;
             panel2.Location = new Point(8, 145);
             panel2.Margin = new Padding(0, 0, 0, 8);
@@ -242,15 +235,27 @@
             Localidad.Name = "Localidad";
             Localidad.Size = new Size(58, 15);
             Localidad.TabIndex = 43;
-            Localidad.Text = "Localidad";
-            // txtlocalidadcliente
-            txtLocalidadCliente.CharacterCasing = CharacterCasing.Upper;
-            txtLocalidadCliente.Font = new Font("Segoe UI", 10F);
-            txtLocalidadCliente.Location = new Point(203, 165);
-            txtLocalidadCliente.MaxLength = 20;
-            txtLocalidadCliente.Name = "txtLocalidadCliente";
-            txtLocalidadCliente.Size = new Size(187, 25);
-            txtLocalidadCliente.TabIndex = 42;
+            Localidad.Text = "Localidad / ciudad (opcional)";
+            // cb local editable, con administracion de opciones al lado
+            cboLocalidadCliente.DropDownStyle = ComboBoxStyle.DropDown;
+            cboLocalidadCliente.Font = new Font("Segoe UI", 10F);
+            cboLocalidadCliente.Location = new Point(203, 165);
+            cboLocalidadCliente.MaxLength = 25;
+            cboLocalidadCliente.Name = "cboLocalidadCliente";
+            cboLocalidadCliente.Size = new Size(187, 25);
+            cboLocalidadCliente.TabIndex = 42;
+            cboLocalidadCliente.TextChanged += cboLocalidadCliente_TextChanged;
+            btnAdministrarLocalidades.BackColor = Color.Gainsboro;
+            btnAdministrarLocalidades.FlatAppearance.BorderSize = 0;
+            btnAdministrarLocalidades.FlatStyle = FlatStyle.Flat;
+            btnAdministrarLocalidades.ForeColor = Color.Black;
+            btnAdministrarLocalidades.Location = new Point(398, 164);
+            btnAdministrarLocalidades.Name = "btnAdministrarLocalidades";
+            btnAdministrarLocalidades.Size = new Size(155, 27);
+            btnAdministrarLocalidades.TabIndex = 43;
+            btnAdministrarLocalidades.Text = "Administrar localidades";
+            btnAdministrarLocalidades.UseVisualStyleBackColor = false;
+            btnAdministrarLocalidades.Click += btnAdministrarLocalidades_Click;
             // label5
             label5.AutoSize = true;
             label5.ForeColor = Color.FromArgb(145, 170, 210);
@@ -263,8 +268,9 @@
             txtDireccionCliente.CharacterCasing = CharacterCasing.Upper;
             txtDireccionCliente.Font = new Font("Segoe UI", 10F);
             txtDireccionCliente.Location = new Point(2, 165);
-            txtDireccionCliente.MaxLength = 50;
+            txtDireccionCliente.MaxLength = 200;
             txtDireccionCliente.Name = "txtDireccionCliente";
+            txtDireccionCliente.PlaceholderText = "CALLE 123 O CALLE S/N";
             txtDireccionCliente.Size = new Size(168, 25);
             txtDireccionCliente.TabIndex = 40;
             // pnlfiltroestadocliente pnlfiltroestadoclientebackcolor: color del fondo del control o de la celda
@@ -313,7 +319,8 @@
             dataGridViewCellStyle7.WrapMode = DataGridViewTriState.True;
             dgv_listadoClientes.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
             dgv_listadoClientes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgv_listadoClientes.Columns.AddRange(new DataGridViewColumn[] { colNombre, colApellido, colTipoDocumento, colDNI, ColTelefono, colDireccion, colLocalidad, colAccion, colFechaRegistro, colSaldoFavor, colCodigoPostal, colDeudaPendiente, colEstadoCuenta, colVerDeuda });
+            dgv_listadoClientes.EditingControlShowing += dgv_listadoClientes_EditingControlShowing;
+            dgv_listadoClientes.Columns.AddRange(new DataGridViewColumn[] { colNombre, colApellido, colTipoDocumento, colDNI, ColTelefono, colDireccion, colLocalidad, colAccion, colFechaRegistro, colSaldoFavor, colDeudaPendiente, colEstadoCuenta, colVerDeuda });
             dataGridViewCellStyle10.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle10.BackColor = Color.White;
             dataGridViewCellStyle10.Font = new Font("Segoe UI", 9F);
@@ -347,10 +354,12 @@
             dgv_listadoClientes.SelectionChanged += dgv_listadoClientes_SelectionChanged;
             // colnombre colnombredatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colNombre.DataPropertyName = "Nombre";
+            colNombre.MaxInputLength = 100;
             colNombre.HeaderText = "Nombre";
             colNombre.Name = "colNombre";
             // colapellido colapellidodatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colApellido.DataPropertyName = "Apellido";
+            colApellido.MaxInputLength = 100;
             colApellido.HeaderText = "Apellido";
             colApellido.Name = "colApellido";
             // coltipodocumento coltipodocumentodatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
@@ -368,14 +377,18 @@
             ColTelefono.DataPropertyName = "Telefono";
             ColTelefono.HeaderText = "Telefono";
             ColTelefono.Name = "ColTelefono";
+            ColTelefono.MaxInputLength = 10;
+            ColTelefono.ToolTipText = "Área y número concatenados: 10 dígitos";
             // coldireccion coldirecciondatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colDireccion.DataPropertyName = "Direccion";
             colDireccion.HeaderText = "Direccion";
             colDireccion.Name = "colDireccion";
+            colDireccion.MaxInputLength = 200;
             // collocalidad collocalidaddatapropertyname: propiedad del objeto enlazado cuyo valor muestra esta columna
             colLocalidad.DataPropertyName = "NombreLocalidad";
             colLocalidad.HeaderText = "Localidad";
             colLocalidad.Name = "colLocalidad";
+            colLocalidad.MaxInputLength = 25;
             // colaccion
             dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle8.ForeColor = Color.FromArgb(21, 30, 41);
@@ -446,11 +459,11 @@
             cboTipoDocumento.SelectedIndexChanged += cboTipoDocumento_SelectedIndexChanged;
             // txttelefonocliente txttelefonoclientefont: tipografia, tamano y estilo con los que se muestra el contenido
             txtTelefonoCliente.Font = new Font("Segoe UI", 10F);
-            txtTelefonoCliente.Location = new Point(2, 107);
-            txtTelefonoCliente.MaxLength = 10;
+            txtTelefonoCliente.Location = new Point(65, 107);
+            txtTelefonoCliente.MaxLength = 8;
             txtTelefonoCliente.Name = "txtTelefonoCliente";
-            txtTelefonoCliente.Size = new Size(168, 25);
-            txtTelefonoCliente.TabIndex = 32;
+            txtTelefonoCliente.Size = new Size(105, 25);
+            txtTelefonoCliente.TabIndex = 33;
             // label10
             label10.AutoSize = true;
             label10.ForeColor = Color.FromArgb(145, 170, 210);
@@ -472,7 +485,7 @@
             txtApellidoCliente.CharacterCasing = CharacterCasing.Upper;
             txtApellidoCliente.Font = new Font("Segoe UI", 10F);
             txtApellidoCliente.Location = new Point(203, 52);
-            txtApellidoCliente.MaxLength = 30;
+            txtApellidoCliente.MaxLength = 100;
             txtApellidoCliente.Name = "txtApellidoCliente";
             txtApellidoCliente.Size = new Size(187, 25);
             txtApellidoCliente.TabIndex = 28;
@@ -483,7 +496,7 @@
             label3.Name = "label3";
             label3.Size = new Size(52, 15);
             label3.TabIndex = 27;
-            label3.Text = "Teléfono (con área)";
+            label3.Text = "Área";
             // lblvc
             lblVC.AutoSize = true;
             lblVC.ForeColor = Color.FromArgb(145, 170, 210);
@@ -496,7 +509,7 @@
             txtNombreCliente.CharacterCasing = CharacterCasing.Upper;
             txtNombreCliente.Font = new Font("Segoe UI", 10F);
             txtNombreCliente.Location = new Point(2, 52);
-            txtNombreCliente.MaxLength = 30;
+            txtNombreCliente.MaxLength = 100;
             txtNombreCliente.Name = "txtNombreCliente";
             txtNombreCliente.Size = new Size(168, 25);
             txtNombreCliente.TabIndex = 24;
@@ -612,6 +625,8 @@
         private Label label2;
         private FontAwesome.Sharp.IconButton btnBuscarClientes;
         private TextBox txtTelefonoCliente;
+        private TextBox txtAreaCliente;
+        private Label lblNumeroCliente;
         private Label label10;
         private Label label8;
         private TextBox txtApellidoCliente;
@@ -627,7 +642,8 @@
         private Label label5;
         private TextBox txtDireccionCliente;
         private Label Localidad;
-        private TextBox txtLocalidadCliente;
+        private ComboBox cboLocalidadCliente;
+        private Button btnAdministrarLocalidades;
         private Button btn_CrearCliente;
         private DataGridViewTextBoxColumn colNombre;
         private DataGridViewTextBoxColumn colApellido;
@@ -638,9 +654,6 @@
         private DataGridViewButtonColumn colAccion;
         private DataGridViewTextBoxColumn colFechaRegistro;
         private DataGridViewTextBoxColumn colSaldoFavor;
-        private TextBox txtCodigoPostal;
-        private Label lblCodigoPostal;
-        private DataGridViewTextBoxColumn colCodigoPostal;
         private DataGridViewTextBoxColumn colDeudaPendiente;
         private DataGridViewTextBoxColumn colEstadoCuenta;
         private DataGridViewButtonColumn colVerDeuda;

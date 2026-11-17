@@ -346,5 +346,10 @@ namespace Prana.Presentacion
 
         // prepara la informacion inicial cuando se carga la ventana
         private void frmPagos_Load(object? sender, EventArgs e) => Buscar();
+
+        private void lblCuentaDestino_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

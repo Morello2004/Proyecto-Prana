@@ -1,4 +1,4 @@
-﻿using Prana.Datos;
+using Prana.Datos;
 using Prana.Entidades;
 using System;
 using System.Collections.Generic;
@@ -74,6 +74,8 @@ namespace Prana.negocio
             // normaliza los textos libres sin modificar las opciones de envio ni los medios
             venta.DomicilioEntrega = NormalizarTexto.Mayusculas(venta.DomicilioEntrega);
             venta.HorarioSugerido = NormalizarTexto.Mayusculas(venta.HorarioSugerido);
+            if (venta.HorarioSugerido.Length > 50)
+                throw new InvalidOperationException("El horario sugerido admite hasta 50 caracteres.");
             venta.ObservacionesEntrega = NormalizarTexto.Mayusculas(venta.ObservacionesEntrega);
             venta.ObservacionPago = NormalizarTexto.Mayusculas(venta.ObservacionPago);
             // la venta no puede tener mas de 99 productos distintos
@@ -139,6 +141,18 @@ namespace Prana.negocio
                 throw new InvalidOperationException("Seleccione una forma de entrega.");
             }
 
+            venta.LocalidadEntrega = Direcciones.NormalizarLocalidad(venta.LocalidadEntrega);
+            if (venta.ModalidadEntrega == "Envío a domicilio")
+            {
+                venta.DomicilioEntrega = Direcciones.ValidarCalleNumero(venta.DomicilioEntrega, true);
+                if (string.IsNullOrWhiteSpace(venta.LocalidadEntrega))
+                    throw new InvalidOperationException("Ingrese la localidad de entrega.");
+            }
+            else
+            {
+                venta.DomicilioEntrega = string.Empty;
+                venta.LocalidadEntrega = string.Empty;
+            }
             // un envio requiere domicilio y un tipo de logistica seleccionado
             if (venta.ModalidadEntrega == "Envío a domicilio" && (string.IsNullOrWhiteSpace(venta.DomicilioEntrega) || string.IsNullOrWhiteSpace(venta.TipoLogistica)))
             {

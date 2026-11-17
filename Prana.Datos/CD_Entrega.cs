@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Prana.Entidades;
 using System.Collections.Generic;
 using System.Data;
@@ -9,11 +9,10 @@ namespace Prana.Datos
     // agrupa los datos y operaciones de cd entrega
     public class CD_Entrega
     {
-        // un remito reserva unidades; una entrega confirmada cambia su estado, no vuelve a descontar stock
+        // Un remito reserva unidades; entregado indica si la preparación llegó a destino.
         private const string PreparadosSql = @"SELECT r.id_venta,dr.id_variante,SUM(dr.cantidad) cantidad
             FROM Remito r JOIN Detalle_Remito dr ON dr.id_remito=r.id_remito
-            WHERE NOT EXISTS(SELECT 1 FROM Envio e JOIN Estado_Envio ee ON ee.id_estado_envio=e.id_estado_envio
-                WHERE e.id_remito=r.id_remito AND ee.nombre LIKE N'Cancelad%') GROUP BY r.id_venta,dr.id_variante";
+            GROUP BY r.id_venta,dr.id_variante";
         // consulta las cantidades pendientes de preparar y el stock disponible de cada variante
         public List<AlertaStockPendiente> ObtenerNecesidadesStock()
         {
@@ -76,39 +75,20 @@ namespace Prana.Datos
             using SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena());
             conexion.Open();
             // prepara la consulta y su conexion los valores variables se envian mediante parametros
-            using SqlCommand existe = new SqlCommand("SELECT OBJECT_ID('dbo.Venta_Entrega')", conexion);
-            bool tieneEntrega = existe.ExecuteScalar() != DBNull.Value;
-            string direccion;
-            if (tieneEntrega)
-            {
-                direccion = "COALESCE(NULLIF(ve.domicilio,''),c.direccion,'')";
-            }
-            else
-            {
-                direccion = "COALESCE(c.direccion,'')";
-            }
-
-            string valorSeleccionado;
-            if (tieneEntrega)
-            {
-                valorSeleccionado = " LEFT JOIN Venta_Entrega ve ON ve.id_venta=v.id_venta ";
-            }
-            else
-            {
-                valorSeleccionado = "";
-            }
-            // prepara la consulta y su conexion los valores variables se envian mediante parametros
             using SqlCommand comando = new SqlCommand(@"SELECT v.id_venta,d.id_variante,CONCAT(c.nombre_cliente,' ',c.apellido_cliente) cliente,
                 CONCAT(p.nombre_producto,' (',vp.color,', ',vp.condicion_producto,')') producto,
-                m.nombre_modalidad_entrega modalidad,d.cantidad vendidos,COALESCE(r.cantidad,0) preparados," + direccion + @" direccion
+                m.nombre_modalidad_entrega modalidad,d.cantidad vendidos,COALESCE(r.cantidad,0) preparados,
+                CASE WHEN m.nombre_modalidad_entrega LIKE N'Retiro%' THEN N'Retiro en local' ELSE COALESCE(ve.direccion_sugerida,'') END domicilio_sugerido,
+                CASE WHEN m.nombre_modalidad_entrega LIKE N'Retiro%' THEN N'' ELSE COALESCE(ve.localidad_sugerida,'') END localidad_sugerida
                 FROM Venta v JOIN Cliente c ON c.id_cliente=v.id_cliente JOIN Estado_Venta ev ON ev.id_estado_venta=v.id_estado_venta
                 JOIN Modalidad_Entrega m ON m.id_modalidad_entrega=v.id_modalidad_entrega
                 JOIN (SELECT id_venta,id_variante,SUM(cantidad) cantidad FROM Detalle_Venta GROUP BY id_venta,id_variante) d ON d.id_venta=v.id_venta
                 JOIN Variante_Producto vp ON vp.id_variante=d.id_variante JOIN Producto p ON p.id_producto=vp.id_producto
-                LEFT JOIN (" + PreparadosSql + @") r ON r.id_venta=v.id_venta AND r.id_variante=d.id_variante " + (valorSeleccionado) + @"
+                LEFT JOIN (" + PreparadosSql + @") r ON r.id_venta=v.id_venta AND r.id_variante=d.id_variante
+                LEFT JOIN Venta_Datos_Entrega ve ON ve.id_venta=v.id_venta
                 WHERE d.cantidad>COALESCE(r.cantidad,0) AND ev.nombre_estado_venta NOT LIKE N'Anulad%' AND ev.nombre_estado_venta NOT LIKE N'Cancelad%'", conexion);
-            AgregarFiltro(comando, texto, "CONCAT(v.id_venta,' ',c.nombre_cliente,' ',c.apellido_cliente,' ',c.dni,' ',p.nombre_producto)");
-            comando.CommandText += " ORDER BY v.fecha_venta,v.id_venta,d.id_variante";
+            AgregarFiltro(comando, texto, "CONCAT(v.id_venta,' ',c.nombre_cliente,' ',c.apellido_cliente,' ',c.numero_documento,' ',p.nombre_producto)");
+            comando.CommandText += " ORDER BY v.fecha_hora_venta,v.id_venta,d.id_variante";
             using SqlDataReader lector = comando.ExecuteReader();
             List<ProductoPorEntregar> lista = new List<ProductoPorEntregar>();
             while (lector.Read())
@@ -122,7 +102,8 @@ namespace Prana.Datos
                     Modalidad = (string)lector["modalidad"],
                     Vendidos = (int)lector["vendidos"],
                     Preparados = (int)lector["preparados"],
-                    Direccion = (string)lector["direccion"]
+                    DomicilioSugerido = (string)lector["domicilio_sugerido"],
+                    LocalidadSugerida = (string)lector["localidad_sugerida"]
 
                 });
             }
@@ -137,31 +118,32 @@ namespace Prana.Datos
             using SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena());
             // prepara la consulta y su conexion los valores variables se envian mediante parametros
             using SqlCommand comando = new SqlCommand(@"SELECT e.id_envio,r.id_venta,r.id_remito,CONCAT(c.nombre_cliente,' ',c.apellido_cliente) cliente,
-                e.direccion,ee.nombre,e.fecha_entrega,
+                COALESCE(e.direccion,'') direccion,COALESCE(e.localidad,'') localidad,
+                CASE WHEN e.entregado=1 THEN N'Entregado' ELSE N'Pendiente' END estado_envio,e.fecha_hora_entrega,
                 COALESCE((SELECT STRING_AGG(CAST(CONCAT(dr.cantidad,' × ',dr.descripcion) AS nvarchar(max)),'; ')
                     FROM Detalle_Remito dr WHERE dr.id_remito=r.id_remito),'') productos
                 FROM Envio e JOIN Remito r ON r.id_remito=e.id_remito JOIN Venta v ON v.id_venta=r.id_venta
-                JOIN Cliente c ON c.id_cliente=v.id_cliente JOIN Estado_Envio ee ON ee.id_estado_envio=e.id_estado_envio WHERE 1=1", conexion);
+                JOIN Cliente c ON c.id_cliente=v.id_cliente WHERE 1=1", conexion);
             if (soloPendientes)
             {
-                comando.CommandText += " AND ee.nombre=N'Pendiente'";
+                comando.CommandText += " AND e.entregado=0";
             }
 
-            AgregarFiltro(comando, texto, "CONCAT(v.id_venta,' ',c.nombre_cliente,' ',c.apellido_cliente,' ',c.dni)");
-            comando.CommandText += " ORDER BY r.fecha_emision DESC,e.id_envio DESC";
+            AgregarFiltro(comando, texto, "CONCAT(v.id_venta,' ',c.nombre_cliente,' ',c.apellido_cliente,' ',c.numero_documento)");
+            comando.CommandText += " ORDER BY r.fecha_hora_emision DESC,e.id_envio DESC";
             conexion.Open();
             using SqlDataReader lector = comando.ExecuteReader();
             List<EntregaRegistrada> lista = new List<EntregaRegistrada>();
             while (lector.Read())
             {
                 DateTime? valorFechaEntrega;
-                if (lector["fecha_entrega"] == DBNull.Value)
+                if (lector["fecha_hora_entrega"] == DBNull.Value)
                 {
                     valorFechaEntrega = null;
                 }
                 else
                 {
-                    valorFechaEntrega = (DateTime)lector["fecha_entrega"];
+                    valorFechaEntrega = (DateTime)lector["fecha_hora_entrega"];
                 }
                 lista.Add(new EntregaRegistrada
                 {
@@ -170,8 +152,9 @@ namespace Prana.Datos
                     IdRemito = (int)lector["id_remito"],
                     Cliente = (string)lector["cliente"],
                     Productos = (string)lector["productos"],
-                    Direccion = (string)lector["direccion"],
-                    Estado = (string)lector["nombre"],
+                    Domicilio = (string)lector["direccion"],
+                    Localidad = (string)lector["localidad"],
+                    Estado = (string)lector["estado_envio"],
                     FechaEntrega = valorFechaEntrega
                 });
             }
@@ -191,7 +174,7 @@ namespace Prana.Datos
         }
 
         // coordina preparar dentro de una transaccion para confirmar o revertir sus escrituras juntas
-        public void Preparar(int venta, int variante, int cantidad, string direccion, string horario, int usuario)
+        public void Preparar(int venta, int variante, int cantidad, string direccion, string localidad, int usuario)
         {
             // prepara la conexion configurada y la libera al terminar este alcance
             using SqlConnection conexion = new SqlConnection(Conexion.ObtenerCadena());
@@ -201,6 +184,17 @@ namespace Prana.Datos
             try
             {
                 ValidarVenta(conexion, transaccion, venta);
+                using (SqlCommand modalidad = Comando(conexion, transaccion,
+                    "SELECT m.nombre_modalidad_entrega FROM Venta v JOIN Modalidad_Entrega m ON m.id_modalidad_entrega=v.id_modalidad_entrega WHERE v.id_venta=@venta", ("@venta", venta)))
+                {
+                    if (Convert.ToString(modalidad.ExecuteScalar())!.StartsWith("Retiro", StringComparison.OrdinalIgnoreCase))
+                    {
+                        direccion = "Retiro en local";
+                        localidad = string.Empty;
+                    }
+                    else if (string.IsNullOrWhiteSpace(direccion) || string.IsNullOrWhiteSpace(localidad))
+                        throw new InvalidOperationException("Complete dirección y localidad de esta entrega.");
+                }
                 using SqlCommand pendiente = Comando(conexion, transaccion, @"SELECT COALESCE(SUM(cantidad),0)-(SELECT COALESCE(SUM(cantidad),0) FROM (" + PreparadosSql + @") r
                     WHERE r.id_venta=@venta AND r.id_variante=@variante) FROM Detalle_Venta WHERE id_venta=@venta AND id_variante=@variante", ("@venta", venta), ("@variante", variante));
                 if (cantidad <= 0 || cantidad > Convert.ToInt32(pendiente.ExecuteScalar()))
@@ -217,30 +211,16 @@ namespace Prana.Datos
                     throw new InvalidOperationException("No hay stock disponible para preparar esa cantidad.");
                 }
 
-                int estado = ObtenerOCrearIdPorNombre(conexion, transaccion, "Estado_Envio", "id_estado_envio", "nombre", "Pendiente");
-                using SqlCommand modalidad = Comando(conexion, transaccion, @"SELECT m.nombre_modalidad_entrega FROM Venta v JOIN Modalidad_Entrega m ON m.id_modalidad_entrega=v.id_modalidad_entrega WHERE id_venta=@venta", ("@venta", venta));
-                string tipo;
-                if (Convert.ToString(modalidad.ExecuteScalar())!.StartsWith("Retiro", StringComparison.OrdinalIgnoreCase))
-                {
-                    tipo = "Retiro en local";
-                }
-                else
-                {
-                    tipo = "Envío a domicilio";
-                }
-                if (tipo == "Retiro en local")
-                {
-                    direccion = "Retiro en local";
-                }
-
-                using SqlCommand remito = Comando(conexion, transaccion, @"INSERT INTO Remito(id_venta,fecha_emision) OUTPUT INSERTED.id_remito
+                using SqlCommand remito = Comando(conexion, transaccion, @"INSERT INTO Remito(id_venta,fecha_hora_emision) OUTPUT INSERTED.id_remito
                     VALUES(@venta,SYSDATETIME())", ("@venta", venta));
                 int idRemito = Convert.ToInt32(remito.ExecuteScalar());
                 using SqlCommand detalle = Comando(conexion, transaccion, @"INSERT INTO Detalle_Remito(id_remito,id_variante,cantidad,descripcion)
                     SELECT @remito,vp.id_variante,@cantidad,LEFT(CONCAT(p.nombre_producto,' (',vp.color,', ',vp.condicion_producto,')'),300)
                     FROM Variante_Producto vp JOIN Producto p ON p.id_producto=vp.id_producto WHERE vp.id_variante=@variante;
-                    INSERT INTO Envio(id_remito,direccion,horario_sugerido,tipo_envio,costo,id_estado_envio)
-                    VALUES(@remito,@direccion,@horario,@tipo,0,@estado)", ("@remito", idRemito), ("@cantidad", cantidad), ("@variante", variante), ("@direccion", direccion), ("@horario", horario), ("@tipo", tipo), ("@estado", estado));
+                    INSERT INTO Envio(id_remito,entregado,direccion,localidad)
+                    VALUES(@remito,0,@direccion,@localidad)", ("@remito", idRemito), ("@cantidad", cantidad), ("@variante", variante));
+                detalle.Parameters.Add("@direccion", SqlDbType.NVarChar, 200).Value = direccion;
+                detalle.Parameters.Add("@localidad", SqlDbType.NVarChar, 25).Value = string.IsNullOrWhiteSpace(localidad) ? DBNull.Value : localidad;
                 detalle.ExecuteNonQuery();
                 RegistrarActividad(conexion, transaccion, usuario, "PREPARAR_ENTREGA", venta, $"Remito {venta}; preparación interna {idRemito}; variante {variante}; cantidad {cantidad}");
                 // confirma todos los cambios de esta transaccion como una unidad
@@ -276,22 +256,21 @@ namespace Prana.Datos
 
                 int venta = Convert.ToInt32(id);
                 ValidarVenta(conexion, transaccion, venta);
-                int estado = ObtenerOCrearIdPorNombre(conexion, transaccion, "Estado_Envio", "id_estado_envio", "nombre", "Entregado");
-                using SqlCommand actualizar = Comando(conexion, transaccion, @"UPDATE e SET id_estado_envio=@estado,fecha_entrega=SYSDATETIME()
-                    FROM Envio e JOIN Estado_Envio ee ON ee.id_estado_envio=e.id_estado_envio WHERE e.id_envio=@envio AND ee.nombre=N'Pendiente'", ("@estado", estado), ("@envio", envio));
+                using SqlCommand actualizar = Comando(conexion, transaccion, @"UPDATE Envio
+                    SET entregado=1,fecha_hora_entrega=SYSDATETIME()
+                    WHERE id_envio=@envio AND entregado=0", ("@envio", envio));
                 if (actualizar.ExecuteNonQuery() != 1)
                 {
                     // interrumpe el flujo con una excepcion; el nivel que la atiende decide como informar o revertir la operacion
                     throw new InvalidOperationException("La entrega ya fue confirmada o no está pendiente.");
                 }
 
-                int entregado = ObtenerOCrearIdPorNombre(conexion, transaccion, "Estado_Variante_Producto", "id_estado_variante_producto", "nombre_estado_variante_producto", "Entregado");
-                // marca completos los productos cuya cantidad vendida ya se entrego; el estado de pago se conserva
-                using SqlCommand detalles = Comando(conexion, transaccion, @"UPDATE d SET id_estado_variante_producto=@estado FROM Detalle_Venta d
+                // Marca como entregados los renglones cuyas unidades vendidas ya se entregaron por completo.
+                using SqlCommand detalles = Comando(conexion, transaccion, @"UPDATE d SET entregado=1 FROM Detalle_Venta d
                     WHERE d.id_venta=@venta AND (SELECT SUM(dv.cantidad) FROM Detalle_Venta dv WHERE dv.id_venta=d.id_venta AND dv.id_variante=d.id_variante)
                     <=(SELECT COALESCE(SUM(dr.cantidad),0) FROM Detalle_Remito dr JOIN Remito r ON r.id_remito=dr.id_remito
-                    WHERE r.id_venta=d.id_venta AND dr.id_variante=d.id_variante AND EXISTS(SELECT 1 FROM Envio e JOIN Estado_Envio ee
-                    ON ee.id_estado_envio=e.id_estado_envio WHERE e.id_remito=r.id_remito AND ee.nombre=N'Entregado'))", ("@estado", entregado), ("@venta", venta));
+                    JOIN Envio e ON e.id_remito=r.id_remito WHERE r.id_venta=d.id_venta AND dr.id_variante=d.id_variante
+                    AND e.entregado=1)", ("@venta", venta));
                 detalles.ExecuteNonQuery();
                 RegistrarActividad(conexion, transaccion, usuario, "CONFIRMAR_ENTREGA", venta, $"Entrega {envio} confirmada");
                 // confirma todos los cambios de esta transaccion como una unidad
@@ -312,11 +291,9 @@ namespace Prana.Datos
         {
             // comprueba la venta y bloquea su encabezado durante la operacion
             ValidarVenta(conexion, transaccion, idVenta);
-            int estadoEnvio = ObtenerOCrearIdPorNombre(conexion, transaccion, "Estado_Envio", "id_estado_envio", "nombre", "Entregado");
-            int estadoDetalle = ObtenerOCrearIdPorNombre(conexion, transaccion, "Estado_Variante_Producto", "id_estado_variante_producto", "nombre_estado_variante_producto", "Entregado");
             // crea un remito para todos los productos retirados
             using SqlCommand remito = Comando(conexion, transaccion, @"INSERT INTO Remito
-            (id_venta, fecha_emision)
+            (id_venta, fecha_hora_emision)
           OUTPUT INSERTED.id_remito
           VALUES (@venta, SYSDATETIME())", ("@venta", idVenta));
             int idRemito = Convert.ToInt32(remito.ExecuteScalar());
@@ -359,16 +336,14 @@ namespace Prana.Datos
 
             // registra el retiro como entregado desde el momento de la venta
             using SqlCommand envio = Comando(conexion, transaccion, @"INSERT INTO Envio
-            (id_remito, direccion, horario_sugerido,
-             tipo_envio, costo, id_estado_envio, fecha_entrega)
+            (id_remito, entregado, fecha_hora_entrega, direccion, localidad)
           VALUES
-            (@remito, @direccion, @horario,
-             N'Retiro en local', 0, @estado, SYSDATETIME())", ("@remito", idRemito), ("@direccion", "Retiro en local"), ("@horario", ""), ("@estado", estadoEnvio));
+            (@remito, 1, SYSDATETIME(), N'Retiro en local', NULL)", ("@remito", idRemito));
             envio.ExecuteNonQuery();
             // marca los productos de esta venta como entregados
             using SqlCommand actualizarDetalles = Comando(conexion, transaccion, @"UPDATE Detalle_Venta
-          SET id_estado_variante_producto = @estado
-          WHERE id_venta = @venta", ("@estado", estadoDetalle), ("@venta", idVenta));
+          SET entregado = 1
+          WHERE id_venta = @venta", ("@venta", idVenta));
             actualizarDetalles.ExecuteNonQuery();
             // deja constancia del retiro en el historial
             RegistrarActividad(conexion, transaccion, venta.IdUsuario, "CONFIRMAR_ENTREGA", idVenta, $"Retiro inmediato en local; remito interno {idRemito}");

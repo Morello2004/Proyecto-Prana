@@ -1,4 +1,4 @@
-﻿namespace Prana.Entidades;
+namespace Prana.Entidades;
 // agrupa los datos y operaciones de venta
 public class venta
 {
@@ -65,13 +65,14 @@ public class venta
     public string ModalidadEntrega { get; set; } = string.Empty;
     // conserva domicilio entrega como string para intercambiar este dato entre las capas
     public string DomicilioEntrega { get; set; } = string.Empty;
+    public string LocalidadEntrega { get; set; } = string.Empty;
+    public string HorarioSugerido { get; set; } = string.Empty;
+    public string DireccionEntregaCompleta => string.Join(", ", new[] { DomicilioEntrega, LocalidadEntrega }.Where(x => !string.IsNullOrWhiteSpace(x)));
     // puede no existir una fecha estimada en ventas anteriores
     public DateTime? FechaEntrega
     {
         get; set;
     }
-    // conserva horario sugerido como string para intercambiar este dato entre las capas
-    public string HorarioSugerido { get; set; } = string.Empty;
     // conserva observaciones entrega como string para intercambiar este dato entre las capas
     public string ObservacionesEntrega { get; set; } = string.Empty;
     // conserva tipo logistica como string para intercambiar este dato entre las capas

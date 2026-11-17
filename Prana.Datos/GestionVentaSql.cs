@@ -54,8 +54,8 @@ namespace Prana.Datos
         // envia los parametros de registrar actividad y ejecuta la escritura en la base de datos
         internal static void RegistrarActividad(SqlConnection cn, SqlTransaction tx, int usuario, string accion, int venta, string detalle)
         {
-            using SqlCommand comando = Comando(cn, tx, @"IF OBJECT_ID('dbo.LogActividad') IS NOT NULL
-                INSERT INTO LogActividad(id_usuario,accion,entidad,id_entidad,detalle)
+            using SqlCommand comando = Comando(cn, tx, @"IF OBJECT_ID('dbo.Log_Actividad') IS NOT NULL
+                INSERT INTO Log_Actividad(id_usuario,accion,entidad,id_entidad,detalle)
                 VALUES(@usuario,@accion,'Venta',@venta,@detalle)", ("@usuario", usuario), ("@accion", accion), ("@venta", venta), ("@detalle", detalle));
             comando.ExecuteNonQuery();
         }
